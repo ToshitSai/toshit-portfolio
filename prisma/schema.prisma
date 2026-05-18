@@ -1,0 +1,229 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WorkspaceRole {
+  ADMIN
+  DEVELOPER
+  VIEWER
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum ScanStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum Severity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum IssueCategory {
+  BUG
+  SECURITY
+  PERFORMANCE
+  MAINTAINABILITY
+  COMPLEXITY
+  TEST
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  clerkId            String?             @unique
+  email              String              @unique
+  name               String?
+  imageUrl           String?
+  githubUsername     String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  apiUsages          ApiUsage[]
+  auditLogs          AuditLog[]
+  memberships        WorkspaceMember[]
+  notifications      Notification[]
+  scans              Scan[]
+  subscriptions      Subscription[]
+  githubIntegrations GitHubIntegration[]
+}
+
+model Team {
+  id            String            @id @default(cuid())
+  name          String
+  slug          String            @unique
+  plan          Plan              @default(FREE)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  members       WorkspaceMember[]
+  projects      Project[]
+  subscriptions Subscription[]
+}
+
+model WorkspaceMember {
+  id        String        @id @default(cuid())
+  userId    String
+  teamId    String
+  role      WorkspaceRole @default(DEVELOPER)
+  invitedBy String?
+  createdAt DateTime      @default(now())
+  team      Team          @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+  @@index([teamId, role])
+}
+
+model Project {
+  id             String              @id @default(cuid())
+  teamId         String
+  name           String
+  slug           String
+  defaultBranch  String              @default("main")
+  language       String
+  repoUrl        String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  team           Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  scans          Scan[]
+  githubLinks    GitHubIntegration[]
+
+  @@unique([teamId, slug])
+  @@index([teamId, updatedAt])
+}
+
+model Scan {
+  id           String       @id @default(cuid())
+  userId       String
+  projectId    String?
+  status       ScanStatus   @default(QUEUED)
+  language     String
+  fileName     String
+  codeHash     String
+  qualityScore Int          @default(0)
+  complexity   String       @default("Medium")
+  summary      String?
+  createdAt    DateTime     @default(now())
+  completedAt  DateTime?
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project      Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  issues       Issue[]
+  report       Report?
+
+  @@index([userId, createdAt])
+  @@index([projectId, status])
+}
+
+model Issue {
+  id          String        @id @default(cuid())
+  scanId      String
+  title       String
+  severity    Severity
+  category    IssueCategory
+  line        Int
+  explanation String
+  fix         String
+  snippet     String
+  resolved    Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  scan        Scan          @relation(fields: [scanId], references: [id], onDelete: Cascade)
+
+  @@index([scanId, severity])
+}
+
+model Report {
+  id            String   @id @default(cuid())
+  scanId        String   @unique
+  shareSlug     String   @unique
+  optimizedCode String
+  unitTests     String
+  pdfUrl        String?
+  public        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  scan          Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+}
+
+model ApiUsage {
+  id        String   @id @default(cuid())
+  userId    String?
+  route     String
+  tokens    Int      @default(0)
+  costCents Int      @default(0)
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([route, createdAt])
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String
+  teamId               String?
+  plan                 Plan     @default(FREE)
+  status               String   @default("inactive")
+  stripeCustomerId     String?
+  stripeSubscriptionId String?  @unique
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  team                 Team?    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([teamId, status])
+  @@index([userId, status])
+}
+
+model GitHubIntegration {
+  id             String   @id @default(cuid())
+  userId         String
+  projectId      String?
+  installationId String?
+  owner          String
+  repo           String
+  accessToken    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  project        Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, owner, repo])
+  @@index([owner, repo])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  teamId    String?
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([teamId, createdAt])
+  @@index([action, createdAt])
+}

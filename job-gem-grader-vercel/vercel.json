@@ -1,0 +1,26 @@
+{
+  "installCommand": "echo \"Skipping install for static mirror\"",
+  "buildCommand": "echo \"Skipping build for static mirror\"",
+  "outputDirectory": ".",
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/assets/pdf-B75MOh95.js",
+      "destination": "/assets/pdf-B75MOh95.js"
+    },
+    {
+      "source": "/((?!assets/|~flock\\.js).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
