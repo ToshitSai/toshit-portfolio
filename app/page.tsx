@@ -8,7 +8,6 @@ import {
   Code2,
   Download,
   Eye,
-  FolderKanban,
   GitBranch,
   GraduationCap,
   LayoutTemplate,
@@ -54,14 +53,6 @@ const skillIcons: Record<string, LucideIcon> = {
   "Team Collaboration": BriefcaseBusiness,
   Adaptability: Sparkles,
   "Continuous Learning": GraduationCap,
-};
-
-const portfolioProject = {
-  title: "Personal Portfolio Website",
-  summary:
-    "Designed and developed a responsive personal portfolio to showcase skills, projects, and contact details with a clean, recruiter-friendly layout.",
-  technologies: "HTML, CSS, JavaScript",
-  role: "Design & Development",
 };
 
 export default function HomePage() {
@@ -212,60 +203,32 @@ export default function HomePage() {
             </div>
           </ScrollReveal>
 
-          <div className="mt-8 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <ScrollReveal delay={140}>
-              <article className="content-panel project-highlight">
-                <div className="project-badge">
-                  <FolderKanban className="h-4 w-4" />
-                  <span>Portfolio Project</span>
-                </div>
-                <h3 className="mt-5 text-3xl font-semibold text-stone-950">{portfolioProject.title}</h3>
-                <p className="mt-4 text-base leading-8 text-stone-700">{portfolioProject.summary}</p>
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                  <div className="detail-block">
-                    <p className="text-sm uppercase tracking-[0.16em] text-stone-500">Technologies</p>
-                    <p className="mt-2 text-base font-medium text-stone-900">{portfolioProject.technologies}</p>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {projectCards.map((project, index) => (
+              <ScrollReveal key={project.title} delay={140 + index * 80}>
+                <article className="content-panel project-summary-card">
+                  <div className="project-badge">
+                    <Sparkles className="h-4 w-4" />
+                    <span>{project.tone}</span>
                   </div>
-                  <div className="detail-block">
-                    <p className="text-sm uppercase tracking-[0.16em] text-stone-500">Role</p>
-                    <p className="mt-2 text-base font-medium text-stone-900">{portfolioProject.role}</p>
+                  <h3 className="mt-5 text-2xl font-semibold text-stone-950">{project.title}</h3>
+                  <p className="mt-3 text-base leading-8 text-stone-700">{project.summary}</p>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <a
+                      className="secondary-link"
+                      href={project.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {project.linkLabel}
+                    </a>
+                    <TransitionLink className="secondary-link" href="/projects">
+                      View Demo
+                    </TransitionLink>
                   </div>
-                </div>
-                <div className="mt-8">
-                  <TransitionLink className="primary-link" href="/projects">
-                    Explore Project Page
-                  </TransitionLink>
-                </div>
-              </article>
-            </ScrollReveal>
-
-            <div className="grid gap-5">
-              {projectCards.map((project, index) => (
-                <ScrollReveal key={project.title} delay={180 + index * 80}>
-                  <article className="content-panel project-summary-card">
-                    <div className="project-badge">
-                      <Sparkles className="h-4 w-4" />
-                      <span>{project.tone}</span>
-                    </div>
-                    <h3 className="mt-5 text-2xl font-semibold text-stone-950">{project.title}</h3>
-                    <p className="mt-3 text-base leading-8 text-stone-700">{project.summary}</p>
-                    <div className="mt-6 flex flex-wrap gap-3">
-                      <a
-                        className="secondary-link"
-                        href={project.href}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {project.linkLabel}
-                      </a>
-                      <TransitionLink className="secondary-link" href="/projects">
-                        View Demo
-                      </TransitionLink>
-                    </div>
-                  </article>
-                </ScrollReveal>
-              ))}
-            </div>
+                </article>
+              </ScrollReveal>
+            ))}
           </div>
         </section>
 

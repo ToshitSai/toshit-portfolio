@@ -3,8 +3,6 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { TransitionLink } from "@/components/transition-link";
 import { projectCards } from "@/lib/portfolio-data";
 
-const featuredProject = projectCards[0];
-
 export default function ProjectsPage() {
   return (
     <main className="portfolio-page">
@@ -39,14 +37,6 @@ export default function ProjectsPage() {
               project room for a video preview, stack details, and a direct live link.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
-              <a
-                className="primary-link"
-                href={featuredProject.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open {featuredProject.title}
-              </a>
               <TransitionLink className="secondary-link" href="/">
                 Back to Home
               </TransitionLink>
