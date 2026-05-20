@@ -92,7 +92,7 @@ export const projectCards: ProjectCard[] = [
     technologies: "AI Tools, Web Development, Product Design",
     role: "Design & Development",
     tone: "AI Launch Tool",
-    href: "https://lnkd.in/gkh9t4vJ",
+    href: "https://ai-startup-idea-validator-teal.vercel.app/",
     linkLabel: "Open Project",
     videoSrc: "/videos/idea-launch-ai.mp4",
     pageHref: "/projects",
