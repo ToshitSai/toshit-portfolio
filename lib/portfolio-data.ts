@@ -66,7 +66,7 @@ export const projectCards: ProjectCard[] = [
     summary:
       "An AI-powered learning platform project presented with a live demo preview and direct access to the deployed website.",
     technologies: "Next.js, React, Tailwind CSS, Vercel",
-    role: "Design & Development",
+    role: "Full Stack Developer & AI Integration",
     tone: "Live Project",
     href: "https://courseforge-ai-pied.vercel.app/",
     linkLabel: "Open Live Site",
@@ -78,7 +78,7 @@ export const projectCards: ProjectCard[] = [
     summary:
       "A resume and portfolio analyzer that scores job readiness, highlights resume gaps, and gives practical improvement tips.",
     technologies: "React, Vite, Tailwind CSS, PDF.js, Vercel",
-    role: "Design & Development",
+    role: "Full Stack Developer & AI Integration",
     tone: "AI Career Tool",
     href: "https://job-gem-grader.vercel.app",
     linkLabel: "Open Live Site",
@@ -88,9 +88,9 @@ export const projectCards: ProjectCard[] = [
   {
     title: "Idea Launch AI",
     summary:
-      "An AI project launch assistant presented with a demo preview and a direct link to the live project experience.",
+      "Turning an idea into a successful startup starts with validation. This AI-powered tool helps entrepreneurs, students, and innovators evaluate their startup ideas in seconds.",
     technologies: "AI Tools, Web Development, Product Design",
-    role: "Design & Development",
+    role: "Full Stack Developer & AI Integration",
     tone: "AI Launch Tool",
     href: "https://ai-startup-idea-validator-teal.vercel.app/",
     linkLabel: "Open Project",
