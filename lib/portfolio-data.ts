@@ -85,6 +85,18 @@ export const projectCards: ProjectCard[] = [
     videoSrc: "/videos/hirescope-ai.mp4",
     pageHref: "/projects",
   },
+  {
+    title: "Idea Launch AI",
+    summary:
+      "An AI project launch assistant presented with a demo preview and a direct link to the live project experience.",
+    technologies: "AI Tools, Web Development, Product Design",
+    role: "Design & Development",
+    tone: "AI Launch Tool",
+    href: "https://lnkd.in/gkh9t4vJ",
+    linkLabel: "Open Project",
+    videoSrc: "/videos/idea-launch-ai.mp4",
+    pageHref: "/projects",
+  },
 ];
 
 export const resumeInfo = {
