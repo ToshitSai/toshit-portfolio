@@ -12,8 +12,8 @@ export type ProjectCard = {
 
 export const skillGroups = [
   {
-    title: "Web Technologies",
-    items: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+    title: "AI Tools",
+    items: ["ChatGPT", "Claude", "Gemini", "Perplexity", "Cursor", "Codex"],
   },
   {
     title: "Frameworks/Libraries",

@@ -12,11 +12,11 @@ import {
 } from "lucide-react";
 
 export const siteConfig = {
-  name: "CodeGuardian AI",
+  name: "Toshit Sai Galam",
   description:
-    "AI-powered bug detection, security review, and code quality intelligence for engineering teams.",
-  url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-  supportEmail: "security@codeguardian.ai",
+    "Portfolio of Toshit Sai Galam, a web development student building real-world projects with modern technologies and AI tools.",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://toshit-portfolio.vercel.app",
+  supportEmail: "iamtoshitsai@gmail.com",
 };
 
 export const navItems = [
