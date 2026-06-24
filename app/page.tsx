@@ -31,7 +31,7 @@ import {
 export const metadata: Metadata = {
   title: "Toshit Sai Galam | Portfolio",
   description:
-    "Portfolio of Toshit Sai Galam, a web development student building real-world projects with modern technologies.",
+    "Portfolio of Toshit Sai Galam, an AI powered full stack developer building real-world projects with modern technologies.",
 };
 
 const skillIcons: Record<string, LucideIcon> = {
