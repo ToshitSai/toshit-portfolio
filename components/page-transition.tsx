@@ -20,7 +20,7 @@ export function PageTransition() {
 
     const timeout = window.setTimeout(() => {
       document.body.classList.remove("route-enter");
-    }, 220);
+    }, 420);
 
     return () => window.clearTimeout(timeout);
   }, [pathname]);

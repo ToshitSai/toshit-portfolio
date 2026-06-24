@@ -37,7 +37,7 @@ export function TransitionLink({
 
     window.setTimeout(() => {
       router.push(typeof href === "string" ? href : href.toString());
-    }, 140);
+    }, 240);
   };
 
   return (

@@ -89,6 +89,11 @@ select {
   background: color-mix(in oklch, var(--color-primary) 35%, transparent);
 }
 
+:root {
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .premium-grid {
   background-image:
     linear-gradient(to right, rgba(125, 92, 255, 0.12) 1px, transparent 1px),
@@ -136,11 +141,11 @@ select {
 }
 
 body.route-enter .portfolio-page {
-  animation: portfolio-enter 220ms ease-out both;
+  animation: portfolio-enter 520ms var(--ease-premium) both;
 }
 
 body.route-leave .portfolio-page {
-  animation: portfolio-leave 140ms ease-in both;
+  animation: portfolio-leave 280ms var(--ease-smooth) both;
 }
 
 .portfolio-page {
@@ -224,11 +229,12 @@ body.route-leave .portfolio-page {
   gap: 0.65rem;
   border-radius: 999px;
   transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease,
-    color 180ms ease;
+    transform 260ms var(--ease-premium),
+    box-shadow 260ms var(--ease-premium),
+    border-color 260ms var(--ease-premium),
+    background-color 260ms var(--ease-premium),
+    color 260ms var(--ease-premium),
+    opacity 260ms var(--ease-premium);
 }
 
 .primary-link {
@@ -243,7 +249,7 @@ body.route-leave .portfolio-page {
 }
 
 .primary-link:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   background: #292524;
   border-color: #292524;
   color: #fafaf9;
@@ -260,7 +266,7 @@ body.route-leave .portfolio-page {
 
 .secondary-link:hover,
 .social-link:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   border-color: #b45309;
   color: #92400e;
 }
@@ -328,16 +334,16 @@ body.route-leave .portfolio-page {
 
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(24px) scale(0.985);
   transition:
-    opacity 420ms ease,
-    transform 420ms ease;
+    opacity 760ms var(--ease-premium),
+    transform 760ms var(--ease-premium);
   will-change: transform, opacity;
 }
 
 .scroll-reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .project-media {
@@ -382,14 +388,16 @@ body.route-leave .portfolio-page {
   padding: 0.95rem 1rem;
   outline: none;
   transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease;
+    border-color 240ms var(--ease-premium),
+    box-shadow 240ms var(--ease-premium),
+    transform 240ms var(--ease-premium);
 }
 
 .contact-field input:focus,
 .contact-field textarea:focus {
   border-color: #d97706;
   box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.14);
+  transform: translateY(-1px);
 }
 
 .contact-submit:disabled {
@@ -471,12 +479,12 @@ body.route-leave .portfolio-page {
 @keyframes portfolio-enter {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px) scale(0.992);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -488,6 +496,30 @@ body.route-leave .portfolio-page {
 
   to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(0.994);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body.route-enter .portfolio-page,
+  body.route-leave .portfolio-page,
+  .scroll-reveal,
+  .primary-link,
+  .secondary-link,
+  .social-link,
+  .skill-pill,
+  .contact-field input,
+  .contact-field textarea {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
   }
 }
