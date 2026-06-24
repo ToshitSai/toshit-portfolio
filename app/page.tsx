@@ -92,7 +92,7 @@ export default function HomePage() {
 
         <section className="grid min-h-[calc(100vh-5rem)] items-center py-16 sm:py-20">
           <ScrollReveal className="hero-shell" delay={60} immediate>
-            <p className="section-eyebrow">Web Development Student</p>
+            <p className="section-eyebrow">AI Powered Full Stack Developer</p>
             <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight text-stone-950 sm:text-6xl lg:text-7xl">
               Toshit Sai Galam
             </h1>
