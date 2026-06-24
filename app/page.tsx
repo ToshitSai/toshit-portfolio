@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowUpRight,
+  Award,
   BookOpen,
   BriefcaseBusiness,
   Brush,
@@ -144,7 +145,7 @@ export default function HomePage() {
               <ScrollReveal key={item.title} delay={140 + index * 80}>
                 <article className="content-panel education-card">
                   <div className="education-icon">
-                    <GraduationCap className="h-5 w-5" />
+                    <Award className="h-5 w-5" />
                   </div>
                   <p className="text-sm font-medium uppercase tracking-[0.16em] text-stone-500">
                     {item.years}

@@ -282,8 +282,9 @@ body.route-leave .portfolio-page {
 
 .education-icon {
   border-radius: 18px;
-  background: rgba(20, 184, 166, 0.12);
-  color: #0f766e;
+  border: 1px solid rgba(180, 83, 9, 0.12);
+  background: rgba(255, 247, 237, 0.86);
+  color: #92400e;
 }
 
 .education-icon {
@@ -407,8 +408,9 @@ body.route-leave .portfolio-page {
   height: 3.25rem;
   width: 3.25rem;
   border-radius: 18px;
-  background: rgba(20, 184, 166, 0.12);
-  color: #0f766e;
+  border: 1px solid rgba(180, 83, 9, 0.12);
+  background: rgba(255, 247, 237, 0.86);
+  color: #92400e;
   font-size: 1.1rem;
   font-weight: 700;
 }

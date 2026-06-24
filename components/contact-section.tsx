@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { Mail, MapPin } from "lucide-react";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
 
@@ -143,7 +144,7 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
             <div className="mt-8 grid gap-5">
               <div className="contact-card-row">
                 <div className="contact-icon-badge">
-                  <span>@</span>
+                  <Mail className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm text-stone-500">Email</p>
@@ -157,7 +158,7 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
               </div>
               <div className="contact-card-row">
                 <div className="contact-icon-badge">
-                  <span>#</span>
+                  <MapPin className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm text-stone-500">Location</p>
