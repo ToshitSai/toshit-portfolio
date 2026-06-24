@@ -1,3 +1,4 @@
+import { GitHubIcon } from "@/components/github-icon";
 import { PageTransition } from "@/components/page-transition";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { TransitionLink } from "@/components/transition-link";
@@ -58,6 +59,13 @@ export default function ProjectsPage() {
                       <p className="mt-4 max-w-3xl text-base leading-8 text-stone-700">
                         {project.summary}
                       </p>
+                      <div className="project-stack mt-5">
+                        {project.stack.map((item) => (
+                          <span key={item} className="project-stack-tag">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                       <div className="project-media project-media-large mt-8">
                         <video
                           className="h-full w-full object-cover"
@@ -89,14 +97,28 @@ export default function ProjectsPage() {
                         <p className="text-sm uppercase tracking-[0.16em] text-stone-500">
                           Live Link
                         </p>
-                        <a
-                          className="mt-3 secondary-link w-full"
-                          href={project.href}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {project.linkLabel}
-                        </a>
+                        <div className="mt-3 flex flex-wrap gap-3">
+                          <a
+                            className="secondary-link"
+                            href={project.href}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {project.linkLabel}
+                          </a>
+                          {project.repoHref ? (
+                            <a
+                              className="secondary-link"
+                              href={project.repoHref}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label="View source on GitHub"
+                            >
+                              <GitHubIcon className="h-4 w-4" />
+                              GitHub
+                            </a>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </div>

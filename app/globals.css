@@ -325,6 +325,26 @@ body.route-leave .portfolio-page {
   padding: 0.55rem 0.85rem;
 }
 
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.project-stack-tag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(214, 211, 209, 0.95);
+  border-radius: 999px;
+  background: rgba(245, 245, 244, 0.92);
+  color: #57534e;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 0.32rem 0.7rem;
+}
+
 .detail-block {
   border: 1px solid rgba(214, 211, 209, 0.9);
   border-radius: 20px;

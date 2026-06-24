@@ -5,6 +5,9 @@ import { Mail, MapPin } from "lucide-react";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
 
+const FORMSPREE_ENDPOINT =
+  process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || "https://formspree.io/f/YOUR_FORMSPREE_ID";
+
 type SocialLink = {
   name: string;
   href: string;
@@ -40,15 +43,12 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    formData.append("_subject", `Portfolio Contact: ${subject}`);
-    formData.append("_template", "table");
-    formData.append("_captcha", "false");
 
     setSubmitState("sending");
     setFeedback("");
 
     try {
-      const response = await fetch("https://formsubmit.co/ajax/iamtoshitsai@gmail.com", {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -63,7 +63,7 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
       form.reset();
       setSubject("Internship Opportunity");
       setSubmitState("success");
-      setFeedback("Message sent successfully. Toshit will receive it in the inbox.");
+      setFeedback("Thanks! I'll get back to you soon.");
     } catch {
       setSubmitState("error");
       setFeedback("Message could not be sent right now. Please try again in a moment.");
@@ -92,7 +92,12 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
       </ScrollReveal>
 
       <ScrollReveal className="contact-grid mt-12" delay={160}>
-        <form className="content-panel contact-form-panel" method="POST" onSubmit={handleSubmit}>
+        <form
+          className="content-panel contact-form-panel"
+          action={FORMSPREE_ENDPOINT}
+          method="POST"
+          onSubmit={handleSubmit}
+        >
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
 
           <div className="grid gap-5 sm:grid-cols-2">
@@ -132,9 +137,6 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
             <button className="primary-link contact-submit" type="submit" disabled={submitState === "sending"}>
               {submitState === "sending" ? "Sending..." : "Send Message"}
             </button>
-            <p className="text-sm leading-7 text-stone-500">
-              Messages stay on this page after submission.
-            </p>
           </div>
         </form>
 

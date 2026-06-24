@@ -18,15 +18,20 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} | AI Code Review Platform`,
+    default: `${siteConfig.name} | AI Powered Full Stack Developer`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   openGraph: {
-    title: siteConfig.name,
+    title: `${siteConfig.name} | AI Powered Full Stack Developer`,
     description: siteConfig.description,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} | AI Powered Full Stack Developer`,
+    description: siteConfig.description,
   },
 };
 

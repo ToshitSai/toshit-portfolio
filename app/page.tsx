@@ -3,13 +3,16 @@ import type { LucideIcon } from "lucide-react";
 import {
   ArrowUpRight,
   Award,
+  Bot,
   BookOpen,
-  BriefcaseBusiness,
   Brush,
+  Code2,
+  Database,
   Download,
   Eye,
   GitBranch,
-  GraduationCap,
+  Cloud,
+  Server,
   Sparkles,
   SquareCode,
   TerminalSquare,
@@ -17,9 +20,11 @@ import {
 } from "lucide-react";
 
 import { ContactSection } from "@/components/contact-section";
+import { GitHubIcon } from "@/components/github-icon";
 import { PageTransition } from "@/components/page-transition";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { TransitionLink } from "@/components/transition-link";
+import { siteConfig } from "@/config/site";
 import {
   educationItems,
   projectCards,
@@ -29,9 +34,8 @@ import {
 } from "@/lib/portfolio-data";
 
 export const metadata: Metadata = {
-  title: "Toshit Sai Galam | Portfolio",
-  description:
-    "Portfolio of Toshit Sai Galam, an AI powered full stack developer building real-world projects with modern technologies.",
+  title: "Toshit Sai Galam | AI Powered Full Stack Developer",
+  description: siteConfig.description,
 };
 
 const skillIcons: Record<string, LucideIcon> = {
@@ -47,12 +51,39 @@ const skillIcons: Record<string, LucideIcon> = {
   Bootstrap: BookOpen,
   Git: TerminalSquare,
   GitHub: GitBranch,
-  Antigravity: Sparkles,
-  "Problem Solving": BriefcaseBusiness,
-  "Team Collaboration": BriefcaseBusiness,
-  Adaptability: Sparkles,
-  "Continuous Learning": GraduationCap,
+  Python: Code2,
+  JavaScript: Code2,
+  TypeScript: Code2,
+  FastAPI: Server,
+  "Node.js": Server,
+  "Express.js": Server,
+  "Claude API": Bot,
+  LangChain: Sparkles,
+  LangGraph: Sparkles,
+  "Gemini API": Sparkles,
+  Gradio: Sparkles,
+  DeepFace: Sparkles,
+  Whisper: Sparkles,
+  PostgreSQL: Database,
+  Supabase: Database,
+  SQLite: Database,
+  Redis: Database,
+  Docker: Cloud,
+  Vercel: Cloud,
+  Railway: Cloud,
 };
+
+function ProjectStackTags({ stack }: { stack: string[] }) {
+  return (
+    <div className="project-stack">
+      {stack.map((item) => (
+        <span key={item} className="project-stack-tag">
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -121,13 +152,21 @@ export default function HomePage() {
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
               Focused on learning through real product work
             </h2>
-            <p className="mt-6 max-w-4xl text-lg leading-9 text-stone-700">
-              I am a motivated student with a strong interest in web development and
-              emerging technologies. I enjoy building real-world projects that help me
-              improve my problem-solving and technical skills. My goal is to secure an
-              internship or entry-level role where I can learn, grow, and contribute to
-              meaningful software solutions.
-            </p>
+            <div className="mt-6 max-w-4xl text-lg leading-9 text-stone-700">
+              <p>
+                I build AI-powered full-stack products using React, FastAPI, Python,
+                and Claude API. In the past year I've shipped 5+ production-grade
+                projects — including NEXUS, a fully local autonomous AI agent with a
+                6-layer LangGraph architecture, EmotionVision AI, a SaaS emotion
+                detection platform using DeepFace and a custom FER2013 CNN, and an AI
+                Finance Advisor combining RAG over Indian government documents with
+                live market data.
+              </p>
+              <p className="mt-5">
+                I'm actively looking for internship or entry-level opportunities where I
+                can contribute to real product work from day one.
+              </p>
+            </div>
           </ScrollReveal>
         </section>
 
@@ -212,6 +251,7 @@ export default function HomePage() {
                   </div>
                   <h3 className="mt-5 text-2xl font-semibold text-stone-950">{project.title}</h3>
                   <p className="mt-3 text-base leading-8 text-stone-700">{project.summary}</p>
+                  <ProjectStackTags stack={project.stack} />
                   <div className="mt-6 flex flex-wrap gap-3">
                     <a
                       className="secondary-link"
@@ -221,6 +261,18 @@ export default function HomePage() {
                     >
                       {project.linkLabel}
                     </a>
+                    {project.repoHref ? (
+                      <a
+                        className="secondary-link"
+                        href={project.repoHref}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="View source on GitHub"
+                      >
+                        <GitHubIcon className="h-4 w-4" />
+                        GitHub
+                      </a>
+                    ) : null}
                     <TransitionLink className="secondary-link" href="/projects">
                       View Demo
                     </TransitionLink>

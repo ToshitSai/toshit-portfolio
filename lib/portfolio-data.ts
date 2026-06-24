@@ -4,7 +4,9 @@ export type ProjectCard = {
   technologies: string;
   role: string;
   tone: string;
+  stack: string[];
   href?: string;
+  repoHref?: string;
   linkLabel?: string;
   videoSrc?: string;
   pageHref?: string;
@@ -20,12 +22,20 @@ export const skillGroups = [
     items: ["React", "Next.js", "Tailwind CSS", "Bootstrap"],
   },
   {
-    title: "Tools/Platforms",
-    items: ["Git", "GitHub", "Antigravity", "Codex"],
+    title: "Languages",
+    items: ["Python", "JavaScript", "TypeScript"],
   },
   {
-    title: "Other Skills",
-    items: ["Problem Solving", "Team Collaboration", "Adaptability", "Continuous Learning"],
+    title: "Backend",
+    items: ["FastAPI", "Node.js", "Express.js"],
+  },
+  {
+    title: "AI / ML",
+    items: ["Claude API", "LangChain", "LangGraph", "Gemini API", "Gradio", "DeepFace", "Whisper"],
+  },
+  {
+    title: "Databases & Cloud",
+    items: ["PostgreSQL", "Supabase", "SQLite", "Redis", "Docker", "Vercel", "Railway"],
   },
 ];
 
@@ -68,7 +78,9 @@ export const projectCards: ProjectCard[] = [
     technologies: "Next.js, React, Tailwind CSS, Vercel",
     role: "Full Stack Developer & AI Integration",
     tone: "Live Project",
+    stack: ["React", "FastAPI", "Claude API", "Tailwind CSS"],
     href: "https://courseforge-ai-pied.vercel.app/",
+    repoHref: "https://github.com/toshitsai/courseforge-ai",
     linkLabel: "Open Live Site",
     videoSrc: "/videos/courseforge-demo.mp4",
     pageHref: "/projects",
@@ -80,7 +92,9 @@ export const projectCards: ProjectCard[] = [
     technologies: "React, Vite, Tailwind CSS, PDF.js, Vercel",
     role: "Full Stack Developer & AI Integration",
     tone: "AI Career Tool",
+    stack: ["Next.js", "Puppeteer", "Claude API", "Serper API", "Tailwind CSS"],
     href: "https://job-gem-grader.vercel.app",
+    repoHref: "https://github.com/toshitsai/hirescope-ai",
     linkLabel: "Open Live Site",
     videoSrc: "/videos/hirescope-ai.mp4",
     pageHref: "/projects",
@@ -92,7 +106,9 @@ export const projectCards: ProjectCard[] = [
     technologies: "AI Tools, Web Development, Product Design",
     role: "Full Stack Developer & AI Integration",
     tone: "AI Launch Tool",
+    stack: ["React", "Supabase", "Claude API", "Tailwind CSS"],
     href: "https://ai-startup-idea-validator-teal.vercel.app/",
+    repoHref: "https://github.com/toshitsai/startup-idea-validator",
     linkLabel: "Open Project",
     videoSrc: "/videos/idea-launch-ai.mp4",
     pageHref: "/projects",
