@@ -14,7 +14,7 @@ import {
 export const siteConfig = {
   name: "Toshit Sai Galam",
   description:
-    "Portfolio of Toshit Sai Galam, building AI-powered web applications with clean design, intuitive user experiences, prompt engineering, and modern AI tools.",
+    "Portfolio of Toshit Sai Galam, building AI-powered web applications with modern design, seamless user experiences, practical functionality, and prompt engineering.",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://toshit-portfolio.vercel.app",
   supportEmail: "iamtoshitsai@gmail.com",
 };

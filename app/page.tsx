@@ -146,12 +146,12 @@ export default function HomePage() {
             </h2>
             <div className="mt-6 max-w-4xl text-lg leading-9 text-stone-700">
               <p>
-                I&apos;m passionate about building AI-powered web applications that solve real-world
-                problems with clean design and intuitive user experiences. I enjoy transforming
-                ideas into functional digital products using modern AI tools, prompt engineering,
-                and no-code/low-code development. I love exploring new technologies, experimenting
-                with innovative solutions, and continuously improving my skills by building projects
-                that combine creativity with practical impact.
+                I build AI-powered web applications with a strong focus on modern design, seamless
+                user experiences, and practical functionality. Using AI tools and prompt engineering,
+                I transform ideas into scalable digital products that are both innovative and
+                user-friendly. I&apos;m constantly exploring emerging technologies, learning through
+                hands-on projects, and creating solutions that make technology more accessible and
+                impactful.
               </p>
             </div>
           </ScrollReveal>
