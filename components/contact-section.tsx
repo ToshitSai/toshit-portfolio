@@ -5,8 +5,8 @@ import { Mail, MapPin } from "lucide-react";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
 
-const FORMSPREE_ENDPOINT =
-  process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || "https://formspree.io/f/YOUR_FORMSPREE_ID";
+const CONTACT_ENDPOINT =
+  process.env.NEXT_PUBLIC_CONTACT_ENDPOINT || "https://formsubmit.co/ajax/iamtoshitsai@gmail.com";
 
 type SocialLink = {
   name: string;
@@ -48,7 +48,7 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
     setFeedback("");
 
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
+      const response = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -63,7 +63,7 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
       form.reset();
       setSubject("Internship Opportunity");
       setSubmitState("success");
-      setFeedback("Thanks! I'll get back to you soon.");
+      setFeedback("Thanks! Your message has been sent to my email.");
     } catch {
       setSubmitState("error");
       setFeedback("Message could not be sent right now. Please try again in a moment.");
@@ -94,11 +94,14 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
       <ScrollReveal className="contact-grid mt-12" delay={160}>
         <form
           className="content-panel contact-form-panel"
-          action={FORMSPREE_ENDPOINT}
+          action={CONTACT_ENDPOINT}
           method="POST"
           onSubmit={handleSubmit}
         >
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
+          <input type="hidden" name="_subject" value={`Portfolio Contact: ${subject}`} />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
 
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="contact-field">

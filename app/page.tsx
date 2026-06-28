@@ -6,13 +6,11 @@ import {
   Bot,
   BookOpen,
   Brush,
-  Code2,
   Database,
   Download,
   Eye,
   GitBranch,
   Cloud,
-  Server,
   Sparkles,
   SquareCode,
   TerminalSquare,
@@ -51,12 +49,6 @@ const skillIcons: Record<string, LucideIcon> = {
   Bootstrap: BookOpen,
   Git: TerminalSquare,
   GitHub: GitBranch,
-  Python: Code2,
-  JavaScript: Code2,
-  TypeScript: Code2,
-  FastAPI: Server,
-  "Node.js": Server,
-  "Express.js": Server,
   "Claude API": Bot,
   LangChain: Sparkles,
   LangGraph: Sparkles,
@@ -154,17 +146,12 @@ export default function HomePage() {
             </h2>
             <div className="mt-6 max-w-4xl text-lg leading-9 text-stone-700">
               <p>
-                I build AI-powered full-stack products using React, FastAPI, Python,
-                and Claude API. In the past year I've shipped 5+ production-grade
-                projects — including NEXUS, a fully local autonomous AI agent with a
-                6-layer LangGraph architecture, EmotionVision AI, a SaaS emotion
-                detection platform using DeepFace and a custom FER2013 CNN, and an AI
-                Finance Advisor combining RAG over Indian government documents with
-                live market data.
-              </p>
-              <p className="mt-5">
-                I'm actively looking for internship or entry-level opportunities where I
-                can contribute to real product work from day one.
+                I&apos;m passionate about building AI-powered web applications that solve real-world
+                problems with clean design and intuitive user experiences. I enjoy transforming
+                ideas into functional digital products using modern AI tools, prompt engineering,
+                and no-code/low-code development. I love exploring new technologies, experimenting
+                with innovative solutions, and continuously improving my skills by building projects
+                that combine creativity with practical impact.
               </p>
             </div>
           </ScrollReveal>

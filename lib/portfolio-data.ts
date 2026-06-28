@@ -22,14 +22,6 @@ export const skillGroups = [
     items: ["React", "Next.js", "Tailwind CSS", "Bootstrap"],
   },
   {
-    title: "Languages",
-    items: ["Python", "JavaScript", "TypeScript"],
-  },
-  {
-    title: "Backend",
-    items: ["FastAPI", "Node.js", "Express.js"],
-  },
-  {
     title: "AI / ML",
     items: ["Claude API", "LangChain", "LangGraph", "Gemini API", "Gradio", "DeepFace", "Whisper"],
   },
@@ -116,7 +108,7 @@ export const projectCards: ProjectCard[] = [
 ];
 
 export const resumeInfo = {
-  downloadHref: "/resume/Toshit-Sai-Galam-Resume.docx",
+  downloadHref: "/resume/Toshit-Sai-Galam-Resume.pdf",
   viewHref: "/resume/Toshit-Sai-Galam-Resume.pdf",
-  updatedLabel: "May 2026",
+  updatedLabel: "June 2026",
 };
