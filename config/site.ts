@@ -14,7 +14,7 @@ import {
 export const siteConfig = {
   name: "Toshit Sai Galam",
   description:
-    "Portfolio of Toshit Sai Galam, an AI-powered full-stack developer building production-grade projects with React, FastAPI, Claude API, and LangGraph.",
+    "Portfolio of Toshit Sai Galam, building AI-powered web applications with clean design, intuitive user experiences, prompt engineering, and modern AI tools.",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://toshit-portfolio.vercel.app",
   supportEmail: "iamtoshitsai@gmail.com",
 };
