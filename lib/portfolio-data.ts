@@ -92,23 +92,23 @@ export const projectCards: ProjectCard[] = [
     pageHref: "/projects",
   },
   {
-    title: "Idea Launch AI",
+    title: "Greetly",
     summary:
-      "Turning an idea into a successful startup starts with validation. This AI-powered tool helps entrepreneurs, students, and innovators evaluate their startup ideas in seconds.",
-    technologies: "AI Tools, Web Development, Product Design",
+      "An AI personalized message generator that helps users craft warm greeting messages for any occasion with a polished, easy-to-use experience.",
+    technologies: "React, Vite, Flask, Tailwind CSS, Groq API",
     role: "Full Stack Developer & AI Integration",
-    tone: "AI Launch Tool",
-    stack: ["React", "Supabase", "Claude API", "Tailwind CSS"],
-    href: "https://ai-startup-idea-validator-teal.vercel.app/",
-    repoHref: "https://github.com/ToshitSai/ai-startup-idea-validator",
-    linkLabel: "Open Project",
-    videoSrc: "/videos/idea-launch-ai.mp4",
+    tone: "AI Greeting Tool",
+    stack: ["React", "Vite", "Flask", "Groq API"],
+    href: "https://toshit-greetly.vercel.app/",
+    repoHref: "https://github.com/ToshitSai/greetly",
+    linkLabel: "Open Live Site",
+    videoSrc: "/videos/greetly.mp4",
     pageHref: "/projects",
   },
 ];
 
 export const resumeInfo = {
-  downloadHref: "/resume/Toshit-Sai-Galam-Resume.pdf",
+  downloadHref: "/resume/Toshit-Sai-Galam-Resume.docx",
   viewHref: "/resume/Toshit-Sai-Galam-Resume.pdf",
   updatedLabel: "June 2026",
 };
