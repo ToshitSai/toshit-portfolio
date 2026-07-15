@@ -1,12 +1,11 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Mail, MapPin } from "lucide-react";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
 
-const CONTACT_ENDPOINT =
-  process.env.NEXT_PUBLIC_CONTACT_ENDPOINT || "https://formsubmit.co/ajax/iamtoshitsai@gmail.com";
+const CONTACT_ENDPOINT = "https://formsubmit.co/iamtoshitsai@gmail.com";
 
 type SocialLink = {
   name: string;
@@ -37,23 +36,41 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
   const [subject, setSubject] = useState("Internship Opportunity");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [feedback, setFeedback] = useState("");
-  const awaitingResponseRef = useRef(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     const form = event.currentTarget;
     setSubmitState("sending");
     setFeedback("");
-    awaitingResponseRef.current = true;
 
-    window.setTimeout(() => {
-      if (awaitingResponseRef.current) {
-        form.reset();
-        setSubject("Internship Opportunity");
-        setSubmitState("success");
-        setFeedback("Thanks! Your message has been sent to my email.");
-        awaitingResponseRef.current = false;
+    const formData = new FormData(form);
+    const payload = new URLSearchParams();
+
+    formData.forEach((value, key) => {
+      if (typeof value === "string") {
+        payload.append(key, value);
       }
-    }, 2500);
+    });
+
+    try {
+      await fetch(CONTACT_ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: payload.toString(),
+      });
+
+      form.reset();
+      setSubject("Internship Opportunity");
+      setSubmitState("success");
+      setFeedback("Mail sent to Toshit Sai");
+    } catch {
+      setSubmitState("error");
+      setFeedback("Message could not be sent right now. Please try again in a moment.");
+    }
   };
 
   return (
@@ -80,15 +97,13 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
       <ScrollReveal className="contact-grid mt-12" delay={160}>
         <form
           className="content-panel contact-form-panel"
-          action={CONTACT_ENDPOINT}
-          method="POST"
-          target="contact-response-frame"
           onSubmit={handleSubmit}
         >
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
           <input type="hidden" name="_subject" value={`Portfolio Contact: ${subject}`} />
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_replyto" value="iamtoshitsai@gmail.com" />
 
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="contact-field">
@@ -124,24 +139,15 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
           </label>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <button className="primary-link contact-submit" type="submit" disabled={submitState === "sending"}>
+            <button
+              className="primary-link contact-submit"
+              type="submit"
+              disabled={submitState === "sending"}
+            >
               {submitState === "sending" ? "Sending..." : "Send Message"}
             </button>
           </div>
         </form>
-
-        <iframe
-          title="Contact response"
-          name="contact-response-frame"
-          className="hidden"
-          onLoad={() => {
-            if (awaitingResponseRef.current) {
-              awaitingResponseRef.current = false;
-              setSubmitState("success");
-              setFeedback("Thanks! Your message has been sent to my email.");
-            }
-          }}
-        />
 
         <div className="contact-side">
           <div className="content-panel">
