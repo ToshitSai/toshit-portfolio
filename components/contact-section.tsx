@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Mail, MapPin } from "lucide-react";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -36,41 +36,12 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
   const [subject, setSubject] = useState("Internship Opportunity");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [feedback, setFeedback] = useState("");
+  const awaitingResponseRef = useRef(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
     setSubmitState("sending");
     setFeedback("");
-
-    const formData = new FormData(form);
-    const payload = new URLSearchParams();
-
-    formData.forEach((value, key) => {
-      if (typeof value === "string") {
-        payload.append(key, value);
-      }
-    });
-
-    try {
-      await fetch(CONTACT_ENDPOINT, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        },
-        body: payload.toString(),
-      });
-
-      form.reset();
-      setSubject("Internship Opportunity");
-      setSubmitState("success");
-      setFeedback("Mail sent to Toshit Sai");
-    } catch {
-      setSubmitState("error");
-      setFeedback("Message could not be sent right now. Please try again in a moment.");
-    }
+    awaitingResponseRef.current = true;
   };
 
   return (
@@ -97,6 +68,9 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
       <ScrollReveal className="contact-grid mt-12" delay={160}>
         <form
           className="content-panel contact-form-panel"
+          action={CONTACT_ENDPOINT}
+          method="POST"
+          target="contact-response-frame"
           onSubmit={handleSubmit}
         >
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
@@ -148,6 +122,22 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
             </button>
           </div>
         </form>
+
+        <iframe
+          title="Contact response"
+          name="contact-response-frame"
+          className="hidden"
+          onLoad={() => {
+            if (awaitingResponseRef.current) {
+              awaitingResponseRef.current = false;
+              setSubmitState("success");
+              setFeedback("Mail sent to Toshit Sai");
+              const form = document.querySelector<HTMLFormElement>(".contact-form-panel");
+              form?.reset();
+              setSubject("Internship Opportunity");
+            }
+          }}
+        />
 
         <div className="contact-side">
           <div className="content-panel">
