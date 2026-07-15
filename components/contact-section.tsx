@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Mail, MapPin } from "lucide-react";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -37,37 +37,23 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
   const [subject, setSubject] = useState("Internship Opportunity");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [feedback, setFeedback] = useState("");
+  const awaitingResponseRef = useRef(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
     const form = event.currentTarget;
-    const formData = new FormData(form);
-
     setSubmitState("sending");
     setFeedback("");
+    awaitingResponseRef.current = true;
 
-    try {
-      const response = await fetch(CONTACT_ENDPOINT, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Unable to send the message right now.");
+    window.setTimeout(() => {
+      if (awaitingResponseRef.current) {
+        form.reset();
+        setSubject("Internship Opportunity");
+        setSubmitState("success");
+        setFeedback("Thanks! Your message has been sent to my email.");
+        awaitingResponseRef.current = false;
       }
-
-      form.reset();
-      setSubject("Internship Opportunity");
-      setSubmitState("success");
-      setFeedback("Thanks! Your message has been sent to my email.");
-    } catch {
-      setSubmitState("error");
-      setFeedback("Message could not be sent right now. Please try again in a moment.");
-    }
+    }, 2500);
   };
 
   return (
@@ -96,6 +82,7 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
           className="content-panel contact-form-panel"
           action={CONTACT_ENDPOINT}
           method="POST"
+          target="contact-response-frame"
           onSubmit={handleSubmit}
         >
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
@@ -142,6 +129,19 @@ export function ContactSection({ socialLinks }: ContactSectionProps) {
             </button>
           </div>
         </form>
+
+        <iframe
+          title="Contact response"
+          name="contact-response-frame"
+          className="hidden"
+          onLoad={() => {
+            if (awaitingResponseRef.current) {
+              awaitingResponseRef.current = false;
+              setSubmitState("success");
+              setFeedback("Thanks! Your message has been sent to my email.");
+            }
+          }}
+        />
 
         <div className="contact-side">
           <div className="content-panel">

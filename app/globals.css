@@ -198,6 +198,9 @@ body.route-leave .portfolio-page {
 }
 
 .resume-footer-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid rgba(214, 211, 209, 0.9);
   border-radius: 32px;
   background: rgba(255, 252, 248, 0.82);
@@ -205,6 +208,15 @@ body.route-leave .portfolio-page {
   margin-bottom: 4rem;
   padding: clamp(2rem, 4vw, 3rem);
   text-align: center;
+}
+
+.resume-footer-copy {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.resume-footer-cta > .mt-8 {
+  justify-content: center;
 }
 
 .section-heading {
