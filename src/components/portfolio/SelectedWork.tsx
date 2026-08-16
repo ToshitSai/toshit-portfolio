@@ -43,7 +43,8 @@ const projectsData: ProjectCardProps[] = [
 
 const SelectedWork: React.FC = () => {
   return (
-    <section id="projects" className="relative w-full py-24 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10">
+    <section id="work" className="relative w-full py-24 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10">
+      <div id="projects" className="absolute -top-10 left-0" />
       <div className="container-narrow">
         {/* Section Header */}
         <div className="flex items-center gap-3 mb-4">

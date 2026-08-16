@@ -1,3 +1,4 @@
+import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
 import TechMarquee from "@/components/portfolio/TechMarquee";
 import About from "@/components/portfolio/About";
@@ -12,6 +13,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans">
       <CustomCursor />
+      <Navbar />
       <main>
         <Hero />
         <TechMarquee />

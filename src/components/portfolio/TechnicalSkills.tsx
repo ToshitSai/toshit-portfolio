@@ -33,7 +33,8 @@ const categories: SkillCategory[] = [
 
 const TechnicalSkills: React.FC = () => {
   return (
-    <section id="skills" className="relative w-full py-24 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10">
+    <section id="playground" className="relative w-full py-24 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10">
+      <div id="skills" className="absolute -top-10 left-0" />
       {/* Drifting Background Cloud */}
       <div className="absolute bottom-10 left-[-5%] w-80 sm:w-96 opacity-25 pointer-events-none z-0">
         <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">

@@ -72,56 +72,15 @@ const Hero: React.FC = () => {
         <rect width="100%" height="100%" filter="url(#studio-noise)" />
       </svg>
 
-      {/* TOP CHROME & STICKY FLOATING CAPSULE HEADER (SINGLE INSTANCE IN DOM) */}
-      <header className="sticky top-0 z-50 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-4 sm:pt-6 flex items-center justify-between pointer-events-auto">
+      {/* TOP CHROME METADATA BAR (STRICTLY METADATA PILLS) */}
+      <header className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-4 sm:pt-6 flex items-center justify-between pointer-events-none">
         {/* Top-Left Metadata: Strictly ONE instance of HYDERABAD, IN */}
-        <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm">
+        <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm pointer-events-auto">
           HYDERABAD, IN
         </div>
 
-        {/* Centered Floating Navigation Capsule */}
-        <nav className="mx-auto sm:mx-0 sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center gap-2 sm:gap-3 px-2 sm:px-2.5 py-1.5 rounded-full bg-white/30 backdrop-blur-xl border border-white/70 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
-          {/* Avatar Badge */}
-          <a
-            href="#hero"
-            className="w-8 h-8 rounded-full bg-[#FFD42A] text-[#20252B] font-bold flex items-center justify-center text-sm shadow-sm hover:scale-105 transition-transform"
-            aria-label="Toshit Home"
-          >
-            T
-          </a>
-
-          <div className="flex items-center gap-1 sm:gap-2 text-xs font-mono tracking-[0.18em] uppercase text-[#20252B] font-bold">
-            <a
-              href="#projects"
-              className="px-3.5 sm:px-4 py-1.5 rounded-full bg-white/40 border border-white/60 text-[#20252B] font-bold shadow-sm transition-all"
-            >
-              WORK
-            </a>
-            <a
-              href="#about"
-              className="px-3.5 sm:px-4 py-1.5 rounded-full text-[#20252B]/80 hover:text-[#20252B] hover:bg-white/20 transition-all"
-            >
-              ABOUT
-            </a>
-            <a
-              href="#skills"
-              className="px-3.5 sm:px-4 py-1.5 rounded-full text-[#20252B]/80 hover:text-[#20252B] hover:bg-white/20 transition-all"
-            >
-              SKILLS
-            </a>
-          </div>
-
-          <a
-            href="#contact"
-            className="px-4 sm:px-5 py-2 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-mono font-bold tracking-[0.18em] uppercase hover:bg-white hover:scale-[1.03] transition-all shadow-sm flex items-center gap-2"
-          >
-            <Mail className="w-3.5 h-3.5 text-[#20252B] stroke-[2.2]" />
-            <span>WORK WITH ME</span>
-          </a>
-        </nav>
-
         {/* Top-Right Metadata: Strictly ONE instance of 2026 */}
-        <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm">
+        <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm pointer-events-auto">
           2026
         </div>
       </header>
