@@ -14,7 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "playground", label: "Playground", href: "#playground" },
 ];
 
-const smoothEasing = [0.16, 1, 0.3, 1];
+const smoothEasing = [0.16, 1, 0.3, 1] as const;
 
 const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
@@ -29,19 +29,19 @@ const Navbar: React.FC = () => {
   const navBg = useTransform(
     scrollY,
     [0, 110],
-    ["rgba(255, 255, 255, 0.45)", "rgba(255, 255, 255, 0.88)"]
+    ["rgba(255, 255, 255, 0.35)", "rgba(255, 255, 255, 0.40)"]
   );
   const navBorder = useTransform(
     scrollY,
     [0, 110],
-    ["rgba(255, 255, 255, 0.75)", "rgba(255, 255, 255, 0.95)"]
+    ["rgba(255, 255, 255, 0.65)", "rgba(255, 255, 255, 0.75)"]
   );
   const navShadow = useTransform(
     scrollY,
     [0, 110],
     [
-      "0px 12px 36px rgba(32, 37, 43, 0.06)",
-      "0px 6px 24px rgba(32, 37, 43, 0.12)",
+      "0px 8px 32px rgba(0, 0, 0, 0.06)",
+      "0px 8px 28px rgba(0, 0, 0, 0.08)",
     ]
   );
 
