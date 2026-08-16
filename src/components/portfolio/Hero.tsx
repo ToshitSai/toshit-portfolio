@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { Mail } from "lucide-react";
 
 const WORDS = [
   "AI-POWERED",
@@ -112,9 +113,10 @@ const Hero: React.FC = () => {
 
           <a
             href="#contact"
-            className="px-4 sm:px-5 py-2 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-mono font-bold tracking-[0.18em] uppercase hover:bg-white hover:scale-[1.03] transition-all shadow-sm"
+            className="px-4 sm:px-5 py-2 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-mono font-bold tracking-[0.18em] uppercase hover:bg-white hover:scale-[1.03] transition-all shadow-sm flex items-center gap-2"
           >
-            WORK WITH ME
+            <Mail className="w-3.5 h-3.5 text-[#20252B] stroke-[2.2]" />
+            <span>WORK WITH ME</span>
           </a>
         </nav>
 
