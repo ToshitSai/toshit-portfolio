@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface SkillItem {
   id: string;
@@ -7,8 +7,6 @@ interface SkillItem {
   name: string;
   role: string;
   category: "ai" | "dev" | "backend";
-  lineX: number; // percentage X relative to section canvas
-  lineY: number; // percentage Y relative to section canvas
 }
 
 const SKILL_GROUPS: {
@@ -20,36 +18,36 @@ const SKILL_GROUPS: {
     title: "AI / ML",
     category: "ai",
     items: [
-      { id: "genai", code: "01", name: "GENERATIVE AI", role: "APPLIED LLM SOLUTIONS", category: "ai", lineX: 22, lineY: 76 },
-      { id: "prompt", code: "02", name: "PROMPT ENGINEERING", role: "SYSTEM CONTEXT & PROMPTS", category: "ai", lineX: 22, lineY: 79 },
-      { id: "llmapps", code: "03", name: "LLM APPLICATIONS", role: "END-TO-END AI PRODUCTS", category: "ai", lineX: 22, lineY: 82 },
-      { id: "langchain", code: "04", name: "LANGCHAIN", role: "LLM WORKFLOWS & CHAINS", category: "ai", lineX: 22, lineY: 85 },
-      { id: "gemini", code: "05", name: "GEMINI API", role: "MULTIMODAL MODEL INTEGRATION", category: "ai", lineX: 22, lineY: 88 },
-      { id: "whisper", code: "06", name: "WHISPER", role: "SPEECH RECOGNITION", category: "ai", lineX: 22, lineY: 91 },
+      { id: "genai", code: "01", name: "GENERATIVE AI", role: "APPLIED LLM SOLUTIONS", category: "ai" },
+      { id: "prompt", code: "02", name: "PROMPT ENGINEERING", role: "SYSTEM CONTEXT & PROMPTS", category: "ai" },
+      { id: "llmapps", code: "03", name: "LLM APPLICATIONS", role: "END-TO-END AI PRODUCTS", category: "ai" },
+      { id: "langchain", code: "04", name: "LANGCHAIN", role: "LLM WORKFLOWS & CHAINS", category: "ai" },
+      { id: "gemini", code: "05", name: "GEMINI API", role: "MULTIMODAL MODEL INTEGRATION", category: "ai" },
+      { id: "whisper", code: "06", name: "WHISPER", role: "SPEECH RECOGNITION", category: "ai" },
     ],
   },
   {
     title: "DEVELOPMENT",
     category: "dev",
     items: [
-      { id: "python", code: "01", name: "PYTHON", role: "BACKEND & CORE AI LOGIC", category: "dev", lineX: 50, lineY: 76 },
-      { id: "react", code: "02", name: "REACT", role: "INTERFACES & UI COMPONENTS", category: "dev", lineX: 50, lineY: 79 },
-      { id: "nextjs", code: "03", name: "NEXT.JS", role: "FULL-STACK SSR FRAMEWORK", category: "dev", lineX: 50, lineY: 82 },
-      { id: "fastapi", code: "04", name: "FASTAPI", role: "HIGH-PERFORMANCE PYTHON APIS", category: "dev", lineX: 50, lineY: 85 },
-      { id: "js", code: "05", name: "JAVASCRIPT", role: "WEB & EVENT SCRIPTING", category: "dev", lineX: 50, lineY: 88 },
-      { id: "tailwind", code: "06", name: "TAILWIND CSS", role: "EDITORIAL UI STYLING", category: "dev", lineX: 50, lineY: 91 },
+      { id: "python", code: "01", name: "PYTHON", role: "BACKEND & CORE AI LOGIC", category: "dev" },
+      { id: "react", code: "02", name: "REACT", role: "INTERFACES & UI COMPONENTS", category: "dev" },
+      { id: "nextjs", code: "03", name: "NEXT.JS", role: "FULL-STACK SSR FRAMEWORK", category: "dev" },
+      { id: "fastapi", code: "04", name: "FASTAPI", role: "HIGH-PERFORMANCE PYTHON APIS", category: "dev" },
+      { id: "js", code: "05", name: "JAVASCRIPT", role: "WEB & EVENT SCRIPTING", category: "dev" },
+      { id: "tailwind", code: "06", name: "TAILWIND CSS", role: "EDITORIAL UI STYLING", category: "dev" },
     ],
   },
   {
     title: "BACKEND / PLATFORM",
     category: "backend",
     items: [
-      { id: "postgres", code: "01", name: "POSTGRESQL", role: "RELATIONAL DATABASE", category: "backend", lineX: 78, lineY: 76 },
-      { id: "supabase", code: "02", name: "SUPABASE", role: "DATABASE & AUTHENTICATION", category: "backend", lineX: 78, lineY: 79 },
-      { id: "rest", code: "03", name: "REST APIs", role: "HTTP API PROTOCOLS", category: "backend", lineX: 78, lineY: 82 },
-      { id: "github", code: "04", name: "GITHUB", role: "VERSION CONTROL & CI/CD", category: "backend", lineX: 78, lineY: 85 },
-      { id: "vercel", code: "05", name: "VERCEL", role: "CLOUD EDGE DEPLOYMENT", category: "backend", lineX: 78, lineY: 88 },
-      { id: "ollama", code: "06", name: "OLLAMA", role: "LOCAL LLM INFERENCE", category: "backend", lineX: 78, lineY: 91 },
+      { id: "postgres", code: "01", name: "POSTGRESQL", role: "RELATIONAL DATABASE", category: "backend" },
+      { id: "supabase", code: "02", name: "SUPABASE", role: "DATABASE & AUTHENTICATION", category: "backend" },
+      { id: "rest", code: "03", name: "REST APIs", role: "HTTP API PROTOCOLS", category: "backend" },
+      { id: "github", code: "04", name: "GITHUB", role: "VERSION CONTROL & CI/CD", category: "backend" },
+      { id: "vercel", code: "05", name: "VERCEL", role: "CLOUD EDGE DEPLOYMENT", category: "backend" },
+      { id: "ollama", code: "06", name: "OLLAMA", role: "LOCAL LLM INFERENCE", category: "backend" },
     ],
   },
 ];
@@ -126,28 +124,6 @@ const TechnicalSkills: React.FC = () => {
       <div className="absolute top-6 right-6 text-[9px] font-mono text-ink/30 tracking-widest hidden md:block select-none pointer-events-none">
         REF: BLUEPRINT_03 +
       </div>
-
-      {/* SVG SECTION CONNECTION LINES OVERLAY (Absolute on full root section, zero layout impact) */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 hidden sm:block">
-        <AnimatePresence>
-          {activeSkill && (
-            <motion.line
-              key={activeSkill.id}
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              x1="50%"
-              y1="40%"
-              x2={`${activeSkill.lineX}%`}
-              y2={`${activeSkill.lineY}%`}
-              stroke="#FFD42A"
-              strokeWidth="2"
-              strokeDasharray="4 4"
-            />
-          )}
-        </AnimatePresence>
-      </svg>
 
       <div className="container-narrow relative z-10 px-4 sm:px-6 md:px-8 flex-1 flex flex-col justify-between">
         {/* 1. HEADER SECTION & CURRENT STACK ANNOTATION */}
