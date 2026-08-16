@@ -189,20 +189,19 @@ const Hero: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* VERTICAL SIDE TEXT (LEFT EDGE) */}
-      <div className="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 z-20 hidden md:block select-none">
-        <span className="inline-block text-[11px] sm:text-xs font-mono tracking-[0.22em] text-white font-bold uppercase -rotate-90 origin-left whitespace-nowrap drop-shadow-sm">
-          DESIGN / DETAILS / CODE
-        </span>
-      </div>
-
       {/* MAIN HERO CONTENT AREA */}
       <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-4 pb-6 flex-1 flex flex-col justify-center items-center text-center">
         {/* ANIMATION B — Headline Title Motion Physics Layer */}
         <motion.div
           style={{ x: titleX, y: titleY }}
-          className="w-full max-w-[780px] flex flex-col items-center"
+          className="w-full max-w-[780px] flex flex-col items-center relative"
         >
+          {/* Vertical Side Tagline directly beside the main display headline */}
+          <div className="absolute -left-12 sm:-left-16 md:-left-24 lg:-left-28 top-1/2 -translate-y-1/2 hidden md:block select-none pointer-events-none">
+            <span className="inline-block text-[10px] sm:text-[11px] font-mono tracking-[0.24em] text-white font-bold uppercase -rotate-90 origin-center whitespace-nowrap drop-shadow-sm">
+              DESIGN / DETAILS / CODE
+            </span>
+          </div>
           {/* ANIMATION F — Eyebrow Badge with Pulsing Yellow Dot */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
