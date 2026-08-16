@@ -20,7 +20,7 @@ interface NowBuildingProject {
 const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
   {
     id: "courseforge",
-    title: "CourseForge AI",
+    title: "CourseForge",
     subtitle: "AI-powered course generation platform",
     url: "https://courseforge-ai-pied.vercel.app/",
   },
@@ -32,7 +32,7 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
   },
   {
     id: "greetly",
-    title: "Greetly AI",
+    title: "Greetly",
     subtitle: "Personalized AI video & message generator",
     url: "https://toshit-greetly.vercel.app",
   },

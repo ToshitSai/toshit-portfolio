@@ -29,7 +29,7 @@ const projectsData: ProjectCardProps[] = [
   },
   {
     category: "AI GREETING TOOL",
-    title: "Greetly AI",
+    title: "Greetly",
     subtitle: "Personalized AI Video & Message Generator",
     description:
       "Context-aware personalized greeting generator utilizing high-speed Groq API inference and Flask micro-service architecture for customized messages.",

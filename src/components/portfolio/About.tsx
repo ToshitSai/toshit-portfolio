@@ -37,7 +37,7 @@ const About: React.FC = () => {
               I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>. Driven by a deep passion for high-performance software engineering and autonomous AI agents.
             </p>
             <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
-              My featured work spans intelligent tools like <strong className="text-ink font-semibold">HireScope AI</strong> for automated resume evaluation and <strong className="text-ink font-semibold">Greetly AI</strong> for personalized context-aware message generation.
+              My featured work spans intelligent tools like <strong className="text-ink font-semibold">HireScope AI</strong> for automated resume evaluation and <strong className="text-ink font-semibold">Greetly</strong> for personalized context-aware message generation.
             </p>
           </div>
 
