@@ -46,13 +46,15 @@ const CustomCursor: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-difference"
+      className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full shadow-sm"
       animate={{
         x: position.x - (isHovered ? 20 : 8),
         y: position.y - (isHovered ? 20 : 8),
         width: isHovered ? 40 : 16,
         height: isHovered ? 40 : 16,
-        backgroundColor: isHovered ? "#FFD42A" : "rgba(255, 255, 255, 0.8)",
+        backgroundColor: isHovered ? "rgba(255, 212, 42, 0.25)" : "rgba(32, 37, 43, 0.25)",
+        borderColor: isHovered ? "#FFD42A" : "rgba(32, 37, 43, 0.4)",
+        borderWidth: isHovered ? 2 : 1.5,
       }}
       transition={{
         type: "spring",
