@@ -4,219 +4,205 @@ import { motion, AnimatePresence } from "framer-motion";
 interface TechObject {
   id: string;
   name: string;
-  category: "primary" | "secondary" | "supporting";
+  isCore: boolean;
   detail: string;
-  x: number; // percentage (0-100)
-  y: number; // percentage (0-100)
-  styleType: "paper" | "badge" | "circle" | "disc" | "pill" | "tag" | "tile";
+  x: number; // percentage (12-84%) for desktop floating canvas
+  y: number; // percentage (12-88%) for desktop floating canvas
   floatDuration: number;
 }
 
 const TECH_OBJECTS: TechObject[] = [
-  // Primary Technologies (Largest visual weight)
+  // CORE STACK (isCore: true — bold text, filled yellow dot, prominent size)
   {
     id: "genai",
     name: "GENERATIVE AI",
-    category: "primary",
+    isCore: true,
     detail: "APPLIED LLM SOLUTIONS",
     x: 28,
-    y: 22,
-    styleType: "paper",
+    y: 28,
     floatDuration: 5.2,
   },
   {
     id: "langchain",
     name: "LANGCHAIN",
-    category: "primary",
+    isCore: true,
     detail: "LLM WORKFLOWS & ORCHESTRATION",
-    x: 74,
-    y: 20,
-    styleType: "tag",
+    x: 72,
+    y: 28,
     floatDuration: 6.1,
   },
   {
     id: "python",
     name: "PYTHON",
-    category: "primary",
+    isCore: true,
     detail: "BACKEND & CORE AI LOGIC",
-    x: 20,
-    y: 50,
-    styleType: "circle",
+    x: 24,
+    y: 58,
     floatDuration: 4.8,
   },
   {
     id: "gemini",
     name: "GEMINI API",
-    category: "primary",
+    isCore: true,
     detail: "AI MODEL INTEGRATION",
-    x: 80,
-    y: 48,
-    styleType: "disc",
+    x: 76,
+    y: 56,
     floatDuration: 5.6,
   },
   {
     id: "prompt",
     name: "PROMPT ENGINEERING",
-    category: "primary",
+    isCore: true,
     detail: "CONTEXT & SYSTEM PROMPTS",
-    x: 30,
-    y: 78,
-    styleType: "tile",
+    x: 35,
+    y: 84,
     floatDuration: 6.4,
   },
   {
     id: "llmapps",
     name: "LLM APPLICATIONS",
-    category: "primary",
+    isCore: true,
     detail: "END-TO-END AI PRODUCTS",
     x: 70,
-    y: 78,
-    styleType: "paper",
+    y: 84,
     floatDuration: 5.0,
   },
-
-  // Secondary Technologies
   {
     id: "react",
     name: "REACT",
-    category: "secondary",
+    isCore: true,
     detail: "INTERFACES & UI",
-    x: 12,
-    y: 34,
-    styleType: "badge",
+    x: 16,
+    y: 42,
     floatDuration: 6.8,
   },
   {
     id: "nextjs",
     name: "NEXT.JS",
-    category: "secondary",
+    isCore: true,
     detail: "FULL-STACK FRAMEWORK",
-    x: 86,
-    y: 30,
-    styleType: "tile",
+    x: 80,
+    y: 40,
     floatDuration: 4.5,
   },
   {
     id: "fastapi",
     name: "FASTAPI",
-    category: "secondary",
+    isCore: true,
     detail: "HIGH-SPEED PYTHON APIS",
-    x: 14,
-    y: 68,
-    styleType: "pill",
+    x: 18,
+    y: 74,
     floatDuration: 5.9,
   },
   {
     id: "postgresql",
     name: "POSTGRESQL",
-    category: "secondary",
+    isCore: true,
     detail: "RELATIONAL DATA",
-    x: 84,
-    y: 68,
-    styleType: "disc",
+    x: 80,
+    y: 72,
     floatDuration: 6.3,
   },
   {
     id: "supabase",
     name: "SUPABASE",
-    category: "secondary",
-    detail: "DATABASE / AUTH",
-    x: 40,
+    isCore: true,
+    detail: "DATABASE & AUTH",
+    x: 44,
     y: 90,
-    styleType: "pill",
     floatDuration: 5.4,
   },
-  {
-    id: "vercel",
-    name: "VERCEL",
-    category: "secondary",
-    detail: "DEPLOYMENT",
-    x: 60,
-    y: 90,
-    styleType: "tile",
-    floatDuration: 4.9,
-  },
 
-  // Supporting Technologies
+  // FAMILIAR WITH / ALSO USING (isCore: false — muted text, thin border, no dot)
   {
     id: "js",
     name: "JAVASCRIPT",
-    category: "supporting",
+    isCore: false,
     detail: "WEB SCRIPTING",
-    x: 8,
-    y: 16,
-    styleType: "tag",
+    x: 14,
+    y: 22,
     floatDuration: 7.2,
   },
   {
     id: "tailwind",
     name: "TAILWIND CSS",
-    category: "supporting",
+    isCore: false,
     detail: "UI STYLING",
-    x: 90,
-    y: 14,
-    styleType: "tag",
+    x: 84,
+    y: 22,
     floatDuration: 5.8,
   },
   {
-    id: "rest",
-    name: "REST APIs",
-    category: "supporting",
-    detail: "API PROTOCOLS",
-    x: 5,
-    y: 86,
-    styleType: "tag",
-    floatDuration: 6.5,
+    id: "vercel",
+    name: "VERCEL",
+    isCore: false,
+    detail: "DEPLOYMENT",
+    x: 56,
+    y: 90,
+    floatDuration: 4.9,
   },
   {
     id: "github",
     name: "GITHUB",
-    category: "supporting",
+    isCore: false,
     detail: "VERSION CONTROL & CI",
-    x: 93,
-    y: 86,
-    styleType: "tag",
+    x: 84,
+    y: 88,
     floatDuration: 5.1,
   },
   {
     id: "ollama",
     name: "OLLAMA",
-    category: "supporting",
+    isCore: false,
     detail: "LOCAL LLM INFERENCE",
-    x: 42,
-    y: 10,
-    styleType: "tag",
+    x: 48,
+    y: 15,
     floatDuration: 6.9,
   },
   {
     id: "whisper",
     name: "WHISPER",
-    category: "supporting",
+    isCore: false,
     detail: "SPEECH RECOGNITION",
-    x: 58,
-    y: 10,
-    styleType: "tag",
+    x: 62,
+    y: 15,
     floatDuration: 5.3,
   },
   {
     id: "aistudio",
     name: "GOOGLE AI STUDIO",
-    category: "supporting",
+    isCore: false,
     detail: "MODEL PROTOTYPING",
-    x: 22,
-    y: 8,
-    styleType: "tag",
+    x: 30,
+    y: 15,
     floatDuration: 6.0,
   },
   {
     id: "antigravity",
     name: "ANTIGRAVITY",
-    category: "supporting",
+    isCore: false,
     detail: "AGENT WORKFLOWS",
-    x: 78,
-    y: 8,
-    styleType: "tag",
+    x: 76,
+    y: 15,
     floatDuration: 7.0,
+  },
+  {
+    id: "rest",
+    name: "REST APIs",
+    isCore: false,
+    detail: "API PROTOCOLS",
+    x: 12,
+    y: 88,
+    floatDuration: 6.5,
+  },
+  {
+    id: "lovable",
+    name: "LOVABLE",
+    isCore: false,
+    detail: "AI WEB CREATION",
+    x: 50,
+    y: 8,
+    floatDuration: 5.7,
   },
 ];
 
@@ -253,9 +239,9 @@ const TechnicalSkills: React.FC = () => {
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!workspaceRef.current) return;
     const rect = workspaceRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
-    setMousePos({ x: x * 16, y: y * 16 });
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x: x * 14, y: y * 14 });
   };
 
   const handleMouseLeave = () => {
@@ -266,7 +252,7 @@ const TechnicalSkills: React.FC = () => {
   return (
     <section
       id="playground"
-      className="relative w-full py-24 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none"
+      className="relative w-full py-20 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none"
     >
       <div id="skills" className="absolute -top-10 left-0" />
 
@@ -280,16 +266,16 @@ const TechnicalSkills: React.FC = () => {
         </svg>
       </div>
 
-      {/* Side Vertical Editorial Annotation: LEARN / BUILD / EXPERIMENT */}
+      {/* Side Vertical Editorial Annotation */}
       <div className="absolute left-2 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 hidden xl:block select-none pointer-events-none z-10">
         <span className="inline-block text-[10px] sm:text-[11px] font-mono tracking-[0.22em] text-ink/40 font-bold uppercase -rotate-90 origin-center whitespace-nowrap">
           LEARN / BUILD / EXPERIMENT
         </span>
       </div>
 
-      <div className="container-narrow relative z-10">
+      <div className="container-narrow relative z-10 px-4 sm:px-6 md:px-8">
         {/* SECTION HEADER & EDITORIAL INTRO */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-14">
           <div>
             {/* Section Eyebrow */}
             <motion.div
@@ -311,7 +297,7 @@ const TechnicalSkills: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-display text-[clamp(2.4rem,6vw,4.5rem)] text-ink leading-[0.95] tracking-[-0.02em] font-serif uppercase"
+              className="text-display text-[clamp(2.2rem,5.5vw,4.5rem)] text-ink leading-[0.95] tracking-[-0.02em] font-serif uppercase"
             >
               THE THINGS <br />
               <span className="text-ink">I BUILD WITH.</span>
@@ -323,13 +309,13 @@ const TechnicalSkills: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-base sm:text-lg text-ink/75 font-sans italic mt-4 max-w-lg"
+              className="text-sm sm:text-lg text-ink/75 font-sans italic mt-3 max-w-lg"
             >
               AI tools, code, APIs and ideas — the ingredients behind everything I build.
             </motion.p>
           </div>
 
-          {/* Dynamic "BUILD WITH" Cycling Editorial Label */}
+          {/* Dynamic "BUILD WITH" Cycling Label */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -357,16 +343,31 @@ const TechnicalSkills: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* INTERACTIVE "TOOL DESK" CONSTELLATION WORKSPACE */}
+        {/* STACK HIERARCHY LEGEND (Requirement 2) */}
+        <div className="flex items-center justify-between gap-4 mb-4 px-2">
+          <div className="flex items-center gap-4 px-4 py-1.5 rounded-full bg-cream border border-ink/15 text-[11px] font-mono tracking-wider text-ink shadow-sm">
+            <div className="flex items-center gap-1.5 font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
+              <span>● CORE STACK</span>
+            </div>
+            <span className="text-ink/25">|</span>
+            <div className="flex items-center gap-1.5 text-ink/65">
+              <span className="w-2 h-2 rounded-full border border-ink/40 bg-transparent" />
+              <span>○ ALSO USING</span>
+            </div>
+          </div>
+        </div>
+
+        {/* DESKTOP & TABLET INTERACTIVE "TOOL DESK" CONSTELLATION WORKSPACE (hidden on mobile < 640px) */}
         <div
           ref={workspaceRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative w-full h-[620px] sm:h-[700px] rounded-3xl bg-cream border border-ink/15 shadow-soft-card overflow-hidden p-4 sm:p-8"
+          className="hidden sm:block relative w-full h-[620px] md:h-[680px] rounded-3xl bg-cream border border-ink/15 shadow-soft-card overflow-hidden p-6 md:p-10 max-w-full"
         >
           {/* GIGANTIC OVERSIZED LOW-OPACITY BACKGROUND WATERMARK */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
-            <span className="text-[clamp(8rem,25vw,22rem)] font-serif text-ink opacity-[0.035] leading-none uppercase tracking-widest font-bold">
+            <span className="text-[clamp(8rem,24vw,20rem)] font-serif text-ink opacity-[0.035] leading-none uppercase tracking-widest font-bold">
               STACK
             </span>
           </div>
@@ -374,13 +375,7 @@ const TechnicalSkills: React.FC = () => {
           {/* Subtle Grid Pattern Overlay */}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:24px_24px]" />
 
-          {/* Floating Status Badge Top-Right */}
-          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-cream-paper border border-ink/10 text-[11px] font-mono tracking-widest text-ink/80 uppercase shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_8px_#FFD42A] animate-pulse" />
-            <span>● CURRENTLY USING: GEMINI API · LANGCHAIN · PYTHON · REACT</span>
-          </div>
-
-          {/* DYNAMIC SVG CONSTELLATION CONNECTION LINES */}
+          {/* Dynamic SVG Constellation Connection Lines */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
             <AnimatePresence>
               {hoveredTech && (
@@ -436,7 +431,7 @@ const TechnicalSkills: React.FC = () => {
           {TECH_OBJECTS.map((tech) => {
             const isHovered = hoveredTech?.id === tech.id;
             const isAnyHovered = hoveredTech !== null;
-            const opacity = isAnyHovered ? (isHovered ? 1 : 0.35) : 1;
+            const opacity = isAnyHovered ? (isHovered ? 1 : 0.32) : 1;
 
             return (
               <motion.div
@@ -451,22 +446,23 @@ const TechnicalSkills: React.FC = () => {
                   top: `${tech.y}%`,
                 }}
                 animate={{
-                  x: mousePos.x * (tech.category === "primary" ? 0.8 : 0.5),
-                  y: mousePos.y * (tech.category === "primary" ? 0.8 : 0.5) + (isHovered ? -4 : 0),
-                  scale: isHovered ? (tech.category === "primary" ? 1.18 : 1.12) : 1,
+                  x: mousePos.x * (tech.isCore ? 0.7 : 0.4),
+                  y: mousePos.y * (tech.isCore ? 0.7 : 0.4) + (isHovered ? -4 : 0),
+                  scale: isHovered ? (tech.isCore ? 1.15 : 1.08) : 1,
+                  rotate: isHovered ? -2 : 0,
                   opacity: opacity,
                 }}
                 transition={{
                   duration: 0.3,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer focus:outline-none"
+                className="absolute -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer focus:outline-none max-w-max"
               >
                 {/* Independent Floating Animation Wrapper */}
                 <motion.div
                   animate={{
                     y: [-4, 4, -4],
-                    rotate: [-1.5, 1.5, -1.5],
+                    rotate: [-1, 1, -1],
                   }}
                   transition={{
                     duration: tech.floatDuration,
@@ -475,83 +471,34 @@ const TechnicalSkills: React.FC = () => {
                   }}
                   className="relative group/object"
                 >
-                  {/* STYLE VARIATION 1: PAPER TILE (Primary) */}
-                  {tech.styleType === "paper" && (
+                  {/* TIER 1: CORE STACK (Bold text, filled dot, prominent visual styling) */}
+                  {tech.isCore ? (
                     <div
-                      className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-2xl border transition-all duration-300 shadow-sm flex items-center gap-2 ${
+                      className={`px-4 sm:px-4.5 py-2 sm:py-2.5 rounded-2xl border transition-all duration-300 shadow-sm flex items-center gap-2 whitespace-nowrap ${
                         isHovered
-                          ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-lg"
-                          : "bg-cream-paper border-ink/20 text-ink hover:border-yellow-accent"
+                          ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-xl"
+                          : "bg-cream-paper border-ink/30 text-ink font-bold hover:border-yellow-accent hover:shadow-md"
                       }`}
                     >
-                      <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
+                      <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
                       <span className="text-xs sm:text-sm font-mono font-bold tracking-wider uppercase">
                         {tech.name}
                       </span>
                     </div>
-                  )}
-
-                  {/* STYLE VARIATION 2: CIRCLE BADGE (Python) */}
-                  {tech.styleType === "circle" && (
+                  ) : (
+                    /* TIER 2: ALSO USING / FAMILIAR WITH (Lighter border, muted text, no dot) */
                     <div
-                      className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex flex-col items-center justify-center text-center p-1 transition-all duration-300 shadow-sm relative ${
-                        isHovered
-                          ? "bg-[#20252B] text-[#FFF8E8] border-yellow-accent shadow-xl"
-                          : "bg-cream-paper border-ink/25 text-ink"
-                      }`}
-                    >
-                      <span className="text-[10px] sm:text-xs font-mono font-bold tracking-wider uppercase">
-                        {tech.name}
-                      </span>
-                      <div className="absolute inset-0 rounded-full border border-yellow-accent/40 animate-ping opacity-25 pointer-events-none" />
-                    </div>
-                  )}
-
-                  {/* STYLE VARIATION 3: GLOWING DISC (Gemini API / Postgres) */}
-                  {tech.styleType === "disc" && (
-                    <div
-                      className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border transition-all duration-300 shadow-sm flex items-center gap-2 ${
-                        isHovered
-                          ? "bg-yellow-accent text-ink border-yellow-accent shadow-lg font-bold"
-                          : "bg-cream-paper border-ink/20 text-ink"
-                      }`}
-                    >
-                      <span className="w-2 h-2 rounded-full bg-ink" />
-                      <span className="text-xs sm:text-sm font-mono font-bold tracking-wider uppercase">
-                        {tech.name}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* STYLE VARIATION 4: TAG WITH CONNECTING LINE (LangChain) */}
-                  {tech.styleType === "tag" && (
-                    <div
-                      className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border text-xs sm:text-sm font-mono tracking-wider uppercase transition-all duration-300 ${
-                        isHovered
-                          ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-md"
-                          : tech.category === "supporting"
-                          ? "bg-cream-paper/70 border-ink/10 text-ink/70 hover:border-ink/30"
-                          : "bg-cream-paper border-ink/20 text-ink"
-                      }`}
-                    >
-                      {tech.name}
-                    </div>
-                  )}
-
-                  {/* STYLE VARIATION 5: MINIMAL TILE / PILL */}
-                  {(tech.styleType === "tile" || tech.styleType === "pill" || tech.styleType === "badge") && (
-                    <div
-                      className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border text-xs sm:text-sm font-mono tracking-wider uppercase transition-all duration-300 ${
+                      className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border text-xs sm:text-xs font-mono tracking-wider uppercase transition-all duration-300 whitespace-nowrap ${
                         isHovered
                           ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-md font-bold"
-                          : "bg-cream-paper border-ink/20 text-ink hover:border-yellow-accent"
+                          : "bg-cream-paper/80 border-ink/15 text-ink/70 font-normal hover:border-ink/40 hover:text-ink"
                       }`}
                     >
                       {tech.name}
                     </div>
                   )}
 
-                  {/* CONTEXTUAL DESCRIPTOR POPUP (Requirement 9) */}
+                  {/* Contextual Role Tooltip on Hover */}
                   <AnimatePresence>
                     {isHovered && (
                       <motion.div
@@ -576,8 +523,64 @@ const TechnicalSkills: React.FC = () => {
           })}
         </div>
 
+        {/* MOBILE REFLOW LAYOUT (< 640px) — Clean wrapped flex container with clear reading order */}
+        <div className="block sm:hidden w-full rounded-2xl bg-cream border border-ink/15 p-5 space-y-6">
+          {/* Central AI Badge Header */}
+          <div className="flex items-center justify-between pb-4 border-b border-ink/10">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-cream-paper border border-ink flex items-center justify-center font-serif text-sm font-bold">
+                AI
+              </div>
+              <span className="text-xs font-mono font-bold text-ink uppercase tracking-wider">
+                CORE TOOLKIT
+              </span>
+            </div>
+          </div>
+
+          {/* Section 1: Core Stack */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
+              <span className="text-xs font-mono font-bold tracking-widest text-ink uppercase">
+                CORE STACK
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {TECH_OBJECTS.filter((t) => t.isCore).map((tech) => (
+                <div
+                  key={tech.id}
+                  className="px-3 py-1.5 rounded-xl bg-cream-paper border border-ink/30 text-ink text-xs font-mono font-bold tracking-wider uppercase flex items-center gap-2 shadow-xs"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-accent" />
+                  <span>{tech.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section 2: Also Using / Familiar With */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full border border-ink/40" />
+              <span className="text-xs font-mono text-ink/70 font-semibold tracking-widest uppercase">
+                ALSO USING / FAMILIAR WITH
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {TECH_OBJECTS.filter((t) => !t.isCore).map((tech) => (
+                <div
+                  key={tech.id}
+                  className="px-2.5 py-1.5 rounded-lg bg-cream-paper/70 border border-ink/15 text-ink/75 text-xs font-mono tracking-wider uppercase"
+                >
+                  {tech.name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* CONTINUOUS MARQUEE TECH TICKER */}
-        <div className="w-full bg-cream-paper border-y border-ink/10 py-4 overflow-hidden select-none my-10 rounded-full shadow-inner">
+        <div className="w-full bg-cream-paper border-y border-ink/10 py-4 overflow-hidden select-none my-8 sm:my-10 rounded-full shadow-inner">
           <div className="flex w-max animate-marquee-x">
             {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
               <div key={idx} className="flex items-center gap-6 sm:gap-10 px-4">
