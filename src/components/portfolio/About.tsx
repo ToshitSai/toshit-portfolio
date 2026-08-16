@@ -32,14 +32,7 @@ const About: React.FC = () => {
             Building software at the intersection of applied AI & modern design — from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pt-4">
-            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
-              I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>. Driven by a deep passion for high-performance software engineering and autonomous AI agents.
-            </p>
-            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
-              My featured work spans intelligent tools like <strong className="text-ink font-semibold">HireScope AI</strong> for automated resume evaluation and <strong className="text-ink font-semibold">Greetly</strong> for personalized context-aware message generation.
-            </p>
-          </div>
+
 
         </div>
       </div>
