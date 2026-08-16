@@ -197,7 +197,7 @@ const Hero: React.FC = () => {
           className="w-full max-w-[780px] flex flex-col items-center relative"
         >
           {/* Vertical Side Tagline directly beside the main display headline */}
-          <div className="absolute -left-12 sm:-left-16 md:-left-24 lg:-left-28 top-1/2 -translate-y-1/2 hidden md:block select-none pointer-events-none">
+          <div className="absolute -left-4 sm:-left-6 md:-left-10 lg:-left-12 top-1/2 -translate-y-1/2 hidden md:block select-none pointer-events-none">
             <span className="inline-block text-[10px] sm:text-[11px] font-mono tracking-[0.24em] text-white font-bold uppercase -rotate-90 origin-center whitespace-nowrap drop-shadow-sm">
               DESIGN / DETAILS / CODE
             </span>

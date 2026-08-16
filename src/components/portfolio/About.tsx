@@ -41,21 +41,6 @@ const About: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Highlight Stats Pill */}
-          <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl">
-            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
-              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">100%</div>
-              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Code Quality Focus</div>
-            </div>
-            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
-              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Applied AI</div>
-              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Full-Stack Engineering</div>
-            </div>
-            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors col-span-2 sm:col-span-1">
-              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Hyderabad</div>
-              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Based in IN</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
