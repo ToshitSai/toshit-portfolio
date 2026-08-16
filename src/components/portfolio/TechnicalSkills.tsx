@@ -578,20 +578,6 @@ const TechnicalSkills: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* CONTINUOUS MARQUEE TECH TICKER */}
-        <div className="w-full bg-cream-paper border-y border-ink/10 py-4 overflow-hidden select-none my-8 sm:my-10 rounded-full shadow-inner">
-          <div className="flex w-max animate-marquee-x">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
-              <div key={idx} className="flex items-center gap-6 sm:gap-10 px-4">
-                <span className="text-xs sm:text-sm font-mono font-bold tracking-widest text-ink uppercase">
-                  {item}
-                </span>
-                <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
