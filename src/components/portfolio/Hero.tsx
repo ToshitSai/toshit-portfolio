@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { Mail } from "lucide-react";
 
@@ -10,17 +10,57 @@ const WORDS = [
   "PRODUCT",
 ];
 
+interface NowBuildingProject {
+  id: string;
+  title: string;
+  subtitle: string;
+  url: string;
+}
+
+const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
+  {
+    id: "courseforge",
+    title: "CourseForge AI",
+    subtitle: "AI-powered course generation platform",
+    url: "https://courseforge-ai-pied.vercel.app/",
+  },
+  {
+    id: "hirescope",
+    title: "HireScope AI",
+    subtitle: "AI-powered portfolio & resume analysis",
+    url: "https://job-gem-grader.vercel.app/",
+  },
+  {
+    id: "validator",
+    title: "AI Startup Idea Validator",
+    subtitle: "AI-powered startup validation",
+    url: "https://ai-startup-idea-validator-teal.vercel.app/",
+  },
+  {
+    id: "nova",
+    title: "NOVA",
+    subtitle: "AI desktop & voice automation assistant",
+    url: "https://github.com/ToshitSai",
+  },
+];
+
 const Hero: React.FC = () => {
   const [wordIndex, setWordIndex] = useState(0);
   const [isCardHovered, setIsCardHovered] = useState(false);
+
+  // Interactive Now Building Card State
+  const [projectIndex, setProjectIndex] = useState(0);
+  const [isCenterHovered, setIsCenterHovered] = useState(false);
+  const [leftDiscHovered, setLeftDiscHovered] = useState(false);
+  const [rightDiscHovered, setRightDiscHovered] = useState(false);
+  const [isAutoRotatePaused, setIsAutoRotatePaused] = useState(false);
+  const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Motion physics for mouse parallax using Framer Motion springs
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   const springConfig = { stiffness: 100, damping: 20 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseY = useSpring(mouseY, springConfig);
 
   // Parallax layer outputs
   // Title layer: ±8px
@@ -40,6 +80,53 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Automatic Project Rotation (every 4.5s, pauses on manual interaction)
+  useEffect(() => {
+    if (isAutoRotatePaused || isCardHovered) return;
+    const interval = setInterval(() => {
+      setProjectIndex((prev) => (prev + 1) % NOW_BUILDING_PROJECTS.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isAutoRotatePaused, isCardHovered]);
+
+  const pauseAutoRotate = () => {
+    setIsAutoRotatePaused(true);
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => {
+      setIsAutoRotatePaused(false);
+    }, 5000);
+  };
+
+  const handlePrevProject = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    pauseAutoRotate();
+    setProjectIndex((prev) => (prev === 0 ? NOW_BUILDING_PROJECTS.length - 1 : prev - 1));
+  };
+
+  const handleNextProject = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    pauseAutoRotate();
+    setProjectIndex((prev) => (prev === NOW_BUILDING_PROJECTS.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleCardClick = () => {
+    const currentProj = NOW_BUILDING_PROJECTS[projectIndex];
+    if (currentProj?.url) {
+      window.open(currentProj.url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const handleKeyDownCard = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      handlePrevProject();
+    } else if (e.key === "ArrowRight") {
+      handleNextProject();
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
@@ -57,6 +144,9 @@ const Hero: React.FC = () => {
     sunX.set(normX * -14);
     sunY.set(normY * -14);
   };
+
+  const currentProject = NOW_BUILDING_PROJECTS[projectIndex];
+  const counterText = `0${projectIndex + 1} / 0${NOW_BUILDING_PROJECTS.length}`;
 
   return (
     <section
@@ -206,39 +296,145 @@ const Hero: React.FC = () => {
             <span className="text-[#20252B] block drop-shadow-sm font-normal">DEVELOPER</span>
           </motion.h1>
 
-          {/* ANIMATION E — Centered Status Card with Lift & Speed-Up Vinyl Discs */}
+          {/* ANIMATION E — Centered Interactive Now Building Card */}
           <motion.div
-            whileHover={{ y: -3, scale: 1.01 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            tabIndex={0}
+            role="region"
+            aria-label="Interactive Now Building Portfolio Easter Egg"
+            onKeyDown={handleKeyDownCard}
+            whileHover={{ y: -4, scale: 1.015 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onMouseEnter={() => setIsCardHovered(true)}
             onMouseLeave={() => setIsCardHovered(false)}
-            className="w-full max-w-[420px] bg-[#FFF8E8] rounded-full p-2.5 sm:p-3 px-5 sm:px-6 shadow-2xl border border-white/80 flex items-center justify-between gap-3 cursor-pointer"
+            className="group/card w-full max-w-[460px] bg-[#FFF8E8] rounded-full p-2.5 sm:p-3 px-4 sm:px-5 shadow-2xl border border-white/80 flex items-center justify-between gap-2.5 cursor-pointer relative select-none focus:outline-none focus:ring-2 focus:ring-[#FFD42A]"
           >
-            {/* Spinning Vinyl Left */}
-            <div
-              className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all ${
-                isCardHovered ? "animate-[spin_5s_linear_infinite]" : "animate-[spin_12s_linear_infinite]"
-              }`}
-            >
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FFD42A]" />
+            {/* LEFT VINYL DISC (PREVIOUS PROJECT) */}
+            <div className="relative flex-shrink-0 z-20">
+              <button
+                type="button"
+                onClick={handlePrevProject}
+                onMouseEnter={() => setLeftDiscHovered(true)}
+                onMouseLeave={() => setLeftDiscHovered(false)}
+                aria-label="Previous Project"
+                className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${
+                  leftDiscHovered
+                    ? "-rotate-12 scale-110 shadow-lg"
+                    : isCardHovered
+                    ? "animate-[spin_6s_linear_infinite]"
+                    : "animate-[spin_12s_linear_infinite]"
+                }`}
+              >
+                <div
+                  className={`w-2.5 h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${
+                    leftDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
+                  }`}
+                />
+              </button>
+
+              {/* PREV Tooltip */}
+              <AnimatePresence>
+                {leftDiscHovered && (
+                  <motion.span
+                    initial={{ opacity: 0, y: 4, scale: 0.85 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-[#20252B] text-[#FFD42A] text-[9px] font-mono font-bold tracking-widest uppercase shadow-md pointer-events-none whitespace-nowrap z-30"
+                  >
+                    PREV
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
 
-            <div className="flex-1 text-center">
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#4A525D] font-bold">
-                NOW BUILDING
+            {/* CENTER CONTENT AREA (DYNAMIC PROJECT INFO + CLICKABLE URL) */}
+            <div
+              onClick={handleCardClick}
+              onMouseEnter={() => setIsCenterHovered(true)}
+              onMouseLeave={() => setIsCenterHovered(false)}
+              className="flex-1 text-center px-1 overflow-hidden h-[38px] flex flex-col justify-center relative cursor-pointer z-10"
+            >
+              <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[#4A525D] font-bold">
+                <span>NOW BUILDING</span>
+                <span className="text-[#20252B]/40">•</span>
+                <span className="text-[#20252B]/70 font-semibold">{counterText}</span>
               </div>
-              <div className="text-xs sm:text-sm font-sans font-bold text-[#20252B] leading-tight truncate">
-                AI-powered web apps & student projects
+
+              {/* PROJECT TITLE & SUBTITLE ANIMATED VIEWPORT */}
+              <div className="relative h-[20px] overflow-hidden flex items-center justify-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentProject.id}
+                    initial={{ opacity: 0, y: 12, filter: "blur(2px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -12, filter: "blur(2px)" }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-0 flex items-center justify-center gap-1.5"
+                  >
+                    <span className="text-xs sm:text-sm font-sans font-bold text-[#20252B] leading-tight truncate">
+                      {currentProject.title}
+                    </span>
+                    <span className="hidden sm:inline text-[11px] font-sans text-[#20252B]/70 truncate">
+                      — {currentProject.subtitle}
+                    </span>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* VIEW PROJECT ↗ HOVER OVERLAY */}
+                <AnimatePresence>
+                  {isCenterHovered && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute inset-0 bg-[#FFF8E8] flex items-center justify-center gap-1 text-[11px] font-mono font-bold uppercase tracking-wider text-[#20252B] shadow-xs z-20"
+                    >
+                      <span className="text-[#20252B] underline decoration-[#FFD42A] underline-offset-2">VIEW PROJECT</span>
+                      <span className="text-[#FFD42A] font-extrabold">↗</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
-            {/* Spinning Vinyl Right */}
-            <div
-              className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all ${
-                isCardHovered ? "animate-[spin_5s_linear_infinite]" : "animate-[spin_12s_linear_infinite]"
-              }`}
-            >
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FFD42A]" />
+            {/* RIGHT VINYL DISC (NEXT PROJECT) */}
+            <div className="relative flex-shrink-0 z-20">
+              <button
+                type="button"
+                onClick={handleNextProject}
+                onMouseEnter={() => setRightDiscHovered(true)}
+                onMouseLeave={() => setRightDiscHovered(false)}
+                aria-label="Next Project"
+                className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${
+                  rightDiscHovered
+                    ? "rotate-12 scale-110 shadow-lg"
+                    : isCardHovered
+                    ? "animate-[spin_6s_linear_infinite]"
+                    : "animate-[spin_12s_linear_infinite]"
+                }`}
+              >
+                <div
+                  className={`w-2.5 h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${
+                    rightDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
+                  }`}
+                />
+              </button>
+
+              {/* NEXT Tooltip */}
+              <AnimatePresence>
+                {rightDiscHovered && (
+                  <motion.span
+                    initial={{ opacity: 0, y: 4, scale: 0.85 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-[#20252B] text-[#FFD42A] text-[9px] font-mono font-bold tracking-widest uppercase shadow-md pointer-events-none whitespace-nowrap z-30"
+                  >
+                    NEXT
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </motion.div>
