@@ -190,9 +190,9 @@ const Hero: React.FC = () => {
       </div>
 
       {/* VERTICAL SIDE TEXT (LEFT EDGE) */}
-      <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 hidden md:block">
-        <span className="inline-block text-[11px] font-mono tracking-[0.22em] text-[#20252B] font-bold uppercase -rotate-90 origin-left whitespace-nowrap bg-white/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/40">
-          BUILD / LEARN / SHIP
+      <div className="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 z-20 hidden md:block select-none">
+        <span className="inline-block text-[11px] sm:text-xs font-mono tracking-[0.22em] text-white font-bold uppercase -rotate-90 origin-left whitespace-nowrap drop-shadow-sm">
+          DESIGN / DETAILS / CODE
         </span>
       </div>
 
