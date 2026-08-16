@@ -62,8 +62,14 @@
 
   body {
     @apply bg-background text-foreground antialiased selection:bg-yellow-accent selection:text-ink;
-    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
+  }
+
+  p {
+    font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.012em;
+    line-height: 1.65;
   }
 
   h1, h2, h3, h4, h5, h6 {

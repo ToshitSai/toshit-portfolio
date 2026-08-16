@@ -26,32 +26,34 @@ const About: React.FC = () => {
           Building Software at the Intersection of Applied AI & Modern Design.
         </h2>
 
-        {/* Two-Column Bio Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
-          <div className="space-y-6 text-base sm:text-lg text-ink/80 leading-relaxed font-sans">
-            <p>
-              I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>.
+        {/* Editorial Bio Feature Block */}
+        <div className="space-y-8 max-w-4xl">
+          <p className="text-xl sm:text-2xl lg:text-3xl text-ink font-sans leading-relaxed sm:leading-relaxed tracking-[-0.015em] font-normal">
+            Building software at the intersection of applied AI & modern design — from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pt-4">
+            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
+              I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>. Driven by a deep passion for high-performance software engineering and autonomous AI agents.
             </p>
-            <p>
-              Driven by a deep passion for building intuitive, high-performance web applications, I leverage cutting-edge LLM APIs, autonomous agents, and modern frontend frameworks to create impactful software solutions.
+            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
+              My featured work spans intelligent tools like <strong className="text-ink font-semibold">HireScope AI</strong> for automated resume evaluation and <strong className="text-ink font-semibold">Greetly AI</strong> for personalized context-aware message generation.
             </p>
           </div>
 
-          <div className="space-y-6 text-base sm:text-lg text-ink/80 leading-relaxed font-sans">
-            <p>
-              My work spans intelligent web tools like <strong className="text-ink font-semibold">HireScope AI</strong> (Job Gem Grader) for AI resume evaluation and <strong className="text-ink font-semibold">Greetly AI</strong> for personalized context-aware message generation.
-            </p>
-            
-            {/* Quick Highlight Stats Pill */}
-            <div className="pt-4 grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
-                <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">100%</div>
-                <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Code Quality Focus</div>
-              </div>
-              <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
-                <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Applied AI</div>
-                <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Full-Stack Engineering</div>
-              </div>
+          {/* Quick Highlight Stats Pill */}
+          <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl">
+            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
+              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">100%</div>
+              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Code Quality Focus</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
+              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Applied AI</div>
+              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Full-Stack Engineering</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors col-span-2 sm:col-span-1">
+              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Hyderabad</div>
+              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Based in IN</div>
             </div>
           </div>
         </div>
