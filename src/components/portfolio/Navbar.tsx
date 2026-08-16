@@ -14,13 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "playground", label: "Playground", href: "#playground" },
 ];
 
-// High-end spring physics configuration for silky liquid morphing
-const springPhysics = {
-  type: "spring" as const,
-  stiffness: 260,
-  damping: 28,
-  mass: 0.7,
-};
+const smoothEasing = [0.16, 1, 0.3, 1];
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,14 +25,14 @@ const Navbar: React.FC = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
 
-      // Hysteresis scroll threshold: prevents micro-jitter around top edge
-      if (scrollY > 85) {
+      // Hysteresis scroll threshold for butter-smooth state shifts
+      if (scrollY > 90) {
         setIsScrolled(true);
-      } else if (scrollY < 35) {
+      } else if (scrollY < 30) {
         setIsScrolled(false);
       }
 
-      // Section detection
+      // Active section detection
       const sections = [
         { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
         { id: "about", el: document.getElementById("about") },
@@ -90,11 +84,14 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="fixed top-4 left-0 right-0 z-50 flex justify-center items-center pointer-events-none px-4">
-      {/* SINGLE UNIFIED SILKY MORPHING NAVBAR CAPSULE */}
+      {/* SINGLE UNIFIED VELVET-SMOOTH TRANSFORMING NAVBAR CAPSULE */}
       <motion.nav
         layout
-        transition={springPhysics}
-        className={`pointer-events-auto relative flex items-center justify-between shadow-[0_10px_38px_rgba(32,37,43,0.09)] backdrop-blur-2xl transition-colors duration-500 rounded-full border overflow-hidden ${
+        transition={{
+          duration: 0.65,
+          ease: smoothEasing,
+        }}
+        className={`pointer-events-auto relative flex items-center justify-between shadow-[0_10px_38px_rgba(32,37,43,0.08)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full border overflow-hidden ${
           isScrolled
             ? "bg-white/85 border-white/95 px-3 py-1.5"
             : "bg-white/45 border-white/75 px-2.5 sm:px-3 py-1.5"
@@ -102,7 +99,8 @@ const Navbar: React.FC = () => {
       >
         {/* LOGO: T BADGE */}
         <motion.a
-          layout
+          layout="position"
+          transition={{ duration: 0.65, ease: smoothEasing }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           className="group relative w-8 h-8 rounded-full bg-[#FFD42A] text-[#20252B] font-bold flex items-center justify-center text-sm shadow-xs hover:scale-105 transition-transform flex-shrink-0 z-10"
@@ -111,17 +109,17 @@ const Navbar: React.FC = () => {
           <span className="font-sans font-extrabold group-hover:rotate-6 transition-transform">T</span>
         </motion.a>
 
-        {/* DESKTOP CONTENT: POP-LAYOUT CROSS-FADE MORPH */}
-        <div className="hidden sm:flex items-center">
+        {/* DESKTOP CONTENT: LIQUID CROSS-FADE MORPH */}
+        <div className="hidden sm:flex items-center overflow-hidden">
           <AnimatePresence mode="popLayout" initial={false}>
             {!isScrolled ? (
               <motion.div
                 key="full-nav"
                 layout
-                initial={{ opacity: 0, scale: 0.92, filter: "blur(4px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.92, filter: "blur(4px)" }}
-                transition={springPhysics}
+                initial={{ opacity: 0, x: -12, scale: 0.96 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 12, scale: 0.96 }}
+                transition={{ duration: 0.55, ease: smoothEasing }}
                 className="flex items-center gap-2 sm:gap-3 ml-3 whitespace-nowrap"
               >
                 {/* NAV LINKS */}
@@ -143,7 +141,7 @@ const Navbar: React.FC = () => {
                           <motion.span
                             layoutId="activeNavPill"
                             className="absolute inset-0 rounded-full bg-white/70 border border-white/90 shadow-xs -z-10"
-                            transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                            transition={{ type: "spring", stiffness: 450, damping: 35 }}
                           />
                         )}
                         <span className="relative z-10">{item.label}</span>
@@ -166,10 +164,10 @@ const Navbar: React.FC = () => {
               <motion.div
                 key="compact-availability"
                 layout
-                initial={{ opacity: 0, scale: 0.92, filter: "blur(4px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.92, filter: "blur(4px)" }}
-                transition={springPhysics}
+                initial={{ opacity: 0, x: 12, scale: 0.96 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -12, scale: 0.96 }}
+                transition={{ duration: 0.55, ease: smoothEasing }}
                 className="flex items-center gap-3 ml-3 pr-1.5 whitespace-nowrap"
               >
                 {/* AVAILABLE FOR WORK TEXT */}
