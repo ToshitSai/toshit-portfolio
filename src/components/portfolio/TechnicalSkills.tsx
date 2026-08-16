@@ -4,219 +4,120 @@ import { motion, AnimatePresence } from "framer-motion";
 interface TechObject {
   id: string;
   name: string;
-  isCore: boolean;
+  size: "large" | "medium" | "small";
   detail: string;
-  x: number; // percentage (12-84%) for desktop floating canvas
-  y: number; // percentage (12-88%) for desktop floating canvas
+  x: number; // percentage (14% - 84%) for main canvas positioning
+  y: number; // percentage (18% - 88%) for main canvas positioning
   floatDuration: number;
 }
 
-const TECH_OBJECTS: TechObject[] = [
-  // CORE STACK (isCore: true — bold text, filled yellow dot, prominent size)
+// Strictly 10 Primary Technologies visible on the default canvas
+const PRIMARY_TECH_OBJECTS: TechObject[] = [
   {
     id: "genai",
     name: "GENERATIVE AI",
-    isCore: true,
+    size: "large",
     detail: "APPLIED LLM SOLUTIONS",
-    x: 28,
-    y: 28,
-    floatDuration: 5.2,
+    x: 32,
+    y: 18,
+    floatDuration: 8.5,
   },
   {
     id: "langchain",
     name: "LANGCHAIN",
-    isCore: true,
+    size: "medium",
     detail: "LLM WORKFLOWS & ORCHESTRATION",
-    x: 72,
-    y: 28,
-    floatDuration: 6.1,
-  },
-  {
-    id: "python",
-    name: "PYTHON",
-    isCore: true,
-    detail: "BACKEND & CORE AI LOGIC",
-    x: 24,
-    y: 58,
-    floatDuration: 4.8,
+    x: 74,
+    y: 22,
+    floatDuration: 9.2,
   },
   {
     id: "gemini",
     name: "GEMINI API",
-    isCore: true,
+    size: "medium",
     detail: "AI MODEL INTEGRATION",
-    x: 76,
-    y: 56,
-    floatDuration: 5.6,
+    x: 82,
+    y: 48,
+    floatDuration: 7.8,
+  },
+  {
+    id: "python",
+    name: "PYTHON",
+    size: "medium",
+    detail: "BACKEND & CORE AI LOGIC",
+    x: 20,
+    y: 52,
+    floatDuration: 8.1,
   },
   {
     id: "prompt",
     name: "PROMPT ENGINEERING",
-    isCore: true,
+    size: "large",
     detail: "CONTEXT & SYSTEM PROMPTS",
-    x: 35,
+    x: 34,
     y: 84,
-    floatDuration: 6.4,
+    floatDuration: 10.2,
   },
   {
     id: "llmapps",
     name: "LLM APPLICATIONS",
-    isCore: true,
+    size: "large",
     detail: "END-TO-END AI PRODUCTS",
-    x: 70,
+    x: 72,
     y: 84,
-    floatDuration: 5.0,
+    floatDuration: 7.5,
   },
   {
     id: "react",
     name: "REACT",
-    isCore: true,
+    size: "medium",
     detail: "INTERFACES & UI",
-    x: 16,
-    y: 42,
-    floatDuration: 6.8,
+    x: 14,
+    y: 34,
+    floatDuration: 9.8,
   },
   {
     id: "nextjs",
     name: "NEXT.JS",
-    isCore: true,
+    size: "medium",
     detail: "FULL-STACK FRAMEWORK",
-    x: 80,
-    y: 40,
-    floatDuration: 4.5,
+    x: 84,
+    y: 34,
+    floatDuration: 8.7,
   },
   {
     id: "fastapi",
     name: "FASTAPI",
-    isCore: true,
+    size: "small",
     detail: "HIGH-SPEED PYTHON APIS",
     x: 18,
-    y: 74,
-    floatDuration: 5.9,
-  },
-  {
-    id: "postgresql",
-    name: "POSTGRESQL",
-    isCore: true,
-    detail: "RELATIONAL DATA",
-    x: 80,
     y: 72,
-    floatDuration: 6.3,
+    floatDuration: 9.4,
   },
   {
     id: "supabase",
     name: "SUPABASE",
-    isCore: true,
+    size: "small",
     detail: "DATABASE & AUTH",
-    x: 44,
-    y: 90,
-    floatDuration: 5.4,
-  },
-
-  // FAMILIAR WITH / ALSO USING (isCore: false — muted text, thin border, no dot)
-  {
-    id: "js",
-    name: "JAVASCRIPT",
-    isCore: false,
-    detail: "WEB SCRIPTING",
-    x: 14,
-    y: 22,
-    floatDuration: 7.2,
-  },
-  {
-    id: "tailwind",
-    name: "TAILWIND CSS",
-    isCore: false,
-    detail: "UI STYLING",
-    x: 84,
-    y: 22,
-    floatDuration: 5.8,
-  },
-  {
-    id: "vercel",
-    name: "VERCEL",
-    isCore: false,
-    detail: "DEPLOYMENT",
-    x: 56,
-    y: 90,
-    floatDuration: 4.9,
-  },
-  {
-    id: "github",
-    name: "GITHUB",
-    isCore: false,
-    detail: "VERSION CONTROL & CI",
-    x: 84,
+    x: 52,
     y: 88,
-    floatDuration: 5.1,
-  },
-  {
-    id: "ollama",
-    name: "OLLAMA",
-    isCore: false,
-    detail: "LOCAL LLM INFERENCE",
-    x: 48,
-    y: 15,
-    floatDuration: 6.9,
-  },
-  {
-    id: "whisper",
-    name: "WHISPER",
-    isCore: false,
-    detail: "SPEECH RECOGNITION",
-    x: 62,
-    y: 15,
-    floatDuration: 5.3,
-  },
-  {
-    id: "aistudio",
-    name: "GOOGLE AI STUDIO",
-    isCore: false,
-    detail: "MODEL PROTOTYPING",
-    x: 30,
-    y: 15,
-    floatDuration: 6.0,
-  },
-  {
-    id: "antigravity",
-    name: "ANTIGRAVITY",
-    isCore: false,
-    detail: "AGENT WORKFLOWS",
-    x: 76,
-    y: 15,
-    floatDuration: 7.0,
-  },
-  {
-    id: "rest",
-    name: "REST APIs",
-    isCore: false,
-    detail: "API PROTOCOLS",
-    x: 12,
-    y: 88,
-    floatDuration: 6.5,
-  },
-  {
-    id: "lovable",
-    name: "LOVABLE",
-    isCore: false,
-    detail: "AI WEB CREATION",
-    x: 50,
-    y: 8,
-    floatDuration: 5.7,
+    floatDuration: 8.9,
   },
 ];
 
-const TICKER_ITEMS = [
-  "PYTHON",
-  "GENERATIVE AI",
-  "LANGCHAIN",
-  "GEMINI API",
-  "LLM APPS",
-  "PROMPT ENGINEERING",
-  "REACT",
-  "FASTAPI",
-  "SUPABASE",
-  "VERCEL",
+// Secondary Technologies (Revealed through "+ MORE TOOLS" drawer interaction)
+const SECONDARY_TECH_ITEMS = [
+  { name: "PostgreSQL", role: "Relational Data" },
+  { name: "Vercel", role: "Cloud Deployment" },
+  { name: "JavaScript", role: "Web Scripting" },
+  { name: "Tailwind CSS", role: "UI Styling" },
+  { name: "REST APIs", role: "HTTP Protocols" },
+  { name: "GitHub", role: "Version Control" },
+  { name: "Whisper", role: "Speech Recognition" },
+  { name: "Ollama", role: "Local LLM Inference" },
+  { name: "Google AI Studio", role: "Model Prototyping" },
+  { name: "Antigravity", role: "Agent Workflows" },
+  { name: "Lovable", role: "AI Web Creation" },
 ];
 
 const BUILD_WITH_WORDS = ["AI", "CODE", "APIs", "IDEAS"];
@@ -224,6 +125,8 @@ const BUILD_WITH_WORDS = ["AI", "CODE", "APIs", "IDEAS"];
 const TechnicalSkills: React.FC = () => {
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [hoveredTech, setHoveredTech] = useState<TechObject | null>(null);
+  const [hoveredCore, setHoveredCore] = useState(false);
+  const [showMoreTools, setShowMoreTools] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const workspaceRef = useRef<HTMLDivElement>(null);
 
@@ -241,23 +144,24 @@ const TechnicalSkills: React.FC = () => {
     const rect = workspaceRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMousePos({ x: x * 14, y: y * 14 });
+    setMousePos({ x: x * 10, y: y * 10 });
   };
 
   const handleMouseLeave = () => {
     setMousePos({ x: 0, y: 0 });
     setHoveredTech(null);
+    setHoveredCore(false);
   };
 
   return (
     <section
       id="playground"
-      className="relative w-full py-20 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none"
+      className="relative w-full min-h-[85vh] sm:min-h-[92vh] py-20 sm:py-28 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none flex flex-col justify-between"
     >
       <div id="skills" className="absolute -top-10 left-0" />
 
       {/* Atmospheric Background Noise & Clouds */}
-      <div className="absolute top-20 right-[-8%] w-96 opacity-25 pointer-events-none z-0">
+      <div className="absolute top-20 right-[-8%] w-96 opacity-20 pointer-events-none z-0">
         <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">
           <path
             d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
@@ -268,7 +172,7 @@ const TechnicalSkills: React.FC = () => {
 
       <div className="container-narrow relative z-10 px-4 sm:px-6 md:px-8">
         {/* SECTION HEADER & EDITORIAL INTRO */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-14">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
           <div>
             {/* Section Eyebrow */}
             <motion.div
@@ -336,27 +240,12 @@ const TechnicalSkills: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* STACK HIERARCHY LEGEND (Requirement 2) */}
-        <div className="flex items-center justify-between gap-4 mb-4 px-2">
-          <div className="flex items-center gap-4 px-4 py-1.5 rounded-full bg-cream border border-ink/15 text-[11px] font-mono tracking-wider text-ink shadow-sm">
-            <div className="flex items-center gap-1.5 font-bold">
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
-              <span>● CORE STACK</span>
-            </div>
-            <span className="text-ink/25">|</span>
-            <div className="flex items-center gap-1.5 text-ink/65">
-              <span className="w-2 h-2 rounded-full border border-ink/40 bg-transparent" />
-              <span>○ ALSO USING</span>
-            </div>
-          </div>
-        </div>
-
-        {/* DESKTOP & TABLET INTERACTIVE "TOOL DESK" CONSTELLATION WORKSPACE (hidden on mobile < 640px) */}
+        {/* DESKTOP & TABLET INTERACTIVE "TOOL DESK" WORKSPACE (hidden on mobile < 640px) */}
         <div
           ref={workspaceRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="hidden sm:block relative w-full h-[620px] md:h-[680px] rounded-3xl bg-cream border border-ink/15 shadow-soft-card overflow-hidden p-6 md:p-10 max-w-full"
+          className="hidden sm:block relative w-full h-[640px] md:h-[700px] rounded-3xl bg-cream border border-ink/15 shadow-soft-card overflow-hidden p-6 md:p-10 max-w-full"
         >
           {/* GIGANTIC OVERSIZED LOW-OPACITY BACKGROUND WATERMARK */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
@@ -366,7 +255,7 @@ const TechnicalSkills: React.FC = () => {
           </div>
 
           {/* Subtle Grid Pattern Overlay */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:24px_24px]" />
+          <div className="absolute inset-0 opacity-[0.025] pointer-events-none bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:28px_28px]" />
 
           {/* Dynamic SVG Constellation Connection Lines */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
@@ -389,42 +278,44 @@ const TechnicalSkills: React.FC = () => {
             </AnimatePresence>
           </svg>
 
-          {/* CENTRAL VISUAL ANCHOR NODE: [ AI ] */}
+          {/* CENTRAL ENLARGED VISUAL ANCHOR NODE: [ AI ] (190-210px diameter on desktop) */}
           <motion.div
             style={{
               x: mousePos.x * 0.4,
               y: mousePos.y * 0.4,
             }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
+            onMouseEnter={() => setHoveredCore(true)}
+            onMouseLeave={() => setHoveredCore(false)}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center cursor-pointer group"
           >
             <motion.div
               animate={{
-                scale: hoveredTech ? 1.12 : [1, 1.04, 1],
-                boxShadow: hoveredTech
-                  ? "0 0 25px rgba(255, 212, 42, 0.6)"
-                  : "0 4px 20px rgba(32, 37, 43, 0.08)",
+                scale: hoveredTech || hoveredCore ? 1.08 : [1, 1.03, 1],
+                boxShadow: hoveredTech || hoveredCore
+                  ? "0 0 30px rgba(255, 212, 42, 0.5)"
+                  : "0 6px 24px rgba(32, 37, 43, 0.08)",
               }}
               transition={{
-                scale: hoveredTech ? { duration: 0.3 } : { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                scale: hoveredTech || hoveredCore ? { duration: 0.3 } : { duration: 5, repeat: Infinity, ease: "easeInOut" },
               }}
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-cream-paper border-2 border-ink flex flex-col items-center justify-center text-center p-2 relative shadow-lg"
+              className="w-36 h-36 sm:w-44 sm:h-44 md:w-48 md:h-48 rounded-full bg-cream-paper border-2 border-ink flex flex-col items-center justify-center text-center p-3 relative shadow-xl"
             >
-              <div className="w-2 h-2 rounded-full bg-yellow-accent mb-1 shadow-sm" />
-              <span className="text-xl sm:text-2xl font-serif font-bold text-ink tracking-tight">
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-accent mb-1.5 shadow-[0_0_8px_#FFD42A] animate-pulse" />
+              <span className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-ink tracking-tight">
                 [ AI ]
               </span>
-              <span className="text-[8px] font-mono tracking-widest text-ink-light uppercase mt-0.5">
-                CORE TOOL
+              <span className="text-[9px] sm:text-[10px] font-mono tracking-[0.2em] text-ink-light uppercase mt-1 font-bold">
+                {hoveredCore ? "AI / CORE STACK" : "CORE TOOL"}
               </span>
             </motion.div>
           </motion.div>
 
-          {/* FLOATING TECHNOLOGY OBJECTS MAP */}
-          {TECH_OBJECTS.map((tech) => {
+          {/* FLOATING PRIMARY TECHNOLOGY OBJECTS MAP (10 ITEMS ONLY) */}
+          {PRIMARY_TECH_OBJECTS.map((tech) => {
             const isHovered = hoveredTech?.id === tech.id;
             const isAnyHovered = hoveredTech !== null;
-            const opacity = isAnyHovered ? (isHovered ? 1 : 0.32) : 1;
+            const opacity = isAnyHovered ? (isHovered ? 1 : 0.3) : 1;
 
             return (
               <motion.div
@@ -439,9 +330,9 @@ const TechnicalSkills: React.FC = () => {
                   top: `${tech.y}%`,
                 }}
                 animate={{
-                  x: mousePos.x * (tech.isCore ? 0.7 : 0.4),
-                  y: mousePos.y * (tech.isCore ? 0.7 : 0.4) + (isHovered ? -4 : 0),
-                  scale: isHovered ? (tech.isCore ? 1.15 : 1.08) : 1,
+                  x: mousePos.x * 0.6,
+                  y: mousePos.y * 0.6 + (isHovered ? -4 : 0),
+                  scale: isHovered ? (tech.size === "large" ? 1.12 : 1.1) : 1,
                   rotate: isHovered ? -2 : 0,
                   opacity: opacity,
                 }}
@@ -451,11 +342,11 @@ const TechnicalSkills: React.FC = () => {
                 }}
                 className="absolute -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer focus:outline-none max-w-max"
               >
-                {/* Independent Floating Animation Wrapper */}
+                {/* Calmer Floating Motion Loop (7.5s - 10.2s) */}
                 <motion.div
                   animate={{
-                    y: [-4, 4, -4],
-                    rotate: [-1, 1, -1],
+                    y: [-3, 3, -3],
+                    rotate: [-0.8, 0.8, -0.8],
                   }}
                   transition={{
                     duration: tech.floatDuration,
@@ -464,32 +355,23 @@ const TechnicalSkills: React.FC = () => {
                   }}
                   className="relative group/object"
                 >
-                  {/* TIER 1: CORE STACK (Bold text, filled dot, prominent visual styling) */}
-                  {tech.isCore ? (
-                    <div
-                      className={`px-4 sm:px-4.5 py-2 sm:py-2.5 rounded-2xl border transition-all duration-300 shadow-sm flex items-center gap-2 whitespace-nowrap ${
-                        isHovered
-                          ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-xl"
-                          : "bg-cream-paper border-ink/30 text-ink font-bold hover:border-yellow-accent hover:shadow-md"
-                      }`}
-                    >
-                      <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
-                      <span className="text-xs sm:text-sm font-mono font-bold tracking-wider uppercase">
-                        {tech.name}
-                      </span>
-                    </div>
-                  ) : (
-                    /* TIER 2: ALSO USING / FAMILIAR WITH (Lighter border, muted text, no dot) */
-                    <div
-                      className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border text-xs sm:text-xs font-mono tracking-wider uppercase transition-all duration-300 whitespace-nowrap ${
-                        isHovered
-                          ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-md font-bold"
-                          : "bg-cream-paper/80 border-ink/15 text-ink/70 font-normal hover:border-ink/40 hover:text-ink"
-                      }`}
-                    >
-                      {tech.name}
-                    </div>
-                  )}
+                  {/* VARYING SIZE STYLING FOR Visual HIERARCHY */}
+                  <div
+                    className={`border transition-all duration-300 shadow-sm flex items-center gap-2 whitespace-nowrap ${
+                      tech.size === "large"
+                        ? "px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl text-sm sm:text-base font-mono font-bold tracking-wider uppercase"
+                        : tech.size === "medium"
+                        ? "px-4 py-2 sm:px-4.5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold tracking-wider uppercase"
+                        : "px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono font-semibold tracking-wider uppercase"
+                    } ${
+                      isHovered
+                        ? "bg-[#20252B] text-[#FFF8E8] border-[#20252B] shadow-xl"
+                        : "bg-cream-paper border-ink/25 text-ink hover:border-yellow-accent hover:shadow-md"
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
+                    <span>{tech.name}</span>
+                  </div>
 
                   {/* Contextual Role Tooltip on Hover */}
                   <AnimatePresence>
@@ -516,10 +398,9 @@ const TechnicalSkills: React.FC = () => {
           })}
         </div>
 
-        {/* MOBILE REFLOW LAYOUT (< 640px) — Clean wrapped flex container with clear reading order */}
-        <div className="block sm:hidden w-full rounded-2xl bg-cream border border-ink/15 p-5 space-y-6">
-          {/* Central AI Badge Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-ink/10">
+        {/* MOBILE REFLOW LAYOUT (< 640px) — Clean 10-Item Core Stack */}
+        <div className="block sm:hidden w-full rounded-2xl bg-cream border border-ink/15 p-5 space-y-5">
+          <div className="flex items-center justify-between pb-3 border-b border-ink/10">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-cream-paper border border-ink flex items-center justify-center font-serif text-sm font-bold">
                 AI
@@ -530,46 +411,58 @@ const TechnicalSkills: React.FC = () => {
             </div>
           </div>
 
-          {/* Section 1: Core Stack */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-              <span className="text-xs font-mono font-bold tracking-widest text-ink uppercase">
-                CORE STACK
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {TECH_OBJECTS.filter((t) => t.isCore).map((tech) => (
-                <div
-                  key={tech.id}
-                  className="px-3 py-1.5 rounded-xl bg-cream-paper border border-ink/30 text-ink text-xs font-mono font-bold tracking-wider uppercase flex items-center gap-2 shadow-xs"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-accent" />
-                  <span>{tech.name}</span>
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2.5">
+            {PRIMARY_TECH_OBJECTS.map((tech) => (
+              <div
+                key={tech.id}
+                className="px-3.5 py-2 rounded-xl bg-cream-paper border border-ink/25 text-ink text-xs font-mono font-bold tracking-wider uppercase flex items-center gap-2 shadow-xs"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-yellow-accent" />
+                <span>{tech.name}</span>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Section 2: Also Using / Familiar With */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full border border-ink/40" />
-              <span className="text-xs font-mono text-ink/70 font-semibold tracking-widest uppercase">
-                ALSO USING / FAMILIAR WITH
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {TECH_OBJECTS.filter((t) => !t.isCore).map((tech) => (
-                <div
-                  key={tech.id}
-                  className="px-2.5 py-1.5 rounded-lg bg-cream-paper/70 border border-ink/15 text-ink/75 text-xs font-mono tracking-wider uppercase"
-                >
-                  {tech.name}
+        {/* SECONDARY "MORE TOOLS" EXPANDABLE DRAWER */}
+        <div className="mt-8 flex flex-col items-center">
+          <button
+            onClick={() => setShowMoreTools(!showMoreTools)}
+            className="group px-5 py-2.5 rounded-full bg-cream border border-ink/20 text-xs font-mono font-bold tracking-widest text-ink uppercase hover:border-yellow-accent hover:bg-cream-paper transition-all duration-300 flex items-center gap-2 shadow-sm"
+          >
+            <span>{showMoreTools ? "- LESS TOOLS" : "+ MORE TOOLS"}</span>
+            <span className="text-yellow-accent group-hover:rotate-90 transition-transform duration-300">
+              {showMoreTools ? "↑" : "→"}
+            </span>
+          </button>
+
+          {/* Secondary Skill Pills Container */}
+          <AnimatePresence>
+            {showMoreTools && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden w-full max-w-2xl mt-6 pt-4 border-t border-ink/10"
+              >
+                <div className="text-center mb-4 text-[10px] font-mono tracking-widest text-ink/60 uppercase font-bold">
+                  ADDITIONAL TECHNOLOGIES & LIBRARIES
                 </div>
-              ))}
-            </div>
-          </div>
+                <div className="flex flex-wrap items-center justify-center gap-2.5">
+                  {SECONDARY_TECH_ITEMS.map((item) => (
+                    <div
+                      key={item.name}
+                      className="px-3 py-1.5 rounded-lg bg-cream-paper border border-ink/15 text-xs font-mono text-ink/80 tracking-wider uppercase hover:border-yellow-accent hover:text-ink transition-colors flex items-center gap-1.5"
+                    >
+                      <span>{item.name}</span>
+                      <span className="text-[9px] text-ink/40 font-normal">({item.role})</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>
