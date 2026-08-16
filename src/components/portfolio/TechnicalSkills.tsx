@@ -266,13 +266,6 @@ const TechnicalSkills: React.FC = () => {
         </svg>
       </div>
 
-      {/* Side Vertical Editorial Annotation */}
-      <div className="absolute left-2 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 hidden xl:block select-none pointer-events-none z-10">
-        <span className="inline-block text-[10px] sm:text-[11px] font-mono tracking-[0.22em] text-ink/40 font-bold uppercase -rotate-90 origin-center whitespace-nowrap">
-          LEARN / BUILD / EXPERIMENT
-        </span>
-      </div>
-
       <div className="container-narrow relative z-10 px-4 sm:px-6 md:px-8">
         {/* SECTION HEADER & EDITORIAL INTRO */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-14">
