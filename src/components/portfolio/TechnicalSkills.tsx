@@ -7,7 +7,6 @@ interface SkillItem {
   name: string;
   role: string;
   category: "ai" | "dev" | "backend";
-  // Position reference percentages (x, y) relative to central canvas container for SVG line calculation
   lineX: number;
   lineY: number;
 }
@@ -38,7 +37,7 @@ const SKILL_GROUPS: {
       { id: "nextjs", code: "03", name: "NEXT.JS", role: "FULL-STACK SSR FRAMEWORK", category: "dev", lineX: 50, lineY: 72 },
       { id: "fastapi", code: "04", name: "FASTAPI", role: "HIGH-PERFORMANCE PYTHON APIS", category: "dev", lineX: 50, lineY: 77 },
       { id: "js", code: "05", name: "JAVASCRIPT", role: "WEB & EVENT SCRIPTING", category: "dev", lineX: 50, lineY: 82 },
-      { id: "tailwind", code: "06", name: "TAILWIND CSS", role: "EDITOIAL UI STYLING", category: "dev", lineX: 50, lineY: 87 },
+      { id: "tailwind", code: "06", name: "TAILWIND CSS", role: "EDITORIAL UI STYLING", category: "dev", lineX: 50, lineY: 87 },
     ],
   },
   {
@@ -69,9 +68,38 @@ const TICKER_ITEMS = [
 ];
 
 const TechnicalSkills: React.FC = () => {
+  // Single Source of Truth States
+  const [selectedCategory, setSelectedCategory] = useState<"ai" | "dev" | "backend" | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<SkillItem | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<SkillItem | null>(null);
   const [hoveredCore, setHoveredCore] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Active Skill is either the currently hovered skill or locked selected skill
+  const activeSkill = hoveredSkill || selectedSkill;
+  const activeCategory = hoveredSkill?.category || selectedCategory || (selectedSkill ? selectedSkill.category : null);
+
+  const handleCategoryClick = (category: "ai" | "dev" | "backend", firstItem: SkillItem, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      setSelectedSkill(null);
+    } else {
+      setSelectedCategory(category);
+      setSelectedSkill(firstItem);
+    }
+  };
+
+  const handleSkillClick = (item: SkillItem, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (selectedSkill?.id === item.id) {
+      setSelectedSkill(null);
+      setSelectedCategory(null);
+    } else {
+      setSelectedSkill(item);
+      setSelectedCategory(item.category);
+    }
+  };
 
   return (
     <section
@@ -92,10 +120,10 @@ const TechnicalSkills: React.FC = () => {
       <div className="absolute inset-0 opacity-[0.025] pointer-events-none bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:32px_32px]" />
 
       {/* Blueprint Technical Corner Marks */}
-      <div className="absolute top-6 left-6 text-[9px] font-mono text-ink/30 tracking-widest hidden md:block select-none">
+      <div className="absolute top-6 left-6 text-[9px] font-mono text-ink/30 tracking-widest hidden md:block select-none pointer-events-none">
         + SYS: ACTIVE // 12.04° N 77.59° E
       </div>
-      <div className="absolute top-6 right-6 text-[9px] font-mono text-ink/30 tracking-widest hidden md:block select-none">
+      <div className="absolute top-6 right-6 text-[9px] font-mono text-ink/30 tracking-widest hidden md:block select-none pointer-events-none">
         REF: BLUEPRINT_03 +
       </div>
 
@@ -157,21 +185,22 @@ const TechnicalSkills: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* 2. CENTRAL INTERACTIVE CORE SYSTEM AI ARTIFACT (280-320px wide on desktop) */}
+        {/* 2. CENTRAL INTERACTIVE CORE SYSTEM AI ARTIFACT (Strict Fixed Bounds & Zero Reflow) */}
         <div className="relative w-full flex items-center justify-center my-8 lg:my-14 min-h-[300px] sm:min-h-[340px]">
-          {/* SVG Connection Lines for Active Hover */}
+          {/* SVG Connection Lines (Overlay Only - Positioned Absolutely) */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 hidden sm:block">
             <AnimatePresence>
-              {hoveredSkill && (
+              {activeSkill && (
                 <motion.line
+                  key={activeSkill.id}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   x1="50%"
                   y1="50%"
-                  x2={`${hoveredSkill.lineX}%`}
-                  y2={`${hoveredSkill.lineY}%`}
+                  x2={`${activeSkill.lineX}%`}
+                  y2={`${activeSkill.lineY}%`}
                   stroke="#FFD42A"
                   strokeWidth="2"
                   strokeDasharray="4 4"
@@ -180,7 +209,7 @@ const TechnicalSkills: React.FC = () => {
             </AnimatePresence>
           </svg>
 
-          {/* Core Artifact Node Container */}
+          {/* Core Artifact Node Container (Fixed Geometry) */}
           <motion.div
             onMouseEnter={() => setHoveredCore(true)}
             onMouseLeave={() => setHoveredCore(false)}
@@ -206,10 +235,10 @@ const TechnicalSkills: React.FC = () => {
             {/* Inner Technical Artifact Disc */}
             <motion.div
               animate={{
-                boxShadow: hoveredCore || hoveredSkill
+                boxShadow: hoveredCore || activeSkill
                   ? "0 0 35px rgba(255, 212, 42, 0.55)"
                   : "0 8px 30px rgba(32, 37, 43, 0.08)",
-                scale: hoveredCore || hoveredSkill ? 1.05 : 1,
+                scale: hoveredCore || activeSkill ? 1.05 : 1,
               }}
               transition={{ duration: 0.3 }}
               className="w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full bg-cream-paper border-2 border-ink flex flex-col items-center justify-center text-center p-4 relative shadow-2xl"
@@ -239,80 +268,111 @@ const TechnicalSkills: React.FC = () => {
                 [ AI ]
               </span>
 
-              <span className="text-[9px] sm:text-[10px] font-mono tracking-widest text-ink/60 uppercase mt-2 font-bold">
-                {hoveredSkill ? hoveredSkill.role : "GENERATIVE AI ENGINE"}
+              <span className="text-[9px] sm:text-[10px] font-mono tracking-widest text-ink/60 uppercase mt-2 font-bold h-4 flex items-center justify-center">
+                {activeSkill ? activeSkill.role : "GENERATIVE AI ENGINE"}
               </span>
             </motion.div>
           </motion.div>
         </div>
 
-        {/* 3. THREE GROUPED TECHNOLOGY COLUMNS (AI/ML, DEVELOPMENT, BACKEND) */}
+        {/* 3. THREE GROUPED TECHNOLOGY COLUMNS (Fixed Geometry & Zero Layout Shift) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mt-8 lg:mt-12 pt-8 border-t border-ink/10">
-          {SKILL_GROUPS.map((group) => (
-            <motion.div
-              key={group.category}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
-              {/* Category Header */}
-              <div className="flex items-center gap-2 pb-3 border-b border-ink/15">
-                <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-                <h3 className="text-xs font-mono font-bold tracking-[0.2em] text-ink uppercase">
-                  {group.title}
-                </h3>
-              </div>
+          {SKILL_GROUPS.map((group) => {
+            const isGroupActive = activeCategory === group.category;
 
-              {/* Typographic Skill List */}
-              <div className="space-y-2.5 pt-1">
-                {group.items.map((item) => {
-                  const isHovered = hoveredSkill?.id === item.id;
-
-                  return (
-                    <div
-                      key={item.id}
-                      onMouseEnter={() => setHoveredSkill(item)}
-                      onMouseLeave={() => setHoveredSkill(null)}
-                      className={`group relative flex items-center justify-between p-2 rounded-lg transition-all duration-200 cursor-pointer ${
-                        isHovered ? "bg-cream border border-ink/20 shadow-xs" : "bg-transparent border border-transparent"
+            return (
+              <motion.div
+                key={group.category}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-4"
+              >
+                {/* Category Header (Clickable & Stable) */}
+                <button
+                  type="button"
+                  onClick={(e) => handleCategoryClick(group.category, group.items[0], e)}
+                  className={`w-full flex items-center justify-between pb-3 border-b transition-colors duration-300 text-left focus:outline-none ${
+                    isGroupActive ? "border-yellow-accent" : "border-ink/15 hover:border-ink/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                        isGroupActive
+                          ? "bg-yellow-accent shadow-[0_0_8px_#FFD42A] scale-110"
+                          : "bg-ink/30"
+                      }`}
+                    />
+                    <h3
+                      className={`text-xs font-mono font-bold tracking-[0.2em] uppercase transition-colors duration-300 ${
+                        isGroupActive ? "text-ink" : "text-ink/70"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono text-ink/40 font-bold">
-                          {item.code}
-                        </span>
-                        <span
-                          className={`text-xs sm:text-sm font-mono tracking-wider transition-colors duration-200 ${
-                            isHovered ? "text-ink font-bold" : "text-ink/80 font-semibold"
-                          }`}
-                        >
-                          {item.name}
-                        </span>
-                      </div>
+                      {group.title}
+                    </h3>
+                  </div>
+                  <span className="text-[10px] font-mono text-ink/40 font-bold uppercase">
+                    [{group.items.length}]
+                  </span>
+                </button>
 
-                      {/* Active Indicator & Tooltip */}
-                      {isHovered ? (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-[9px] font-mono text-ink/60 uppercase font-semibold hidden sm:inline">
-                            {item.role}
+                {/* Typographic Skill List (Reserved Height & Fixed Bounds) */}
+                <div className="space-y-2 pt-1 min-h-[260px]">
+                  {group.items.map((item) => {
+                    const isItemActive = activeSkill?.id === item.id;
+
+                    return (
+                      <div
+                        key={item.id}
+                        onMouseEnter={() => setHoveredSkill(item)}
+                        onMouseLeave={() => setHoveredSkill(null)}
+                        onClick={(e) => handleSkillClick(item, e)}
+                        className={`group relative flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer h-10 border ${
+                          isItemActive
+                            ? "bg-cream border-ink/25 shadow-xs"
+                            : "bg-transparent border-transparent hover:bg-cream/40"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-mono text-ink/40 font-bold">
+                            {item.code}
                           </span>
-                          <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
-                        </motion.div>
-                      ) : (
-                        <span className="w-1.5 h-1.5 rounded-full border border-ink/30 group-hover:border-ink/60" />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          ))}
+                          <span
+                            className={`text-xs sm:text-sm font-mono tracking-wider transition-colors duration-200 ${
+                              isItemActive ? "text-ink font-bold" : "text-ink/80 font-semibold"
+                            }`}
+                          >
+                            {item.name}
+                          </span>
+                        </div>
+
+                        {/* Active Indicator & Tooltip (Fixed Right Alignment) */}
+                        <div className="flex items-center gap-2 min-w-[20px] justify-end">
+                          {isItemActive ? (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.2 }}
+                              className="flex items-center gap-2"
+                            >
+                              <span className="text-[9px] font-mono text-ink/60 uppercase font-semibold hidden sm:inline whitespace-nowrap">
+                                {item.role}
+                              </span>
+                              <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_6px_#FFD42A]" />
+                            </motion.div>
+                          ) : (
+                            <span className="w-1.5 h-1.5 rounded-full border border-ink/30 group-hover:border-ink/60" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
