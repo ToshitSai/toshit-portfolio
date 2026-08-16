@@ -1,16 +1,16 @@
 import React from "react";
 
 const MARQUEE_ITEMS = [
-  "React",
-  "Next.js",
-  "Tailwind CSS",
-  "Claude API",
-  "LangChain",
-  "PostgreSQL",
-  "Gemini API",
-  "Flask",
-  "Whisper",
-  "Vite",
+  "PYTHON",
+  "GENERATIVE AI",
+  "LANGCHAIN",
+  "GEMINI API",
+  "LLM APPS",
+  "PROMPT ENGINEERING",
+  "REACT",
+  "FASTAPI",
+  "SUPABASE",
+  "VERCEL",
 ];
 
 const TechMarquee: React.FC = () => {
