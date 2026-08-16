@@ -1,92 +1,59 @@
+import React from "react";
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { Code2, Lightbulb, Target, Users } from "lucide-react";
 
-const highlights = [
-  { icon: Code2, label: "Clean Code", description: "Writing maintainable solutions" },
-  { icon: Lightbulb, label: "Problem Solver", description: "Analytical thinking approach" },
-  { icon: Users, label: "Team Player", description: "Collaborative mindset" },
-  { icon: Target, label: "Goal Oriented", description: "Focused on results" },
-];
-
-const About = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
+const About: React.FC = () => {
   return (
-    <section id="about" className="section-padding bg-card">
-      <div className="container-narrow" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="text-sm font-medium text-accent uppercase tracking-wider">About Me</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2">
-            Get to Know Me
-          </h2>
-        </motion.div>
+    <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-ink overflow-hidden z-10">
+      {/* Drifting Background Cloud Graphic */}
+      <div className="absolute top-12 right-[-5%] w-72 sm:w-96 opacity-30 pointer-events-none z-0">
+        <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">
+          <path
+            d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
+            fill="#82BCE5"
+          />
+        </svg>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Avatar & Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
-          >
-            <div className="relative mx-auto w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 p-1">
-              <div className="w-full h-full rounded-xl bg-muted flex items-center justify-center">
-                <div className="text-6xl md:text-8xl">👨‍💻</div>
+      <div className="container-narrow relative z-10">
+        {/* Section Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
+          <span className="label-mono text-ink-light">01 // ABOUT ME</span>
+        </div>
+
+        {/* H2 Headline */}
+        <h2 className="text-display text-[clamp(2.2rem,5.5vw,4.2rem)] text-ink mb-12 sm:mb-16 max-w-4xl">
+          Building Software at the Intersection of Applied AI & Modern Design.
+        </h2>
+
+        {/* Two-Column Bio Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
+          <div className="space-y-6 text-base sm:text-lg text-ink/80 leading-relaxed font-sans">
+            <p>
+              I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>.
+            </p>
+            <p>
+              Driven by a deep passion for building intuitive, high-performance web applications, I leverage cutting-edge LLM APIs, autonomous agents, and modern frontend frameworks to create impactful software solutions.
+            </p>
+          </div>
+
+          <div className="space-y-6 text-base sm:text-lg text-ink/80 leading-relaxed font-sans">
+            <p>
+              My work spans intelligent web tools like <strong className="text-ink font-semibold">HireScope AI</strong> (Job Gem Grader) for AI resume evaluation and <strong className="text-ink font-semibold">Greetly AI</strong> for personalized context-aware message generation.
+            </p>
+            
+            {/* Quick Highlight Stats Pill */}
+            <div className="pt-4 grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
+                <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">100%</div>
+                <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Code Quality Focus</div>
+              </div>
+              <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
+                <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Applied AI</div>
+                <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Full-Stack Engineering</div>
               </div>
             </div>
-            {/* Decorative Elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-accent/10 rounded-full blur-2xl" />
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
-          </motion.div>
-
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="space-y-6 text-muted-foreground">
-              <p className="text-lg leading-relaxed">
-                Hello! I'm <span className="text-foreground font-medium">Toshit Sai Galam</span>, a motivated 
-                student with a strong interest in <span className="text-foreground font-medium">web development</span> and 
-                emerging technologies.
-              </p>
-              <p className="leading-relaxed">
-                I enjoy building real-world projects that help me improve my problem-solving and 
-                technical skills. Currently pursuing my B.Tech in Computer Science Engineering, 
-                I'm focused on learning modern technologies through hands-on experience.
-              </p>
-              <p className="leading-relaxed">
-                My goal is to secure an <span className="text-foreground font-medium">internship or entry-level role</span> where 
-                I can learn, grow, and contribute to meaningful software solutions.
-              </p>
-            </div>
-
-            {/* Highlights Grid */}
-            <div className="grid grid-cols-2 gap-4 mt-8">
-              {highlights.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-                  className="p-4 rounded-xl bg-background border border-border hover:border-accent/50 transition-colors group"
-                >
-                  <item.icon className="w-5 h-5 text-accent mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="font-medium text-foreground text-sm">{item.label}</p>
-                  <p className="text-xs text-muted-foreground">{item.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

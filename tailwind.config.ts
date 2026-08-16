@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Instrument Serif', 'Georgia', 'serif'],
+        sans: ['DM Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -23,6 +24,26 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        sky: {
+          DEFAULT: "#82BCE5",
+          light: "#A9D5EE",
+          deep: "#5B9BD5",
+          soft: "#7EB8E8",
+        },
+        cream: {
+          DEFAULT: "#FFF8E8",
+          paper: "#F7F4EA",
+          light: "#FFFDF6",
+        },
+        yellow: {
+          accent: "#FFD42A",
+          gold: "#F5C542",
+        },
+        ink: {
+          DEFAULT: "#20252B",
+          muted: "#4A525D",
+          light: "#6E7885",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -71,6 +92,8 @@ export default {
         'card': 'var(--card-shadow)',
         'card-hover': 'var(--card-shadow-hover)',
         'glow': 'var(--glow-accent)',
+        'soft': '0 8px 30px rgba(0, 0, 0, 0.04)',
+        'pill': '0 4px 20px rgba(32, 37, 43, 0.06)',
       },
       keyframes: {
         "accordion-down": {
@@ -93,6 +116,18 @@ export default {
           from: { opacity: "0", transform: "scale(0.95)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
+        "marquee": {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "float-cloud": {
+          "0%, 100%": { transform: "translateY(0px) translateX(0px)" },
+          "50%": { transform: "translateY(-8px) translateX(6px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -100,6 +135,9 @@ export default {
         "fade-in": "fade-in 0.6s ease-out forwards",
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
         "scale-in": "scale-in 0.4s ease-out forwards",
+        "marquee-x": "marquee 32s linear infinite",
+        "spin-slow": "spin-slow 24s linear infinite",
+        "float-cloud": "float-cloud 8s ease-in-out infinite",
       },
     },
   },

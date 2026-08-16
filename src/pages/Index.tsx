@@ -1,27 +1,27 @@
-import Header from "@/components/portfolio/Header";
 import Hero from "@/components/portfolio/Hero";
+import TechMarquee from "@/components/portfolio/TechMarquee";
 import About from "@/components/portfolio/About";
-import Education from "@/components/portfolio/Education";
-import Skills from "@/components/portfolio/Skills";
-import Projects from "@/components/portfolio/Projects";
-import Resume from "@/components/portfolio/Resume";
-import Contact from "@/components/portfolio/Contact";
-import Footer from "@/components/portfolio/Footer";
+import SelectedWork from "@/components/portfolio/SelectedWork";
+import AcademicJourney from "@/components/portfolio/AcademicJourney";
+import TechnicalSkills from "@/components/portfolio/TechnicalSkills";
+import Testimonials from "@/components/portfolio/Testimonials";
+import ContactFooter from "@/components/portfolio/ContactFooter";
+import CustomCursor from "@/components/portfolio/CustomCursor";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans">
+      <CustomCursor />
       <main>
         <Hero />
+        <TechMarquee />
         <About />
-        <Education />
-        <Skills />
-        <Projects />
-        <Resume />
-        <Contact />
+        <SelectedWork />
+        <AcademicJourney />
+        <TechnicalSkills />
+        <Testimonials />
       </main>
-      <Footer />
+      <ContactFooter />
     </div>
   );
 };
