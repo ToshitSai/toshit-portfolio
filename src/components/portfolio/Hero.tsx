@@ -31,12 +31,6 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
     url: "https://job-gem-grader.vercel.app/",
   },
   {
-    id: "validator",
-    title: "AI Startup Idea Validator",
-    subtitle: "AI-powered startup validation",
-    url: "https://ai-startup-idea-validator-teal.vercel.app/",
-  },
-  {
     id: "nova",
     title: "NOVA",
     subtitle: "AI desktop & voice automation assistant",
