@@ -146,7 +146,6 @@ const Hero: React.FC = () => {
   };
 
   const currentProject = NOW_BUILDING_PROJECTS[projectIndex];
-  const counterText = `0${projectIndex + 1} / 0${NOW_BUILDING_PROJECTS.length}`;
 
   return (
     <section
@@ -354,10 +353,8 @@ const Hero: React.FC = () => {
               onMouseLeave={() => setIsCenterHovered(false)}
               className="flex-1 text-center px-1 overflow-hidden h-[38px] flex flex-col justify-center relative cursor-pointer z-10"
             >
-              <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[#4A525D] font-bold">
-                <span>NOW BUILDING</span>
-                <span className="text-[#20252B]/40">•</span>
-                <span className="text-[#20252B]/70 font-semibold">{counterText}</span>
+              <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#4A525D] font-bold">
+                NOW BUILDING
               </div>
 
               {/* PROJECT TITLE & SUBTITLE ANIMATED VIEWPORT */}
