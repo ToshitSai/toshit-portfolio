@@ -161,16 +161,10 @@ const Hero: React.FC = () => {
         <rect width="100%" height="100%" filter="url(#studio-noise)" />
       </svg>
 
-      {/* TOP CHROME METADATA BAR (STRICTLY METADATA PILLS) */}
       <header className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-4 sm:pt-6 flex items-center justify-between pointer-events-none">
         {/* Top-Left Metadata: Strictly ONE instance of HYDERABAD, IN */}
         <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm pointer-events-auto">
           HYDERABAD, IN
-        </div>
-
-        {/* Top-Right Metadata: Strictly ONE instance of 2026 */}
-        <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm pointer-events-auto">
-          2026
         </div>
       </header>
 
