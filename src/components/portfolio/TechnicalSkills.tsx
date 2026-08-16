@@ -52,19 +52,6 @@ const SKILL_GROUPS: {
   },
 ];
 
-const TICKER_ITEMS = [
-  "PYTHON",
-  "GENERATIVE AI",
-  "LANGCHAIN",
-  "GEMINI API",
-  "LLM APPS",
-  "PROMPT ENGINEERING",
-  "REACT",
-  "FASTAPI",
-  "SUPABASE",
-  "VERCEL",
-];
-
 const TechnicalSkills: React.FC = () => {
   // Single Source of Truth States
   const [selectedCategory, setSelectedCategory] = useState<"ai" | "dev" | "backend" | null>(null);
@@ -131,7 +118,7 @@ const TechnicalSkills: React.FC = () => {
     <section
       id="playground"
       ref={sectionRef}
-      className="relative w-full min-h-[90vh] py-16 sm:py-28 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none flex flex-col justify-between"
+      className="relative w-full min-h-[85vh] py-16 sm:py-28 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none flex flex-col justify-between"
     >
       <div id="skills" className="absolute -top-10 left-0" />
 
@@ -398,20 +385,6 @@ const TechnicalSkills: React.FC = () => {
               </motion.div>
             );
           })}
-        </div>
-      </div>
-
-      {/* 4. BOTTOM CONTINUOUS MARQUEE TECH TICKER */}
-      <div className="w-full bg-cream-paper border-t border-ink/10 py-4 overflow-hidden select-none mt-10 sm:mt-12">
-        <div className="flex w-max animate-marquee-x">
-          {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-6 sm:gap-10 px-4">
-              <span className="text-xs sm:text-sm font-mono font-bold tracking-widest text-ink uppercase">
-                {item}
-              </span>
-              <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-            </div>
-          ))}
         </div>
       </div>
     </section>
