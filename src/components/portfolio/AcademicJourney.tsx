@@ -72,8 +72,19 @@ const AcademicJourney: React.FC = () => {
 
               {/* Main content column */}
               <div className="md:col-span-8 space-y-2">
-                <h3 className="text-2xl sm:text-3xl font-serif text-ink group-hover:translate-x-2 transition-transform duration-300 flex items-center gap-3">
+                <h3 className="text-2xl sm:text-3xl font-serif text-ink group-hover:translate-x-2 transition-transform duration-300 flex flex-wrap items-center gap-3">
                   <span>{item.degree}</span>
+                  {item.badge && (
+                    <span
+                      className={`inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-mono tracking-wider font-bold uppercase shadow-xs ${
+                        item.badge === "COMPLETED"
+                          ? "bg-emerald-600/15 text-emerald-900 border border-emerald-600/30"
+                          : "bg-yellow-accent text-ink"
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
                   <ArrowRight className="w-5 h-5 text-yellow-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </h3>
                 <p className="text-sm sm:text-base font-sans font-medium text-ink/90">
