@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SkillItem {
   id: string;
@@ -73,12 +73,38 @@ const TechnicalSkills: React.FC = () => {
   const [hoveredCore, setHoveredCore] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
+  // Debounce Timer Refs for Flicker-Free Fast Cursor Skimming
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Active Skill & Category derived cleanly
   const activeSkill = hoveredSkill || selectedSkill;
   const activeCategory = hoveredSkill?.category || selectedCategory || (selectedSkill ? selectedSkill.category : null);
 
-  const handleCategoryClick = (category: "ai" | "dev" | "backend", firstItem: SkillItem, e: React.MouseEvent) => {
+  const clearTimers = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+  };
+
+  const handleMouseEnterSkill = (item: SkillItem) => {
+    clearTimers();
+    // 80ms activation debounce to eliminate rapid flickering during fast skimming
+    hoverTimer.current = setTimeout(() => {
+      setHoveredSkill(item);
+    }, 80);
+  };
+
+  const handleMouseLeaveSkill = () => {
+    clearTimers();
+    // 120ms deactivation delay before returning to idle state
+    leaveTimer.current = setTimeout(() => {
+      setHoveredSkill(null);
+    }, 120);
+  };
+
+  const handleCategoryClick = (category: "ai" | "dev" | "backend", firstItem: SkillItem, e: React.SyntheticEvent) => {
     e.preventDefault();
+    clearTimers();
     if (selectedCategory === category) {
       setSelectedCategory(null);
       setSelectedSkill(null);
@@ -88,8 +114,10 @@ const TechnicalSkills: React.FC = () => {
     }
   };
 
-  const handleSkillClick = (item: SkillItem, e: React.MouseEvent) => {
+  const handleSkillClick = (item: SkillItem, e: React.SyntheticEvent) => {
     e.preventDefault();
+    clearTimers();
+    // Tap / Click toggle behavior
     if (selectedSkill?.id === item.id) {
       setSelectedSkill(null);
       setSelectedCategory(null);
@@ -249,11 +277,20 @@ const TechnicalSkills: React.FC = () => {
                 [ AI ]
               </span>
 
-              {/* Role Indicator - Clean Single Line Centered Container */}
-              <div className="mt-2 h-6 px-3 flex items-center justify-center w-full max-w-[210px]">
-                <span className="text-[9px] sm:text-[10px] font-mono tracking-wider text-ink/85 uppercase font-bold truncate text-center transition-colors duration-300">
-                  {activeSkill ? activeSkill.role : "GENERATIVE AI ENGINE"}
-                </span>
+              {/* Role Indicator - Smooth Fade & Motion Transition Container */}
+              <div className="mt-2 h-6 px-3 flex items-center justify-center w-full max-w-[210px] overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeSkill ? activeSkill.id : "idle-state"}
+                    initial={{ opacity: 0, y: 3 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -3 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-[9px] sm:text-[10px] font-mono tracking-wider text-ink/85 uppercase font-bold truncate text-center block"
+                  >
+                    {activeSkill ? activeSkill.role : "Backend & Core AI Logic"}
+                  </motion.span>
+                </AnimatePresence>
               </div>
             </motion.div>
           </motion.div>
@@ -277,7 +314,7 @@ const TechnicalSkills: React.FC = () => {
                 <button
                   type="button"
                   onClick={(e) => handleCategoryClick(group.category, group.items[0], e)}
-                  className={`w-full flex items-center justify-between pb-3 border-b transition-all duration-300 text-left focus:outline-none ${
+                  className={`w-full flex items-center justify-between pb-3 border-b transition-all duration-300 text-left focus:outline-none focus:ring-1 focus:ring-ink/20 ${
                     isGroupActive ? "border-yellow-accent" : "border-ink/15 hover:border-ink/40"
                   }`}
                 >
@@ -314,10 +351,12 @@ const TechnicalSkills: React.FC = () => {
                       <button
                         key={item.id}
                         type="button"
-                        onMouseEnter={() => setHoveredSkill(item)}
-                        onMouseLeave={() => setHoveredSkill(null)}
+                        onMouseEnter={() => handleMouseEnterSkill(item)}
+                        onMouseLeave={handleMouseLeaveSkill}
+                        onFocus={() => handleMouseEnterSkill(item)}
+                        onBlur={handleMouseLeaveSkill}
                         onClick={(e) => handleSkillClick(item, e)}
-                        className={`w-full text-left group relative flex items-center justify-between px-3 py-2 sm:py-2 rounded-lg transition-all duration-300 cursor-pointer h-10 border ${
+                        className={`w-full text-left group relative flex items-center justify-between px-3 py-2 sm:py-2 rounded-lg transition-all duration-300 cursor-pointer h-10 border focus:outline-none focus:ring-1 focus:ring-ink/30 ${
                           isItemActive
                             ? "bg-cream border-ink/25 shadow-xs opacity-100 scale-[1.01]"
                             : isItemDimmed
