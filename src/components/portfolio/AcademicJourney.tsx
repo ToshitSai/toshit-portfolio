@@ -23,6 +23,7 @@ const educationData: EducationItem[] = [
     degree: "Intermediate MPC (12th Grade)",
     institution: "Bhavishya Junior College",
     details: "Rigorous coursework in Mathematics, Physics, and Chemistry, graduating with academic distinction.",
+    badge: "COMPLETED",
   },
 ];
 
@@ -57,7 +58,13 @@ const AcademicJourney: React.FC = () => {
                   {item.years}
                 </span>
                 {item.badge && (
-                  <span className="mt-2 inline-block w-max px-2.5 py-0.5 rounded-full bg-yellow-accent text-ink text-[10px] font-mono tracking-wider font-semibold uppercase">
+                  <span
+                    className={`mt-2 inline-block w-max px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wider font-semibold uppercase ${
+                      item.badge === "COMPLETED"
+                        ? "bg-[#20252B]/10 text-[#20252B] border border-[#20252B]/20"
+                        : "bg-yellow-accent text-ink"
+                    }`}
+                  >
                     {item.badge}
                   </span>
                 )}
