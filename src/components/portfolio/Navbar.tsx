@@ -31,12 +31,12 @@ const Navbar: React.FC = () => {
     return 1 - Math.pow(1 - clamped, 3);
   });
 
-  // A) Compact Glassmorphism Parameters (715px->300px width, 58px height, 18px->12px top, 9999px radius)
+  // A) Compact Glassmorphism Parameters (665px->290px width, 54px height, 18px->12px top, 9999px radius)
   const navTop = useTransform(easedProgress, [0, 1], ["18px", "12px"]);
-  const navHeight = useTransform(easedProgress, [0, 1], ["58px", "58px"]);
+  const navHeight = useTransform(easedProgress, [0, 1], ["54px", "54px"]);
   const navRadius = useTransform(easedProgress, [0, 1], ["9999px", "9999px"]);
-  const navMaxWidth = useTransform(easedProgress, [0, 1], ["715px", "300px"]);
-  const navPadding = useTransform(easedProgress, [0, 1], ["4px 8px", "4px 8px"]);
+  const navMaxWidth = useTransform(easedProgress, [0, 1], ["665px", "290px"]);
+  const navPadding = useTransform(easedProgress, [0, 1], ["4px 6px", "4px 6px"]);
   const navScale = useTransform(easedProgress, [0, 1], [1, 0.98]);
 
   const navBg = useTransform(
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
   );
   const navBlur = useTransform(easedProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
 
-  // B) Anchor Avatar / T Logo (44px x 44px, stable & anchored)
+  // B) Anchor Avatar / T Logo (40px x 40px, stable & anchored)
   const logoScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
 
   // C) Full Navigation Container (Links + CTA Button)
@@ -134,10 +134,10 @@ const Navbar: React.FC = () => {
       style={{ paddingTop: navTop }}
       className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 transition-all duration-300"
     >
-      {/* TARGET REFERENCE ELEGANT SLIM FLOATING PILL NAVBAR */}
+      {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
       <motion.nav
         style={{
-          width: "min(715px, calc(100vw - 48px))",
+          width: "min(665px, calc(100vw - 48px))",
           maxWidth: navMaxWidth,
           height: navHeight,
           borderRadius: navRadius,
@@ -154,21 +154,21 @@ const Navbar: React.FC = () => {
         }}
         className="nav-container pointer-events-auto relative flex items-center justify-between border transition-all duration-300"
       >
-        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (44px x 44px) */}
+        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (40px x 40px) */}
         <motion.a
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
+          className="group relative flex items-center justify-center w-[40px] h-[40px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
         >
-          <span className="font-sans text-lg font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+          <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
           </span>
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-3">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-2">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
           <motion.div
             style={{
@@ -178,10 +178,10 @@ const Navbar: React.FC = () => {
               scale: fullNavScale,
               pointerEvents: fullNavPointerEvents,
             }}
-            className="flex items-center justify-between w-full whitespace-nowrap pl-4 pr-1"
+            className="flex items-center justify-between w-full whitespace-nowrap pl-3 pr-1"
           >
-            {/* NAV LINKS WITH GAP 42px (WORK 86px x 42px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
-            <div className="flex items-center gap-[36px]">
+            {/* NAV LINKS WITH GAP 32px (WORK 80px x 38px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
+            <div className="flex items-center gap-[32px]">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -189,9 +189,9 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative text-[17px] font-medium leading-none transition-colors duration-200 ${
+                    className={`relative text-[16px] font-medium leading-none transition-colors duration-200 ${
                       isActive
-                        ? "w-[86px] h-[42px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        ? "w-[80px] h-[38px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
                         : "text-white hover:text-white/80 py-1.5 px-1"
                     }`}
                   >
@@ -201,23 +201,24 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (205px wide x 42px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
+            {/* WORK WITH ME CTA BUTTON (195px wide x 38px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-2.5 w-[205px] h-[42px] rounded-full bg-white text-[#20252B] text-[17px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-2.5 w-[195px] h-[38px] rounded-full bg-white text-[#20252B] text-[16px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
+              {/* LARGER BLACK MAIL ENVELOPE SYMBOL (22px x 16px) */}
               <svg
-                className="w-[18px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
-                viewBox="0 0 20 15"
+                className="w-[22px] h-[16px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                viewBox="0 0 22 16"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect width="20" height="15" rx="3" fill="#20252B" />
+                <rect width="22" height="16" rx="3.5" fill="#20252B" />
                 <path
-                  d="M3.5 4.5L10 9.5L16.5 4.5"
+                  d="M3.5 4.5L11 10.5L18.5 4.5"
                   stroke="white"
-                  strokeWidth="2"
+                  strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
