@@ -5,14 +5,17 @@
 @layer base {
   :root {
     --nav-width-rest: 100%;
-    --nav-width-active: 90%;
-    --nav-max-width: 1200px;
-    --nav-height-rest: 80px;
-    --nav-height-active: 56px;
+    --nav-width-active: calc(100% - 32px);
+    --nav-max-width: 960px;
+    --nav-height-rest: 72px;
+    --nav-height-active: 48px;
+    
     --nav-top-rest: 0px;
-    --nav-top-active: 16px;
+    --nav-top-active: 12px;
+    --nav-padding-rest: 0 32px;
+    --nav-padding-active: 0 16px;
     --nav-radius-rest: 0px;
-    --nav-radius-active: 50px;
+    --nav-radius-active: 9999px;
     
     --glass-bg-rest: rgba(255, 255, 255, 0.35);
     --glass-bg-active: rgba(242, 246, 252, 0.75);

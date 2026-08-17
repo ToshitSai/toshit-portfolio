@@ -18,12 +18,12 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 150px timeline)
+  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 120px timeline)
   // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
   const { scrollY } = useScroll();
 
-  // Linear progress [0, 1] clamped between 0px and 150px scroll
-  const rawProgress = useTransform(scrollY, [0, 150], [0, 1]);
+  // Linear progress [0, 1] clamped between 0px and 120px scroll range
+  const rawProgress = useTransform(scrollY, [0, 120], [0, 1]);
 
   // Eased progress curve (cubic-bezier(0.075, 0.82, 0.165, 1) fluid response)
   const easedProgress = useTransform(rawProgress, (v) => {
@@ -31,17 +31,18 @@ const Navbar: React.FC = () => {
     return 1 - Math.pow(1 - clamped, 3);
   });
 
-  // A) Glassmorphism Surface Parameters (Driven by design tokens: 80px->56px, 0px->16px top, 0px->50px radius)
-  const navTop = useTransform(easedProgress, [0, 1], ["0px", "16px"]);
-  const navHeight = useTransform(easedProgress, [0, 1], ["80px", "56px"]);
-  const navRadius = useTransform(easedProgress, [0, 1], ["0px", "50px"]);
-  const navMaxWidth = useTransform(easedProgress, [0, 1], ["1200px", "300px"]);
-  const navScale = useTransform(easedProgress, [0, 1], [1, 0.96]);
+  // A) Compact Glassmorphism Parameters (72px->48px height, 0px->12px top, 960px->300px width, 0px->9999px radius)
+  const navTop = useTransform(easedProgress, [0, 1], ["0px", "12px"]);
+  const navHeight = useTransform(easedProgress, [0, 1], ["72px", "48px"]);
+  const navRadius = useTransform(easedProgress, [0, 1], ["0px", "9999px"]);
+  const navMaxWidth = useTransform(easedProgress, [0, 1], ["960px", "300px"]);
+  const navPadding = useTransform(easedProgress, [0, 1], ["0 32px", "0 16px"]);
+  const navScale = useTransform(easedProgress, [0, 1], [1, 0.97]);
 
   const navBg = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.75)"]
+    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.78)"]
   );
   const navBorder = useTransform(
     easedProgress,
@@ -53,7 +54,7 @@ const Navbar: React.FC = () => {
     [0, 1],
     [
       "0px 0px 0px rgba(0, 0, 0, 0)",
-      "0px 20px 40px rgba(0, 0, 0, 0.12), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
+      "0px 16px 32px rgba(0, 0, 0, 0.14), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
     ]
   );
   const navBlur = useTransform(easedProgress, [0, 1], ["blur(4px)", "blur(12px)"]);
@@ -139,6 +140,7 @@ const Navbar: React.FC = () => {
           maxWidth: navMaxWidth,
           height: navHeight,
           borderRadius: navRadius,
+          padding: navPadding,
           scale: navScale,
           backgroundColor: navBg,
           borderColor: navBorder,
@@ -146,10 +148,10 @@ const Navbar: React.FC = () => {
           backdropFilter: navBlur,
           WebkitBackdropFilter: navBlur,
           transform: "translateZ(0)",
-          willChange: "transform, width, height, backdrop-filter",
+          willChange: "transform, width, height, padding, backdrop-filter",
           contain: "layout paint style",
         }}
-        className="nav-container pointer-events-auto relative w-full flex items-center justify-between px-3.5 sm:px-4 border transition-all duration-300 gap-4"
+        className="nav-container pointer-events-auto relative w-full flex items-center justify-between border transition-all duration-300 gap-4"
       >
         {/* ANCHOR: AVATAR / T MONOGRAM BADGE (48px x 48px) */}
         <motion.a
