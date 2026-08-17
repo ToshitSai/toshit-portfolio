@@ -18,49 +18,58 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. CONTINUOUS SCROLL-LINKED MOTION VALUES (60fps GPU Motion)
-  // Driven directly by window.scrollY — 100% reversible, zero layout thrashing
+  // 1. SINGLE CONTINUOUS SCROLL PROGRESS VALUE (20px -> 180px)
+  // Driven directly by window.scrollY — 100% reversible, 60fps GPU accelerated
   const { scrollY } = useScroll();
 
-  // A) Outer Capsule Container Continuous Interpolation (30px -> 160px)
-  const navScale = useTransform(scrollY, [30, 160], [1, 0.95]);
+  // Linear progress [0, 1] clamped between 20px and 180px scroll
+  const rawProgress = useTransform(scrollY, [20, 180], [0, 1]);
+
+  // Eased progress curve approximation of cubic-bezier(0.16, 1, 0.3, 1)
+  const easedProgress = useTransform(rawProgress, (v) => {
+    const clamped = Math.min(Math.max(v, 0), 1);
+    return 1 - Math.pow(1 - clamped, 3);
+  });
+
+  // A) Outer Capsule Container Continuous Morph
+  const navScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
   const navBg = useTransform(
-    scrollY,
-    [30, 160],
-    ["rgba(255, 255, 255, 0.30)", "rgba(237, 243, 252, 0.45)"]
+    easedProgress,
+    [0, 1],
+    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.55)"]
   );
   const navBorder = useTransform(
-    scrollY,
-    [30, 160],
-    ["rgba(255, 255, 255, 0.65)", "rgba(255, 255, 255, 0.85)"]
+    easedProgress,
+    [0, 1],
+    ["rgba(255, 255, 255, 0.70)", "rgba(255, 255, 255, 0.90)"]
   );
   const navShadow = useTransform(
-    scrollY,
-    [30, 160],
+    easedProgress,
+    [0, 1],
     [
-      "0px 8px 32px rgba(32, 37, 43, 0.05), inset 0px 1px 1px rgba(255, 255, 255, 0.7)",
-      "0px 10px 35px rgba(32, 37, 43, 0.1), inset 0px 1px 1px rgba(255, 255, 255, 0.85)",
+      "0px 8px 32px rgba(32, 37, 43, 0.06), inset 0px 1px 1px rgba(255, 255, 255, 0.8)",
+      "0px 10px 36px rgba(32, 37, 43, 0.12), inset 0px 1px 1px rgba(255, 255, 255, 0.95)",
     ]
   );
 
   // B) Anchor T Logo (Remains stable & visually anchored)
-  const logoScale = useTransform(scrollY, [30, 160], [1, 0.94]);
+  const logoScale = useTransform(easedProgress, [0, 1], [1, 0.92]);
 
   // C) Full Navigation Container (Links + CTA Button)
-  // Overlapping disappearance: 30px -> 105px fade, 35px -> 145px width contraction
-  const fullNavOpacity = useTransform(scrollY, [30, 105], [1, 0]);
-  const fullNavY = useTransform(scrollY, [30, 105], [0, -5]);
-  const fullNavScale = useTransform(scrollY, [30, 105], [1, 0.95]);
-  const fullNavMaxWidth = useTransform(scrollY, [35, 145], ["620px", "0px"]);
-  const fullNavPointerEvents = useTransform(scrollY, (y) => (y > 105 ? "none" : "auto"));
+  // Overlapping exit: 0.0 -> 0.45 opacity fade, 0.0 -> 0.65 width contraction
+  const fullNavOpacity = useTransform(easedProgress, [0, 0.45], [1, 0]);
+  const fullNavX = useTransform(easedProgress, [0, 0.45], [0, -10]);
+  const fullNavScale = useTransform(easedProgress, [0, 0.45], [1, 0.96]);
+  const fullNavMaxWidth = useTransform(easedProgress, [0, 0.65], ["580px", "0px"]);
+  const fullNavPointerEvents = useTransform(easedProgress, (p) => (p > 0.45 ? "none" : "auto"));
 
   // D) Compact Availability Content ("AVAILABLE FOR WORK ●")
-  // Overlapping appearance: 65px -> 140px fade, 45px -> 155px width expansion
-  const compactOpacity = useTransform(scrollY, [65, 140], [0, 1]);
-  const compactY = useTransform(scrollY, [65, 140], [5, 0]);
-  const compactScale = useTransform(scrollY, [65, 140], [0.96, 1]);
-  const compactMaxWidth = useTransform(scrollY, [45, 155], ["0px", "240px"]);
-  const compactPointerEvents = useTransform(scrollY, (y) => (y < 65 ? "none" : "auto"));
+  // Overlapping entrance: 0.35 -> 0.85 opacity fade, 0.30 -> 0.90 width expansion
+  const compactOpacity = useTransform(easedProgress, [0.35, 0.85], [0, 1]);
+  const compactX = useTransform(easedProgress, [0.35, 0.85], [10, 0]);
+  const compactScale = useTransform(easedProgress, [0.35, 0.85], [0.96, 1]);
+  const compactMaxWidth = useTransform(easedProgress, [0.30, 0.90], ["0px", "240px"]);
+  const compactPointerEvents = useTransform(easedProgress, (p) => (p < 0.35 ? "none" : "auto"));
 
   // Active section tracking (purely for highlighting the current section link)
   useEffect(() => {
@@ -144,7 +153,7 @@ const Navbar: React.FC = () => {
         <motion.div
           style={{
             opacity: fullNavOpacity,
-            y: fullNavY,
+            x: fullNavX,
             scale: fullNavScale,
             maxWidth: fullNavMaxWidth,
             pointerEvents: fullNavPointerEvents,
@@ -192,7 +201,7 @@ const Navbar: React.FC = () => {
         <motion.div
           style={{
             opacity: compactOpacity,
-            y: compactY,
+            x: compactX,
             scale: compactScale,
             maxWidth: compactMaxWidth,
             pointerEvents: compactPointerEvents,
