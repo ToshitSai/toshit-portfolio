@@ -11,7 +11,7 @@ const HERO_WORDS: HeroWordItem[] = [
   { text: "AI-POWERED", showDeveloper: true },
   { text: "FULL STACK", showDeveloper: true },
   { text: "CREATIVE", showDeveloper: true },
-  { text: "PROMPT ENGINEER", showDeveloper: false },
+  { text: "PROMPT", showDeveloper: false },
   { text: "AI BUILDER", showDeveloper: true },
 ];
 
