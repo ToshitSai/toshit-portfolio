@@ -4,6 +4,26 @@
 
 @layer base {
   :root {
+    --nav-width-rest: 100%;
+    --nav-width-active: 90%;
+    --nav-max-width: 1200px;
+    --nav-height-rest: 80px;
+    --nav-height-active: 56px;
+    --nav-top-rest: 0px;
+    --nav-top-active: 16px;
+    --nav-radius-rest: 0px;
+    --nav-radius-active: 50px;
+    
+    --glass-bg-rest: rgba(255, 255, 255, 0.35);
+    --glass-bg-active: rgba(242, 246, 252, 0.75);
+    --glass-blur-rest: 4px;
+    --glass-blur-active: 12px;
+    --glass-border-rest: rgba(255, 255, 255, 0.40);
+    --glass-border-active: rgba(255, 255, 255, 0.85);
+    
+    --ease-fluid: cubic-bezier(0.075, 0.82, 0.165, 1);
+    --ease-smooth: cubic-bezier(0.15, 0.75, 0.35, 1);
+
     --background: 44 80% 97%; /* #FFF8E8 */
     --foreground: 213 15% 15%; /* #20252B */
 

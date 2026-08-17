@@ -18,43 +18,48 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (10px -> 100px)
+  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 150px timeline)
   // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
   const { scrollY } = useScroll();
 
-  // Linear progress [0, 1] clamped between 10px and 100px scroll
-  const rawProgress = useTransform(scrollY, [10, 100], [0, 1]);
+  // Linear progress [0, 1] clamped between 0px and 150px scroll
+  const rawProgress = useTransform(scrollY, [0, 150], [0, 1]);
 
-  // Eased progress curve (cubic-bezier(0.22, 1, 0.36, 1) response)
+  // Eased progress curve (cubic-bezier(0.075, 0.82, 0.165, 1) fluid response)
   const easedProgress = useTransform(rawProgress, (v) => {
     const clamped = Math.min(Math.max(v, 0), 1);
     return 1 - Math.pow(1 - clamped, 3);
   });
 
-  // A) Outer Capsule Container Continuous Morph (1200px -> 300px)
+  // A) Glassmorphism Surface Parameters (Driven by design tokens: 80px->56px, 0px->16px top, 0px->50px radius)
+  const navTop = useTransform(easedProgress, [0, 1], ["0px", "16px"]);
+  const navHeight = useTransform(easedProgress, [0, 1], ["80px", "56px"]);
+  const navRadius = useTransform(easedProgress, [0, 1], ["0px", "50px"]);
   const navMaxWidth = useTransform(easedProgress, [0, 1], ["1200px", "300px"]);
   const navScale = useTransform(easedProgress, [0, 1], [1, 0.96]);
+
   const navBg = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.40)", "rgba(242, 246, 252, 0.65)"]
+    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.75)"]
   );
   const navBorder = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.95)"]
+    ["rgba(255, 255, 255, 0.40)", "rgba(255, 255, 255, 0.85)"]
   );
   const navShadow = useTransform(
     easedProgress,
     [0, 1],
     [
-      "0px 8px 32px rgba(32, 37, 43, 0.08), inset 0px 1px 1px rgba(255, 255, 255, 0.85)",
-      "0px 10px 36px rgba(32, 37, 43, 0.14), inset 0px 1px 1px rgba(255, 255, 255, 0.95)",
+      "0px 0px 0px rgba(0, 0, 0, 0)",
+      "0px 20px 40px rgba(0, 0, 0, 0.12), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
     ]
   );
+  const navBlur = useTransform(easedProgress, [0, 1], ["blur(4px)", "blur(12px)"]);
 
   // B) Anchor Avatar / T Logo (48px x 48px, stable & anchored)
-  const logoScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
+  const logoScale = useTransform(easedProgress, [0, 1], [1, 0.92]);
 
   // C) Full Navigation Container (Links + CTA Button)
   // Clean exit: 0.0 -> 0.30 opacity fade out, 0.0 -> 0.30 translation
@@ -124,17 +129,27 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="fixed top-4 sm:top-5 left-0 right-0 z-50 flex justify-center items-center pointer-events-none px-4 sm:px-6">
-      {/* SINGLE UNIFIED FLOATING GLASSMORPHISM MORPHING CAPSULE (~70px height) */}
+    <motion.header
+      style={{ paddingTop: navTop }}
+      className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 transition-all duration-300"
+    >
+      {/* PRODUCTION GLASSMORPHIC SCROLL NAVIGATION CONTAINER */}
       <motion.nav
         style={{
           maxWidth: navMaxWidth,
+          height: navHeight,
+          borderRadius: navRadius,
           scale: navScale,
           backgroundColor: navBg,
           borderColor: navBorder,
           boxShadow: navShadow,
+          backdropFilter: navBlur,
+          WebkitBackdropFilter: navBlur,
+          transform: "translateZ(0)",
+          willChange: "transform, width, height, backdrop-filter",
+          contain: "layout paint style",
         }}
-        className="pointer-events-auto relative w-full h-[70px] flex items-center justify-between rounded-full px-3.5 sm:px-4 backdrop-blur-xl backdrop-saturate-150 border transition-all duration-75 gap-4"
+        className="nav-container pointer-events-auto relative w-full flex items-center justify-between px-3.5 sm:px-4 border transition-all duration-300 gap-4"
       >
         {/* ANCHOR: AVATAR / T MONOGRAM BADGE (48px x 48px) */}
         <motion.a
@@ -288,7 +303,7 @@ const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 };
 
