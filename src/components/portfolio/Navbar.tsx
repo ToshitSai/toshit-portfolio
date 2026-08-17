@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
   });
 
   // A) Outer Capsule Container Continuous Morph
-  const navMaxWidth = useTransform(easedProgress, [0, 1], ["580px", "240px"]);
+  const navMaxWidth = useTransform(easedProgress, [0, 1], ["630px", "240px"]);
   const navScale = useTransform(easedProgress, [0, 1], [1, 0.95]);
   const navBg = useTransform(
     easedProgress,
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
           borderColor: navBorder,
           boxShadow: navShadow,
         }}
-        className="pointer-events-auto relative w-full flex items-center justify-between rounded-full px-3 py-2 sm:px-4 sm:py-2.5 backdrop-blur-md backdrop-saturate-150 border transition-all duration-75"
+        className="pointer-events-auto relative w-full flex items-center justify-between rounded-full px-3 py-2 sm:px-4 sm:py-2.5 backdrop-blur-md backdrop-saturate-150 border transition-all duration-75 gap-3 sm:gap-4"
       >
         {/* ANCHOR: YELLOW MONOGRAM "T" LOGO */}
         <motion.a
@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 justify-end pl-3">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 justify-end pl-2">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
           <motion.div
             style={{
@@ -160,10 +160,10 @@ const Navbar: React.FC = () => {
               scale: fullNavScale,
               pointerEvents: fullNavPointerEvents,
             }}
-            className="flex items-center justify-end gap-4 sm:gap-6 whitespace-nowrap"
+            className="flex items-center justify-end gap-3 sm:gap-5 whitespace-nowrap"
           >
             {/* NAV LINKS */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -171,7 +171,7 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-medium tracking-[0.14em] transition-colors duration-200 ${
+                    className={`relative px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-medium tracking-[0.14em] transition-colors duration-200 ${
                       isActive ? "text-[#20252B] font-semibold" : "text-[#20252B]/75 hover:text-[#20252B]"
                     }`}
                   >
