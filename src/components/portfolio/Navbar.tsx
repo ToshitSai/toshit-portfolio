@@ -31,36 +31,36 @@ const Navbar: React.FC = () => {
     return 1 - Math.pow(1 - clamped, 3);
   });
 
-  // A) Compact Glassmorphism Parameters (72px->48px height, 0px->12px top, 960px->300px width, 0px->9999px radius)
-  const navTop = useTransform(easedProgress, [0, 1], ["0px", "12px"]);
-  const navHeight = useTransform(easedProgress, [0, 1], ["72px", "48px"]);
-  const navRadius = useTransform(easedProgress, [0, 1], ["0px", "9999px"]);
-  const navMaxWidth = useTransform(easedProgress, [0, 1], ["960px", "300px"]);
-  const navPadding = useTransform(easedProgress, [0, 1], ["0 32px", "0 16px"]);
-  const navScale = useTransform(easedProgress, [0, 1], [1, 0.97]);
+  // A) Compact Glassmorphism Parameters (715px->300px width, 70px height, 18px->12px top, 9999px radius)
+  const navTop = useTransform(easedProgress, [0, 1], ["18px", "12px"]);
+  const navHeight = useTransform(easedProgress, [0, 1], ["70px", "70px"]);
+  const navRadius = useTransform(easedProgress, [0, 1], ["9999px", "9999px"]);
+  const navMaxWidth = useTransform(easedProgress, [0, 1], ["715px", "300px"]);
+  const navPadding = useTransform(easedProgress, [0, 1], ["8px 9px", "8px 9px"]);
+  const navScale = useTransform(easedProgress, [0, 1], [1, 0.98]);
 
   const navBg = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.78)"]
+    ["rgba(255, 255, 255, 0.25)", "rgba(242, 246, 252, 0.80)"]
   );
   const navBorder = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.40)", "rgba(255, 255, 255, 0.85)"]
+    ["rgba(255, 255, 255, 0.45)", "rgba(255, 255, 255, 0.85)"]
   );
   const navShadow = useTransform(
     easedProgress,
     [0, 1],
     [
-      "0px 0px 0px rgba(0, 0, 0, 0)",
+      "0px 8px 24px rgba(0, 0, 0, 0.08)",
       "0px 16px 32px rgba(0, 0, 0, 0.14), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
     ]
   );
-  const navBlur = useTransform(easedProgress, [0, 1], ["blur(4px)", "blur(12px)"]);
+  const navBlur = useTransform(easedProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
 
-  // B) Anchor Avatar / T Logo (48px x 48px, stable & anchored)
-  const logoScale = useTransform(easedProgress, [0, 1], [1, 0.92]);
+  // B) Anchor Avatar / T Logo (50px x 50px, stable & anchored)
+  const logoScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
 
   // C) Full Navigation Container (Links + CTA Button)
   // Clean exit: 0.0 -> 0.30 opacity fade out, 0.0 -> 0.30 translation
@@ -134,9 +134,10 @@ const Navbar: React.FC = () => {
       style={{ paddingTop: navTop }}
       className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 transition-all duration-300"
     >
-      {/* PRODUCTION GLASSMORPHIC SCROLL NAVIGATION CONTAINER */}
+      {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
       <motion.nav
         style={{
+          width: "min(715px, calc(100vw - 48px))",
           maxWidth: navMaxWidth,
           height: navHeight,
           borderRadius: navRadius,
@@ -151,15 +152,15 @@ const Navbar: React.FC = () => {
           willChange: "transform, width, height, padding, backdrop-filter",
           contain: "layout paint style",
         }}
-        className="nav-container pointer-events-auto relative w-full flex items-center justify-between border transition-all duration-300 gap-4"
+        className="nav-container pointer-events-auto relative flex items-center justify-between border transition-all duration-300"
       >
-        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (48px x 48px) */}
+        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (50px x 50px) */}
         <motion.a
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-12 h-12 rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20"
+          className="group relative flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
         >
           <span className="font-sans text-xl font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
@@ -167,7 +168,7 @@ const Navbar: React.FC = () => {
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-2">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-3">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
           <motion.div
             style={{
@@ -177,10 +178,10 @@ const Navbar: React.FC = () => {
               scale: fullNavScale,
               pointerEvents: fullNavPointerEvents,
             }}
-            className="flex items-center justify-between w-full whitespace-nowrap pl-4 sm:pl-8"
+            className="flex items-center justify-between w-full whitespace-nowrap pl-4 pr-1"
           >
-            {/* NAV LINKS WITH PURE WHITE TYPOGRAPHY MATCHING REFERENCE */}
-            <div className="flex items-center gap-10 sm:gap-11">
+            {/* NAV LINKS WITH GAP 42px (WORK 90px x 50px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
+            <div className="flex items-center gap-[36px]">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -188,31 +189,26 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative px-4 py-2 rounded-full text-base font-medium transition-colors duration-200 ${
-                      isActive ? "text-white font-semibold" : "text-white/90 hover:text-white"
+                    className={`relative text-[18px] font-medium transition-colors duration-200 ${
+                      isActive
+                        ? "w-[90px] h-[50px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        : "text-white hover:text-white/80 py-2 px-1"
                     }`}
                   >
-                    {isActive && (
-                      <motion.span
-                        layoutId="activeNavPill"
-                        className="absolute inset-0 rounded-full bg-white/25 backdrop-blur-md border border-white/40 -z-10"
-                        transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                      />
-                    )}
-                    <span className="relative z-10">{item.label}</span>
+                    <span>{item.label}</span>
                   </a>
                 );
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (WHITE PILL, BLACK MAIL ICON & BLACK TEXT) */}
+            {/* WORK WITH ME CTA BUTTON (210px wide x 50px high, COMPACT WHITE PILL INSIDE NAVBAR) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-full bg-white text-black text-base font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-2.5 w-[210px] h-[50px] rounded-full bg-white text-[#20252B] text-base font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
-              <Mail className="w-5 h-5 text-black fill-black group-hover:rotate-6 transition-transform" />
-              <span className="text-black font-semibold">Work with me</span>
+              <Mail className="w-5 h-5 text-[#20252B] fill-[#20252B] group-hover:rotate-6 transition-transform" />
+              <span className="text-[#20252B] font-semibold">Work with me</span>
             </a>
           </motion.div>
 

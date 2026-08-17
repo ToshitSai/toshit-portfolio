@@ -4,24 +4,24 @@
 
 @layer base {
   :root {
-    --nav-width-rest: 100%;
-    --nav-width-active: calc(100% - 32px);
-    --nav-max-width: 960px;
-    --nav-height-rest: 72px;
-    --nav-height-active: 48px;
+    --nav-width-rest: min(715px, calc(100vw - 48px));
+    --nav-width-active: 300px;
+    --nav-max-width: 715px;
+    --nav-height-rest: 70px;
+    --nav-height-active: 70px;
     
-    --nav-top-rest: 0px;
+    --nav-top-rest: 18px;
     --nav-top-active: 12px;
-    --nav-padding-rest: 0 32px;
-    --nav-padding-active: 0 16px;
-    --nav-radius-rest: 0px;
+    --nav-padding-rest: 8px 9px;
+    --nav-padding-active: 8px 9px;
+    --nav-radius-rest: 9999px;
     --nav-radius-active: 9999px;
     
-    --glass-bg-rest: rgba(255, 255, 255, 0.35);
-    --glass-bg-active: rgba(242, 246, 252, 0.75);
-    --glass-blur-rest: 4px;
-    --glass-blur-active: 12px;
-    --glass-border-rest: rgba(255, 255, 255, 0.40);
+    --glass-bg-rest: rgba(255, 255, 255, 0.25);
+    --glass-bg-active: rgba(242, 246, 252, 0.80);
+    --glass-blur-rest: 14px;
+    --glass-blur-active: 16px;
+    --glass-border-rest: rgba(255, 255, 255, 0.45);
     --glass-border-active: rgba(255, 255, 255, 0.85);
     
     --ease-fluid: cubic-bezier(0.075, 0.82, 0.165, 1);
