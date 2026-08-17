@@ -57,18 +57,18 @@ const Navbar: React.FC = () => {
   const logoScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
 
   // C) Full Navigation Container (Links + CTA Button)
-  // Overlapping exit: 0.0 -> 0.45 opacity fade, 0.0 -> 0.45 translation
-  const fullNavOpacity = useTransform(easedProgress, [0, 0.45], [1, 0]);
-  const fullNavX = useTransform(easedProgress, [0, 0.45], [0, -15]);
-  const fullNavScale = useTransform(easedProgress, [0, 0.45], [1, 0.96]);
-  const fullNavPointerEvents = useTransform(easedProgress, (p) => (p > 0.45 ? "none" : "auto"));
+  // Clean exit: 0.0 -> 0.30 opacity fade out, 0.0 -> 0.30 translation
+  const fullNavOpacity = useTransform(easedProgress, [0, 0.30], [1, 0]);
+  const fullNavX = useTransform(easedProgress, [0, 0.30], [0, -15]);
+  const fullNavScale = useTransform(easedProgress, [0, 0.30], [1, 0.96]);
+  const fullNavPointerEvents = useTransform(easedProgress, (p) => (p > 0.30 ? "none" : "auto"));
 
   // D) Compact Availability Content ("Available for work 🟡")
-  // Overlapping entrance: 0.35 -> 0.85 opacity fade, 0.35 -> 0.85 translation
-  const compactOpacity = useTransform(easedProgress, [0.35, 0.85], [0, 1]);
-  const compactX = useTransform(easedProgress, [0.35, 0.85], [15, 0]);
-  const compactScale = useTransform(easedProgress, [0.35, 0.85], [0.96, 1]);
-  const compactPointerEvents = useTransform(easedProgress, (p) => (p < 0.35 ? "none" : "auto"));
+  // Clean entrance: 0.45 -> 0.80 opacity fade in, 0.45 -> 0.80 translation
+  const compactOpacity = useTransform(easedProgress, [0.45, 0.80], [0, 1]);
+  const compactX = useTransform(easedProgress, [0.45, 0.80], [15, 0]);
+  const compactScale = useTransform(easedProgress, [0.45, 0.80], [0.96, 1]);
+  const compactPointerEvents = useTransform(easedProgress, (p) => (p < 0.45 ? "none" : "auto"));
 
   // Active section tracking (purely for highlighting the current section link)
   useEffect(() => {
