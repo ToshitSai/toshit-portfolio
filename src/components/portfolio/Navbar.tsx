@@ -179,7 +179,7 @@ const Navbar: React.FC = () => {
             }}
             className="flex items-center justify-between w-full whitespace-nowrap pl-4 sm:pl-8"
           >
-            {/* NAV LINKS WITH 40-45px SPACING */}
+            {/* NAV LINKS WITH PURE WHITE TYPOGRAPHY MATCHING REFERENCE */}
             <div className="flex items-center gap-10 sm:gap-11">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
@@ -189,13 +189,13 @@ const Navbar: React.FC = () => {
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
                     className={`relative px-4 py-2 rounded-full text-base font-medium transition-colors duration-200 ${
-                      isActive ? "text-[#20252B] font-semibold" : "text-[#20252B]/80 hover:text-[#20252B]"
+                      isActive ? "text-white font-semibold" : "text-white/90 hover:text-white"
                     }`}
                   >
                     {isActive && (
                       <motion.span
                         layoutId="activeNavPill"
-                        className="absolute inset-0 rounded-full bg-white/90 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-white/90 -z-10"
+                        className="absolute inset-0 rounded-full bg-white/25 backdrop-blur-md border border-white/40 -z-10"
                         transition={{ type: "spring", stiffness: 450, damping: 35 }}
                       />
                     )}
@@ -205,14 +205,14 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (~215px wide, ~50px high) */}
+            {/* WORK WITH ME CTA BUTTON (WHITE PILL, BLACK MAIL ICON & BLACK TEXT) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-2.5 w-[215px] h-[50px] rounded-full bg-[#FFF8E8] backdrop-blur-sm text-[#20252B] text-base font-semibold tracking-wide border border-white/90 shadow-xs hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-full bg-white text-black text-base font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
-              <Mail className="w-5 h-5 text-[#20252B] stroke-[2.2] group-hover:rotate-6 transition-transform" />
-              <span>Work with me</span>
+              <Mail className="w-5 h-5 text-black fill-black group-hover:rotate-6 transition-transform" />
+              <span className="text-black font-semibold">Work with me</span>
             </a>
           </motion.div>
 
