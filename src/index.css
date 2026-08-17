@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --nav-width-rest: min(665px, calc(100vw - 48px));
-    --nav-width-active: 290px;
-    --nav-max-width: 665px;
-    --nav-height-rest: 54px;
-    --nav-height-active: 54px;
+    --nav-width-rest: min(580px, calc(100vw - 40px));
+    --nav-width-active: 260px;
+    --nav-max-width: 580px;
+    --nav-height-rest: 48px;
+    --nav-height-active: 48px;
     
-    --nav-top-rest: 18px;
-    --nav-top-active: 12px;
-    --nav-padding-rest: 4px 6px;
-    --nav-padding-active: 4px 6px;
+    --nav-top-rest: 16px;
+    --nav-top-active: 10px;
+    --nav-padding-rest: 3px 5px;
+    --nav-padding-active: 3px 5px;
     --nav-radius-rest: 9999px;
     --nav-radius-active: 9999px;
     
-    --glass-bg-rest: rgba(255, 255, 255, 0.25);
-    --glass-bg-active: rgba(242, 246, 252, 0.80);
+    --glass-bg-rest: rgba(255, 255, 255, 0.28);
+    --glass-bg-active: rgba(242, 246, 252, 0.85);
     --glass-blur-rest: 14px;
     --glass-blur-active: 16px;
-    --glass-border-rest: rgba(255, 255, 255, 0.45);
-    --glass-border-active: rgba(255, 255, 255, 0.85);
+    --glass-border-rest: rgba(255, 255, 255, 0.50);
+    --glass-border-active: rgba(255, 255, 255, 0.90);
     
     --ease-fluid: cubic-bezier(0.075, 0.82, 0.165, 1);
     --ease-smooth: cubic-bezier(0.15, 0.75, 0.35, 1);

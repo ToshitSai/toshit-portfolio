@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
 
 interface NavItem {
@@ -18,63 +18,65 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 120px timeline)
+  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 140px timeline)
   // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
   const { scrollY } = useScroll();
 
-  // Linear progress [0, 1] clamped between 0px and 120px scroll range
-  const rawProgress = useTransform(scrollY, [0, 120], [0, 1]);
+  // Linear raw progress [0, 1] clamped between 0px and 140px scroll range
+  const rawProgress = useTransform(scrollY, [0, 140], [0, 1]);
 
-  // Eased progress curve (cubic-bezier(0.075, 0.82, 0.165, 1) fluid response)
-  const easedProgress = useTransform(rawProgress, (v) => {
-    const clamped = Math.min(Math.max(v, 0), 1);
-    return 1 - Math.pow(1 - clamped, 3);
+  // Physics spring for continuous 60fps buttery scroll motion with zero step-snapping
+  const smoothProgress = useSpring(rawProgress, {
+    stiffness: 240,
+    damping: 30,
+    mass: 0.2,
+    restDelta: 0.001,
   });
 
-  // A) Compact Glassmorphism Parameters (665px->290px width, 54px height, 18px->12px top, 9999px radius)
-  const navTop = useTransform(easedProgress, [0, 1], ["18px", "12px"]);
-  const navHeight = useTransform(easedProgress, [0, 1], ["54px", "54px"]);
-  const navRadius = useTransform(easedProgress, [0, 1], ["9999px", "9999px"]);
-  const navMaxWidth = useTransform(easedProgress, [0, 1], ["665px", "290px"]);
-  const navPadding = useTransform(easedProgress, [0, 1], ["4px 6px", "4px 6px"]);
-  const navScale = useTransform(easedProgress, [0, 1], [1, 0.98]);
+  // A) Compact Glassmorphism Parameters (580px->260px width, 48px height, 16px->10px top, 9999px radius)
+  const navTop = useTransform(smoothProgress, [0, 1], ["16px", "10px"]);
+  const navHeight = useTransform(smoothProgress, [0, 1], ["48px", "48px"]);
+  const navRadius = useTransform(smoothProgress, [0, 1], ["9999px", "9999px"]);
+  const navMaxWidth = useTransform(smoothProgress, [0, 1], ["580px", "260px"]);
+  const navPadding = useTransform(smoothProgress, [0, 1], ["3px 5px", "3px 5px"]);
+  const navScale = useTransform(smoothProgress, [0, 1], [1, 0.98]);
 
   const navBg = useTransform(
-    easedProgress,
+    smoothProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.25)", "rgba(242, 246, 252, 0.80)"]
+    ["rgba(255, 255, 255, 0.28)", "rgba(242, 246, 252, 0.85)"]
   );
   const navBorder = useTransform(
-    easedProgress,
+    smoothProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.45)", "rgba(255, 255, 255, 0.85)"]
+    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.90)"]
   );
   const navShadow = useTransform(
-    easedProgress,
+    smoothProgress,
     [0, 1],
     [
-      "0px 8px 24px rgba(0, 0, 0, 0.08)",
-      "0px 16px 32px rgba(0, 0, 0, 0.14), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
+      "0px 8px 24px rgba(0, 0, 0, 0.06)",
+      "0px 14px 28px rgba(0, 0, 0, 0.12), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
     ]
   );
-  const navBlur = useTransform(easedProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
+  const navBlur = useTransform(smoothProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
 
-  // B) Anchor Avatar / T Logo (40px x 40px, stable & anchored)
-  const logoScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
+  // B) Anchor Avatar / T Logo (36px x 36px, stable & anchored)
+  const logoScale = useTransform(smoothProgress, [0, 1], [1, 0.94]);
 
   // C) Full Navigation Container (Links + CTA Button)
-  // Clean exit: 0.0 -> 0.30 opacity fade out, 0.0 -> 0.30 translation
-  const fullNavOpacity = useTransform(easedProgress, [0, 0.30], [1, 0]);
-  const fullNavX = useTransform(easedProgress, [0, 0.30], [0, -15]);
-  const fullNavScale = useTransform(easedProgress, [0, 0.30], [1, 0.96]);
-  const fullNavPointerEvents = useTransform(easedProgress, (p) => (p > 0.30 ? "none" : "auto"));
+  // Continuous smooth cross-fade exit: 0.0 -> 0.55
+  const fullNavOpacity = useTransform(smoothProgress, [0, 0.55], [1, 0]);
+  const fullNavX = useTransform(smoothProgress, [0, 0.55], [0, -14]);
+  const fullNavScale = useTransform(smoothProgress, [0, 0.55], [1, 0.96]);
+  const fullNavPointerEvents = useTransform(smoothProgress, (p) => (p > 0.50 ? "none" : "auto"));
 
   // D) Compact Availability Content ("Available for work 🟡")
-  // Clean entrance: 0.45 -> 0.80 opacity fade in, 0.45 -> 0.80 translation
-  const compactOpacity = useTransform(easedProgress, [0.45, 0.80], [0, 1]);
-  const compactX = useTransform(easedProgress, [0.45, 0.80], [15, 0]);
-  const compactScale = useTransform(easedProgress, [0.45, 0.80], [0.96, 1]);
-  const compactPointerEvents = useTransform(easedProgress, (p) => (p < 0.45 ? "none" : "auto"));
+  // Continuous smooth entrance: 0.25 -> 0.80
+  const compactOpacity = useTransform(smoothProgress, [0.25, 0.80], [0, 1]);
+  const compactX = useTransform(smoothProgress, [0.25, 0.80], [14, 0]);
+  const compactScale = useTransform(smoothProgress, [0.25, 0.80], [0.96, 1]);
+  const compactPointerEvents = useTransform(smoothProgress, (p) => (p < 0.30 ? "none" : "auto"));
 
   // Active section tracking (purely for highlighting the current section link)
   useEffect(() => {
@@ -137,7 +139,7 @@ const Navbar: React.FC = () => {
       {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
       <motion.nav
         style={{
-          width: "min(665px, calc(100vw - 48px))",
+          width: "min(580px, calc(100vw - 40px))",
           maxWidth: navMaxWidth,
           height: navHeight,
           borderRadius: navRadius,
@@ -154,15 +156,15 @@ const Navbar: React.FC = () => {
         }}
         className="nav-container pointer-events-auto relative flex items-center justify-between border transition-all duration-300"
       >
-        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (40px x 40px) */}
+        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (36px x 36px) */}
         <motion.a
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-[40px] h-[40px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
+          className="group relative flex items-center justify-center w-[36px] h-[36px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
         >
-          <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+          <span className="font-sans text-sm font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
           </span>
         </motion.a>
@@ -178,10 +180,10 @@ const Navbar: React.FC = () => {
               scale: fullNavScale,
               pointerEvents: fullNavPointerEvents,
             }}
-            className="flex items-center justify-between w-full whitespace-nowrap pl-3 pr-1"
+            className="flex items-center justify-between w-full whitespace-nowrap pl-2 pr-0.5"
           >
-            {/* NAV LINKS WITH GAP 32px (WORK 80px x 38px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
-            <div className="flex items-center gap-[32px]">
+            {/* NAV LINKS WITH GAP 24px (WORK 72px x 34px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
+            <div className="flex items-center gap-[24px]">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -189,10 +191,10 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative text-[16px] font-medium leading-none transition-colors duration-200 ${
+                    className={`relative text-[14.5px] font-medium leading-none transition-colors duration-200 ${
                       isActive
-                        ? "w-[80px] h-[38px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
-                        : "text-white hover:text-white/80 py-1.5 px-1"
+                        ? "w-[72px] h-[34px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        : "text-white hover:text-white/80 py-1 px-1"
                     }`}
                   >
                     <span>{item.label}</span>
@@ -201,24 +203,24 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (195px wide x 38px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
+            {/* WORK WITH ME CTA BUTTON (165px wide x 34px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-2.5 w-[195px] h-[38px] rounded-full bg-white text-[#20252B] text-[16px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-2 w-[165px] h-[34px] rounded-full bg-white text-[#20252B] text-[14.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
-              {/* LARGER BLACK MAIL ENVELOPE SYMBOL (22px x 16px) */}
+              {/* BLACK MAIL ENVELOPE SYMBOL (19px x 14px) */}
               <svg
-                className="w-[22px] h-[16px] flex-shrink-0 group-hover:rotate-6 transition-transform"
-                viewBox="0 0 22 16"
+                className="w-[19px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                viewBox="0 0 20 14"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect width="22" height="16" rx="3.5" fill="#20252B" />
+                <rect width="20" height="14" rx="3" fill="#20252B" />
                 <path
-                  d="M3.5 4.5L11 10.5L18.5 4.5"
+                  d="M3.5 4L10 9.5L16.5 4"
                   stroke="white"
-                  strokeWidth="2.2"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
