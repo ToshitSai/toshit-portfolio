@@ -207,7 +207,21 @@ const Navbar: React.FC = () => {
               onClick={(e) => handleNavClick(e, "#contact")}
               className="group relative flex items-center justify-center gap-2.5 w-[205px] h-[42px] rounded-full bg-white text-[#20252B] text-[17px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
-              <Mail className="w-4.5 h-4.5 text-[#20252B] fill-[#20252B] group-hover:rotate-6 transition-transform" />
+              <svg
+                className="w-[18px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                viewBox="0 0 20 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="20" height="15" rx="3" fill="#20252B" />
+                <path
+                  d="M3.5 4.5L10 9.5L16.5 4.5"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
               <span className="text-[#20252B] font-semibold">Work with me</span>
             </a>
           </motion.div>
@@ -243,9 +257,23 @@ const Navbar: React.FC = () => {
           <a
             href="#contact"
             onClick={(e) => handleNavClick(e, "#contact")}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-semibold uppercase border border-white/80 shadow-xs hover:bg-white transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white text-[#20252B] text-xs font-semibold uppercase border border-white/80 shadow-xs hover:bg-white transition-colors"
           >
-            <Mail className="w-3.5 h-3.5 text-[#20252B]" />
+            <svg
+              className="w-3.5 h-2.5 flex-shrink-0"
+              viewBox="0 0 20 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="20" height="15" rx="3" fill="#20252B" />
+              <path
+                d="M3.5 4.5L10 9.5L16.5 4.5"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             <span>Work with me</span>
           </a>
 
