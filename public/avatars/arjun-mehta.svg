@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <!-- Paper Grain Filter -->
+    <filter id="grain-arjun" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.04 0" />
+      <feComposite operator="in" in2="SourceGraphic" />
+    </filter>
+  </defs>
+
+  <!-- Background Circle (Cream) -->
+  <circle cx="60" cy="60" r="58" fill="#F7F4EA" />
+
+  <!-- Subtle Blue Accent Geometric Shape -->
+  <path d="M 30 20 C 60 10, 90 20, 100 50 C 90 80, 60 90, 30 80 Z" fill="#3B82F6" opacity="0.15" />
+
+  <!-- Shoulders / Clothes (Charcoal) -->
+  <path d="M 22 104 C 25 82, 42 76, 60 76 C 78 76, 95 82, 98 104 Z" fill="#20252B" />
+
+  <!-- Collar / Shirt Detail (Blue Accent) -->
+  <path d="M 52 76 L 60 88 L 68 76 Z" fill="#3B82F6" />
+
+  <!-- Neck -->
+  <rect x="52" y="60" width="16" height="18" rx="3" fill="#E8D5C4" />
+
+  <!-- Face Base (Minimalist Skin Tone) -->
+  <path d="M 40 40 C 40 28, 80 28, 80 40 L 80 54 C 80 66, 40 66, 40 54 Z" fill="#F3DECB" />
+
+  <!-- Dark Hair (Short, Clean Geometric Style) -->
+  <path d="M 37 38 C 37 22, 50 18, 60 18 C 72 18, 83 22, 83 38 C 83 33, 76 25, 60 25 C 46 25, 39 33, 37 38 Z" fill="#20252B" />
+  <!-- Sideburns & Bangs accent -->
+  <path d="M 37 38 L 42 38 L 44 26 Z" fill="#20252B" />
+  <path d="M 83 38 L 78 38 L 76 26 Z" fill="#20252B" />
+
+  <!-- Minimalist Glasses / Eyes (Geometric Charcoal Line) -->
+  <rect x="44" y="42" width="12" height="8" rx="2" fill="none" stroke="#20252B" stroke-width="2.5" />
+  <rect x="64" y="42" width="12" height="8" rx="2" fill="none" stroke="#20252B" stroke-width="2.5" />
+  <line x1="56" y1="46" x2="64" y2="46" stroke="#20252B" stroke-width="2.5" />
+
+  <!-- Nose (Minimal Line) -->
+  <path d="M 60 48 L 59 53 L 62 53" stroke="#C8AC96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+  <!-- Mouth (Simple Neutral Line) -->
+  <line x1="54" y1="60" x2="66" y2="60" stroke="#20252B" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Grain Overlay -->
+  <circle cx="60" cy="60" r="58" fill="#000000" filter="url(#grain-arjun)" />
+</svg>

@@ -9,74 +9,71 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "work", label: "Work", href: "#work" },
-  { id: "about", label: "About", href: "#about" },
-  { id: "playground", label: "Playground", href: "#playground" },
+  { id: "work", label: "WORK", href: "#work" },
+  { id: "about", label: "ABOUT", href: "#about" },
+  { id: "playground", label: "PLAYGROUND", href: "#playground" },
 ];
-
-const smoothEasing = [0.16, 1, 0.3, 1] as const;
 
 const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. CONTINUOUS SCROLL PROGRESS (0px -> 110px)
+  // 1. CONTINUOUS SCROLL-LINKED MOTION VALUES (60fps GPU Motion)
+  // Driven directly by window.scrollY — 100% reversible, zero layout thrashing
   const { scrollY } = useScroll();
 
-  // Outer Capsule Continuous Interpolation
-  const navScale = useTransform(scrollY, [0, 110], [1, 0.94]);
+  // A) Outer Capsule Container Continuous Interpolation (30px -> 160px)
+  const navScale = useTransform(scrollY, [30, 160], [1, 0.95]);
   const navBg = useTransform(
     scrollY,
-    [0, 110],
-    ["rgba(255, 255, 255, 0.35)", "rgba(255, 255, 255, 0.40)"]
+    [30, 160],
+    ["rgba(255, 255, 255, 0.30)", "rgba(237, 243, 252, 0.45)"]
   );
   const navBorder = useTransform(
     scrollY,
-    [0, 110],
-    ["rgba(255, 255, 255, 0.65)", "rgba(255, 255, 255, 0.75)"]
+    [30, 160],
+    ["rgba(255, 255, 255, 0.65)", "rgba(255, 255, 255, 0.85)"]
   );
   const navShadow = useTransform(
     scrollY,
-    [0, 110],
+    [30, 160],
     [
-      "0px 8px 32px rgba(0, 0, 0, 0.06)",
-      "0px 8px 28px rgba(0, 0, 0, 0.08)",
+      "0px 8px 32px rgba(32, 37, 43, 0.05), inset 0px 1px 1px rgba(255, 255, 255, 0.7)",
+      "0px 10px 35px rgba(32, 37, 43, 0.1), inset 0px 1px 1px rgba(255, 255, 255, 0.85)",
     ]
   );
 
-  // Logo T Badge Anchor Continuous Interpolation
-  const logoScale = useTransform(scrollY, [0, 110], [1, 0.95]);
+  // B) Anchor T Logo (Remains stable & visually anchored)
+  const logoScale = useTransform(scrollY, [30, 160], [1, 0.94]);
 
-  // Content Motion Values
-  const fullNavOpacity = useTransform(scrollY, [0, 60], [1, 0]);
-  const fullNavY = useTransform(scrollY, [0, 60], [0, -6]);
-  const fullNavScale = useTransform(scrollY, [0, 60], [1, 0.95]);
+  // C) Full Navigation Container (Links + CTA Button)
+  // Overlapping disappearance: 30px -> 105px fade, 35px -> 145px width contraction
+  const fullNavOpacity = useTransform(scrollY, [30, 105], [1, 0]);
+  const fullNavY = useTransform(scrollY, [30, 105], [0, -5]);
+  const fullNavScale = useTransform(scrollY, [30, 105], [1, 0.95]);
+  const fullNavMaxWidth = useTransform(scrollY, [35, 145], ["620px", "0px"]);
+  const fullNavPointerEvents = useTransform(scrollY, (y) => (y > 105 ? "none" : "auto"));
 
-  const compactOpacity = useTransform(scrollY, [40, 100], [0, 1]);
-  const compactY = useTransform(scrollY, [40, 100], [6, 0]);
-  const compactScale = useTransform(scrollY, [40, 100], [0.95, 1]);
+  // D) Compact Availability Content ("AVAILABLE FOR WORK ●")
+  // Overlapping appearance: 65px -> 140px fade, 45px -> 155px width expansion
+  const compactOpacity = useTransform(scrollY, [65, 140], [0, 1]);
+  const compactY = useTransform(scrollY, [65, 140], [5, 0]);
+  const compactScale = useTransform(scrollY, [65, 140], [0.96, 1]);
+  const compactMaxWidth = useTransform(scrollY, [45, 155], ["0px", "240px"]);
+  const compactPointerEvents = useTransform(scrollY, (y) => (y < 65 ? "none" : "auto"));
 
-  // Scroll Listener for Active Section & Compact Layout Width Toggle
+  // Active section tracking (purely for highlighting the current section link)
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
-
-      // Hysteresis toggle for structural layout width contraction
-      if (currentScroll > 75) {
-        setIsScrolled(true);
-      } else if (currentScroll < 30) {
-        setIsScrolled(false);
-      }
 
       const sections = [
         { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
         { id: "about", el: document.getElementById("about") },
         { id: "playground", el: document.getElementById("playground") || document.getElementById("skills") },
-        { id: "contact", el: document.getElementById("contact") },
       ];
 
-      const scrollPosition = currentScroll + 280;
+      const scrollPosition = currentScroll + 250;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const sec = sections[i];
@@ -119,172 +116,167 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-4 left-0 right-0 z-50 flex justify-center items-center pointer-events-none px-4">
-      {/* SINGLE UNIFIED TIGHTLY MORPHING NAVBAR CAPSULE */}
+    <header className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center items-center pointer-events-none px-4 sm:px-6">
+      {/* SINGLE UNIFIED FLOATING GLASSMORPHISM MORPHING CAPSULE */}
       <motion.nav
-        layout
         style={{
           scale: navScale,
           backgroundColor: navBg,
           borderColor: navBorder,
           boxShadow: navShadow,
         }}
-        transition={{
-          layout: { duration: 0.55, ease: smoothEasing },
-        }}
-        className="pointer-events-auto relative flex items-center justify-between backdrop-blur-2xl rounded-full border px-2.5 sm:px-3 py-1.5 overflow-hidden w-auto max-w-full"
+        className="pointer-events-auto relative flex items-center justify-between rounded-full px-3 py-2 sm:px-4 sm:py-2.5 backdrop-blur-md backdrop-saturate-150 transition-colors duration-200"
       >
-        {/* LOGO: T BADGE (ANCHOR ELEMENT) */}
+        {/* ANCHOR 1: YELLOW MONOGRAM "T" LOGO */}
         <motion.a
-          layout="position"
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
-          className="group relative w-8 h-8 rounded-full bg-[#FFD42A] text-[#20252B] font-bold flex items-center justify-center text-sm shadow-xs hover:scale-105 transition-transform flex-shrink-0 z-20"
-          aria-label="Toshit Sai Home"
+          aria-label="Toshit Sai - Return to top"
+          className="group relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-10"
         >
-          <span className="font-sans font-extrabold group-hover:rotate-6 transition-transform">T</span>
+          <span className="font-sans text-base sm:text-lg font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+            T
+          </span>
         </motion.a>
 
-        {/* DESKTOP CONTENT: COMPACT VS FULL EXPANDED CONTAINER */}
-        <div className="hidden sm:flex items-center ml-2.5 sm:ml-3 overflow-hidden">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {!isScrolled ? (
-              <motion.div
-                key="full-nav-container"
-                layout
-                style={{
-                  opacity: fullNavOpacity,
-                  y: fullNavY,
-                  scale: fullNavScale,
-                }}
-                transition={{ duration: 0.45, ease: smoothEasing }}
-                className="flex items-center gap-2 sm:gap-3 whitespace-nowrap"
-              >
-                {/* NAV LINKS */}
-                <div className="flex items-center gap-1 text-xs font-mono tracking-[0.16em] uppercase text-[#20252B] font-bold">
-                  {NAV_ITEMS.map((item) => {
-                    const isActive = activeSection === item.id;
-                    return (
-                      <a
-                        key={item.id}
-                        href={item.href}
-                        onClick={(e) => handleNavClick(e, item.href)}
-                        className={`relative px-3.5 sm:px-4 py-1.5 rounded-full transition-all duration-200 hover:-translate-y-[1px] ${
-                          isActive
-                            ? "text-[#20252B] font-bold"
-                            : "text-[#20252B]/75 hover:text-[#20252B]"
-                        }`}
-                      >
-                        {isActive && (
-                          <motion.span
-                            layoutId="activeNavPill"
-                            className="absolute inset-0 rounded-full bg-white/70 border border-white/90 shadow-xs -z-10"
-                            transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                          />
-                        )}
-                        <span className="relative z-10">{item.label}</span>
-                      </a>
-                    );
-                  })}
-                </div>
-
-                {/* WORK WITH ME CTA BUTTON */}
+        {/* DESKTOP CONTENT 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
+        <motion.div
+          style={{
+            opacity: fullNavOpacity,
+            y: fullNavY,
+            scale: fullNavScale,
+            maxWidth: fullNavMaxWidth,
+            pointerEvents: fullNavPointerEvents,
+          }}
+          className="hidden md:flex items-center gap-4 sm:gap-6 overflow-hidden whitespace-nowrap"
+        >
+          {/* NAV LINKS */}
+          <div className="flex items-center gap-1.5 sm:gap-2 pl-3">
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
                 <a
-                  href="#contact"
-                  onClick={(e) => handleNavClick(e, "#contact")}
-                  className="group ml-1 px-4 sm:px-4.5 py-1.5 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-mono font-bold tracking-[0.16em] uppercase hover:bg-white hover:scale-[1.03] transition-all shadow-xs flex items-center gap-2 border border-white/80"
+                  key={item.id}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`relative px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-medium tracking-[0.14em] transition-colors duration-200 ${
+                    isActive ? "text-[#20252B] font-semibold" : "text-[#20252B]/75 hover:text-[#20252B]"
+                  }`}
                 >
-                  <Mail className="w-3.5 h-3.5 text-[#20252B] stroke-[2.2] group-hover:translate-x-0.5 transition-transform" />
-                  <span>Work with me</span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeNavPill"
+                      className="absolute inset-0 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-white/90 -z-10"
+                      transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                    />
+                  )}
+                  <span className="relative z-10">{item.label}</span>
                 </a>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="compact-availability-container"
-                layout
-                style={{
-                  opacity: compactOpacity,
-                  y: compactY,
-                  scale: compactScale,
-                }}
-                transition={{ duration: 0.45, ease: smoothEasing }}
-                className="flex items-center gap-2.5 pr-1 sm:pr-1.5 whitespace-nowrap"
-              >
-                <a
-                  href="#contact"
-                  onClick={(e) => handleNavClick(e, "#contact")}
-                  className="text-xs font-mono tracking-[0.14em] uppercase font-bold text-[#20252B] hover:text-[#4A525D] transition-colors flex items-center gap-2.5"
-                >
-                  <span>Available for work</span>
-                  <span className="relative flex h-2.5 w-2.5 items-center justify-center">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FFD42A] shadow-[0_0_6px_#FFD42A]" />
-                  </span>
-                </a>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+              );
+            })}
+          </div>
 
-        {/* MOBILE TRIGGER BUTTON */}
-        <div className="flex sm:hidden items-center ml-2">
-          {!isScrolled ? (
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-1.5 text-[#20252B] focus:outline-none"
-              aria-label="Toggle Navigation Menu"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          ) : (
-            <a
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "#contact")}
-              className="flex items-center gap-2 text-[11px] font-mono tracking-wider font-bold uppercase text-[#20252B] px-2"
-            >
-              <span>Available</span>
-              <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-[0_0_6px_#FFD42A] animate-pulse" />
-            </a>
-          )}
+          {/* WORK WITH ME CTA BUTTON */}
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "#contact")}
+            className="group relative flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#FFF8E8]/90 backdrop-blur-sm text-[#20252B] text-xs font-semibold tracking-[0.12em] uppercase border border-white/80 shadow-xs hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all"
+          >
+            <Mail className="w-3.5 h-3.5 text-[#20252B] stroke-[2.2] group-hover:rotate-6 transition-transform" />
+            <span>WORK WITH ME</span>
+          </a>
+        </motion.div>
+
+        {/* DESKTOP CONTENT 2: COMPACT AVAILABILITY STATUS ("AVAILABLE FOR WORK ●") */}
+        <motion.div
+          style={{
+            opacity: compactOpacity,
+            y: compactY,
+            scale: compactScale,
+            maxWidth: compactMaxWidth,
+            pointerEvents: compactPointerEvents,
+          }}
+          className="hidden md:flex items-center gap-3 overflow-hidden whitespace-nowrap pl-3 pr-1"
+        >
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "#contact")}
+            className="group flex items-center gap-2.5 text-xs font-medium tracking-[0.14em] uppercase text-[#20252B] hover:text-[#4A525D] transition-colors"
+          >
+            <span className="font-semibold">AVAILABLE FOR WORK</span>
+            <span className="relative flex h-2.5 w-2.5 items-center justify-center">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FFD42A] shadow-[0_0_6px_#FFD42A]" />
+            </span>
+          </a>
+        </motion.div>
+
+        {/* MOBILE CONTROLS */}
+        <div className="flex md:hidden items-center gap-2 pl-2">
+          {/* Mobile CTA */}
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "#contact")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFF8E8] text-[#20252B] text-[11px] font-semibold tracking-[0.12em] uppercase border border-white/80 shadow-xs hover:bg-white transition-colors"
+          >
+            <Mail className="w-3 h-3 text-[#20252B]" />
+            <span>WORK WITH ME</span>
+          </a>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-1.5 text-[#20252B] hover:text-black rounded-full bg-white/40 border border-white/60 focus:outline-none"
+            aria-label="Toggle Mobile Menu"
+          >
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </motion.nav>
 
-      {/* MOBILE MENU DROPDOWN */}
+      {/* MOBILE DROPDOWN MENU */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            initial={{ opacity: 0, y: -12, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="pointer-events-auto absolute top-16 left-4 right-4 bg-white/95 backdrop-blur-2xl border border-white/80 p-4 rounded-2xl shadow-2xl flex flex-col gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#20252B]"
+            exit={{ opacity: 0, y: -12, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-auto absolute top-20 left-4 right-4 max-w-md mx-auto bg-white/90 backdrop-blur-2xl border border-white p-3 rounded-3xl shadow-2xl flex flex-col gap-1.5"
           >
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item.href)}
-                className="px-4 py-2.5 rounded-xl hover:bg-cream-paper/80 transition-colors flex items-center justify-between"
-              >
-                <span>{item.label}</span>
-                {activeSection === item.id && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFD42A]" />
-                )}
-              </a>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`px-4 py-2.5 rounded-full text-xs font-semibold tracking-[0.14em] flex items-center justify-between transition-all ${
+                    isActive
+                      ? "bg-white text-[#20252B] shadow-sm border border-white"
+                      : "text-[#20252B]/75 hover:text-[#20252B] hover:bg-white/50"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
+                  )}
+                </a>
+              );
+            })}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="mt-2 px-4 py-3 rounded-xl bg-[#FFF8E8] text-[#20252B] flex items-center justify-center gap-2 font-bold shadow-sm border border-white"
+              className="mt-1 px-4 py-2.5 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-semibold tracking-[0.14em] uppercase flex items-center justify-center gap-2 border border-white/80 shadow-xs hover:bg-white transition-colors"
             >
-              <Mail className="w-4 h-4 text-[#20252B]" />
-              <span>Work with me</span>
+              <Mail className="w-3.5 h-3.5 text-[#20252B]" />
+              <span>WORK WITH ME</span>
             </a>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </header>
   );
 };
 

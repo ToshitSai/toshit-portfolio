@@ -2,13 +2,66 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { Mail } from "lucide-react";
 
-const WORDS = [
-  "AI-POWERED",
-  "FULL STACK",
-  "CREATIVE",
-  "AI BUILDER",
-  "PRODUCT",
+interface HeroWordItem {
+  text: string;
+  showDeveloper: boolean;
+}
+
+const HERO_WORDS: HeroWordItem[] = [
+  { text: "AI-POWERED", showDeveloper: true },
+  { text: "FULL STACK", showDeveloper: true },
+  { text: "CREATIVE", showDeveloper: true },
+  { text: "PROMPT ENGINEER", showDeveloper: false },
+  { text: "AI BUILDER", showDeveloper: true },
 ];
+
+const RotatingHeroWord: React.FC = React.memo(() => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % HERO_WORDS.length);
+    }, 2100); // 1.6s hold + 0.5s transition
+    return () => clearInterval(timer);
+  }, []);
+
+  const currentWord = HERO_WORDS[index];
+
+  return (
+    <div className="w-full flex flex-col items-center justify-center">
+      {/* Line 1: Dedicated Fixed Height Overlapping Word Viewport */}
+      <div className="relative w-full h-[1.15em] min-h-[64px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={currentWord.text}
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: "0%" }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{
+              duration: 0.5,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            style={{ willChange: "transform, opacity" }}
+            className="absolute inset-x-0 text-center text-[#FFD42A] font-serif tracking-tight whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+          >
+            {currentWord.text}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+
+      {/* Line 2: Static Line DEVELOPER (Reserved Space for PROMPT ENGINEER) */}
+      <div className="h-[1.15em] min-h-[64px] sm:min-h-[85px] md:min-h-[105px] flex items-center justify-center">
+        <span
+          className={`text-[#20252B] block drop-shadow-sm font-normal transition-opacity duration-300 ${
+            currentWord.showDeveloper ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          DEVELOPER
+        </span>
+      </div>
+    </div>
+  );
+});
 
 interface NowBuildingProject {
   id: string;
@@ -45,7 +98,6 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
 ];
 
 const Hero: React.FC = () => {
-  const [wordIndex, setWordIndex] = useState(0);
   const [isCardHovered, setIsCardHovered] = useState(false);
 
   // Interactive Now Building Card State
@@ -72,13 +124,6 @@ const Hero: React.FC = () => {
   // Sun layer: ∓14px (opposite direction)
   const sunX = useSpring(useMotionValue(0), springConfig);
   const sunY = useSpring(useMotionValue(0), springConfig);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % WORDS.length);
-    }, 2800);
-    return () => clearInterval(timer);
-  }, []);
 
   // Automatic Project Rotation (every 4.5s, pauses on manual interaction)
   useEffect(() => {
@@ -161,12 +206,8 @@ const Hero: React.FC = () => {
         <rect width="100%" height="100%" filter="url(#studio-noise)" />
       </svg>
 
-      <header className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-4 sm:pt-6 flex items-center justify-between pointer-events-none">
-        {/* Top-Left Metadata: Strictly ONE instance of HYDERABAD, IN */}
-        <div className="label-mono text-[#20252B] font-bold hidden sm:block tracking-[0.18em] bg-white/30 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/40 shadow-sm pointer-events-auto">
-          HYDERABAD, IN
-        </div>
-      </header>
+      {/* Top spacing spacer for floating navbar */}
+      <div className="pt-20 sm:pt-24" />
 
       {/* BACKGROUND SCENERY & MULTI-LAYER PARALLAX GRAPHICS */}
       <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
@@ -266,27 +307,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
             className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(3rem,8vw,6.2rem)] leading-[0.88] tracking-[-0.02em] mb-6 flex flex-col items-center justify-center"
           >
-            {/* ANIMATION A — Line 1: Dedicated Fixed Height Word Viewport */}
-            <div className="relative w-full h-[1.15em] min-h-[64px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={WORDS[wordIndex]}
-                  initial={{ opacity: 0, y: 35 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -35 }}
-                  transition={{
-                    duration: 0.8,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="absolute inset-x-0 text-center text-[#FFD42A] font-serif tracking-tight whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
-                >
-                  {WORDS[wordIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-
-            {/* Line 2: Static Line DEVELOPER */}
-            <span className="text-[#20252B] block drop-shadow-sm font-normal">DEVELOPER</span>
+            <RotatingHeroWord />
           </motion.h1>
 
           {/* ANIMATION E — Centered Interactive Now Building Card */}

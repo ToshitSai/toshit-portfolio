@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <filter id="grain-riya" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.04 0" />
+      <feComposite operator="in" in2="SourceGraphic" />
+    </filter>
+  </defs>
+
+  <!-- Background Circle (Cream) -->
+  <circle cx="60" cy="60" r="58" fill="#F7F4EA" />
+
+  <!-- Warm Yellow Accent Background Circle -->
+  <circle cx="60" cy="40" r="32" fill="#FFD42A" opacity="0.3" />
+
+  <!-- Long Dark Hair Back Layer -->
+  <path d="M 32 35 C 32 15, 88 15, 88 35 L 92 85 C 92 90, 85 95, 80 95 L 40 95 C 35 95, 28 90, 28 85 Z" fill="#20252B" />
+
+  <!-- Shoulders / Outfit (Warm Yellow + Charcoal Accent) -->
+  <path d="M 24 104 C 28 82, 44 76, 60 76 C 76 76, 92 82, 96 104 Z" fill="#FFD42A" />
+  <path d="M 44 76 L 60 94 L 76 76 Z" fill="#20252B" />
+
+  <!-- Neck -->
+  <rect x="52" y="60" width="16" height="18" rx="3" fill="#E8D5C4" />
+
+  <!-- Face Base -->
+  <path d="M 42 38 C 42 26, 78 26, 78 38 L 78 52 C 78 64, 42 64, 42 52 Z" fill="#F3DECB" />
+
+  <!-- Long Hair Front Frames -->
+  <path d="M 34 38 C 34 22, 48 18, 60 18 C 72 18, 86 22, 86 38 C 84 30, 72 26, 60 27 C 48 26, 36 30, 34 38 Z" fill="#20252B" />
+  <path d="M 34 38 C 36 50, 40 60, 42 70 L 32 68 C 30 55, 32 45, 34 38 Z" fill="#20252B" />
+  <path d="M 86 38 C 84 50, 80 60, 78 70 L 88 68 C 90 55, 88 45, 86 38 Z" fill="#20252B" />
+
+  <!-- Minimalist Eyes (Warm & Clean Geometric Curves) -->
+  <path d="M 46 45 C 49 43, 53 43, 55 45" stroke="#20252B" stroke-width="2.5" stroke-linecap="round" fill="none" />
+  <path d="M 65 45 C 67 43, 71 43, 74 45" stroke="#20252B" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+  <!-- Nose -->
+  <path d="M 60 47 L 59 52 L 62 52" stroke="#C8AC96" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+  <!-- Mouth (Warm Smile) -->
+  <path d="M 52 58 C 56 62, 64 62, 68 58" stroke="#20252B" stroke-width="2" stroke-linecap="round" fill="none" />
+
+  <!-- Earring Accent (Yellow Circle) -->
+  <circle cx="41" cy="54" r="3" fill="#FFD42A" />
+
+  <!-- Grain Overlay -->
+  <circle cx="60" cy="60" r="58" fill="#000000" filter="url(#grain-riya)" />
+</svg>
