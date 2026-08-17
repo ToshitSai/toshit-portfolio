@@ -31,12 +31,12 @@ const Navbar: React.FC = () => {
     return 1 - Math.pow(1 - clamped, 3);
   });
 
-  // A) Compact Glassmorphism Parameters (715px->300px width, 70px height, 18px->12px top, 9999px radius)
+  // A) Compact Glassmorphism Parameters (715px->300px width, 58px height, 18px->12px top, 9999px radius)
   const navTop = useTransform(easedProgress, [0, 1], ["18px", "12px"]);
-  const navHeight = useTransform(easedProgress, [0, 1], ["70px", "70px"]);
+  const navHeight = useTransform(easedProgress, [0, 1], ["58px", "58px"]);
   const navRadius = useTransform(easedProgress, [0, 1], ["9999px", "9999px"]);
   const navMaxWidth = useTransform(easedProgress, [0, 1], ["715px", "300px"]);
-  const navPadding = useTransform(easedProgress, [0, 1], ["8px 9px", "8px 9px"]);
+  const navPadding = useTransform(easedProgress, [0, 1], ["4px 8px", "4px 8px"]);
   const navScale = useTransform(easedProgress, [0, 1], [1, 0.98]);
 
   const navBg = useTransform(
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
   );
   const navBlur = useTransform(easedProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
 
-  // B) Anchor Avatar / T Logo (50px x 50px, stable & anchored)
+  // B) Anchor Avatar / T Logo (44px x 44px, stable & anchored)
   const logoScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
 
   // C) Full Navigation Container (Links + CTA Button)
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
       style={{ paddingTop: navTop }}
       className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 transition-all duration-300"
     >
-      {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
+      {/* TARGET REFERENCE ELEGANT SLIM FLOATING PILL NAVBAR */}
       <motion.nav
         style={{
           width: "min(715px, calc(100vw - 48px))",
@@ -154,15 +154,15 @@ const Navbar: React.FC = () => {
         }}
         className="nav-container pointer-events-auto relative flex items-center justify-between border transition-all duration-300"
       >
-        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (50px x 50px) */}
+        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (44px x 44px) */}
         <motion.a
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-[50px] h-[50px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
+          className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
         >
-          <span className="font-sans text-xl font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+          <span className="font-sans text-lg font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
           </span>
         </motion.a>
@@ -180,7 +180,7 @@ const Navbar: React.FC = () => {
             }}
             className="flex items-center justify-between w-full whitespace-nowrap pl-4 pr-1"
           >
-            {/* NAV LINKS WITH GAP 42px (WORK 90px x 50px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
+            {/* NAV LINKS WITH GAP 42px (WORK 86px x 42px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
             <div className="flex items-center gap-[36px]">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
@@ -189,10 +189,10 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative text-[18px] font-medium transition-colors duration-200 ${
+                    className={`relative text-[17px] font-medium leading-none transition-colors duration-200 ${
                       isActive
-                        ? "w-[90px] h-[50px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
-                        : "text-white hover:text-white/80 py-2 px-1"
+                        ? "w-[86px] h-[42px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        : "text-white hover:text-white/80 py-1.5 px-1"
                     }`}
                   >
                     <span>{item.label}</span>
@@ -201,13 +201,13 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (210px wide x 50px high, COMPACT WHITE PILL INSIDE NAVBAR) */}
+            {/* WORK WITH ME CTA BUTTON (205px wide x 42px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-2.5 w-[210px] h-[50px] rounded-full bg-white text-[#20252B] text-base font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-2.5 w-[205px] h-[42px] rounded-full bg-white text-[#20252B] text-[17px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
-              <Mail className="w-5 h-5 text-[#20252B] fill-[#20252B] group-hover:rotate-6 transition-transform" />
+              <Mail className="w-4.5 h-4.5 text-[#20252B] fill-[#20252B] group-hover:rotate-6 transition-transform" />
               <span className="text-[#20252B] font-semibold">Work with me</span>
             </a>
           </motion.div>

@@ -7,13 +7,13 @@
     --nav-width-rest: min(715px, calc(100vw - 48px));
     --nav-width-active: 300px;
     --nav-max-width: 715px;
-    --nav-height-rest: 70px;
-    --nav-height-active: 70px;
+    --nav-height-rest: 58px;
+    --nav-height-active: 58px;
     
     --nav-top-rest: 18px;
     --nav-top-active: 12px;
-    --nav-padding-rest: 8px 9px;
-    --nav-padding-active: 8px 9px;
+    --nav-padding-rest: 4px 8px;
+    --nav-padding-active: 4px 8px;
     --nav-radius-rest: 9999px;
     --nav-radius-active: 9999px;
     
