@@ -2,17 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { Mail } from "lucide-react";
 
-interface HeroWordItem {
-  text: string;
-  showDeveloper: boolean;
-}
-
-const HERO_WORDS: HeroWordItem[] = [
-  { text: "AI-POWERED", showDeveloper: true },
-  { text: "FULL STACK", showDeveloper: true },
-  { text: "CREATIVE", showDeveloper: true },
-  { text: "PROMPT", showDeveloper: false },
-  { text: "AI BUILDER", showDeveloper: true },
+const HERO_WORDS = [
+  "AI-POWERED",
+  "FULL STACK",
+  "CREATIVE",
+  "PROMPT",
+  "AI BUILDER",
 ];
 
 const RotatingHeroWord: React.FC = React.memo(() => {
@@ -33,7 +28,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
       <div className="relative w-full h-[1.15em] min-h-[64px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="popLayout">
           <motion.span
-            key={currentWord.text}
+            key={currentWord}
             initial={{ opacity: 0, y: "100%" }}
             animate={{ opacity: 1, y: "0%" }}
             exit={{ opacity: 0, y: "-100%" }}
@@ -44,21 +39,15 @@ const RotatingHeroWord: React.FC = React.memo(() => {
             style={{ willChange: "transform, opacity" }}
             className="absolute inset-x-0 text-center text-[#FFD42A] font-serif tracking-tight whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
           >
-            {currentWord.text}
+            {currentWord}
           </motion.span>
         </AnimatePresence>
       </div>
 
-      {/* Line 2: Static Line DEVELOPER (Reserved Space for PROMPT ENGINEER) */}
-      <div className="h-[1.15em] min-h-[64px] sm:min-h-[85px] md:min-h-[105px] flex items-center justify-center">
-        <span
-          className={`text-[#20252B] block drop-shadow-sm font-normal transition-opacity duration-300 ${
-            currentWord.showDeveloper ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-        >
-          DEVELOPER
-        </span>
-      </div>
+      {/* Line 2: Permanent Static DEVELOPER Line */}
+      <span className="text-[#20252B] block drop-shadow-sm font-normal">
+        DEVELOPER
+      </span>
     </div>
   );
 });
