@@ -18,30 +18,31 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. SINGLE CONTINUOUS SCROLL PROGRESS VALUE (20px -> 180px)
-  // Driven directly by window.scrollY — 100% reversible, 60fps GPU accelerated
+  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (20px -> 180px)
+  // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
   const { scrollY } = useScroll();
 
   // Linear progress [0, 1] clamped between 20px and 180px scroll
   const rawProgress = useTransform(scrollY, [20, 180], [0, 1]);
 
-  // Eased progress curve approximation of cubic-bezier(0.16, 1, 0.3, 1)
+  // Eased progress curve (cubic-bezier(0.16, 1, 0.3, 1) response)
   const easedProgress = useTransform(rawProgress, (v) => {
     const clamped = Math.min(Math.max(v, 0), 1);
     return 1 - Math.pow(1 - clamped, 3);
   });
 
   // A) Outer Capsule Container Continuous Morph
-  const navScale = useTransform(easedProgress, [0, 1], [1, 0.94]);
+  const navMaxWidth = useTransform(easedProgress, [0, 1], ["580px", "240px"]);
+  const navScale = useTransform(easedProgress, [0, 1], [1, 0.95]);
   const navBg = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.55)"]
+    ["rgba(255, 255, 255, 0.35)", "rgba(242, 246, 252, 0.60)"]
   );
   const navBorder = useTransform(
     easedProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.70)", "rgba(255, 255, 255, 0.90)"]
+    ["rgba(255, 255, 255, 0.70)", "rgba(255, 255, 255, 0.95)"]
   );
   const navShadow = useTransform(
     easedProgress,
@@ -56,19 +57,17 @@ const Navbar: React.FC = () => {
   const logoScale = useTransform(easedProgress, [0, 1], [1, 0.92]);
 
   // C) Full Navigation Container (Links + CTA Button)
-  // Overlapping exit: 0.0 -> 0.45 opacity fade, 0.0 -> 0.65 width contraction
+  // Overlapping exit: 0.0 -> 0.45 opacity fade, 0.0 -> 0.45 translation
   const fullNavOpacity = useTransform(easedProgress, [0, 0.45], [1, 0]);
-  const fullNavX = useTransform(easedProgress, [0, 0.45], [0, -10]);
+  const fullNavX = useTransform(easedProgress, [0, 0.45], [0, -15]);
   const fullNavScale = useTransform(easedProgress, [0, 0.45], [1, 0.96]);
-  const fullNavMaxWidth = useTransform(easedProgress, [0, 0.65], ["580px", "0px"]);
   const fullNavPointerEvents = useTransform(easedProgress, (p) => (p > 0.45 ? "none" : "auto"));
 
   // D) Compact Availability Content ("AVAILABLE FOR WORK ●")
-  // Overlapping entrance: 0.35 -> 0.85 opacity fade, 0.30 -> 0.90 width expansion
+  // Overlapping entrance: 0.35 -> 0.85 opacity fade, 0.35 -> 0.85 translation
   const compactOpacity = useTransform(easedProgress, [0.35, 0.85], [0, 1]);
-  const compactX = useTransform(easedProgress, [0.35, 0.85], [10, 0]);
+  const compactX = useTransform(easedProgress, [0.35, 0.85], [15, 0]);
   const compactScale = useTransform(easedProgress, [0.35, 0.85], [0.96, 1]);
-  const compactMaxWidth = useTransform(easedProgress, [0.30, 0.90], ["0px", "240px"]);
   const compactPointerEvents = useTransform(easedProgress, (p) => (p < 0.35 ? "none" : "auto"));
 
   // Active section tracking (purely for highlighting the current section link)
@@ -129,97 +128,101 @@ const Navbar: React.FC = () => {
       {/* SINGLE UNIFIED FLOATING GLASSMORPHISM MORPHING CAPSULE */}
       <motion.nav
         style={{
+          maxWidth: navMaxWidth,
           scale: navScale,
           backgroundColor: navBg,
           borderColor: navBorder,
           boxShadow: navShadow,
         }}
-        className="pointer-events-auto relative flex items-center justify-between rounded-full px-3 py-2 sm:px-4 sm:py-2.5 backdrop-blur-md backdrop-saturate-150 transition-colors duration-200"
+        className="pointer-events-auto relative w-full flex items-center justify-between rounded-full px-3 py-2 sm:px-4 sm:py-2.5 backdrop-blur-md backdrop-saturate-150 border transition-all duration-75"
       >
-        {/* ANCHOR 1: YELLOW MONOGRAM "T" LOGO */}
+        {/* ANCHOR: YELLOW MONOGRAM "T" LOGO */}
         <motion.a
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-10"
+          className="group relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20"
         >
           <span className="font-sans text-base sm:text-lg font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
           </span>
         </motion.a>
 
-        {/* DESKTOP CONTENT 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
-        <motion.div
-          style={{
-            opacity: fullNavOpacity,
-            x: fullNavX,
-            scale: fullNavScale,
-            maxWidth: fullNavMaxWidth,
-            pointerEvents: fullNavPointerEvents,
-          }}
-          className="hidden md:flex items-center gap-4 sm:gap-6 overflow-hidden whitespace-nowrap"
-        >
-          {/* NAV LINKS */}
-          <div className="flex items-center gap-1.5 sm:gap-2 pl-3">
-            {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.id;
-              return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  className={`relative px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-medium tracking-[0.14em] transition-colors duration-200 ${
-                    isActive ? "text-[#20252B] font-semibold" : "text-[#20252B]/75 hover:text-[#20252B]"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="activeNavPill"
-                      className="absolute inset-0 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-white/90 -z-10"
-                      transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                    />
-                  )}
-                  <span className="relative z-10">{item.label}</span>
-                </a>
-              );
-            })}
-          </div>
-
-          {/* WORK WITH ME CTA BUTTON */}
-          <a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, "#contact")}
-            className="group relative flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#FFF8E8]/90 backdrop-blur-sm text-[#20252B] text-xs font-semibold tracking-[0.12em] uppercase border border-white/80 shadow-xs hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all"
+        {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 justify-end pl-3">
+          {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
+          <motion.div
+            style={{
+              gridArea: "1 / 1 / 2 / 2",
+              opacity: fullNavOpacity,
+              x: fullNavX,
+              scale: fullNavScale,
+              pointerEvents: fullNavPointerEvents,
+            }}
+            className="flex items-center justify-end gap-4 sm:gap-6 whitespace-nowrap"
           >
-            <Mail className="w-3.5 h-3.5 text-[#20252B] stroke-[2.2] group-hover:rotate-6 transition-transform" />
-            <span>WORK WITH ME</span>
-          </a>
-        </motion.div>
+            {/* NAV LINKS */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {NAV_ITEMS.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    className={`relative px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-medium tracking-[0.14em] transition-colors duration-200 ${
+                      isActive ? "text-[#20252B] font-semibold" : "text-[#20252B]/75 hover:text-[#20252B]"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeNavPill"
+                        className="absolute inset-0 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-white/90 -z-10"
+                        transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                      />
+                    )}
+                    <span className="relative z-10">{item.label}</span>
+                  </a>
+                );
+              })}
+            </div>
 
-        {/* DESKTOP CONTENT 2: COMPACT AVAILABILITY STATUS ("AVAILABLE FOR WORK ●") */}
-        <motion.div
-          style={{
-            opacity: compactOpacity,
-            x: compactX,
-            scale: compactScale,
-            maxWidth: compactMaxWidth,
-            pointerEvents: compactPointerEvents,
-          }}
-          className="hidden md:flex items-center gap-3 overflow-hidden whitespace-nowrap pl-3 pr-1"
-        >
-          <a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, "#contact")}
-            className="group flex items-center gap-2.5 text-xs font-medium tracking-[0.14em] uppercase text-[#20252B] hover:text-[#4A525D] transition-colors"
+            {/* WORK WITH ME CTA BUTTON */}
+            <a
+              href="#contact"
+              onClick={(e) => handleNavClick(e, "#contact")}
+              className="group relative flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#FFF8E8]/90 backdrop-blur-sm text-[#20252B] text-xs font-semibold tracking-[0.12em] uppercase border border-white/80 shadow-xs hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0"
+            >
+              <Mail className="w-3.5 h-3.5 text-[#20252B] stroke-[2.2] group-hover:rotate-6 transition-transform" />
+              <span>WORK WITH ME</span>
+            </a>
+          </motion.div>
+
+          {/* LAYER 2: COMPACT AVAILABILITY STATUS ("AVAILABLE FOR WORK ●") */}
+          <motion.div
+            style={{
+              gridArea: "1 / 1 / 2 / 2",
+              opacity: compactOpacity,
+              x: compactX,
+              scale: compactScale,
+              pointerEvents: compactPointerEvents,
+            }}
+            className="flex items-center justify-center whitespace-nowrap pr-1"
           >
-            <span className="font-semibold">AVAILABLE FOR WORK</span>
-            <span className="relative flex h-2.5 w-2.5 items-center justify-center">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FFD42A] shadow-[0_0_6px_#FFD42A]" />
-            </span>
-          </a>
-        </motion.div>
+            <a
+              href="#contact"
+              onClick={(e) => handleNavClick(e, "#contact")}
+              className="group flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium tracking-[0.14em] uppercase text-[#20252B] hover:text-[#4A525D] transition-colors"
+            >
+              <span className="font-semibold">AVAILABLE FOR WORK</span>
+              <span className="relative flex h-2.5 w-2.5 items-center justify-center">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FFD42A] shadow-[0_0_6px_#FFD42A]" />
+              </span>
+            </a>
+          </motion.div>
+        </div>
 
         {/* MOBILE CONTROLS */}
         <div className="flex md:hidden items-center gap-2 pl-2">
