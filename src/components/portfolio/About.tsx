@@ -187,8 +187,8 @@ const About: React.FC = () => {
 
   const headlineLines = [
     "Building Software",
-    "at the Intersection of",
-    "Applied AI",
+    "at the Intersection",
+    "of Applied AI",
     "& Modern Design.",
   ];
 
@@ -246,29 +246,29 @@ const About: React.FC = () => {
 
           {/* MAIN EDITORIAL HEADLINE & CONTENT (LEFT & CENTER COLUMN) */}
           <div className="lg:col-span-7 flex flex-col justify-between">
-            {/* OVERSIZED MODERN GROTESK HEADLINE WITH STAGGERED LINE REVEAL */}
-            <h2 className="font-grotesk text-[clamp(3.0rem,6.2vw,5.6rem)] leading-[0.95] tracking-[-0.045em] text-[#20252B] font-medium mb-12 sm:mb-16">
-              {headlineLines.map((line, idx) => {
-                const isAppliedAI = line === "Applied AI";
-                return (
-                  <div key={`line-${idx}`} className="overflow-hidden py-0.5">
-                    <motion.div
-                      initial={{ y: 40, opacity: 0 }}
-                      animate={isInView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
-                      transition={{
-                        duration: 0.75,
-                        delay: 0.15 + idx * 0.12,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className={`block ${isAppliedAI ? "font-normal text-[#20252B]/85" : "font-medium text-[#20252B]"}`}
-                    >
-                      {line.split(" ").map((w, wIdx) => (
-                        <HoverWord key={`word-${idx}-${wIdx}`} word={w} />
-                      ))}
-                    </motion.div>
-                  </div>
-                );
-              })}
+            {/* OVERSIZED INSTRUMENT SANS HEADLINE WITH STAGGERED LINE REVEAL */}
+            <h2
+              style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+              className="font-semibold text-[clamp(2.9rem,6.0vw,5.5rem)] leading-[1.05] tracking-[-0.035em] text-[#20252B] mb-12 sm:mb-16"
+            >
+              {headlineLines.map((line, idx) => (
+                <div key={`line-${idx}`} className="overflow-hidden py-0.5">
+                  <motion.div
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={isInView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
+                    transition={{
+                      duration: 0.75,
+                      delay: 0.15 + idx * 0.12,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="block font-semibold text-[#20252B]"
+                  >
+                    {line.split(" ").map((w, wIdx) => (
+                      <HoverWord key={`word-${idx}-${wIdx}`} word={w} />
+                    ))}
+                  </motion.div>
+                </div>
+              ))}
             </h2>
 
             {/* EDITORIAL METADATA ACCENT STRIP */}
