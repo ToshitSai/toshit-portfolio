@@ -121,8 +121,8 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "300px" : "min(650px, calc(100vw - 28px))",
-          maxWidth: isScrolled ? "300px" : "650px",
+          width: isScrolled ? "300px" : "min(525px, calc(100vw - 24px))",
+          maxWidth: isScrolled ? "300px" : "525px",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
@@ -156,7 +156,7 @@ const Navbar: React.FC = () => {
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 ml-3 overflow-hidden">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 ml-2.5 overflow-hidden">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (NO ML-AUTO, NO JUSTIFY-BETWEEN) */}
           <motion.div
             style={{ gridArea: "1 / 1 / 2 / 2" }}
@@ -167,10 +167,10 @@ const Navbar: React.FC = () => {
               pointerEvents: isScrolled ? "none" : "auto",
             }}
             transition={NAV_TRANSITION}
-            className="flex items-center whitespace-nowrap pl-1"
+            className="flex items-center whitespace-nowrap pl-0.5"
           >
-            {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 28px GAPS) */}
-            <div className="flex items-center gap-[28px] flex-shrink-0 whitespace-nowrap">
+            {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 24px GAPS) */}
+            <div className="flex items-center gap-[24px] flex-shrink-0 whitespace-nowrap">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -190,15 +190,15 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (195px wide x 42px high, SITS NATURALLY AFTER PLAYGROUND WITH 28px GAP, NEVER CLIPPED) */}
+            {/* WORK WITH ME CTA BUTTON (172px wide x 40px high, SITS NATURALLY WITH 24px GAP, ZERO EXTRA GLASS GAP AFTER IT) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex-shrink-0 relative flex items-center justify-center gap-[10px] min-w-[195px] h-[42px] px-[18px] rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[28px] whitespace-nowrap box-sizing-border"
+              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[172px] h-[40px] px-3.5 rounded-full bg-white text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[24px] whitespace-nowrap"
             >
-              {/* BLACK MAIL ENVELOPE SYMBOL (20px x 14px) */}
+              {/* BLACK MAIL ENVELOPE SYMBOL (18px x 13px) */}
               <svg
-                className="w-[20px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
                 viewBox="0 0 20 14"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
