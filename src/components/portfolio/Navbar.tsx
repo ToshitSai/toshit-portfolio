@@ -33,12 +33,12 @@ const Navbar: React.FC = () => {
     restDelta: 0.001,
   });
 
-  // A) Compact Glassmorphism Parameters (580px->260px width, 48px height, 16px->10px top, 9999px radius)
+  // A) Compact Glassmorphism Parameters (475px->245px width, 46px height, 16px->10px top, 9999px radius)
   const navTop = useTransform(smoothProgress, [0, 1], ["16px", "10px"]);
-  const navHeight = useTransform(smoothProgress, [0, 1], ["48px", "48px"]);
+  const navHeight = useTransform(smoothProgress, [0, 1], ["46px", "46px"]);
   const navRadius = useTransform(smoothProgress, [0, 1], ["9999px", "9999px"]);
-  const navMaxWidth = useTransform(smoothProgress, [0, 1], ["580px", "260px"]);
-  const navPadding = useTransform(smoothProgress, [0, 1], ["3px 5px", "3px 5px"]);
+  const navMaxWidth = useTransform(smoothProgress, [0, 1], ["475px", "245px"]);
+  const navPadding = useTransform(smoothProgress, [0, 1], ["3px 4px", "3px 4px"]);
   const navScale = useTransform(smoothProgress, [0, 1], [1, 0.98]);
 
   const navBg = useTransform(
@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
   );
   const navBlur = useTransform(smoothProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
 
-  // B) Anchor Avatar / T Logo (36px x 36px, stable & anchored)
+  // B) Anchor Avatar / T Logo (34px x 34px, stable & anchored)
   const logoScale = useTransform(smoothProgress, [0, 1], [1, 0.94]);
 
   // C) Full Navigation Container (Links + CTA Button)
@@ -139,7 +139,7 @@ const Navbar: React.FC = () => {
       {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
       <motion.nav
         style={{
-          width: "min(580px, calc(100vw - 40px))",
+          width: "min(475px, calc(100vw - 32px))",
           maxWidth: navMaxWidth,
           height: navHeight,
           borderRadius: navRadius,
@@ -156,21 +156,21 @@ const Navbar: React.FC = () => {
         }}
         className="nav-container pointer-events-auto relative flex items-center justify-between border transition-all duration-300"
       >
-        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (36px x 36px) */}
+        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (34px x 34px) */}
         <motion.a
           style={{ scale: logoScale }}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-[36px] h-[36px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
+          className="group relative flex items-center justify-center w-[34px] h-[34px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
         >
-          <span className="font-sans text-sm font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+          <span className="font-sans text-xs font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
           </span>
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-2">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-1.5">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
           <motion.div
             style={{
@@ -180,10 +180,10 @@ const Navbar: React.FC = () => {
               scale: fullNavScale,
               pointerEvents: fullNavPointerEvents,
             }}
-            className="flex items-center justify-between w-full whitespace-nowrap pl-2 pr-0.5"
+            className="flex items-center justify-between w-full whitespace-nowrap pl-1.5 pr-0.5"
           >
-            {/* NAV LINKS WITH GAP 24px (WORK 72px x 34px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
-            <div className="flex items-center gap-[24px]">
+            {/* NAV LINKS WITH UNIFORM GAP 14px (WORK 64px x 32px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
+            <div className="flex items-center gap-[14px]">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -191,9 +191,9 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative text-[14.5px] font-medium leading-none transition-colors duration-200 ${
+                    className={`relative text-[13.5px] font-medium leading-none transition-colors duration-200 ${
                       isActive
-                        ? "w-[72px] h-[34px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        ? "w-[64px] h-[32px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
                         : "text-white hover:text-white/80 py-1 px-1"
                     }`}
                   >
@@ -203,24 +203,24 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (165px wide x 34px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
+            {/* WORK WITH ME CTA BUTTON (148px wide x 32px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-2 w-[165px] h-[34px] rounded-full bg-white text-[#20252B] text-[14.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-1.5 w-[148px] h-[32px] rounded-full bg-white text-[#20252B] text-[13.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
-              {/* BLACK MAIL ENVELOPE SYMBOL (19px x 14px) */}
+              {/* BLACK MAIL ENVELOPE SYMBOL (17px x 12px) */}
               <svg
-                className="w-[19px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
-                viewBox="0 0 20 14"
+                className="w-[17px] h-[12px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                viewBox="0 0 18 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect width="20" height="14" rx="3" fill="#20252B" />
+                <rect width="18" height="12" rx="2.5" fill="#20252B" />
                 <path
-                  d="M3.5 4L10 9.5L16.5 4"
+                  d="M3 3.5L9 8L15 3.5"
                   stroke="white"
-                  strokeWidth="2"
+                  strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />

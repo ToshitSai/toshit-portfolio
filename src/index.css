@@ -4,16 +4,16 @@
 
 @layer base {
   :root {
-    --nav-width-rest: min(580px, calc(100vw - 40px));
-    --nav-width-active: 260px;
-    --nav-max-width: 580px;
-    --nav-height-rest: 48px;
-    --nav-height-active: 48px;
+    --nav-width-rest: min(475px, calc(100vw - 32px));
+    --nav-width-active: 245px;
+    --nav-max-width: 475px;
+    --nav-height-rest: 46px;
+    --nav-height-active: 46px;
     
     --nav-top-rest: 16px;
     --nav-top-active: 10px;
-    --nav-padding-rest: 3px 5px;
-    --nav-padding-active: 3px 5px;
+    --nav-padding-rest: 3px 4px;
+    --nav-padding-active: 3px 4px;
     --nav-radius-rest: 9999px;
     --nav-radius-active: 9999px;
     
