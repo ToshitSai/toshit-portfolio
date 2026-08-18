@@ -18,18 +18,18 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 140px timeline)
+  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 50px timeline)
   // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
   const { scrollY } = useScroll();
 
-  // Linear raw progress [0, 1] clamped between 0px and 140px scroll range
-  const rawProgress = useTransform(scrollY, [0, 140], [0, 1]);
+  // Fast & snappy raw progress [0, 1] clamped between 0px and 50px scroll range
+  const rawProgress = useTransform(scrollY, [0, 50], [0, 1]);
 
-  // Physics spring for continuous 60fps buttery scroll motion with zero step-snapping
+  // Reactive high-stiffness physics spring for instant, snappy scroll motion
   const smoothProgress = useSpring(rawProgress, {
-    stiffness: 240,
-    damping: 30,
-    mass: 0.2,
+    stiffness: 450,
+    damping: 28,
+    mass: 0.1,
     restDelta: 0.001,
   });
 
@@ -41,22 +41,23 @@ const Navbar: React.FC = () => {
   const navPadding = useTransform(smoothProgress, [0, 1], ["3px 4px", "3px 4px"]);
   const navScale = useTransform(smoothProgress, [0, 1], [1, 0.98]);
 
+  // Translucent glass backgrounds (increased transparency when scrolled down)
   const navBg = useTransform(
     smoothProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.28)", "rgba(242, 246, 252, 0.85)"]
+    ["rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.32)"]
   );
   const navBorder = useTransform(
     smoothProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.90)"]
+    ["rgba(255, 255, 255, 0.40)", "rgba(255, 255, 255, 0.45)"]
   );
   const navShadow = useTransform(
     smoothProgress,
     [0, 1],
     [
       "0px 8px 24px rgba(0, 0, 0, 0.06)",
-      "0px 14px 28px rgba(0, 0, 0, 0.12), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.6)",
+      "0px 10px 24px rgba(0, 0, 0, 0.10), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.5)",
     ]
   );
   const navBlur = useTransform(smoothProgress, [0, 1], ["blur(14px)", "blur(16px)"]);

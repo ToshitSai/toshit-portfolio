@@ -17,12 +17,12 @@
     --nav-radius-rest: 9999px;
     --nav-radius-active: 9999px;
     
-    --glass-bg-rest: rgba(255, 255, 255, 0.28);
-    --glass-bg-active: rgba(242, 246, 252, 0.85);
+    --glass-bg-rest: rgba(255, 255, 255, 0.25);
+    --glass-bg-active: rgba(255, 255, 255, 0.32);
     --glass-blur-rest: 14px;
     --glass-blur-active: 16px;
-    --glass-border-rest: rgba(255, 255, 255, 0.50);
-    --glass-border-active: rgba(255, 255, 255, 0.90);
+    --glass-border-rest: rgba(255, 255, 255, 0.40);
+    --glass-border-active: rgba(255, 255, 255, 0.45);
     
     --ease-fluid: cubic-bezier(0.075, 0.82, 0.165, 1);
     --ease-smooth: cubic-bezier(0.15, 0.75, 0.35, 1);
