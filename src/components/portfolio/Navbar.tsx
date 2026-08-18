@@ -14,9 +14,9 @@ const NAV_ITEMS: NavItem[] = [
   { id: "playground", label: "Playground", href: "#playground" },
 ];
 
-// Unified 300ms cubic-bezier transition as requested (0.3s duration, fast + smooth)
+// Unified 250ms cubic-bezier transition as requested (0.25s duration, fast, direct & smooth)
 const NAV_TRANSITION = {
-  duration: 0.3,
+  duration: 0.25,
   ease: [0.22, 1, 0.36, 1] as const,
 };
 
@@ -25,26 +25,39 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Instant, hysteresis scroll detection:
-  // Scroll > 25px -> COMPACT state
-  // Scroll < 10px -> FULL state
+  // OPTIMIZED PASSIVE rAF HYSTERESIS SCROLL LISTENER
+  // - Eliminates continuous React re-renders on scroll
+  // - Throttled using window.requestAnimationFrame
+  // - Hysteresis thresholds: FULL -> COMPACT (>= 40px), COMPACT -> FULL (<= 15px)
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      if (currentScroll > 25) {
-        setIsScrolled(true);
-      } else if (currentScroll < 10) {
-        setIsScrolled(false);
+    let ticking = false;
+    let currentState = isScrolled;
+
+    const updateScrollState = () => {
+      const currentY = window.scrollY;
+
+      // Hysteresis threshold checking to prevent flickering
+      let nextState = currentState;
+      if (!currentState && currentY >= 40) {
+        nextState = true;
+      } else if (currentState && currentY <= 15) {
+        nextState = false;
       }
 
-      // Active section highlighting
+      // ONLY call setIsScrolled if state actually changed
+      if (nextState !== currentState) {
+        currentState = nextState;
+        setIsScrolled(nextState);
+      }
+
+      // Active section tracking (throttled inside rAF)
       const sections = [
         { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
         { id: "about", el: document.getElementById("about") },
         { id: "playground", el: document.getElementById("playground") || document.getElementById("skills") },
       ];
 
-      const scrollPosition = currentScroll + 250;
+      const scrollPosition = currentY + 250;
       for (let i = sections.length - 1; i >= 0; i--) {
         const sec = sections[i];
         if (sec.el) {
@@ -56,14 +69,26 @@ const Navbar: React.FC = () => {
         }
       }
 
-      if (currentScroll < 100) {
+      if (currentY < 100) {
         setActiveSection("work");
+      }
+
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollState);
+        ticking = true;
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    updateScrollState();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -96,8 +121,8 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "300px" : "min(600px, calc(100vw - 32px))",
-          maxWidth: isScrolled ? "300px" : "600px",
+          width: isScrolled ? "300px" : "min(640px, calc(100vw - 32px))",
+          maxWidth: isScrolled ? "300px" : "640px",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
@@ -111,7 +136,7 @@ const Navbar: React.FC = () => {
           backdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
           WebkitBackdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
           transform: "translateZ(0)",
-          willChange: "transform, width, height, background-color, border-color",
+          willChange: "transform, opacity, width",
         }}
         className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors"
       >
@@ -141,7 +166,7 @@ const Navbar: React.FC = () => {
               pointerEvents: isScrolled ? "none" : "auto",
             }}
             transition={NAV_TRANSITION}
-            className="flex items-center whitespace-nowrap pl-0.5"
+            className="flex items-center whitespace-nowrap pl-1"
           >
             {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 24px GAPS) */}
             <div className="flex items-center gap-[24px] flex-shrink-0">
@@ -164,11 +189,11 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (170px wide x 40px high, SITS NATURALLY AFTER PLAYGROUND WITH 28px GAP) */}
+            {/* WORK WITH ME CTA BUTTON (180px wide x 40px high, SITS NATURALLY AFTER PLAYGROUND WITH 28px GAP) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[170px] h-[40px] rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[28px]"
+              className="group flex-shrink-0 relative flex items-center justify-center gap-2.5 w-[180px] h-[40px] px-4 rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[28px]"
             >
               {/* BLACK MAIL ENVELOPE SYMBOL (20px x 14px) */}
               <svg
@@ -186,7 +211,7 @@ const Navbar: React.FC = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="text-[#20252B] font-semibold">Work with me</span>
+              <span className="text-[#20252B] font-semibold whitespace-nowrap">Work with me</span>
             </a>
           </motion.div>
 

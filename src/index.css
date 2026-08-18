@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --nav-width-rest: min(600px, calc(100vw - 32px));
+    --nav-width-rest: min(640px, calc(100vw - 32px));
     --nav-width-active: 300px;
-    --nav-max-width: 600px;
+    --nav-max-width: 640px;
     --nav-height-rest: 58px;
     --nav-height-active: 58px;
     
