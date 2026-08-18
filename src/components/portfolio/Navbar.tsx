@@ -121,8 +121,8 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "310px" : "min(530px, calc(100vw - 24px))",
-          maxWidth: isScrolled ? "310px" : "530px",
+          width: isScrolled ? "300px" : "min(545px, calc(100vw - 24px))",
+          maxWidth: isScrolled ? "300px" : "545px",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
@@ -156,7 +156,7 @@ const Navbar: React.FC = () => {
         </motion.a>
 
         {/* DESKTOP CONTENT CONTAINER */}
-        <div className="hidden md:flex items-center flex-1 ml-3 relative h-full overflow-hidden">
+        <div className="hidden md:flex items-center flex-1 ml-2.5 relative h-full overflow-hidden">
           {/* LAYER 1: EXPANDED FULL NAVIGATION */}
           <motion.div
             initial={false}
@@ -190,15 +190,15 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (180px wide x 40px high, SITS NATURALLY WITH 24px GAP) */}
+            {/* WORK WITH ME CTA BUTTON (170px wide x 40px high, SITS NATURALLY WITH 24px GAP, ZERO OVERFLOW) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex-shrink-0 relative flex items-center justify-center gap-2.5 w-[180px] h-[40px] px-4 rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[24px] whitespace-nowrap"
+              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[24px] whitespace-nowrap"
             >
-              {/* BLACK MAIL ENVELOPE SYMBOL (20px x 14px) */}
+              {/* BLACK MAIL ENVELOPE SYMBOL (18px x 13px) */}
               <svg
-                className="w-[20px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
                 viewBox="0 0 20 14"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
