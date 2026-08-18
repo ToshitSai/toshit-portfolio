@@ -18,34 +18,34 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 50px timeline)
+  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 30px timeline)
   // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
   const { scrollY } = useScroll();
 
-  // Fast & snappy raw progress [0, 1] clamped between 0px and 50px scroll range
-  const rawProgress = useTransform(scrollY, [0, 50], [0, 1]);
+  // Lightning-fast raw progress [0, 1] clamped between 0px and 30px scroll range
+  const rawProgress = useTransform(scrollY, [0, 30], [0, 1]);
 
-  // Reactive high-stiffness physics spring for instant, snappy scroll motion
+  // Ultra-fast, zero-lag physics spring for instantaneous scroll response
   const smoothProgress = useSpring(rawProgress, {
-    stiffness: 450,
-    damping: 28,
-    mass: 0.1,
+    stiffness: 1000,
+    damping: 45,
+    mass: 0.02,
     restDelta: 0.001,
   });
 
-  // A) Compact Glassmorphism Parameters (475px->245px width, 46px height, 16px->10px top, 9999px radius)
+  // A) Compact Glassmorphism Parameters (415px->235px width, 46px height, 16px->10px top, 9999px radius)
   const navTop = useTransform(smoothProgress, [0, 1], ["16px", "10px"]);
   const navHeight = useTransform(smoothProgress, [0, 1], ["46px", "46px"]);
   const navRadius = useTransform(smoothProgress, [0, 1], ["9999px", "9999px"]);
-  const navMaxWidth = useTransform(smoothProgress, [0, 1], ["475px", "245px"]);
+  const navMaxWidth = useTransform(smoothProgress, [0, 1], ["415px", "235px"]);
   const navPadding = useTransform(smoothProgress, [0, 1], ["3px 4px", "3px 4px"]);
   const navScale = useTransform(smoothProgress, [0, 1], [1, 0.98]);
 
-  // Translucent glass backgrounds (increased transparency when scrolled down)
+  // Translucent glass backgrounds (increased transparency when scrolled down: 30% opacity)
   const navBg = useTransform(
     smoothProgress,
     [0, 1],
-    ["rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.32)"]
+    ["rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.30)"]
   );
   const navBorder = useTransform(
     smoothProgress,
@@ -140,7 +140,7 @@ const Navbar: React.FC = () => {
       {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
       <motion.nav
         style={{
-          width: "min(475px, calc(100vw - 32px))",
+          width: "min(415px, calc(100vw - 24px))",
           maxWidth: navMaxWidth,
           height: navHeight,
           borderRadius: navRadius,
@@ -171,7 +171,7 @@ const Navbar: React.FC = () => {
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-1.5">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-1">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
           <motion.div
             style={{
@@ -181,10 +181,10 @@ const Navbar: React.FC = () => {
               scale: fullNavScale,
               pointerEvents: fullNavPointerEvents,
             }}
-            className="flex items-center justify-between w-full whitespace-nowrap pl-1.5 pr-0.5"
+            className="flex items-center justify-between w-full whitespace-nowrap pl-1 pr-0.5"
           >
-            {/* NAV LINKS WITH UNIFORM GAP 14px (WORK 64px x 32px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
-            <div className="flex items-center gap-[14px]">
+            {/* NAV LINKS WITH UNIFORM GAP 10px (WORK 64px x 32px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
+            <div className="flex items-center gap-[10px]">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -204,11 +204,11 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (148px wide x 32px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
+            {/* WORK WITH ME CTA BUTTON (145px wide x 32px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-1.5 w-[148px] h-[32px] rounded-full bg-white text-[#20252B] text-[13.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group relative flex items-center justify-center gap-1.5 w-[145px] h-[32px] rounded-full bg-white text-[#20252B] text-[13.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
             >
               {/* BLACK MAIL ENVELOPE SYMBOL (17px x 12px) */}
               <svg
