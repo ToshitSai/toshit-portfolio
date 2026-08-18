@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
 
 interface NavItem {
@@ -14,76 +14,30 @@ const NAV_ITEMS: NavItem[] = [
   { id: "playground", label: "Playground", href: "#playground" },
 ];
 
+// Unified 300ms cubic-bezier transition as requested (0.3s duration, fast + smooth)
+const NAV_TRANSITION = {
+  duration: 0.3,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
 const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // 1. SINGLE UNIFIED CONTINUOUS SCROLL PROGRESS VALUE (0px -> 30px timeline)
-  // Driven directly by window.scrollY — 100% reversible, 60fps GPU motion
-  const { scrollY } = useScroll();
-
-  // Lightning-fast raw progress [0, 1] clamped between 0px and 30px scroll range
-  const rawProgress = useTransform(scrollY, [0, 30], [0, 1]);
-
-  // Ultra-fast, zero-lag physics spring for instantaneous scroll response
-  const smoothProgress = useSpring(rawProgress, {
-    stiffness: 1000,
-    damping: 45,
-    mass: 0.02,
-    restDelta: 0.001,
-  });
-
-  // A) Compact Glassmorphism Parameters (415px->235px width, 46px height, 16px->10px top, 9999px radius)
-  const navTop = useTransform(smoothProgress, [0, 1], ["16px", "10px"]);
-  const navHeight = useTransform(smoothProgress, [0, 1], ["46px", "46px"]);
-  const navRadius = useTransform(smoothProgress, [0, 1], ["9999px", "9999px"]);
-  const navMaxWidth = useTransform(smoothProgress, [0, 1], ["415px", "235px"]);
-  const navPadding = useTransform(smoothProgress, [0, 1], ["3px 4px", "3px 4px"]);
-  const navScale = useTransform(smoothProgress, [0, 1], [1, 0.98]);
-
-  // Translucent glass backgrounds (increased transparency when scrolled down: 30% opacity)
-  const navBg = useTransform(
-    smoothProgress,
-    [0, 1],
-    ["rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.30)"]
-  );
-  const navBorder = useTransform(
-    smoothProgress,
-    [0, 1],
-    ["rgba(255, 255, 255, 0.40)", "rgba(255, 255, 255, 0.45)"]
-  );
-  const navShadow = useTransform(
-    smoothProgress,
-    [0, 1],
-    [
-      "0px 8px 24px rgba(0, 0, 0, 0.06)",
-      "0px 10px 24px rgba(0, 0, 0, 0.10), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.5)",
-    ]
-  );
-  const navBlur = useTransform(smoothProgress, [0, 1], ["blur(14px)", "blur(16px)"]);
-
-  // B) Anchor Avatar / T Logo (34px x 34px, stable & anchored)
-  const logoScale = useTransform(smoothProgress, [0, 1], [1, 0.94]);
-
-  // C) Full Navigation Container (Links + CTA Button)
-  // Continuous smooth cross-fade exit: 0.0 -> 0.55
-  const fullNavOpacity = useTransform(smoothProgress, [0, 0.55], [1, 0]);
-  const fullNavX = useTransform(smoothProgress, [0, 0.55], [0, -14]);
-  const fullNavScale = useTransform(smoothProgress, [0, 0.55], [1, 0.96]);
-  const fullNavPointerEvents = useTransform(smoothProgress, (p) => (p > 0.50 ? "none" : "auto"));
-
-  // D) Compact Availability Content ("Available for work 🟡")
-  // Continuous smooth entrance: 0.25 -> 0.80
-  const compactOpacity = useTransform(smoothProgress, [0.25, 0.80], [0, 1]);
-  const compactX = useTransform(smoothProgress, [0.25, 0.80], [14, 0]);
-  const compactScale = useTransform(smoothProgress, [0.25, 0.80], [0.96, 1]);
-  const compactPointerEvents = useTransform(smoothProgress, (p) => (p < 0.30 ? "none" : "auto"));
-
-  // Active section tracking (purely for highlighting the current section link)
+  // Instant, hysteresis scroll detection:
+  // Scroll > 25px -> COMPACT state
+  // Scroll < 10px -> FULL state
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
+      if (currentScroll > 25) {
+        setIsScrolled(true);
+      } else if (currentScroll < 10) {
+        setIsScrolled(false);
+      }
 
+      // Active section highlighting
       const sections = [
         { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
         { id: "about", el: document.getElementById("about") },
@@ -91,7 +45,6 @@ const Navbar: React.FC = () => {
       ];
 
       const scrollPosition = currentScroll + 250;
-
       for (let i = sections.length - 1; i >= 0; i--) {
         const sec = sections[i];
         if (sec.el) {
@@ -134,57 +87,64 @@ const Navbar: React.FC = () => {
 
   return (
     <motion.header
-      style={{ paddingTop: navTop }}
-      className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 transition-all duration-300"
+      animate={{
+        paddingTop: isScrolled ? "12px" : "16px",
+      }}
+      transition={NAV_TRANSITION}
+      className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6"
     >
-      {/* TARGET REFERENCE COMPACT FLOATING PILL NAVBAR */}
+      {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
-        style={{
-          width: "min(415px, calc(100vw - 24px))",
-          maxWidth: navMaxWidth,
-          height: navHeight,
-          borderRadius: navRadius,
-          padding: navPadding,
-          scale: navScale,
-          backgroundColor: navBg,
-          borderColor: navBorder,
-          boxShadow: navShadow,
-          backdropFilter: navBlur,
-          WebkitBackdropFilter: navBlur,
-          transform: "translateZ(0)",
-          willChange: "transform, width, height, padding, backdrop-filter",
-          contain: "layout paint style",
+        animate={{
+          width: isScrolled ? "300px" : "min(600px, calc(100vw - 32px))",
+          maxWidth: isScrolled ? "300px" : "600px",
+          height: "58px",
+          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
+          borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
+          boxShadow: isScrolled
+            ? "0px 10px 24px rgba(0, 0, 0, 0.10), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.5)"
+            : "0px 8px 24px rgba(0, 0, 0, 0.06)",
         }}
-        className="nav-container pointer-events-auto relative flex items-center justify-between border transition-all duration-300"
+        transition={NAV_TRANSITION}
+        style={{
+          borderRadius: "9999px",
+          backdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
+          WebkitBackdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
+          transform: "translateZ(0)",
+          willChange: "transform, width, height, background-color, border-color",
+        }}
+        className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors"
       >
-        {/* ANCHOR: AVATAR / T MONOGRAM BADGE (34px x 34px) */}
+        {/* AVATAR / T MONOGRAM BADGE (44px x 44px) - STABLE ANCHOR */}
         <motion.a
-          style={{ scale: logoScale }}
+          animate={{ scale: isScrolled ? 0.94 : 1 }}
+          transition={NAV_TRANSITION}
           href="#hero"
           onClick={(e) => handleNavClick(e, "#hero")}
           aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-[34px] h-[34px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-all flex-shrink-0 z-20 ml-0.5"
+          className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-transform flex-shrink-0 z-20 ml-0.5"
         >
-          <span className="font-sans text-xs font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+          <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
             T
           </span>
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 pl-1">
-          {/* LAYER 1: EXPANDED FULL NAVIGATION (LINKS + CTA) */}
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 ml-3 overflow-hidden">
+          {/* LAYER 1: EXPANDED FULL NAVIGATION (NO ML-AUTO, NO JUSTIFY-BETWEEN) */}
           <motion.div
-            style={{
-              gridArea: "1 / 1 / 2 / 2",
-              opacity: fullNavOpacity,
-              x: fullNavX,
-              scale: fullNavScale,
-              pointerEvents: fullNavPointerEvents,
+            style={{ gridArea: "1 / 1 / 2 / 2" }}
+            animate={{
+              opacity: isScrolled ? 0 : 1,
+              x: isScrolled ? -14 : 0,
+              scale: isScrolled ? 0.96 : 1,
+              pointerEvents: isScrolled ? "none" : "auto",
             }}
-            className="flex items-center justify-between w-full whitespace-nowrap pl-1 pr-0.5"
+            transition={NAV_TRANSITION}
+            className="flex items-center whitespace-nowrap pl-0.5"
           >
-            {/* NAV LINKS WITH UNIFORM GAP 10px (WORK 64px x 32px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY) */}
-            <div className="flex items-center gap-[10px]">
+            {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 24px GAPS) */}
+            <div className="flex items-center gap-[24px] flex-shrink-0">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -192,9 +152,9 @@ const Navbar: React.FC = () => {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative text-[13.5px] font-medium leading-none transition-colors duration-200 ${
+                    className={`relative text-[15px] font-medium leading-none transition-colors duration-200 ${
                       isActive
-                        ? "w-[64px] h-[32px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        ? "w-[80px] h-[40px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
                         : "text-white hover:text-white/80 py-1 px-1"
                     }`}
                   >
@@ -204,24 +164,24 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (145px wide x 32px high, ELEGANT WHITE PILL INSIDE NAVBAR) */}
+            {/* WORK WITH ME CTA BUTTON (170px wide x 40px high, SITS NATURALLY AFTER PLAYGROUND WITH 28px GAP) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group relative flex items-center justify-center gap-1.5 w-[145px] h-[32px] rounded-full bg-white text-[#20252B] text-[13.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 ml-auto"
+              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[170px] h-[40px] rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[28px]"
             >
-              {/* BLACK MAIL ENVELOPE SYMBOL (17px x 12px) */}
+              {/* BLACK MAIL ENVELOPE SYMBOL (20px x 14px) */}
               <svg
-                className="w-[17px] h-[12px] flex-shrink-0 group-hover:rotate-6 transition-transform"
-                viewBox="0 0 18 12"
+                className="w-[20px] h-[14px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+                viewBox="0 0 20 14"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect width="18" height="12" rx="2.5" fill="#20252B" />
+                <rect width="20" height="14" rx="3" fill="#20252B" />
                 <path
-                  d="M3 3.5L9 8L15 3.5"
+                  d="M3.5 4L10 9.5L16.5 4"
                   stroke="white"
-                  strokeWidth="1.8"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
@@ -232,13 +192,14 @@ const Navbar: React.FC = () => {
 
           {/* LAYER 2: COMPACT AVAILABILITY STATUS ("Available for work 🟡") */}
           <motion.div
-            style={{
-              gridArea: "1 / 1 / 2 / 2",
-              opacity: compactOpacity,
-              x: compactX,
-              scale: compactScale,
-              pointerEvents: compactPointerEvents,
+            style={{ gridArea: "1 / 1 / 2 / 2" }}
+            animate={{
+              opacity: isScrolled ? 1 : 0,
+              x: isScrolled ? 0 : 14,
+              scale: isScrolled ? 1 : 0.96,
+              pointerEvents: isScrolled ? "auto" : "none",
             }}
+            transition={NAV_TRANSITION}
             className="flex items-center justify-center whitespace-nowrap pr-2"
           >
             <a
@@ -246,7 +207,7 @@ const Navbar: React.FC = () => {
               onClick={(e) => handleNavClick(e, "#contact")}
               className="group flex items-center gap-3 px-2 py-1.5 text-base font-medium text-[#20252B] hover:text-[#4A525D] transition-colors"
             >
-              <span className="font-semibold">Available for work</span>
+              <span className="font-semibold text-[15px]">Available for work</span>
               <span className="relative flex h-3 w-3 items-center justify-center">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
@@ -256,7 +217,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* MOBILE CONTROLS */}
-        <div className="flex md:hidden items-center gap-2 pl-2">
+        <div className="flex md:hidden items-center gap-2 ml-auto pr-1">
           {/* Mobile CTA */}
           <a
             href="#contact"
@@ -299,7 +260,7 @@ const Navbar: React.FC = () => {
             initial={{ opacity: 0, y: -12, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -12, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            transition={NAV_TRANSITION}
             className="pointer-events-auto absolute top-20 left-4 right-4 max-w-md mx-auto bg-white/90 backdrop-blur-2xl border border-white p-3 rounded-3xl shadow-2xl flex flex-col gap-1.5"
           >
             {NAV_ITEMS.map((item) => {

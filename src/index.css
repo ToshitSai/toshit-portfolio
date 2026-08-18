@@ -4,28 +4,28 @@
 
 @layer base {
   :root {
-    --nav-width-rest: min(415px, calc(100vw - 24px));
-    --nav-width-active: 235px;
-    --nav-max-width: 415px;
-    --nav-height-rest: 46px;
-    --nav-height-active: 46px;
+    --nav-width-rest: min(600px, calc(100vw - 32px));
+    --nav-width-active: 300px;
+    --nav-max-width: 600px;
+    --nav-height-rest: 58px;
+    --nav-height-active: 58px;
     
     --nav-top-rest: 16px;
-    --nav-top-active: 10px;
-    --nav-padding-rest: 3px 4px;
-    --nav-padding-active: 3px 4px;
+    --nav-top-active: 12px;
+    --nav-padding-rest: 6px 8px;
+    --nav-padding-active: 6px 8px;
     --nav-radius-rest: 9999px;
     --nav-radius-active: 9999px;
     
-    --glass-bg-rest: rgba(255, 255, 255, 0.25);
-    --glass-bg-active: rgba(255, 255, 255, 0.32);
+    --glass-bg-rest: rgba(255, 255, 255, 0.28);
+    --glass-bg-active: rgba(255, 255, 255, 0.35);
     --glass-blur-rest: 14px;
     --glass-blur-active: 16px;
-    --glass-border-rest: rgba(255, 255, 255, 0.40);
-    --glass-border-active: rgba(255, 255, 255, 0.45);
+    --glass-border-rest: rgba(255, 255, 255, 0.45);
+    --glass-border-active: rgba(255, 255, 255, 0.50);
     
-    --ease-fluid: cubic-bezier(0.075, 0.82, 0.165, 1);
-    --ease-smooth: cubic-bezier(0.15, 0.75, 0.35, 1);
+    --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 
     --background: 44 80% 97%; /* #FFF8E8 */
     --foreground: 213 15% 15%; /* #20252B */
