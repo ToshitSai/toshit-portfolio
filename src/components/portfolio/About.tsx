@@ -246,26 +246,29 @@ const About: React.FC = () => {
 
           {/* MAIN EDITORIAL HEADLINE & CONTENT (LEFT & CENTER COLUMN) */}
           <div className="lg:col-span-7 flex flex-col justify-between">
-            {/* OVERSIZED EDITORIAL HEADLINE WITH STAGGERED LINE REVEAL */}
-            <h2 className="font-serif text-[clamp(2.8rem,5.8vw,5.5rem)] leading-[0.92] tracking-[-0.045em] text-[#20252B] font-normal mb-12 sm:mb-16">
-              {headlineLines.map((line, idx) => (
-                <div key={`line-${idx}`} className="overflow-hidden py-1">
-                  <motion.div
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={isInView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
-                    transition={{
-                      duration: 0.75,
-                      delay: 0.15 + idx * 0.12,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="block"
-                  >
-                    {line.split(" ").map((w, wIdx) => (
-                      <HoverWord key={`word-${idx}-${wIdx}`} word={w} />
-                    ))}
-                  </motion.div>
-                </div>
-              ))}
+            {/* OVERSIZED MODERN GROTESK HEADLINE WITH STAGGERED LINE REVEAL */}
+            <h2 className="font-grotesk text-[clamp(3.0rem,6.2vw,5.6rem)] leading-[0.95] tracking-[-0.045em] text-[#20252B] font-medium mb-12 sm:mb-16">
+              {headlineLines.map((line, idx) => {
+                const isAppliedAI = line === "Applied AI";
+                return (
+                  <div key={`line-${idx}`} className="overflow-hidden py-0.5">
+                    <motion.div
+                      initial={{ y: 40, opacity: 0 }}
+                      animate={isInView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
+                      transition={{
+                        duration: 0.75,
+                        delay: 0.15 + idx * 0.12,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className={`block ${isAppliedAI ? "font-normal text-[#20252B]/85" : "font-medium text-[#20252B]"}`}
+                    >
+                      {line.split(" ").map((w, wIdx) => (
+                        <HoverWord key={`word-${idx}-${wIdx}`} word={w} />
+                      ))}
+                    </motion.div>
+                  </div>
+                );
+              })}
             </h2>
 
             {/* EDITORIAL METADATA ACCENT STRIP */}
@@ -287,7 +290,7 @@ const About: React.FC = () => {
               transition={{ duration: 0.7, delay: 0.65 }}
               className="max-w-full sm:max-w-[90%] md:max-w-[650px] lg:max-w-[680px]"
             >
-              <p className="text-[19px] sm:text-[22px] lg:text-[23px] font-sans font-normal leading-[1.4] tracking-[-0.015em] text-[#20252B]/90">
+              <p className="text-[20px] sm:text-[21px] lg:text-[22px] font-grotesk font-normal leading-[1.4] tracking-[-0.015em] text-[#20252B]/90">
                 I design and build intelligent digital products — from AI-powered tools and automation systems to context-aware web applications, turning complex ideas into useful, scalable experiences.
               </p>
             </motion.div>

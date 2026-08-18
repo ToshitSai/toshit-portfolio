@@ -15,7 +15,8 @@ export default {
     extend: {
       fontFamily: {
         serif: ['Instrument Serif', 'Georgia', 'serif'],
-        sans: ['Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter Tight', 'Space Grotesk', 'DM Sans', 'system-ui', 'sans-serif'],
+        grotesk: ['Inter Tight', 'Plus Jakarta Sans', 'Space Grotesk', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
