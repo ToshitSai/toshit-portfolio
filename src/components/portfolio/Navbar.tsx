@@ -121,8 +121,8 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "300px" : "min(530px, calc(100vw - 24px))",
-          maxWidth: isScrolled ? "300px" : "530px",
+          width: isScrolled ? "300px" : "min(650px, calc(100vw - 28px))",
+          maxWidth: isScrolled ? "300px" : "650px",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
@@ -137,8 +137,9 @@ const Navbar: React.FC = () => {
           WebkitBackdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
           transform: "translateZ(0)",
           willChange: "transform, opacity, width",
+          boxSizing: "border-box",
         }}
-        className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors"
+        className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors overflow-hidden"
       >
         {/* AVATAR / T MONOGRAM BADGE (44px x 44px) - STABLE ANCHOR */}
         <motion.a
@@ -168,8 +169,8 @@ const Navbar: React.FC = () => {
             transition={NAV_TRANSITION}
             className="flex items-center whitespace-nowrap pl-1"
           >
-            {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 24px GAPS) */}
-            <div className="flex items-center gap-[24px] flex-shrink-0">
+            {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 28px GAPS) */}
+            <div className="flex items-center gap-[28px] flex-shrink-0 whitespace-nowrap">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -189,11 +190,11 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (180px wide x 40px high, SITS NATURALLY AFTER PLAYGROUND WITH 28px GAP) */}
+            {/* WORK WITH ME CTA BUTTON (195px wide x 42px high, SITS NATURALLY AFTER PLAYGROUND WITH 28px GAP, NEVER CLIPPED) */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex-shrink-0 relative flex items-center justify-center gap-2.5 w-[180px] h-[40px] px-4 rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[28px]"
+              className="group flex-shrink-0 relative flex items-center justify-center gap-[10px] min-w-[195px] h-[42px] px-[18px] rounded-full bg-white text-[#20252B] text-[15px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[28px] whitespace-nowrap box-sizing-border"
             >
               {/* BLACK MAIL ENVELOPE SYMBOL (20px x 14px) */}
               <svg
