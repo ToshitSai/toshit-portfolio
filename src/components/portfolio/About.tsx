@@ -275,20 +275,20 @@ const About: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="flex items-center gap-4 py-3 border-y border-[#20252B]/10 max-w-xl mb-10 font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#20252B]/60 uppercase"
             >
-              <span className="text-[#FFD42A] font-bold">FOCUS</span>
+              <span className="text-[#C49A00] font-bold">FOCUS</span>
               <span>//</span>
               <span className="font-medium text-[#20252B]/80">AI / FULL-STACK / CREATIVE TECHNOLOGY</span>
             </motion.div>
 
-            {/* NARROWER SUPPORTING DESCRIPTION */}
+            {/* NARROWER SUPPORTING DESCRIPTION (60-75 CHARS PER LINE) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.7, delay: 0.65 }}
-              className="max-w-[650px]"
+              className="max-w-full sm:max-w-[90%] md:max-w-[650px] lg:max-w-[680px]"
             >
               <p className="text-[19px] sm:text-[22px] lg:text-[23px] font-sans font-normal leading-[1.4] tracking-[-0.015em] text-[#20252B]/90">
-                Building software at the intersection of applied AI & modern design — from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
+                I design and build intelligent digital products — from AI-powered tools and automation systems to context-aware web applications, turning complex ideas into useful, scalable experiences.
               </p>
             </motion.div>
           </div>
