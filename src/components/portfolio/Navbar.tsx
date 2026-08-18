@@ -121,8 +121,7 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "300px" : "min(525px, calc(100vw - 24px))",
-          maxWidth: isScrolled ? "300px" : "525px",
+          width: isScrolled ? "300px" : "max-content",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
@@ -156,7 +155,7 @@ const Navbar: React.FC = () => {
         </motion.a>
 
         {/* DESKTOP CONTENT: STACKED GRID CELL (ZERO LAYOUT REFLOW) */}
-        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-1 ml-2.5 overflow-hidden">
+        <div className="hidden md:grid grid-cols-1 grid-rows-1 items-center flex-shrink-0 ml-2.5 overflow-hidden">
           {/* LAYER 1: EXPANDED FULL NAVIGATION (NO ML-AUTO, NO JUSTIFY-BETWEEN) */}
           <motion.div
             style={{ gridArea: "1 / 1 / 2 / 2" }}
@@ -167,7 +166,7 @@ const Navbar: React.FC = () => {
               pointerEvents: isScrolled ? "none" : "auto",
             }}
             transition={NAV_TRANSITION}
-            className="flex items-center whitespace-nowrap pl-0.5"
+            className="flex items-center whitespace-nowrap pl-0.5 pr-0.5"
           >
             {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 24px GAPS) */}
             <div className="flex items-center gap-[24px] flex-shrink-0 whitespace-nowrap">
