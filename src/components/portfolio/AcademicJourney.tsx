@@ -2,42 +2,43 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-interface AcademicRecord {
+interface TimelineEntry {
   id: string;
-  number: string;
-  yearRange: string;
-  status: "CURRENT" | "COMPLETED";
-  degreeMain: string;
-  degreeSub: string;
-  institutionLine1: string;
-  institutionLine2?: string;
-  focusTopics: string[];
-  leftOffsetClass: string;
+  isCurrent: boolean;
+  startYear: string;
+  endYear: string;
+  statusLabel: string;
+  degree: string;
+  field: string;
+  institution: string;
+  subinstitution: string;
+  focusArea: string[];
 }
 
-const dossierRecords: AcademicRecord[] = [
+const timelineEntries: TimelineEntry[] = [
   {
     id: "btech",
-    number: "01",
-    yearRange: "2025 / 2029",
-    status: "CURRENT",
-    degreeMain: "B.TECH",
-    degreeSub: "/ COMPUTER SCIENCE",
-    institutionLine1: "NxtWave Institute of Advanced Technologies (NIAT)",
-    institutionLine2: "Chaitanya Deemed to be University",
-    focusTopics: ["AI SYSTEMS", "FULL STACK", "CLOUD INFRASTRUCTURE", "SOFTWARE ARCHITECTURE"],
-    leftOffsetClass: "lg:col-span-8 lg:col-start-5",
+    isCurrent: true,
+    startYear: "2025",
+    endYear: "2029",
+    statusLabel: "● IN PROGRESS",
+    degree: "B.Tech",
+    field: "/ Computer Science",
+    institution: "NxtWave Institute of Advanced Technologies (NIAT)",
+    subinstitution: "Chaitanya Deemed to be University",
+    focusArea: ["AI Systems", "Full Stack", "Cloud Infrastructure", "Software Architecture"],
   },
   {
     id: "intermediate",
-    number: "02",
-    yearRange: "2023 / 2025",
-    status: "COMPLETED",
-    degreeMain: "INTERMEDIATE",
-    degreeSub: "/ MPC (12TH GRADE)",
-    institutionLine1: "Bhavishya Junior College",
-    focusTopics: ["MATHEMATICS", "PHYSICS", "CHEMISTRY"],
-    leftOffsetClass: "lg:col-span-8 lg:col-start-4",
+    isCurrent: false,
+    startYear: "2023",
+    endYear: "2025",
+    statusLabel: "COMPLETED",
+    degree: "Intermediate",
+    field: "/ MPC (12th Grade)",
+    institution: "Bhavishya Junior College",
+    subinstitution: "Board of Intermediate Education",
+    focusArea: ["Mathematics", "Physics", "Chemistry"],
   },
 ];
 
@@ -45,159 +46,147 @@ const AcademicJourney: React.FC = () => {
   return (
     <section
       id="education"
-      style={{ backgroundColor: "#F8F2E6", color: "#191C21" }}
-      className="relative w-full py-20 sm:py-28 lg:py-36 overflow-hidden z-10 select-none"
+      style={{ backgroundColor: "#F7F2E7", color: "#1B1B18" }}
+      className="relative w-full py-24 sm:py-32 font-sans select-none overflow-hidden z-10"
     >
-      {/* Tiny Vertical Edge Index */}
-      <div className="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
-        <span
-          style={{ writingMode: "vertical-rl" }}
-          className="font-mono text-[10px] tracking-[0.25em] text-[#9A9891] uppercase rotate-180 block"
-        >
-          EDUCATION // ACADEMIC DOSSIER
-        </span>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
-        {/* COMPACT EDITORIAL HEADER */}
-        <div className="mb-12 sm:mb-16">
-          {/* Top Metadata Strip */}
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-6 border-b border-[#191C21]/10 pb-4">
-            <div className="flex items-center gap-2.5">
-              <span className="w-2 h-2 rounded-full bg-[#D2A900] shadow-xs" />
-              <span className="font-mono text-xs tracking-[0.18em] text-[#191C21]/70 uppercase font-semibold">
-                03 // ACADEMIC JOURNEY
-              </span>
+      <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
+        
+        {/* HEADER ROW */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#1B1B18]/12 pb-10 mb-16 sm:mb-24 gap-6">
+          <div>
+            <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-wider text-[#4A4A45] mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]" />
+              <span>03 // ACADEMIC JOURNEY</span>
             </div>
-            <span className="font-mono text-[11px] tracking-[0.16em] text-[#85837D] uppercase font-medium">
-              ACADEMIC ARCHIVE / 2023 — PRESENT
-            </span>
-          </div>
-
-          {/* Heading + Short Editorial Intro Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-end pt-2">
-            <div className="lg:col-span-7">
-              <h2
-                style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                className="font-medium text-[clamp(42px,5vw,72px)] leading-[0.92] tracking-[-0.045em] text-[#191C21]"
-              >
-                ACADEMIC <br />
-                DOSSIER
-              </h2>
-            </div>
-            <div className="lg:col-span-5 lg:pb-1">
-              <p
-                style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                className="text-[16px] sm:text-[17px] leading-[1.4] text-[#60646A] max-w-[420px] font-normal"
-              >
-                A concise record of the academic foundations, core technical disciplines, and engineering history shaping my work.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* MAIN SECTION DIVIDER */}
-        <div className="w-full h-px bg-[#191C21]/16 mb-12 sm:mb-16" />
-
-        {/* OPEN EDITORIAL DOSSIER RECORDS LIST (NO CARDS / NO SHADOWS) */}
-        <div className="space-y-16 sm:space-y-24">
-          {dossierRecords.map((record, idx) => (
-            <motion.article
-              key={record.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{
-                duration: 0.7,
-                delay: idx * 0.12,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="group relative border-b border-[#191C21]/14 pb-12 sm:pb-16 pt-2"
+            <h2
+              style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+              className="font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-[#1B1B18]"
             >
-              {/* ASYMMETRIC GRID SYSTEM */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start relative">
-                
-                {/* NUMBER + YEAR + STATUS METADATA COLUMN */}
-                <div className="lg:col-span-3 flex lg:flex-col justify-between items-baseline lg:items-start gap-3">
-                  <div className="flex items-baseline gap-4">
-                    <span
-                      style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                      className="text-[clamp(48px,5vw,76px)] font-medium leading-none tracking-[-0.05em] text-[#191C21]/22 group-hover:text-[#191C21]/50 transition-colors duration-400 block"
-                    >
-                      {record.number}
-                    </span>
-                  </div>
+              Academic<br />
+              <span className="text-[#A9A69C]">Timeline.</span>
+            </h2>
+          </div>
 
-                  <div className="flex flex-col gap-1.5 font-mono text-xs tracking-[0.14em] text-[#70757C] uppercase font-medium">
-                    <span>{record.yearRange}</span>
-                    
-                    {/* Status Badge */}
-                    {record.status === "CURRENT" ? (
-                      <span className="flex items-center gap-1.5 text-[10px] text-[#B08B00] font-semibold tracking-widest mt-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D2A900] animate-pulse" />
-                        CURRENT
-                      </span>
-                    ) : (
-                      <span className="text-[10px] text-[#70757C]/80 font-semibold tracking-widest mt-1">
-                        COMPLETED
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* MAIN DEGREE & INSTITUTION CONTENT COLUMN (ASYMMETRICALLY SHIFTED) */}
-                <div className={`${record.leftOffsetClass} space-y-6`}>
-                  {/* Degree Headline & Interactive Archive Marker */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3
-                        style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                        className="text-[clamp(30px,3.4vw,50px)] font-medium leading-[0.98] tracking-[-0.04em] text-[#191C21] group-hover:translate-x-1.5 transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                      >
-                        <div>{record.degreeMain}</div>
-                        <div className="text-[#191C21]/50 font-normal">{record.degreeSub}</div>
-                      </h3>
-                    </div>
-
-                    {/* Circular Interactive Archive Marker */}
-                    <div className="w-[44px] h-[44px] rounded-full border border-[#191C21]/18 flex items-center justify-center text-[#191C21]/70 group-hover:border-[#191C21] group-hover:text-[#191C21] group-hover:bg-white/50 transition-all duration-300 flex-shrink-0 mt-1">
-                      <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                    </div>
-                  </div>
-
-                  {/* University Name */}
-                  <div
-                    style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                    className="text-[16px] sm:text-[17px] font-medium leading-[1.4] text-[#35393F] space-y-0.5"
-                  >
-                    <div>{record.institutionLine1}</div>
-                    {record.institutionLine2 && (
-                      <div className="text-[#60646A] font-normal">{record.institutionLine2}</div>
-                    )}
-                  </div>
-
-                  {/* Technical FOCUS Metadata Strip */}
-                  <div className="pt-3">
-                    <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#D2A900] uppercase block mb-1.5">
-                      FOCUS
-                    </span>
-                    <div className="font-mono text-[11px] sm:text-xs tracking-[0.12em] text-[#191C21]/75 uppercase flex flex-wrap gap-x-2.5 gap-y-1">
-                      {record.focusTopics.map((topic, tIdx) => (
-                        <React.Fragment key={topic}>
-                          <span>{topic}</span>
-                          {tIdx < record.focusTopics.length - 1 && (
-                            <span className="text-[#191C21]/25">/</span>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </motion.article>
-          ))}
+          <p className="max-w-xs text-sm sm:text-base leading-relaxed text-[#55554F] md:text-right font-normal">
+            A concise record of the academic foundations, core technical disciplines, and engineering history shaping my work.
+          </p>
         </div>
+
+        {/* TIMELINE SECTION */}
+        <div className="relative pl-8 sm:pl-12">
+          
+          {/* Vertical Timeline Track Line */}
+          <div
+            className="absolute left-[5px] top-2.5 bottom-2.5 w-[1px]"
+            style={{
+              background: "linear-gradient(to bottom, rgba(27,27,24,0.18), rgba(27,27,24,0.05))",
+            }}
+          />
+
+          {/* Timeline Entries */}
+          <div className="space-y-16 sm:space-y-20">
+            {timelineEntries.map((entry, idx) => (
+              <motion.div
+                key={entry.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  duration: 0.7,
+                  delay: idx * 0.12,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="relative grid grid-cols-1 md:grid-cols-[130px_1fr] gap-6 md:gap-10 pb-16 border-b border-[#1B1B18]/08 last:border-b-0 last:pb-0"
+              >
+                {/* Timeline Node Bullet */}
+                <div
+                  className={`absolute -left-[32px] sm:-left-[48px] top-1.5 w-[11px] h-[11px] rounded-full border-[1.5px] transition-all duration-300 ${
+                    entry.isCurrent
+                      ? "bg-[#D9A62C] border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.18)]"
+                      : "bg-[#F7F2E7] border-[#1B1B18]"
+                  }`}
+                />
+
+                {/* Period Column */}
+                <div className="font-mono text-xs sm:text-sm text-[#85847C] pt-0.5">
+                  <div className="leading-snug">
+                    {entry.startYear}
+                    <br />
+                    —
+                    <br />
+                    {entry.endYear}
+                  </div>
+                  <span
+                    className={`block mt-2.5 font-mono text-[11px] tracking-wider font-semibold ${
+                      entry.isCurrent ? "text-[#B08420]" : "text-[#85847C]"
+                    }`}
+                  >
+                    {entry.statusLabel}
+                  </span>
+                </div>
+
+                {/* Main Content Column */}
+                <div className="space-y-4">
+                  {/* Degree Title Row */}
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span
+                      style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+                      className="font-bold text-2xl sm:text-3xl text-[#1B1B18]"
+                    >
+                      {entry.degree}
+                    </span>
+                    <span
+                      style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+                      className="font-medium text-2xl sm:text-3xl text-[#A9A69C]"
+                    >
+                      {entry.field}
+                    </span>
+                  </div>
+
+                  {/* Institutions */}
+                  <div>
+                    <div className="text-base sm:text-lg font-medium text-[#3A3A35]">
+                      {entry.institution}
+                    </div>
+                    <div className="text-sm text-[#85847C] mt-0.5">
+                      {entry.subinstitution}
+                    </div>
+                  </div>
+
+                  {/* Detail Row: Focus Tags + Link Arrow */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 pt-4">
+                    <div>
+                      <div className="font-mono text-xs tracking-wider text-[#B08420] font-semibold mb-2">
+                        FOCUS
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-[#55554F]">
+                        {entry.focusArea.map((tag, tIdx) => (
+                          <React.Fragment key={tag}>
+                            <span>{tag}</span>
+                            {tIdx < entry.focusArea.length - 1 && (
+                              <span className="text-[#C9C6BA] font-light">/</span>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Circular Interactive Arrow Button */}
+                    <a
+                      href="#contact"
+                      className="w-[38px] h-[38px] rounded-full border border-[#1B1B18]/20 flex items-center justify-center text-[#1B1B18] hover:bg-[#1B1B18] hover:text-[#F7F7F7] hover:border-[#1B1B18] transition-all duration-200 flex-shrink-0"
+                    >
+                      <ArrowUpRight className="w-4 h-4" />
+                    </a>
+                  </div>
+
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+        </div>
+
       </div>
     </section>
   );
