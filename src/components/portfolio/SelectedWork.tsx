@@ -157,7 +157,7 @@ const DoomProtocolPreview: React.FC = () => {
             <div className="w-3 h-3 rounded-full bg-[#FFE4E6] shadow-[0_0_12px_#FFF]" />
           </div>
         </div>
-        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase font-medium">AVENGERS DOOMSDAY</span>
+        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase font-medium">DOOM PROTOCOL</span>
       </div>
 
       {/* Tech Footer */}
@@ -226,10 +226,10 @@ const projects: ProjectItem[] = [
     layoutVariant: "compact",
   },
   {
-    id: "avengers-doomsday",
+    id: "doom-protocol",
     number: "04",
     category: "WEBGL & 3D EXPERIENCE",
-    titleMain: "Avengers Doomsday",
+    titleMain: "Doom Protocol",
     titleSub: "",
     description: "Cinematic WebGL experience combining 3D scenes, scroll-driven storytelling, animation systems, and immersive interactive environments.",
     tech: ["NEXT.JS", "R3F", "THREE.JS", "GSAP", "LENIS"],

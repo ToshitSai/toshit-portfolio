@@ -107,11 +107,11 @@ const Navbar: React.FC = () => {
         transition={NAV_TRANSITION}
         style={{
           borderRadius: "9999px",
-          backgroundColor: "rgba(255, 255, 255, 0.08)",
-          borderColor: "rgba(255, 255, 255, 0.22)",
-          boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.06)",
-          backdropFilter: "blur(20px) saturate(120%)",
-          WebkitBackdropFilter: "blur(20px) saturate(120%)",
+          backgroundColor: "rgba(248, 242, 230, 0.78)",
+          borderColor: "rgba(255, 255, 255, 0.5)",
+          boxShadow: "0px 8px 30px rgba(25, 28, 33, 0.08)",
+          backdropFilter: "blur(20px) saturate(130%)",
+          WebkitBackdropFilter: "blur(20px) saturate(130%)",
           transform: "translateZ(0)",
           willChange: "transform, opacity, width",
           boxSizing: "border-box",
