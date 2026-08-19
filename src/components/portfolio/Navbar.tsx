@@ -121,8 +121,8 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "300px" : "min(545px, calc(100vw - 24px))",
-          maxWidth: isScrolled ? "300px" : "545px",
+          width: isScrolled ? "235px" : "min(545px, calc(100vw - 24px))",
+          maxWidth: isScrolled ? "235px" : "545px",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
