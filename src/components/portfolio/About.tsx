@@ -223,12 +223,6 @@ const About: React.FC = () => {
               <span>•</span>
               <span>2026 — PRESENT</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-[#20252B]/10 shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFD42A] animate-ping" />
-              <span className="font-mono text-[11px] font-medium tracking-[0.12em] text-[#20252B]/80 uppercase">
-                AVAILABLE FOR WORK
-              </span>
-            </div>
           </div>
         </div>
 
