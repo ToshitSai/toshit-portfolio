@@ -13,6 +13,7 @@ interface TimelineEntry {
   institution: string;
   subinstitution: string;
   focusArea: string[];
+  mapUrl: string;
 }
 
 const timelineEntries: TimelineEntry[] = [
@@ -27,6 +28,7 @@ const timelineEntries: TimelineEntry[] = [
     institution: "NxtWave Institute of Advanced Technologies (NIAT)",
     subinstitution: "Chaitanya Deemed to be University",
     focusArea: ["AI Systems", "Full Stack", "Cloud Infrastructure", "Software Architecture"],
+    mapUrl: "https://maps.app.goo.gl/WZe3FTwGNj2e3MAU8",
   },
   {
     id: "intermediate",
@@ -39,6 +41,7 @@ const timelineEntries: TimelineEntry[] = [
     institution: "Bhavishya Junior College",
     subinstitution: "Board of Intermediate Education",
     focusArea: ["Mathematics", "Physics", "Chemistry"],
+    mapUrl: "https://maps.app.goo.gl/sX3tuQTFbeLMkXS28",
   },
 ];
 
@@ -173,7 +176,10 @@ const AcademicJourney: React.FC = () => {
 
                     {/* Circular Interactive Arrow Button */}
                     <a
-                      href="#contact"
+                      href={entry.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`View ${entry.institution} location on Google Maps`}
                       className="w-[38px] h-[38px] rounded-full border border-[#1B1B18]/20 flex items-center justify-center text-[#1B1B18] hover:bg-[#1B1B18] hover:text-[#F7F7F7] hover:border-[#1B1B18] transition-all duration-200 flex-shrink-0"
                     >
                       <ArrowUpRight className="w-4 h-4" />
