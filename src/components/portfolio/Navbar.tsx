@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
 
@@ -14,7 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "playground", label: "Playground", href: "#playground" },
 ];
 
-// Unified 250ms cubic-bezier transition as requested (0.25s duration, fast, direct & smooth)
+// Unified 250ms cubic-bezier transition (fast, direct & smooth)
 const NAV_TRANSITION = {
   duration: 0.25,
   ease: [0.22, 1, 0.36, 1] as const,
@@ -23,72 +23,76 @@ const NAV_TRANSITION = {
 const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCompact, setIsCompact] = useState(false);
 
-  // OPTIMIZED PASSIVE rAF SCROLL DIRECTIONAL TRANSFORMATION DETECTOR
-  // - TOP / SCROLL UP -> Full Navbar (Avatar + Work + About + Playground + Work with me)
-  // - SCROLL DOWN -> Compact Work with me CTA (195px width)
-  // - Micro-threshold of 6px prevents scroll jitter
+  // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE
+  const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
+  const navbarModeRef = useRef<"full" | "compact">("full");
+  const lastScrollYRef = useRef<number>(0);
+
+  // SINGLE PASSIVE rAF SCROLL DIRECTIONAL STATE MACHINE
+  // - TOP (scrollY <= 5) -> "full"
+  // - SCROLL DOWN (delta > 5) -> "compact" (Work with me CTA only)
+  // - SCROLL UP (delta < -5) -> "full" (Full Navbar from anywhere on page)
   useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
     let ticking = false;
-    let lastScrollY = window.scrollY;
-    let compactState = false;
-
-    const updateScrollState = () => {
-      const currentY = window.scrollY;
-      const diff = currentY - lastScrollY;
-
-      let nextCompactState = compactState;
-      if (currentY <= 20) {
-        nextCompactState = false; // Always Full Navbar at page top
-      } else if (diff > 6 && currentY >= 40) {
-        nextCompactState = true; // Scrolling DOWN -> Compact Work with me CTA
-      } else if (diff < -6) {
-        nextCompactState = false; // Scrolling UP anywhere on page -> Full Navbar
-      }
-
-      if (nextCompactState !== compactState) {
-        compactState = nextCompactState;
-        setIsCompact(nextCompactState);
-      }
-
-      // Active section detection
-      const sections = [
-        { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
-        { id: "about", el: document.getElementById("about") },
-        { id: "playground", el: document.getElementById("playground") || document.getElementById("skills") },
-      ];
-
-      const scrollPosition = currentY + 250;
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const sec = sections[i];
-        if (sec.el) {
-          const top = sec.el.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveSection(sec.id);
-            break;
-          }
-        }
-      }
-
-      if (currentY < 100) {
-        setActiveSection("work");
-      }
-
-      lastScrollY = currentY;
-      ticking = false;
-    };
 
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateScrollState);
-        ticking = true;
-      }
+      if (ticking) return;
+      ticking = true;
+
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        const delta = currentScrollY - lastScrollYRef.current;
+        const DIRECTION_THRESHOLD = 5;
+
+        let targetMode = navbarModeRef.current;
+
+        if (currentScrollY <= 5) {
+          targetMode = "full";
+        } else if (delta > DIRECTION_THRESHOLD) {
+          // Meaningfully scrolling DOWN -> COMPACT
+          targetMode = "compact";
+        } else if (delta < -DIRECTION_THRESHOLD) {
+          // Meaningfully scrolling UP -> FULL
+          targetMode = "full";
+        }
+
+        // ONLY trigger React re-render when state actually changes
+        if (targetMode !== navbarModeRef.current) {
+          navbarModeRef.current = targetMode;
+          setNavbarMode(targetMode);
+        }
+
+        // Active section detection
+        const sections = [
+          { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
+          { id: "about", el: document.getElementById("about") },
+          { id: "playground", el: document.getElementById("playground") || document.getElementById("skills") },
+        ];
+
+        const scrollPosition = currentScrollY + 250;
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const sec = sections[i];
+          if (sec.el) {
+            const top = sec.el.offsetTop;
+            if (scrollPosition >= top) {
+              setActiveSection(sec.id);
+              break;
+            }
+          }
+        }
+
+        if (currentScrollY < 100) {
+          setActiveSection("work");
+        }
+
+        lastScrollYRef.current = currentScrollY;
+        ticking = false;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    updateScrollState();
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -112,6 +116,8 @@ const Navbar: React.FC = () => {
       targetEl.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const isCompact = navbarMode === "compact";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 pt-[18px]">
