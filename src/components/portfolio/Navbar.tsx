@@ -23,53 +23,36 @@ const NAV_TRANSITION = {
 const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isNavVisible, setIsNavVisible] = useState(true);
+  const [isCompact, setIsCompact] = useState(false);
 
-  // OPTIMIZED PASSIVE rAF SCROLL DIRECTION & THRESHOLD DETECTOR
-  // - Smooth hide on scroll DOWN (y: -120%, opacity: 0)
-  // - Immediate reveal on scroll UP (y: 0%, opacity: 1)
-  // - Always visible at top of page (scrollY <= 20px)
-  // - Micro-threshold of 6px to prevent scroll direction flickering
+  // OPTIMIZED PASSIVE rAF SCROLL DIRECTIONAL TRANSFORMATION DETECTOR
+  // - TOP / SCROLL UP -> Full Navbar (Avatar + Work + About + Playground + Work with me)
+  // - SCROLL DOWN -> Compact Work with me CTA (195px width)
+  // - Micro-threshold of 6px prevents scroll jitter
   useEffect(() => {
     let ticking = false;
     let lastScrollY = window.scrollY;
-    let lastVisibility = true;
-    let lastScrolledState = false;
+    let compactState = false;
 
     const updateScrollState = () => {
       const currentY = window.scrollY;
       const diff = currentY - lastScrollY;
 
-      // 1. Determine compact vs expanded state
-      let nextScrolledState = lastScrolledState;
-      if (!lastScrolledState && currentY >= 40) {
-        nextScrolledState = true;
-      } else if (lastScrolledState && currentY <= 15) {
-        nextScrolledState = false;
-      }
-
-      if (nextScrolledState !== lastScrolledState) {
-        lastScrolledState = nextScrolledState;
-        setIsScrolled(nextScrolledState);
-      }
-
-      // 2. Determine hide/show visibility
-      let nextVisibility = lastVisibility;
+      let nextCompactState = compactState;
       if (currentY <= 20) {
-        nextVisibility = true; // Always visible at top
-      } else if (diff > 6) {
-        nextVisibility = false; // Scrolling DOWN past threshold -> HIDE
+        nextCompactState = false; // Always Full Navbar at page top
+      } else if (diff > 6 && currentY >= 40) {
+        nextCompactState = true; // Scrolling DOWN -> Compact Work with me CTA
       } else if (diff < -6) {
-        nextVisibility = true; // Scrolling UP past threshold -> SHOW
+        nextCompactState = false; // Scrolling UP anywhere on page -> Full Navbar
       }
 
-      if (nextVisibility !== lastVisibility) {
-        lastVisibility = nextVisibility;
-        setIsNavVisible(nextVisibility);
+      if (nextCompactState !== compactState) {
+        compactState = nextCompactState;
+        setIsCompact(nextCompactState);
       }
 
-      // 3. Active section detection
+      // Active section detection
       const sections = [
         { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
         { id: "about", el: document.getElementById("about") },
@@ -131,163 +114,107 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <motion.header
-      animate={{
-        y: isNavVisible ? "0%" : "-120%",
-        opacity: isNavVisible ? 1 : 0,
-        paddingTop: isScrolled ? "12px" : "18px",
-      }}
-      transition={NAV_TRANSITION}
-      className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6"
-    >
-      {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING NAVBAR */}
+    <header className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 pt-[18px]">
+      {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING CAPSULE NAVBAR */}
       <motion.nav
         animate={{
-          width: isScrolled ? "300px" : "min(545px, calc(100vw - 24px))",
-          maxWidth: isScrolled ? "300px" : "545px",
+          width: isCompact ? "195px" : "min(545px, calc(100vw - 24px))",
+          maxWidth: isCompact ? "195px" : "545px",
           height: "58px",
-          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.08)",
-          borderColor: isScrolled ? "rgba(255, 255, 255, 0.30)" : "rgba(255, 255, 255, 0.22)",
-          boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.06)",
         }}
         transition={NAV_TRANSITION}
         style={{
           borderRadius: "9999px",
+          backgroundColor: "rgba(255, 255, 255, 0.08)",
+          borderColor: "rgba(255, 255, 255, 0.22)",
+          boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.06)",
           backdropFilter: "blur(20px) saturate(120%)",
           WebkitBackdropFilter: "blur(20px) saturate(120%)",
           transform: "translateZ(0)",
           willChange: "transform, opacity, width",
           boxSizing: "border-box",
         }}
-        className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors overflow-hidden"
+        className="nav-container pointer-events-auto relative flex items-center justify-between border px-2 py-1.5 transition-colors overflow-hidden"
       >
-        {/* AVATAR / T MONOGRAM BADGE (44px x 44px) - STABLE ANCHOR */}
-        <motion.a
-          animate={{ scale: isScrolled ? 0.94 : 1 }}
+        {/* FULL NAVBAR CONTENT: AVATAR & NAV LINKS */}
+        <motion.div
+          animate={{
+            opacity: isCompact ? 0 : 1,
+            x: isCompact ? -20 : 0,
+            scale: isCompact ? 0.9 : 1,
+            pointerEvents: isCompact ? "none" : "auto",
+          }}
           transition={NAV_TRANSITION}
-          href="#hero"
-          onClick={(e) => handleNavClick(e, "#hero")}
-          aria-label="Toshit Sai - Return to top"
-          className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 hover:shadow-md transition-transform flex-shrink-0 z-20 ml-0.5"
+          className="flex items-center gap-2.5"
         >
-          <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
-            T
-          </span>
-        </motion.a>
-
-        {/* DESKTOP CONTENT CONTAINER */}
-        <div className="hidden md:flex items-center flex-1 ml-2.5 relative h-full overflow-hidden">
-          {/* LAYER 1: EXPANDED FULL NAVIGATION */}
-          <motion.div
-            initial={false}
-            animate={{
-              opacity: isScrolled ? 0 : 1,
-              x: isScrolled ? -20 : 0,
-              scale: isScrolled ? 0.95 : 1,
-              pointerEvents: isScrolled ? "none" : "auto",
-            }}
-            transition={NAV_TRANSITION}
-            className="flex items-center whitespace-nowrap w-full"
+          {/* AVATAR / T MONOGRAM BADGE */}
+          <a
+            href="#hero"
+            onClick={(e) => handleNavClick(e, "#hero")}
+            aria-label="Toshit Sai - Return to top"
+            className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
-            {/* NAV LINKS GROUP */}
-            <div className="flex items-center gap-[24px] flex-shrink-0 whitespace-nowrap">
-              {NAV_ITEMS.map((item) => {
-                const isActive = activeSection === item.id;
-                return (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className={`relative text-[15px] font-medium leading-none transition-colors duration-200 ${
-                      isActive
-                        ? "w-[80px] h-[40px] rounded-full bg-white/85 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
-                        : "text-[#20252B] hover:text-[#20252B]/80 py-1 px-1"
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                  </a>
-                );
-              })}
-            </div>
+            <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+              T
+            </span>
+          </a>
 
-            {/* WORK WITH ME CTA BUTTON */}
-            <a
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all ml-[24px] whitespace-nowrap backdrop-blur-md"
-            >
-              {/* BLACK MAIL ENVELOPE SYMBOL */}
-              <svg
-                className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
-                viewBox="0 0 20 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="20" height="14" rx="3" fill="#20252B" />
-                <path
-                  d="M3.5 4L10 9.5L16.5 4"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text-[#20252B] font-semibold whitespace-nowrap">Work with me</span>
-            </a>
-          </motion.div>
+          {/* DESKTOP NAV LINKS */}
+          <div className="hidden md:flex items-center gap-[24px] whitespace-nowrap">
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`relative text-[15px] font-medium leading-none transition-colors duration-200 ${
+                    isActive
+                      ? "w-[80px] h-[40px] rounded-full bg-white/85 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
+                      : "text-[#20252B] hover:text-[#20252B]/80 py-1 px-1"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                </a>
+              );
+            })}
+          </div>
+        </motion.div>
 
-          {/* LAYER 2: COMPACT AVAILABILITY STATUS ("Available for work 🟡") */}
-          <motion.div
-            initial={false}
-            animate={{
-              opacity: isScrolled ? 1 : 0,
-              x: isScrolled ? 0 : 20,
-              scale: isScrolled ? 1 : 0.95,
-              pointerEvents: isScrolled ? "auto" : "none",
-            }}
-            transition={NAV_TRANSITION}
-            className="absolute inset-0 flex items-center justify-center whitespace-nowrap pr-2"
-          >
-            <a
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex items-center gap-2.5 px-1 py-1 text-[#20252B] hover:text-[#4A525D] transition-colors"
-            >
-              <span className="font-semibold text-[15px] whitespace-nowrap">Available for work</span>
-              <span className="relative flex h-3 w-3 items-center justify-center flex-shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
-              </span>
-            </a>
-          </motion.div>
-        </div>
-
-        {/* MOBILE CONTROLS */}
-        <div className="flex md:hidden items-center gap-2 ml-auto pr-1">
-          {/* Mobile CTA */}
+        {/* WORK WITH ME CTA (CONTAINED & CENTERED WHEN COMPACT) */}
+        <motion.div
+          transition={NAV_TRANSITION}
+          className={`flex items-center justify-center ${
+            isCompact ? "absolute inset-0 px-2" : "relative flex-shrink-0 ml-[24px]"
+          }`}
+        >
           <a
             href="#contact"
             onClick={(e) => handleNavClick(e, "#contact")}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white text-[#20252B] text-xs font-semibold uppercase border border-white/80 shadow-xs hover:bg-white transition-colors"
+            className="group flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md"
           >
+            {/* BLACK MAIL ENVELOPE SYMBOL */}
             <svg
-              className="w-3.5 h-2.5 flex-shrink-0"
-              viewBox="0 0 20 15"
+              className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+              viewBox="0 0 20 14"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <rect width="20" height="15" rx="3" fill="#20252B" />
+              <rect width="20" height="14" rx="3" fill="#20252B" />
               <path
-                d="M3.5 4.5L10 9.5L16.5 4.5"
+                d="M3.5 4L10 9.5L16.5 4"
                 stroke="white"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
-            <span>Work with me</span>
+            <span className="text-[#20252B] font-semibold whitespace-nowrap">Work with me</span>
           </a>
+        </motion.div>
 
+        {/* MOBILE CONTROLS */}
+        <div className="flex md:hidden items-center gap-2 ml-auto pr-1">
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -340,7 +267,7 @@ const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 };
 
