@@ -1,214 +1,195 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star, Quote, Sparkles } from "lucide-react";
 
-interface Testimonial {
-  id: number;
+interface FeedbackLogEntry {
+  id: string;
+  badge: string;
   name: string;
-  role: string;
-  content: string;
-  rating: number;
-  initials: string;
+  roleLine1: string;
+  roleLine2: string;
+  quote: string;
+  metaTag: string;
 }
 
-const testimonials: Testimonial[] = [
+const feedbackLogs: FeedbackLogEntry[] = [
   {
-    id: 1,
-    name: "Arjun Mehta",
-    role: "PRODUCT ENGINEER — NOVA LABS",
-    content:
-      "Toshit has a strong instinct for turning AI ideas into polished, usable products. The combination of experimentation and web engineering really stands out.",
-    rating: 5,
-    initials: "AM",
-  },
-  {
-    id: 2,
+    id: "log-1",
+    badge: "RS",
     name: "Riya Sharma",
-    role: "AI RESEARCH INTERN — PIXEL MIND",
-    content:
-      "What impressed me most was how quickly Toshit moved from an idea to a working AI application with a thoughtful interface.",
-    rating: 5,
-    initials: "RS",
+    roleLine1: "AI RESEARCH INTERN",
+    roleLine2: "PIXEL MIND",
+    quote: "What impressed me most was how quickly Toshit moved from an idea to a working AI application with a thoughtful interface.",
+    metaTag: "RE: HireScope",
   },
   {
-    id: 3,
+    id: "log-2",
+    badge: "AK",
+    name: "Arjun Kapoor",
+    roleLine1: "SENIOR ENGINEER",
+    roleLine2: "NIAT FACULTY",
+    quote: "Solid grasp of system design for someone early in their degree — the API architecture on CourseForge held up well under review.",
+    metaTag: "RE: CourseForge",
+  },
+  {
+    id: "log-3",
+    badge: "AM",
+    name: "Arjun Mehta",
+    roleLine1: "PRODUCT ENGINEER",
+    roleLine2: "NOVA LABS",
+    quote: "Toshit has a strong instinct for turning AI ideas into polished, usable products. The combination of experimentation and web engineering really stands out.",
+    metaTag: "RE: Greetly",
+  },
+  {
+    id: "log-4",
+    badge: "KM",
     name: "Karan Malhotra",
-    role: "SOFTWARE ENGINEER — BUILDCRAFT",
-    content:
-      "Toshit brings together modern AI tools, frontend development, and practical problem solving in a way that feels genuinely product-focused.",
-    rating: 5,
-    initials: "KM",
+    roleLine1: "SOFTWARE ENGINEER",
+    roleLine2: "BUILDCRAFT",
+    quote: "Toshit brings together modern AI tools, frontend development, and practical problem solving in a way that feels genuinely product-focused.",
+    metaTag: "RE: AI Systems",
   },
   {
-    id: 4,
+    id: "log-5",
+    badge: "NK",
     name: "Ananya Kapoor",
-    role: "PRODUCT DESIGNER — ORBIT STUDIO",
-    content:
-      "The work feels both technical and creative. Toshit pays attention to interaction, presentation, and the actual usefulness of what he builds.",
-    rating: 5,
-    initials: "AK",
+    roleLine1: "PRODUCT DESIGNER",
+    roleLine2: "ORBIT STUDIO",
+    quote: "The work feels both technical and creative. Toshit pays attention to interaction, presentation, and the actual usefulness of what he builds.",
+    metaTag: "RE: Avengers Doomsday",
   },
 ];
 
-const stats = [
-  { label: "AI Models Integrated", value: "12+" },
-  { label: "Projects Completed", value: "15+" },
-  { label: "Code Quality", value: "100%" },
-  { label: "Hours Built", value: "1200+" },
-];
+const ITEMS_PER_PAGE = 2;
 
 const Testimonials: React.FC = () => {
-  const [current, setCurrent] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
+  const totalPages = Math.ceil(feedbackLogs.length / ITEMS_PER_PAGE);
 
-  const handleNext = () => setCurrent((prev) => (prev + 1) % testimonials.length);
-  const handlePrev = () => setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
 
-  const testimonial = testimonials[current];
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const startIndex = currentPage * ITEMS_PER_PAGE;
+  const currentEntries = feedbackLogs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const visibleCount = Math.min(startIndex + ITEMS_PER_PAGE, feedbackLogs.length);
+  const progressPercent = ((currentPage + 1) / totalPages) * 100;
 
   return (
-    <section className="relative w-full py-24 sm:py-32 bg-cream text-ink overflow-hidden z-10 border-t border-ink/10">
-      <div className="container-narrow">
-        {/* Statistics Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24 p-8 rounded-3xl bg-cream-paper border border-ink/10 shadow-soft-card">
-          {stats.map((st, idx) => (
-            <motion.div
-              key={st.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="text-center"
+    <section
+      id="feedback"
+      style={{ backgroundColor: "#F7F2E7", color: "#1B1B18" }}
+      className="relative w-full py-24 sm:py-32 font-sans select-none overflow-hidden z-10 border-t border-[#1B1B18]/10"
+    >
+      <div className="max-w-[1100px] mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
+        
+        {/* HEADER ROW */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-[#1B1B18]/12 pb-9 mb-14 gap-4">
+          <div>
+            <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-wider text-[#4A4A45] mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]" />
+              <span>FEEDBACK LOG</span>
+            </div>
+            <h2
+              style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+              className="font-bold text-3xl sm:text-4xl lg:text-[42px] leading-tight tracking-tight text-[#1B1B18]"
             >
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-serif text-ink font-bold tracking-tight">
-                {st.value}
-              </div>
-              <div className="text-xs font-mono uppercase tracking-wider text-ink-light mt-2">
-                {st.label}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Section Label */}
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-          <span className="label-mono text-ink-light tracking-wider uppercase">SELECTED FEEDBACK / DEMO</span>
-        </div>
-
-        <h2 className="text-display text-center text-[clamp(2.4rem,5.5vw,4.2rem)] text-ink mb-6">
-          Words from Mentors &amp; Collaborators
-        </h2>
-
-        {/* Quiet Subtle Disclaimer Badge */}
-        <div className="flex items-center justify-center mb-12">
-          <span className="text-xs font-mono text-ink-light/80 bg-cream-paper border border-ink/10 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
-            <Sparkles className="w-3 h-3 text-yellow-accent" />
-            Portfolio Feedback
-          </span>
-        </div>
-
-        {/* Carousel Container */}
-        <div className="relative max-w-3xl mx-auto bg-cream-paper border border-ink/10 rounded-3xl p-8 sm:p-12 shadow-soft-card">
-          {/* Animated Big Quote Mark */}
-          <div className="absolute top-6 left-8 text-yellow-accent/40 pointer-events-none">
-            <Quote className="w-16 h-16 rotate-12 scale-110" />
+              Words from mentors &amp; collaborators.
+            </h2>
           </div>
 
+          <div className="font-mono text-xs sm:text-sm text-[#85847C] sm:text-right">
+            <b className="text-[#1B1B18] text-sm sm:text-base font-semibold">
+              {String(visibleCount).padStart(2, "0")}
+            </b>{" "}
+            / {String(feedbackLogs.length).padStart(2, "0")} entries
+          </div>
+        </div>
+
+        {/* LOG-STYLE FEEDBACK LIST */}
+        <div className="border-t border-[#1B1B18]/12 min-h-[320px]">
           <AnimatePresence mode="wait">
             <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 4 }}
+              key={currentPage}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 flex flex-col items-center text-center space-y-6 min-h-[220px] justify-between"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Star Ratings Staggered Reveal */}
-              <div className="flex gap-1">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: i * 0.05, duration: 0.2 }}
-                  >
-                    <Star className="w-5 h-5 fill-yellow-accent text-yellow-accent" />
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Quote Content */}
-              <div className="flex-1 flex items-center justify-center my-2">
-                <p className="text-lg sm:text-2xl font-serif italic text-ink leading-relaxed max-w-xl">
-                  "{testimonial.content}"
-                </p>
-              </div>
-
-              {/* Author Details & Initial-Based Avatar */}
-              <div className="flex items-center gap-4 pt-4 border-t border-ink/10 w-full justify-center">
-                {/* PURE INITIAL-BASED CIRCULAR AVATAR */}
-                <motion.div
-                  key={`avatar-${testimonial.id}`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-[54px] h-[54px] rounded-full border-2 border-yellow-accent bg-[#FFF8E8] shadow-sm flex items-center justify-center font-mono font-bold text-base text-ink tracking-wider hover:scale-[1.03] hover:border-[#FFD42A] hover:shadow-md transition-all flex-shrink-0"
+              {currentEntries.map((item) => (
+                <div
+                  key={item.id}
+                  className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 md:gap-10 py-9 border-b border-[#1B1B18]/10 items-start"
                 >
-                  {testimonial.initials}
-                </motion.div>
+                  {/* WHO COLUMN */}
+                  <div className="flex flex-col gap-2.5">
+                    <div className="w-[34px] h-[34px] rounded bg-[#1B1B18] text-[#F7F2E7] font-mono text-xs font-medium flex items-center justify-center">
+                      {item.badge}
+                    </div>
+                    <div
+                      style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+                      className="font-bold text-base sm:text-lg text-[#1B1B18]"
+                    >
+                      {item.name}
+                    </div>
+                    <div className="font-mono text-[11px] tracking-wider text-[#85847C] leading-tight uppercase">
+                      <div>{item.roleLine1}</div>
+                      <div>{item.roleLine2}</div>
+                    </div>
+                  </div>
 
-                <div className="text-left">
-                  <h4 className="text-base font-sans font-bold text-ink">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-xs font-mono text-ink-light uppercase tracking-wider">
-                    {testimonial.role}
-                  </p>
+                  {/* QUOTE & META COLUMN */}
+                  <div>
+                    <p className="text-base sm:text-lg leading-[1.65] text-[#2A2A25] font-normal">
+                      <span className="text-[#D9A62C] font-serif text-2xl mr-1 leading-none">“</span>
+                      {item.quote}
+                    </p>
+                    <span className="inline-block mt-4 font-mono text-[11px] tracking-wider text-[#B08420] bg-[#D9A62C]/10 border border-[#D9A62C]/35 px-2.5 py-1 rounded">
+                      {item.metaTag}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              ))}
             </motion.div>
           </AnimatePresence>
+        </div>
 
-          {/* Carousel Controls */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-ink/10">
-            <div className="flex gap-2">
-              {testimonials.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrent(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    current === idx ? "w-8 bg-yellow-accent" : "w-2.5 bg-ink/20 hover:bg-ink/40"
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={handlePrev}
-                className="p-2.5 rounded-full bg-cream border border-ink/10 text-ink hover:bg-yellow-accent transition-colors"
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleNext}
-                className="p-2.5 rounded-full bg-cream border border-ink/10 text-ink hover:bg-yellow-accent transition-colors"
-                aria-label="Next testimonial"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+        {/* FOOTER NAVIGATION */}
+        <div className="flex items-center justify-between pt-8">
+          <div className="font-mono text-xs text-[#85847C] flex items-center gap-3">
+            <span>
+              {String(visibleCount).padStart(2, "0")} / {String(feedbackLogs.length).padStart(2, "0")}
+            </span>
+            <div className="w-[120px] h-[2px] bg-[#1B1B18]/12 relative overflow-hidden">
+              <div
+                className="h-full bg-[#D9A62C] transition-all duration-300"
+                style={{ width: `${progressPercent}%` }}
+              />
             </div>
           </div>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous feedback entries"
+              className="w-[34px] h-[34px] rounded border border-[#1B1B18]/20 bg-transparent flex items-center justify-center text-[#1B1B18] text-sm hover:bg-[#1B1B18] hover:text-[#F7F2E7] transition-colors"
+            >
+              ←
+            </button>
+            <button
+              onClick={handleNext}
+              aria-label="Next feedback entries"
+              className="w-[34px] h-[34px] rounded border border-[#1B1B18]/20 bg-transparent flex items-center justify-center text-[#1B1B18] text-sm hover:bg-[#1B1B18] hover:text-[#F7F2E7] transition-colors"
+            >
+              →
+            </button>
+          </div>
         </div>
+
       </div>
     </section>
   );
