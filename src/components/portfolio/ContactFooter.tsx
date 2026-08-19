@@ -1,28 +1,80 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, CheckCircle2, ArrowUp, Github, Linkedin, Mail, ExternalLink, Loader2 } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Send, CheckCircle2, ArrowUp, Github, Linkedin, Mail, ExternalLink, Loader2, AlertTriangle } from "lucide-react";
+
+interface FormFieldError {
+  id: string;
+  fieldId: string;
+  msg: string;
+}
 
 const ContactFooter: React.FC = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [summaryErrors, setSummaryErrors] = useState<FormFieldError[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formError, setFormError] = useState("");
+
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const messageInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    const summary: FormFieldError[] = [];
+
+    if (!formData.name.trim()) {
+      errors.name = "Enter your full name.";
+      summary.push({ id: "name-err-summary", fieldId: "full-name", msg: "Enter your full name." });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      errors.email = "Enter a valid email address.";
+      summary.push({ id: "email-err-summary", fieldId: "email-address", msg: "Enter a valid email address." });
+    }
+
+    if (!formData.message.trim()) {
+      errors.message = "Enter your message.";
+      summary.push({ id: "message-err-summary", fieldId: "message-content", msg: "Enter your message." });
+    }
+
+    return { errors, summary };
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setFormError("Please fill out all required fields.");
+    const { errors, summary } = validateForm();
+
+    setFieldErrors(errors);
+    setSummaryErrors(summary);
+
+    if (summary.length > 0) {
+      // Focus summary box for keyboard & screen reader accessibility
+      setTimeout(() => {
+        if (errorSummaryRef.current) {
+          errorSummaryRef.current.focus();
+        }
+      }, 50);
       return;
     }
-    setFormError("");
-    setIsSubmitting(true);
 
+    setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      setFieldErrors({});
+      setSummaryErrors([]);
     }, 1200);
+  };
+
+  const handleSummaryLinkClick = (fieldId: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (fieldId === "full-name" && nameInputRef.current) nameInputRef.current.focus();
+    if (fieldId === "email-address" && emailInputRef.current) emailInputRef.current.focus();
+    if (fieldId === "message-content" && messageInputRef.current) messageInputRef.current.focus();
   };
 
   const scrollToTop = () => {
@@ -54,7 +106,7 @@ const ContactFooter: React.FC = () => {
         </div>
 
         {/* Big Editorial Headline */}
-        <h2 className="text-display text-[clamp(2.6rem,8.5vw,6.5rem)] text-[#FFF8E8] mb-6 leading-[0.88] max-w-5xl">
+        <h2 id="contact-heading" className="text-display text-[clamp(2.6rem,8.5vw,6.5rem)] text-[#FFF8E8] mb-6 leading-[0.88] max-w-5xl">
           Let's build something remarkable together.
         </h2>
 
@@ -66,16 +118,45 @@ const ContactFooter: React.FC = () => {
 
           <a
             href="mailto:iamtoshitsai@gmail.com"
-            className="inline-flex items-center justify-center gap-3 px-6 py-4 rounded-full bg-[#FFD42A] text-[#20252B] font-mono text-xs sm:text-sm tracking-wider font-bold uppercase shadow-xl hover:-translate-y-1 hover:bg-[#FFF8E8] transition-all duration-300 w-max"
+            className="inline-flex items-center justify-center gap-3 px-6 py-4 rounded-full bg-[#FFD42A] text-[#20252B] font-mono text-xs sm:text-sm tracking-wider font-bold uppercase shadow-xl hover:-translate-y-1 hover:bg-[#FFF8E8] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#FFD42A] transition-all duration-300 w-max"
           >
             <Mail className="w-4 h-4 text-[#20252B]" />
             <span>iamtoshitsai@gmail.com ↗</span>
           </a>
         </div>
 
-        {/* Contact Form & Info Grid Grid */}
+        {/* Dynamic Focusable Error Summary Container */}
+        {summaryErrors.length > 0 && (
+          <div
+            ref={errorSummaryRef}
+            tabIndex={-1}
+            role="alert"
+            aria-labelledby="error-summary-title"
+            className="p-5 mb-8 rounded-2xl bg-red-950/80 border-2 border-red-500 text-red-200 focus:outline-none focus:ring-4 focus:ring-red-400"
+          >
+            <h3 id="error-summary-title" className="text-base font-mono font-bold text-red-100 flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-5 h-5 text-red-400" />
+              There is a problem with your submission
+            </h3>
+            <ul className="list-disc list-inside space-y-1 text-xs font-mono text-red-200">
+              {summaryErrors.map((err) => (
+                <li key={err.id}>
+                  <a
+                    href={`#${err.fieldId}`}
+                    onClick={handleSummaryLinkClick(err.fieldId)}
+                    className="underline hover:text-white focus:outline-none focus:text-white"
+                  >
+                    {err.msg}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Form & Info Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-20">
-          {/* Interactive Form Card */}
+          {/* Interactive Accessible Form Card */}
           <div className="lg:col-span-7 bg-[#2A3038] border border-white/20 p-8 sm:p-10 rounded-3xl shadow-2xl">
             <h3 className="text-2xl font-serif text-[#FFF8E8] mb-6">Send a Direct Message</h3>
 
@@ -100,78 +181,137 @@ const ContactFooter: React.FC = () => {
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-8">
-                {formError && (
-                  <div className="p-3 rounded-lg bg-red-500/20 border border-red-400 text-red-200 text-xs font-mono">
-                    {formError}
-                  </div>
-                )}
-
-                {/* Name Input */}
-                <div className="relative">
+              <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                
+                {/* Field 1: Full Name */}
+                <div className={`space-y-2 ${fieldErrors.name ? "has-error" : ""}`}>
                   <label
-                    htmlFor="name"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] mb-2 font-semibold"
+                    htmlFor="full-name"
+                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
                   >
-                    Your Name *
+                    Your Name <span className="text-red-400 font-bold" aria-hidden="true">*</span>
+                    <span className="sr-only">(Required)</span>
                   </label>
                   <input
-                    id="name"
+                    ref={nameInputRef}
+                    id="full-name"
                     type="text"
+                    name="name"
+                    autoComplete="name"
+                    required
+                    aria-required="true"
+                    aria-invalid={fieldErrors.name ? "true" : "false"}
+                    aria-describedby={fieldErrors.name ? "full-name-error" : undefined}
                     value={formData.name}
-                    onFocus={() => setFocusedField("name")}
-                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-[#1F2329] border border-white/20 rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:border-[#FFD42A] transition-colors text-base"
+                    className={`w-full min-h-[48px] bg-[#1F2329] border rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base ${
+                      fieldErrors.name ? "border-red-500 bg-red-950/20" : "border-white/20 focus:border-[#FFD42A]"
+                    }`}
                     placeholder="e.g. Alex Morgan"
                   />
+                  {fieldErrors.name && (
+                    <div id="full-name-error" className="flex items-center gap-1.5 text-xs font-mono text-red-300 mt-1 font-semibold">
+                      <span aria-hidden="true">⚠️</span>
+                      <span>{fieldErrors.name}</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Email Input */}
-                <div className="relative">
+                {/* Field 2: Email Address */}
+                <div className={`space-y-2 ${fieldErrors.email ? "has-error" : ""}`}>
                   <label
-                    htmlFor="email"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] mb-2 font-semibold"
+                    htmlFor="email-address"
+                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
                   >
-                    Your Email *
+                    Your Email <span className="text-red-400 font-bold" aria-hidden="true">*</span>
+                    <span className="sr-only">(Required)</span>
                   </label>
+                  <span id="email-hint" className="block text-xs font-mono text-white/50 mb-1">
+                    Example: name@domain.com
+                  </span>
                   <input
-                    id="email"
+                    ref={emailInputRef}
+                    id="email-address"
                     type="email"
+                    name="email"
+                    autoComplete="email"
+                    required
+                    aria-required="true"
+                    aria-invalid={fieldErrors.email ? "true" : "false"}
+                    aria-describedby={`email-hint ${fieldErrors.email ? "email-error" : ""}`}
                     value={formData.email}
-                    onFocus={() => setFocusedField("email")}
-                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-[#1F2329] border border-white/20 rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:border-[#FFD42A] transition-colors text-base"
+                    className={`w-full min-h-[48px] bg-[#1F2329] border rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base ${
+                      fieldErrors.email ? "border-red-500 bg-red-950/20" : "border-white/20 focus:border-[#FFD42A]"
+                    }`}
                     placeholder="alex@company.com"
                   />
+                  {fieldErrors.email && (
+                    <div id="email-error" className="flex items-center gap-1.5 text-xs font-mono text-red-300 mt-1 font-semibold">
+                      <span aria-hidden="true">⚠️</span>
+                      <span>{fieldErrors.email}</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Message Input */}
-                <div className="relative">
+                {/* Field 3: Phone Number (Optional) */}
+                <div className="space-y-2">
                   <label
-                    htmlFor="message"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] mb-2 font-semibold"
+                    htmlFor="phone-number"
+                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
                   >
-                    Your Message *
+                    Phone Number <span className="text-white/50 text-xs lowercase font-normal">(optional)</span>
+                  </label>
+                  <input
+                    id="phone-number"
+                    type="tel"
+                    name="phone"
+                    autoComplete="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full min-h-[48px] bg-[#1F2329] border border-white/20 rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:border-[#FFD42A] focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base"
+                    placeholder="+1 (555) 000-0000"
+                  />
+                </div>
+
+                {/* Field 4: Message */}
+                <div className={`space-y-2 ${fieldErrors.message ? "has-error" : ""}`}>
+                  <label
+                    htmlFor="message-content"
+                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
+                  >
+                    Your Message <span className="text-red-400 font-bold" aria-hidden="true">*</span>
+                    <span className="sr-only">(Required)</span>
                   </label>
                   <textarea
-                    id="message"
+                    ref={messageInputRef}
+                    id="message-content"
+                    name="message"
                     rows={4}
+                    required
+                    aria-required="true"
+                    aria-invalid={fieldErrors.message ? "true" : "false"}
+                    aria-describedby={fieldErrors.message ? "message-error" : undefined}
                     value={formData.message}
-                    onFocus={() => setFocusedField("message")}
-                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-[#1F2329] border border-white/20 rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:border-[#FFD42A] transition-colors text-base resize-none"
+                    className={`w-full min-h-[120px] bg-[#1F2329] border rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base resize-none ${
+                      fieldErrors.message ? "border-red-500 bg-red-950/20" : "border-white/20 focus:border-[#FFD42A]"
+                    }`}
                     placeholder="Tell me about your project or opportunity..."
                   />
+                  {fieldErrors.message && (
+                    <div id="message-error" className="flex items-center gap-1.5 text-xs font-mono text-red-300 mt-1 font-semibold">
+                      <span aria-hidden="true">⚠️</span>
+                      <span>{fieldErrors.message}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 rounded-full bg-[#FFD42A] text-[#20252B] font-mono text-xs font-bold uppercase tracking-[0.2em] shadow-lg hover:bg-[#FFF8E8] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                  className="w-full min-h-[48px] py-4 rounded-full bg-[#FFD42A] text-[#20252B] font-mono text-xs font-bold uppercase tracking-[0.2em] shadow-lg hover:bg-[#FFF8E8] active:scale-[0.98] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#FFD42A] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                 >
                   {isSubmitting ? (
                     <>
@@ -189,7 +329,7 @@ const ContactFooter: React.FC = () => {
             )}
           </div>
 
-          {/* Info Grid (<dl>) */}
+          {/* Info Grid */}
           <div className="lg:col-span-5 space-y-8 lg:pt-4">
             <dl className="space-y-8">
               <div>
