@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle2, ArrowUp, Github, Linkedin, Mail, ExternalLink, Loader2, AlertTriangle } from "lucide-react";
+import ResumeModal from "./ResumeModal";
 
 interface FormFieldError {
   id: string;
@@ -14,6 +15,7 @@ const ContactFooter: React.FC = () => {
   const [summaryErrors, setSummaryErrors] = useState<FormFieldError[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -379,20 +381,25 @@ const ContactFooter: React.FC = () => {
                   RESUME / DOCUMENTATION
                 </dt>
                 <dd className="flex flex-wrap gap-4 font-mono text-xs">
-                  <a
-                    href="https://github.com/ToshitSai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2.5 rounded-full border border-white/30 text-[#FFF8E8] hover:bg-[#FFD42A] hover:text-[#20252B] hover:border-[#FFD42A] transition-all inline-flex items-center gap-1.5 font-semibold"
+                  <button
+                    type="button"
+                    onClick={() => setIsResumeModalOpen(true)}
+                    className="px-4 py-2.5 rounded-full border border-white/30 text-[#FFF8E8] hover:bg-[#FFD42A] hover:text-[#20252B] hover:border-[#FFD42A] transition-all inline-flex items-center gap-1.5 font-semibold cursor-pointer"
                   >
-                    <span>View Resume & Projects</span>
+                    <span>View Resume</span>
                     <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  </button>
                 </dd>
               </div>
             </dl>
           </div>
         </div>
+
+        {/* RESUME MODAL VIEWER */}
+        <ResumeModal
+          isOpen={isResumeModalOpen}
+          onClose={() => setIsResumeModalOpen(false)}
+        />
 
         {/* Footer Bottom Row */}
         <div className="pt-8 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#FFF8E8]/90">
