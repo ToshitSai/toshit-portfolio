@@ -39,6 +39,30 @@ const projectsData: ProjectCardProps[] = [
     githubUrl: "https://github.com/ToshitSai",
     isYellowHeader: true,
   },
+  {
+    category: "AI COURSE BUILDER",
+    title: "CourseForge AI",
+    subtitle: "Personalized AI Course & Quiz Generator",
+    description:
+      "Generates structured 4-lesson courses on any topic instantly using AI, featuring automated quiz generation and curated YouTube educational videos.",
+    headerBgClass: "bg-gradient-to-br from-[#0F766E] via-[#0D9488] to-[#14B8A6]",
+    tech: ["REACT", "VITE", "PYTHON", "AI ENGINE"],
+    liveUrl: "https://courseforge-ai-pied.vercel.app/",
+    githubUrl: "https://github.com/ToshitSai/courseforge-ai",
+    isYellowHeader: false,
+  },
+  {
+    category: "WEBGL & 3D EXPERIENCE",
+    title: "Avengers: Doomsday",
+    subtitle: "Cinematic Scroll & 3D Multiverse Web Experience",
+    description:
+      "Awwwards-style scroll-driven interactive web experience built with Next.js, React Three Fiber, GSAP, and Three.js featuring 3D Doctor Doom showcase and video scrubbing.",
+    headerBgClass: "bg-gradient-to-br from-[#881337] via-[#9F1239] to-[#BE123C]",
+    tech: ["NEXT.JS", "R3F", "THREE.JS", "GSAP", "LENIS"],
+    liveUrl: "https://avengers-doomsday-rose.vercel.app/",
+    githubUrl: "https://github.com/ToshitSai/Avengers-DoomsDay-",
+    isYellowHeader: false,
+  },
 ];
 
 const SelectedWork: React.FC = () => {
