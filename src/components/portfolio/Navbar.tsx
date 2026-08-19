@@ -21,17 +21,16 @@ const NAV_TRANSITION = {
 };
 
 const Navbar: React.FC = () => {
-  const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE
+  // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
   const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
   const navbarModeRef = useRef<"full" | "compact">("full");
   const lastScrollYRef = useRef<number>(0);
 
   // SINGLE PASSIVE rAF SCROLL DIRECTIONAL STATE MACHINE
   // - TOP (scrollY <= 5) -> "full"
-  // - SCROLL DOWN (delta > 5) -> "compact" (Available for work status pill)
+  // - SCROLL DOWN (delta > 5) -> "compact" (T + Available for work + status dot)
   // - SCROLL UP (delta < -5) -> "full" (Full Navbar from anywhere on page)
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
@@ -62,29 +61,6 @@ const Navbar: React.FC = () => {
         if (targetMode !== navbarModeRef.current) {
           navbarModeRef.current = targetMode;
           setNavbarMode(targetMode);
-        }
-
-        // Active section detection
-        const sections = [
-          { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
-          { id: "about", el: document.getElementById("about") },
-          { id: "playground", el: document.getElementById("skills") || document.getElementById("skills") },
-        ];
-
-        const scrollPosition = currentScrollY + 250;
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const sec = sections[i];
-          if (sec.el) {
-            const top = sec.el.offsetTop;
-            if (scrollPosition >= top) {
-              setActiveSection(sec.id);
-              break;
-            }
-          }
-        }
-
-        if (currentScrollY < 100) {
-          setActiveSection("work");
         }
 
         lastScrollYRef.current = currentScrollY;
@@ -124,9 +100,9 @@ const Navbar: React.FC = () => {
       {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING CAPSULE NAVBAR */}
       <motion.nav
         animate={{
-          width: isCompact ? "305px" : "min(545px, calc(100vw - 24px))",
-          maxWidth: isCompact ? "305px" : "545px",
-          height: "58px",
+          width: isCompact ? "310px" : "min(545px, calc(100vw - 24px))",
+          maxWidth: isCompact ? "310px" : "545px",
+          height: "60px",
         }}
         transition={NAV_TRANSITION}
         style={{
@@ -164,17 +140,17 @@ const Navbar: React.FC = () => {
             </span>
           </a>
 
-          {/* DESKTOP NAV LINKS */}
+          {/* STATIC DESKTOP NAV LINKS */}
           <div className="hidden md:flex items-center gap-[24px] whitespace-nowrap ml-2.5">
             {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.id;
+              const isWork = item.id === "work";
               return (
                 <a
                   key={item.id}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
                   className={`relative text-[15px] font-medium leading-none transition-colors duration-200 ${
-                    isActive
+                    isWork
                       ? "w-[80px] h-[40px] rounded-full bg-white/85 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
                       : "text-[#20252B] hover:text-[#20252B]/80 py-1 px-1"
                   }`}
@@ -281,22 +257,14 @@ const Navbar: React.FC = () => {
             className="pointer-events-auto absolute top-20 left-4 right-4 max-w-md mx-auto bg-white/90 backdrop-blur-2xl border border-white p-3 rounded-3xl shadow-2xl flex flex-col gap-1.5"
           >
             {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.id;
               return (
                 <a
                   key={item.id}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`px-4 py-2.5 rounded-full text-xs font-semibold tracking-[0.14em] flex items-center justify-between transition-all ${
-                    isActive
-                      ? "bg-white text-[#20252B] shadow-sm border border-white"
-                      : "text-[#20252B]/75 hover:text-[#20252B] hover:bg-white/50"
-                  }`}
+                  className="px-4 py-2.5 rounded-full text-xs font-semibold tracking-[0.14em] flex items-center justify-between transition-all text-[#20252B]/75 hover:text-[#20252B] hover:bg-white/50"
                 >
                   <span>{item.label}</span>
-                  {isActive && (
-                    <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
-                  )}
                 </a>
               );
             })}
