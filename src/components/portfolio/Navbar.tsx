@@ -24,33 +24,52 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("work");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isNavVisible, setIsNavVisible] = useState(true);
 
-  // OPTIMIZED PASSIVE rAF HYSTERESIS SCROLL LISTENER
-  // - Eliminates continuous React re-renders on scroll
-  // - Throttled using window.requestAnimationFrame
-  // - Hysteresis thresholds: FULL -> COMPACT (>= 40px), COMPACT -> FULL (<= 15px)
+  // OPTIMIZED PASSIVE rAF SCROLL DIRECTION & THRESHOLD DETECTOR
+  // - Smooth hide on scroll DOWN (y: -120%, opacity: 0)
+  // - Immediate reveal on scroll UP (y: 0%, opacity: 1)
+  // - Always visible at top of page (scrollY <= 20px)
+  // - Micro-threshold of 6px to prevent scroll direction flickering
   useEffect(() => {
     let ticking = false;
-    let currentState = isScrolled;
+    let lastScrollY = window.scrollY;
+    let lastVisibility = true;
+    let lastScrolledState = false;
 
     const updateScrollState = () => {
       const currentY = window.scrollY;
+      const diff = currentY - lastScrollY;
 
-      // Hysteresis threshold checking to prevent flickering
-      let nextState = currentState;
-      if (!currentState && currentY >= 40) {
-        nextState = true;
-      } else if (currentState && currentY <= 15) {
-        nextState = false;
+      // 1. Determine compact vs expanded state
+      let nextScrolledState = lastScrolledState;
+      if (!lastScrolledState && currentY >= 40) {
+        nextScrolledState = true;
+      } else if (lastScrolledState && currentY <= 15) {
+        nextScrolledState = false;
       }
 
-      // ONLY call setIsScrolled if state actually changed
-      if (nextState !== currentState) {
-        currentState = nextState;
-        setIsScrolled(nextState);
+      if (nextScrolledState !== lastScrolledState) {
+        lastScrolledState = nextScrolledState;
+        setIsScrolled(nextScrolledState);
       }
 
-      // Active section tracking (throttled inside rAF)
+      // 2. Determine hide/show visibility
+      let nextVisibility = lastVisibility;
+      if (currentY <= 20) {
+        nextVisibility = true; // Always visible at top
+      } else if (diff > 6) {
+        nextVisibility = false; // Scrolling DOWN past threshold -> HIDE
+      } else if (diff < -6) {
+        nextVisibility = true; // Scrolling UP past threshold -> SHOW
+      }
+
+      if (nextVisibility !== lastVisibility) {
+        lastVisibility = nextVisibility;
+        setIsNavVisible(nextVisibility);
+      }
+
+      // 3. Active section detection
       const sections = [
         { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
         { id: "about", el: document.getElementById("about") },
@@ -73,6 +92,7 @@ const Navbar: React.FC = () => {
         setActiveSection("work");
       }
 
+      lastScrollY = currentY;
       ticking = false;
     };
 
@@ -113,28 +133,28 @@ const Navbar: React.FC = () => {
   return (
     <motion.header
       animate={{
-        paddingTop: isScrolled ? "12px" : "16px",
+        y: isNavVisible ? "0%" : "-120%",
+        opacity: isNavVisible ? 1 : 0,
+        paddingTop: isScrolled ? "12px" : "18px",
       }}
       transition={NAV_TRANSITION}
       className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6"
     >
-      {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
+      {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING NAVBAR */}
       <motion.nav
         animate={{
           width: isScrolled ? "300px" : "min(545px, calc(100vw - 24px))",
           maxWidth: isScrolled ? "300px" : "545px",
           height: "58px",
-          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
-          borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
-          boxShadow: isScrolled
-            ? "0px 10px 24px rgba(0, 0, 0, 0.10), inset 0px 0px 0px 0.5px rgba(255, 255, 255, 0.5)"
-            : "0px 8px 24px rgba(0, 0, 0, 0.06)",
+          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.08)",
+          borderColor: isScrolled ? "rgba(255, 255, 255, 0.30)" : "rgba(255, 255, 255, 0.22)",
+          boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.06)",
         }}
         transition={NAV_TRANSITION}
         style={{
           borderRadius: "9999px",
-          backdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
-          WebkitBackdropFilter: isScrolled ? "blur(16px)" : "blur(14px)",
+          backdropFilter: "blur(20px) saturate(120%)",
+          WebkitBackdropFilter: "blur(20px) saturate(120%)",
           transform: "translateZ(0)",
           willChange: "transform, opacity, width",
           boxSizing: "border-box",
@@ -169,7 +189,7 @@ const Navbar: React.FC = () => {
             transition={NAV_TRANSITION}
             className="flex items-center whitespace-nowrap w-full"
           >
-            {/* NAV LINKS GROUP (WORK 80px x 40px ACTIVE PILL, ABOUT/PLAYGROUND TEXT ONLY, 24px GAPS) */}
+            {/* NAV LINKS GROUP */}
             <div className="flex items-center gap-[24px] flex-shrink-0 whitespace-nowrap">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.id;
@@ -180,7 +200,7 @@ const Navbar: React.FC = () => {
                     onClick={(e) => handleNavClick(e, item.href)}
                     className={`relative text-[15px] font-medium leading-none transition-colors duration-200 ${
                       isActive
-                        ? "w-[80px] h-[40px] rounded-full bg-white/95 text-[#20252B] font-semibold flex items-center justify-center shadow-xs"
+                        ? "w-[80px] h-[40px] rounded-full bg-white/85 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
                         : "text-[#20252B] hover:text-[#20252B]/80 py-1 px-1"
                     }`}
                   >
@@ -190,13 +210,13 @@ const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* WORK WITH ME CTA BUTTON (170px wide x 40px high, SITS NATURALLY WITH 24px GAP, ZERO OVERFLOW) */}
+            {/* WORK WITH ME CTA BUTTON */}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white/95 hover:scale-[1.02] active:scale-[0.98] transition-all ml-[24px] whitespace-nowrap"
+              className="group flex-shrink-0 relative flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all ml-[24px] whitespace-nowrap backdrop-blur-md"
             >
-              {/* BLACK MAIL ENVELOPE SYMBOL (18px x 13px) */}
+              {/* BLACK MAIL ENVELOPE SYMBOL */}
               <svg
                 className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
                 viewBox="0 0 20 14"
