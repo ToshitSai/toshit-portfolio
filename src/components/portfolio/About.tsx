@@ -59,20 +59,20 @@ const AISystemVisual: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] lg:w-[360px] lg:h-[360px] flex items-center justify-center pointer-events-auto"
+      className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-auto"
     >
-      {/* ROTATING MICRO-ELEMENT (TEXT CIRCLE FOLLOWING ROTATION) */}
-      <div className="absolute inset-0 flex items-center justify-center animate-[spin_24s_linear_infinite] pointer-events-none">
+      {/* ALWAYS READABLE UPRIGHT TOP-ARC TEXT MICRO-ELEMENT */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <svg viewBox="0 0 300 300" className="w-full h-full">
           <defs>
             <path
-              id="textCirclePath"
-              d="M 150, 150 m -115, 0 a 115,115 0 1,1 230,0 a 115,115 0 1,1 -230,0"
+              id="textTopArcPath"
+              d="M 35,150 A 115,115 0 0,1 265,150"
             />
           </defs>
-          <text className="text-[10px] font-mono tracking-[0.24em] fill-[#20252B]/40 uppercase font-medium">
-            <textPath href="#textCirclePath" startOffset="0%">
-              AI • DESIGN • SOFTWARE • SYSTEMS • CREATIVE TECH •
+          <text className="text-[11px] font-mono tracking-[0.22em] fill-[#20252B]/50 uppercase font-medium">
+            <textPath href="#textTopArcPath" startOffset="50%" textAnchor="middle">
+              AI • DESIGN • SOFTWARE • SYSTEMS
             </textPath>
           </text>
         </svg>
@@ -150,11 +150,11 @@ const AISystemVisual: React.FC = () => {
         <circle cx="150" cy="150" r="3" fill="#20252B" />
       </svg>
 
-      {/* Subtle Corner Markers */}
-      <span className="absolute top-2 left-2 w-1.5 h-1.5 border-t border-l border-[#20252B]/30" />
-      <span className="absolute top-2 right-2 w-1.5 h-1.5 border-t border-r border-[#20252B]/30" />
-      <span className="absolute bottom-2 left-2 w-1.5 h-1.5 border-b border-l border-[#20252B]/30" />
-      <span className="absolute bottom-2 right-2 w-1.5 h-1.5 border-b border-r border-[#20252B]/30" />
+      {/* Tightened Corner Markers (TIGHTER FRAME) */}
+      <span className="absolute top-5 left-5 w-2 h-2 border-t border-l border-[#20252B]/40" />
+      <span className="absolute top-5 right-5 w-2 h-2 border-t border-r border-[#20252B]/40" />
+      <span className="absolute bottom-5 left-5 w-2 h-2 border-b border-l border-[#20252B]/40" />
+      <span className="absolute bottom-5 right-5 w-2 h-2 border-b border-r border-[#20252B]/40" />
     </div>
   );
 };
@@ -248,7 +248,7 @@ const About: React.FC = () => {
             {/* OVERSIZED INSTRUMENT SANS HEADLINE WITH STAGGERED LINE REVEAL */}
             <h2
               style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-              className="font-semibold text-[clamp(2.5rem,4.5vw,4.4rem)] leading-[0.98] tracking-[-0.035em] text-[#20252B] mb-12 sm:mb-16"
+              className="font-semibold text-[clamp(2.5rem,4.5vw,4.4rem)] leading-[0.98] tracking-[-0.035em] text-[#20252B] mb-0"
             >
               {headlineLines.map((line, idx) => (
                 <div key={`line-${idx}`} className="overflow-hidden py-0.5">
@@ -270,12 +270,12 @@ const About: React.FC = () => {
               ))}
             </h2>
 
-            {/* EDITORIAL METADATA ACCENT STRIP */}
+            {/* EDITORIAL METADATA ACCENT STRIP (WITH INTENTIONAL VERTICAL RHYTHM) */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex items-center gap-4 py-3 border-y border-[#20252B]/10 max-w-xl mb-10 font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#20252B]/60 uppercase"
+              className="flex items-center gap-4 py-3 border-y border-[#20252B]/10 max-w-xl mt-12 sm:mt-14 mb-10 font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#20252B]/60 uppercase"
             >
               <span className="text-[#C49A00] font-bold">FOCUS</span>
               <span>//</span>
@@ -309,9 +309,9 @@ const About: React.FC = () => {
             >
               <AISystemVisual />
 
-              {/* CAPTION ANNOTATION BELOW VISUAL */}
-              <div className="mt-6 flex items-center gap-2 font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#20252B]/50 uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#20252B]/40" />
+              {/* CAPTION ANNOTATION BELOW VISUAL (CLEAN WRAPPING & PROPER CONNECTION) */}
+              <div className="mt-5 flex items-center justify-center gap-2 font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#20252B]/60 uppercase max-w-[290px] text-center leading-relaxed [hyphens:none] break-normal overflow-wrap-normal">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#20252B]/50 flex-shrink-0" />
                 <span>FIG 01. INTEGRATED AI SYSTEM ARCHITECTURE</span>
               </div>
             </motion.div>
