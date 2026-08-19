@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 const projects = [
   {
     title: "HireScope AI / Job Gem Grader",
-    description: "Advanced AI tool evaluating candidate resumes against job descriptions with real-time scraping, feedback analysis, and scoring metrics.",
+    description: "AI-powered resume evaluation and job matching with automated scoring, analysis, and intelligent candidate-to-role recommendations.",
     technologies: ["Next.js", "Puppeteer", "Claude API", "Serper API"],
     role: "AI Full-Stack Development",
     liveUrl: "https://job-gem-grader.vercel.app",
@@ -15,7 +15,7 @@ const projects = [
   },
   {
     title: "Greetly",
-    description: "Context-aware personalized greeting generator utilizing high-speed Groq API inference and Flask micro-service architecture.",
+    description: "Personalized AI greetings and messages generated from contextual inputs using high-speed inference and a lightweight Flask service.",
     technologies: ["React", "Vite", "Flask", "Groq API"],
     role: "Full-Stack & AI Integration",
     liveUrl: "https://toshit-greetly.vercel.app",
@@ -24,7 +24,7 @@ const projects = [
   },
   {
     title: "CourseForge AI",
-    description: "Generates structured 4-lesson courses on any topic instantly using AI, featuring automated quiz generation and curated YouTube videos.",
+    description: "AI-generated courses with structured lessons, automated quizzes, and curated educational content for faster learning.",
     technologies: ["React", "Vite", "Python", "AI Engine"],
     role: "AI Application Architecture",
     liveUrl: "https://courseforge-ai-pied.vercel.app/",
@@ -32,8 +32,8 @@ const projects = [
     featured: true,
   },
   {
-    title: "Avengers: Doomsday — Cinematic Experience",
-    description: "Awwwards-style scroll-driven interactive web experience built with Next.js, React Three Fiber, GSAP, and Three.js.",
+    title: "Doom Protocol",
+    description: "Cinematic WebGL experience combining 3D scenes, scroll-driven storytelling, animation systems, and immersive interactive environments.",
     technologies: ["Next.js", "React Three Fiber", "GSAP", "Lenis"],
     role: "Creative Technology & WebGL",
     liveUrl: "https://avengers-doomsday-rose.vercel.app/",

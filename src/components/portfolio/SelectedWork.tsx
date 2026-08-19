@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
 
@@ -14,7 +14,9 @@ const HireScopePreview: React.FC = () => {
           <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-ping" />
           <span className="font-semibold uppercase">RESUME ANALYSIS ENGINE</span>
         </div>
-        <span className="opacity-75">LIVE EVALUATION</span>
+        <span className="text-[10px] tracking-widest text-[#2B6090]/65 uppercase font-semibold">
+          SAMPLE OUTPUT
+        </span>
       </div>
 
       {/* Score & Matching Metrics */}
@@ -64,7 +66,9 @@ const GreetlyPreview: React.FC = () => {
           <Sparkles className="w-3.5 h-3.5 text-[#D9A700]" />
           <span className="font-semibold uppercase">GROQ API INFERENCE</span>
         </div>
-        <span className="opacity-75">LATENCY: 42MS</span>
+        <span className="text-[10px] tracking-widest text-[#8A6A00]/70 uppercase font-semibold">
+          SAMPLE OUTPUT // 42MS LATENCY
+        </span>
       </div>
 
       {/* Greeting Preview Card */}
@@ -103,7 +107,9 @@ const CourseForgePreview: React.FC = () => {
           <Cpu className="w-3.5 h-3.5 text-[#0F766E]" />
           <span className="font-semibold uppercase">AI CURRICULUM GENERATOR</span>
         </div>
-        <span className="opacity-75">4 LESSONS READY</span>
+        <span className="text-[10px] tracking-widest text-[#0D5C56]/70 uppercase font-semibold">
+          SAMPLE OUTPUT // 4 LESSONS
+        </span>
       </div>
 
       {/* Generated Modules Tree */}
@@ -129,31 +135,33 @@ const CourseForgePreview: React.FC = () => {
   );
 };
 
-// 4. Avengers: Doomsday WebGL 3D Preview Component
-const AvengersPreview: React.FC = () => {
+// 4. Doom Protocol WebGL 3D Preview Component (Sophisticated Deep Crimson Integration)
+const DoomProtocolPreview: React.FC = () => {
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#16070E] border border-[#881337]/60 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#E11D48]/80 transition-colors text-white">
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#8A1334] border border-[#BE123C]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#FB7185]/80 transition-colors text-white">
       {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-[#881337]/50 pb-3 font-mono text-[11px] tracking-widest text-[#F43F5E]">
+      <div className="flex items-center justify-between border-b border-white/20 pb-3 font-mono text-[11px] tracking-widest text-white/90">
         <div className="flex items-center gap-2">
-          <Activity className="w-3.5 h-3.5 text-[#E11D48] animate-pulse" />
-          <span className="font-semibold uppercase">3D MULTIVERSE WEBGL CANVAS</span>
+          <Activity className="w-3.5 h-3.5 text-[#FFE4E6] animate-pulse" />
+          <span className="font-semibold uppercase">3D MULTIVERSE CANVAS</span>
         </div>
-        <span>60 FPS</span>
+        <span className="text-[10px] tracking-widest text-white/75 uppercase font-semibold">
+          SAMPLE OUTPUT // 60 FPS
+        </span>
       </div>
 
       {/* Central 3D Wireframe Visual Effect */}
       <div className="my-auto flex items-center justify-center relative py-2">
-        <div className="w-20 h-20 rounded-full border border-[#E11D48]/40 border-dashed animate-[spin_12s_linear_infinite] flex items-center justify-center">
-          <div className="w-12 h-12 rounded-full border border-[#F43F5E]/60 flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-[#E11D48] shadow-[0_0_12px_#E11D48]" />
+        <div className="w-20 h-20 rounded-full border border-white/30 border-dashed animate-[spin_12s_linear_infinite] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center">
+            <div className="w-3 h-3 rounded-full bg-[#FFE4E6] shadow-[0_0_12px_#FFF]" />
           </div>
         </div>
-        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/50 uppercase">DOCTOR DOOM</span>
+        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase font-medium">DOOM PROTOCOL</span>
       </div>
 
       {/* Tech Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#881337]/50 font-mono text-[11px] text-white/70">
+      <div className="flex items-center justify-between pt-3 border-t border-white/20 font-mono text-[11px] text-white/80">
         <span>REACT THREE FIBER</span>
         <span>GSAP LENIS</span>
       </div>
@@ -184,7 +192,7 @@ const projects: ProjectItem[] = [
     category: "AI CAREER TOOL",
     titleMain: "HireScope AI",
     titleSub: "/ Job Gem Grader",
-    description: "Advanced AI resume evaluation engine built with Claude API, Puppeteer, and Serper API for real-time candidate scoring and feedback.",
+    description: "AI-powered resume evaluation and job matching with automated scoring, analysis, and intelligent candidate-to-role recommendations.",
     tech: ["NEXT.JS", "PUPPETEER", "CLAUDE API", "SERPER API"],
     liveUrl: "https://job-gem-grader.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
@@ -197,7 +205,7 @@ const projects: ProjectItem[] = [
     category: "AI GREETING TOOL",
     titleMain: "Greetly",
     titleSub: "/ AI Video & Message Engine",
-    description: "Context-aware personalized greeting generator utilizing high-speed Groq API inference and Flask micro-service architecture.",
+    description: "Personalized AI greetings and messages generated from contextual inputs using high-speed inference and a lightweight Flask service.",
     tech: ["REACT", "VITE", "FLASK", "GROQ API"],
     liveUrl: "https://toshit-greetly.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
@@ -210,7 +218,7 @@ const projects: ProjectItem[] = [
     category: "AI COURSE BUILDER",
     titleMain: "CourseForge AI",
     titleSub: "/ AI Curriculum Engine",
-    description: "Generates structured 4-lesson courses on any topic instantly using AI, featuring automated quiz generation and curated YouTube videos.",
+    description: "AI-generated courses with structured lessons, automated quizzes, and curated educational content for faster learning.",
     tech: ["REACT", "VITE", "PYTHON", "AI ENGINE"],
     liveUrl: "https://courseforge-ai-pied.vercel.app/",
     githubUrl: "https://github.com/ToshitSai/courseforge-ai",
@@ -218,16 +226,16 @@ const projects: ProjectItem[] = [
     layoutVariant: "compact",
   },
   {
-    id: "avengers",
+    id: "doom-protocol",
     number: "04",
     category: "WEBGL & 3D EXPERIENCE",
-    titleMain: "Avengers: Doomsday",
-    titleSub: "/ 3D Multiverse Experience",
-    description: "Awwwards-style scroll-driven interactive web experience built with Next.js, React Three Fiber, GSAP, and Three.js featuring 3D Doctor Doom showcase.",
+    titleMain: "Doom Protocol",
+    titleSub: "/ 3D Multiverse Web Experience",
+    description: "Cinematic WebGL experience combining 3D scenes, scroll-driven storytelling, animation systems, and immersive interactive environments.",
     tech: ["NEXT.JS", "R3F", "THREE.JS", "GSAP", "LENIS"],
     liveUrl: "https://avengers-doomsday-rose.vercel.app/",
     githubUrl: "https://github.com/ToshitSai/Avengers-DoomsDay-",
-    PreviewComponent: AvengersPreview,
+    PreviewComponent: DoomProtocolPreview,
     layoutVariant: "wide",
   },
 ];
@@ -316,7 +324,7 @@ const SelectedWork: React.FC = () => {
 
                       <p
                         style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                        className="text-[17px] sm:text-[18px] leading-[1.45] text-[#1D2024]/85 max-w-[500px] mb-8 font-normal"
+                        className="text-[17px] sm:text-[18px] leading-[1.45] text-[#1D2024]/85 max-w-[520px] min-h-[76px] mb-8 font-normal"
                       >
                         {project.description}
                       </p>
@@ -351,10 +359,10 @@ const SelectedWork: React.FC = () => {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024]/70 hover:text-[#1D2024] py-1"
+                        className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024]/80 hover:text-[#1D2024] py-1"
                       >
-                        <Github className="w-3.5 h-3.5" />
-                        <span>GITHUB</span>
+                        <Github className="w-4 h-4 text-[#1D2024]" />
+                        <span>GITHUB CODE</span>
                         <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-100 transition-all duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                         <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#1D2024]/40 transition-all origin-left scale-x-0 group-hover/link:scale-x-100" />
                       </a>
