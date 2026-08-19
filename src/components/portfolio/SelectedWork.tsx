@@ -157,7 +157,7 @@ const DoomProtocolPreview: React.FC = () => {
             <div className="w-3 h-3 rounded-full bg-[#FFE4E6] shadow-[0_0_12px_#FFF]" />
           </div>
         </div>
-        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase font-medium">DOOM PROTOCOL</span>
+        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase font-medium">AVENGERS DOOMSDAY</span>
       </div>
 
       {/* Tech Footer */}
@@ -190,7 +190,7 @@ const projects: ProjectItem[] = [
     id: "hirescope",
     number: "01",
     category: "AI CAREER TOOL",
-    titleMain: "HireScope AI",
+    titleMain: "HireScope",
     titleSub: "/ Job Gem Grader",
     description: "AI-powered resume evaluation and job matching with automated scoring, analysis, and intelligent candidate-to-role recommendations.",
     tech: ["NEXT.JS", "PUPPETEER", "CLAUDE API", "SERPER API"],
@@ -204,7 +204,7 @@ const projects: ProjectItem[] = [
     number: "02",
     category: "AI GREETING TOOL",
     titleMain: "Greetly",
-    titleSub: "/ AI Video & Message Engine",
+    titleSub: "",
     description: "Personalized AI greetings and messages generated from contextual inputs using high-speed inference and a lightweight Flask service.",
     tech: ["REACT", "VITE", "FLASK", "GROQ API"],
     liveUrl: "https://toshit-greetly.vercel.app",
@@ -216,8 +216,8 @@ const projects: ProjectItem[] = [
     id: "courseforge",
     number: "03",
     category: "AI COURSE BUILDER",
-    titleMain: "CourseForge AI",
-    titleSub: "/ AI Curriculum Engine",
+    titleMain: "CourseForge",
+    titleSub: "/ Curriculum Engine",
     description: "AI-generated courses with structured lessons, automated quizzes, and curated educational content for faster learning.",
     tech: ["REACT", "VITE", "PYTHON", "AI ENGINE"],
     liveUrl: "https://courseforge-ai-pied.vercel.app/",
@@ -226,11 +226,11 @@ const projects: ProjectItem[] = [
     layoutVariant: "compact",
   },
   {
-    id: "doom-protocol",
+    id: "avengers-doomsday",
     number: "04",
     category: "WEBGL & 3D EXPERIENCE",
-    titleMain: "Doom Protocol",
-    titleSub: "/ 3D Multiverse Web Experience",
+    titleMain: "Avengers Doomsday",
+    titleSub: "",
     description: "Cinematic WebGL experience combining 3D scenes, scroll-driven storytelling, animation systems, and immersive interactive environments.",
     tech: ["NEXT.JS", "R3F", "THREE.JS", "GSAP", "LENIS"],
     liveUrl: "https://avengers-doomsday-rose.vercel.app/",
