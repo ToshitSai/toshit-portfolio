@@ -188,7 +188,7 @@ const About: React.FC = () => {
 
           {/* MAIN HEADLINE & CONTENT (LEFT/CENTER COLUMN) */}
           <div className="lg:col-span-7 flex flex-col max-w-full lg:max-w-[780px]">
-            {/* OVERSIZED INSTRUMENT SANS HEADLINE */}
+            {/* INSTRUMENT SANS HEADLINE */}
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -196,16 +196,15 @@ const About: React.FC = () => {
               style={{
                 fontFamily: "'Instrument Sans', sans-serif",
                 fontWeight: 600,
-                fontSize: "clamp(44px, 5.2vw, 78px)",
-                lineHeight: 1.02,
+                fontSize: "clamp(42px, 4.5vw, 68px)",
+                lineHeight: 0.98,
                 letterSpacing: "-0.035em",
                 color: "#1F2328",
               }}
-              className="mb-8 sm:mb-10 text-left"
+              className="mb-8 sm:mb-10 text-left max-w-[800px]"
             >
               Building Software <br />
-              at the Intersection <br />
-              of <br />
+              at the Intersection of <br />
               Applied AI <br />
               & Modern Design.
             </motion.h2>
