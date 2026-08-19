@@ -1,183 +1,378 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Github, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
 
-interface ProjectCardProps {
+// --- ABSTRACT INTERACTIVE PROJECT PREVIEWS ---
+
+// 1. HireScope AI Preview Component
+const HireScopePreview: React.FC = () => {
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EEF5FC] border border-[#5B9BD5]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#5B9BD5]/60 transition-colors">
+      {/* Top Status Bar */}
+      <div className="flex items-center justify-between border-b border-[#5B9BD5]/20 pb-3 font-mono text-[11px] tracking-wider text-[#2B6090]">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-ping" />
+          <span className="font-semibold uppercase">RESUME ANALYSIS ENGINE</span>
+        </div>
+        <span className="opacity-75">LIVE EVALUATION</span>
+      </div>
+
+      {/* Score & Matching Metrics */}
+      <div className="my-auto py-2">
+        <div className="flex items-end justify-between mb-2">
+          <div>
+            <span className="text-xs font-mono text-[#2B6090]/70 uppercase tracking-widest block">Overall Match</span>
+            <span className="text-3xl sm:text-4xl font-mono font-bold text-[#1E40AF]">92.4%</span>
+          </div>
+          <div className="text-right">
+            <span className="text-xs font-mono text-[#2B6090]/70 uppercase tracking-widest block font-medium">Scoring Metric</span>
+            <span className="text-sm font-mono font-semibold text-[#1E40AF]">87 / 100 PTS</span>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="w-full h-2.5 bg-[#5B9BD5]/20 rounded-full overflow-hidden p-0.5">
+          <div className="h-full bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] rounded-full w-[92%] transition-all duration-1000 group-hover:w-[96%]" />
+        </div>
+      </div>
+
+      {/* Extracted Skills Badges */}
+      <div className="flex items-center justify-between pt-3 border-t border-[#5B9BD5]/20 font-mono text-[11px]">
+        <div className="flex items-center gap-1.5 text-[#1E40AF]">
+          <CheckCircle2 className="w-3.5 h-3.5" />
+          <span>Claude API Scored</span>
+        </div>
+        <div className="flex gap-2 text-[#2B6090]/80">
+          <span>REACT</span>
+          <span>•</span>
+          <span>PUPPETEER</span>
+          <span>•</span>
+          <span>SERPER</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 2. Greetly Preview Component
+const GreetlyPreview: React.FC = () => {
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#FFFBF0] border border-[#FFD42A]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#FFD42A] transition-colors">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between border-b border-[#FFD42A]/30 pb-3 font-mono text-[11px] tracking-wider text-[#8A6A00]">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-3.5 h-3.5 text-[#D9A700]" />
+          <span className="font-semibold uppercase">GROQ API INFERENCE</span>
+        </div>
+        <span className="opacity-75">LATENCY: 42MS</span>
+      </div>
+
+      {/* Greeting Preview Card */}
+      <div className="my-auto bg-white/80 backdrop-blur-xs border border-[#FFD42A]/30 p-4 rounded-md shadow-xs">
+        <span className="text-[10px] font-mono tracking-widest text-[#8A6A00] uppercase block mb-1">Generated Output</span>
+        <p className="font-sans text-sm sm:text-base text-[#1D2024] font-medium leading-snug">
+          "Wishing you an inspiring year filled with breakthrough ideas and seamless code!"
+        </p>
+      </div>
+
+      {/* Audio/Video Waveform Graphic */}
+      <div className="flex items-center justify-between pt-3 border-t border-[#FFD42A]/30 font-mono text-[11px]">
+        <div className="flex items-center gap-1.5 text-[#8A6A00]">
+          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <span>READY FOR RENDER</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-1 h-3 bg-[#FFD42A] rounded-full animate-pulse" />
+          <div className="w-1 h-5 bg-[#D9A700] rounded-full animate-pulse delay-75" />
+          <div className="w-1 h-2 bg-[#FFD42A] rounded-full animate-pulse delay-150" />
+          <div className="w-1 h-6 bg-[#D9A700] rounded-full animate-pulse delay-100" />
+          <div className="w-1 h-4 bg-[#FFD42A] rounded-full animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 3. CourseForge AI Preview Component
+const CourseForgePreview: React.FC = () => {
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EBF6F4] border border-[#0F766E]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#0F766E]/60 transition-colors">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between border-b border-[#0F766E]/20 pb-3 font-mono text-[11px] tracking-wider text-[#0D5C56]">
+        <div className="flex items-center gap-2">
+          <Cpu className="w-3.5 h-3.5 text-[#0F766E]" />
+          <span className="font-semibold uppercase">AI CURRICULUM GENERATOR</span>
+        </div>
+        <span className="opacity-75">4 LESSONS READY</span>
+      </div>
+
+      {/* Generated Modules Tree */}
+      <div className="my-auto space-y-2">
+        {[
+          "01. Introduction to Applied AI Systems",
+          "02. Neural Architectures & Transformers",
+          "03. Context Windowing & Vector Search",
+        ].map((module, idx) => (
+          <div key={idx} className="flex items-center justify-between bg-white/75 border border-[#0F766E]/15 px-3 py-1.5 rounded text-xs font-mono text-[#0D5C56]">
+            <span className="truncate pr-2">{module}</span>
+            <Play className="w-3 h-3 text-[#0F766E] flex-shrink-0" />
+          </div>
+        ))}
+      </div>
+
+      {/* Status Footer */}
+      <div className="flex items-center justify-between pt-3 border-t border-[#0F766E]/20 font-mono text-[11px] text-[#0D5C56]">
+        <span className="font-semibold">QUIZ GENERATED</span>
+        <span className="opacity-80">YOUTUBE CURATED</span>
+      </div>
+    </div>
+  );
+};
+
+// 4. Avengers: Doomsday WebGL 3D Preview Component
+const AvengersPreview: React.FC = () => {
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#16070E] border border-[#881337]/60 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#E11D48]/80 transition-colors text-white">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between border-b border-[#881337]/50 pb-3 font-mono text-[11px] tracking-widest text-[#F43F5E]">
+        <div className="flex items-center gap-2">
+          <Activity className="w-3.5 h-3.5 text-[#E11D48] animate-pulse" />
+          <span className="font-semibold uppercase">3D MULTIVERSE WEBGL CANVAS</span>
+        </div>
+        <span>60 FPS</span>
+      </div>
+
+      {/* Central 3D Wireframe Visual Effect */}
+      <div className="my-auto flex items-center justify-center relative py-2">
+        <div className="w-20 h-20 rounded-full border border-[#E11D48]/40 border-dashed animate-[spin_12s_linear_infinite] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full border border-[#F43F5E]/60 flex items-center justify-center">
+            <div className="w-3 h-3 rounded-full bg-[#E11D48] shadow-[0_0_12px_#E11D48]" />
+          </div>
+        </div>
+        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/50 uppercase">DOCTOR DOOM</span>
+      </div>
+
+      {/* Tech Footer */}
+      <div className="flex items-center justify-between pt-3 border-t border-[#881337]/50 font-mono text-[11px] text-white/70">
+        <span>REACT THREE FIBER</span>
+        <span>GSAP LENIS</span>
+      </div>
+    </div>
+  );
+};
+
+// --- MAIN PROJECTS CASE-STUDY COMPOSITION ---
+
+interface ProjectItem {
+  id: string;
+  number: string;
   category: string;
-  title: string;
-  subtitle: string;
+  titleMain: string;
+  titleSub: string;
   description: string;
-  headerBgClass: string;
   tech: string[];
   liveUrl: string;
   githubUrl: string;
-  isYellowHeader?: boolean;
+  PreviewComponent: React.FC;
+  layoutVariant: "wide" | "compact";
 }
 
-const projectsData: ProjectCardProps[] = [
+const projects: ProjectItem[] = [
   {
+    id: "hirescope",
+    number: "01",
     category: "AI CAREER TOOL",
-    title: "HireScope AI / Job Gem Grader",
-    subtitle: "Automated Resume Evaluation & Matching Engine",
-    description:
-      "Advanced AI tool evaluating candidate resumes against job descriptions with real-time scraping, feedback analysis, and scoring metrics powered by Claude API.",
-    headerBgClass: "bg-gradient-to-br from-[#5B9BD5] via-[#82BCE5] to-[#A9D5EE]",
+    titleMain: "HireScope AI",
+    titleSub: "/ Job Gem Grader",
+    description: "Advanced AI resume evaluation engine built with Claude API, Puppeteer, and Serper API for real-time candidate scoring and feedback.",
     tech: ["NEXT.JS", "PUPPETEER", "CLAUDE API", "SERPER API"],
     liveUrl: "https://job-gem-grader.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
-    isYellowHeader: false,
+    PreviewComponent: HireScopePreview,
+    layoutVariant: "wide",
   },
   {
+    id: "greetly",
+    number: "02",
     category: "AI GREETING TOOL",
-    title: "Greetly",
-    subtitle: "Personalized AI Video & Message Generator",
-    description:
-      "Context-aware personalized greeting generator utilizing high-speed Groq API inference and Flask micro-service architecture for customized messages.",
-    headerBgClass: "bg-gradient-to-br from-[#FFD42A] via-[#F5C542] to-[#FFE066]",
+    titleMain: "Greetly",
+    titleSub: "/ AI Video & Message Engine",
+    description: "Context-aware personalized greeting generator utilizing high-speed Groq API inference and Flask micro-service architecture.",
     tech: ["REACT", "VITE", "FLASK", "GROQ API"],
     liveUrl: "https://toshit-greetly.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
-    isYellowHeader: true,
+    PreviewComponent: GreetlyPreview,
+    layoutVariant: "compact",
   },
   {
+    id: "courseforge",
+    number: "03",
     category: "AI COURSE BUILDER",
-    title: "CourseForge AI",
-    subtitle: "Personalized AI Course & Quiz Generator",
-    description:
-      "Generates structured 4-lesson courses on any topic instantly using AI, featuring automated quiz generation and curated YouTube educational videos.",
-    headerBgClass: "bg-gradient-to-br from-[#0F766E] via-[#0D9488] to-[#14B8A6]",
+    titleMain: "CourseForge AI",
+    titleSub: "/ AI Curriculum Engine",
+    description: "Generates structured 4-lesson courses on any topic instantly using AI, featuring automated quiz generation and curated YouTube videos.",
     tech: ["REACT", "VITE", "PYTHON", "AI ENGINE"],
     liveUrl: "https://courseforge-ai-pied.vercel.app/",
     githubUrl: "https://github.com/ToshitSai/courseforge-ai",
-    isYellowHeader: false,
+    PreviewComponent: CourseForgePreview,
+    layoutVariant: "compact",
   },
   {
+    id: "avengers",
+    number: "04",
     category: "WEBGL & 3D EXPERIENCE",
-    title: "Avengers: Doomsday",
-    subtitle: "Cinematic Scroll & 3D Multiverse Web Experience",
-    description:
-      "Awwwards-style scroll-driven interactive web experience built with Next.js, React Three Fiber, GSAP, and Three.js featuring 3D Doctor Doom showcase and video scrubbing.",
-    headerBgClass: "bg-gradient-to-br from-[#881337] via-[#9F1239] to-[#BE123C]",
+    titleMain: "Avengers: Doomsday",
+    titleSub: "/ 3D Multiverse Experience",
+    description: "Awwwards-style scroll-driven interactive web experience built with Next.js, React Three Fiber, GSAP, and Three.js featuring 3D Doctor Doom showcase.",
     tech: ["NEXT.JS", "R3F", "THREE.JS", "GSAP", "LENIS"],
     liveUrl: "https://avengers-doomsday-rose.vercel.app/",
     githubUrl: "https://github.com/ToshitSai/Avengers-DoomsDay-",
-    isYellowHeader: false,
+    PreviewComponent: AvengersPreview,
+    layoutVariant: "wide",
   },
 ];
 
 const SelectedWork: React.FC = () => {
   return (
-    <section id="work" className="relative w-full py-24 sm:py-32 bg-cream-paper text-ink overflow-hidden z-10">
-      <div id="projects" className="absolute -top-10 left-0" />
-      <div className="container-narrow">
-        {/* Section Header */}
-        <div className="flex items-center gap-3 mb-4">
-          <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-          <span className="label-mono text-ink-light">02 // SELECTED WORK</span>
-        </div>
+    <section
+      id="work"
+      style={{ backgroundColor: "#F8F2E6" }}
+      className="relative w-full py-28 sm:py-36 lg:py-44 text-[#1D2024] overflow-hidden z-10 select-none"
+    >
+      <div id="projects" className="absolute -top-12 left-0" />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-4">
-          <h2 className="text-display text-[clamp(2.4rem,6vw,4.5rem)] text-ink">
-            Featured Software Projects
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
+        {/* EDITORIAL SECTION HEADER */}
+        <div className="border-b border-[#1D2024]/15 pb-10 mb-20 sm:mb-28">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs" />
+            <span className="font-mono text-xs tracking-[0.2em] text-[#1D2024]/60 uppercase font-semibold">
+              02 // SELECTED WORK
+            </span>
+          </div>
+
+          <h2
+            style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+            className="font-semibold text-[clamp(34px,4.8vw,68px)] leading-[1.04] tracking-[-0.035em] text-[#1D2024] max-w-3xl"
+          >
+            Projects that turn <br className="hidden sm:block" />
+            ideas into working systems.
           </h2>
-          <p className="text-sm font-mono text-ink-light uppercase tracking-wider max-w-xs">
-            Handcrafted applications combining modern design & applied AI
-          </p>
         </div>
 
-        {/* Two-Column Grid Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-          {projectsData.map((project, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: idx * 0.15 }}
-              className="group relative rounded-3xl bg-cream border border-ink/10 shadow-soft-card overflow-hidden flex flex-col hover:-translate-y-2 transition-all duration-300"
-            >
-              {/* 224px Gradient Header with White Radial Wash */}
-              <div className={`relative h-[224px] w-full ${project.headerBgClass} p-6 flex flex-col justify-between overflow-hidden`}>
-                {/* White radial wash overlay */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.35),transparent_70%)] pointer-events-none" />
+        {/* CASE STUDY INDEX - ASYMMETRIC SPACING & LAYOUT */}
+        <div className="space-y-24 sm:space-y-32 lg:space-y-40">
+          {projects.map((project, idx) => {
+            const PreviewComp = project.PreviewComponent;
+            const isEven = idx % 2 === 0;
 
-                {/* Top Category Pill */}
-                <div className="relative z-10 flex items-center justify-between">
-                  <span className="inline-block px-3 py-1 rounded-full bg-cream text-ink text-[10px] font-mono tracking-[0.18em] font-semibold uppercase shadow-sm">
-                    {project.category}
-                  </span>
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-cream/90 text-ink flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                    aria-label="View Live Project"
-                  >
-                    <ArrowUpRight className="w-5 h-5" />
-                  </a>
-                </div>
-
-                {/* Animated Header Title */}
-                <div className="relative z-10">
-                  <h3
-                    className={`text-2xl sm:text-3xl font-serif tracking-tight transition-transform duration-300 group-hover:-translate-y-1 ${
-                      project.isYellowHeader ? "text-ink" : "text-cream"
-                    }`}
-                  >
-                    {project.title}
-                  </h3>
-                  <p
-                    className={`text-xs font-mono tracking-wider mt-1 uppercase ${
-                      project.isYellowHeader ? "text-ink/75" : "text-cream/80"
-                    }`}
-                  >
-                    {project.subtitle}
-                  </p>
-                </div>
-              </div>
-
-              {/* Card Body Content */}
-              <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
-                <p className="text-sm sm:text-base text-ink/80 leading-relaxed font-sans">
-                  {project.description}
-                </p>
-
-                {/* Tech Pills */}
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="px-2.5 py-1 rounded-md bg-cream-paper border border-ink/10 text-ink text-[11px] font-mono tracking-wider uppercase font-medium"
-                    >
-                      {t}
+            return (
+              <motion.article
+                key={project.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                  duration: 0.85,
+                  delay: idx * 0.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="group relative border-b border-[#1D2024]/10 pb-16 sm:pb-24"
+              >
+                {/* TOP METADATA BAR */}
+                <div className="flex items-center justify-between mb-8 font-mono text-xs tracking-[0.18em] text-[#1D2024]/60 uppercase">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono font-bold text-sm text-[#1D2024]">
+                      {project.number}
                     </span>
-                  ))}
+                    <span>/</span>
+                    <span className="font-semibold text-[#1D2024]/80">
+                      {project.category}
+                    </span>
+                  </div>
+                  <span className="hidden sm:inline-block text-[#1D2024]/40">
+                    CASE STUDY PREVIEW
+                  </span>
                 </div>
 
-                {/* Links */}
-                <div className="pt-4 border-t border-ink/10 flex items-center gap-6 text-xs font-mono tracking-wider font-semibold uppercase">
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-ink hover:text-yellow-accent underline underline-offset-4 decoration-yellow-accent transition-colors"
+                {/* MAIN GRID CONTENT */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                  {/* LEFT / RIGHT ALTERNATING TITLE & DESCRIPTION */}
+                  <div
+                    className={`lg:col-span-6 flex flex-col justify-between ${
+                      isEven ? "lg:order-1" : "lg:order-2"
+                    }`}
                   >
-                    <span>LIVE DEMO</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-ink-light hover:text-ink transition-colors"
+                    <div>
+                      <h3
+                        style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+                        className="text-[clamp(32px,4vw,56px)] font-medium leading-[1.05] tracking-[-0.04em] text-[#1D2024] mb-4 group-hover:text-black transition-colors"
+                      >
+                        <span>{project.titleMain} </span>
+                        <span className="opacity-50 font-normal">
+                          {project.titleSub}
+                        </span>
+                      </h3>
+
+                      <p
+                        style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+                        className="text-[17px] sm:text-[18px] leading-[1.45] text-[#1D2024]/85 max-w-[500px] mb-8 font-normal"
+                      >
+                        {project.description}
+                      </p>
+                    </div>
+
+                    {/* EDITORIAL TECH TAGS (MONOSPACE / NO SaaS PILLS) */}
+                    <div className="mb-8 font-mono text-[11px] sm:text-xs tracking-wider text-[#1D2024]/60 uppercase flex flex-wrap gap-x-3 gap-y-1">
+                      {project.tech.map((t, tIdx) => (
+                        <React.Fragment key={t}>
+                          <span>{t}</span>
+                          {tIdx < project.tech.length - 1 && (
+                            <span className="text-[#1D2024]/30">/</span>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+
+                    {/* EDITORIAL UNDERLINE LINKS */}
+                    <div className="flex items-center gap-8 font-mono text-xs tracking-widest font-semibold uppercase">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024] hover:text-black py-1"
+                      >
+                        <span>LIVE DEMO</span>
+                        <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
+                        <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1D2024] transition-all origin-left scale-x-100 group-hover/link:scale-x-110" />
+                      </a>
+
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024]/70 hover:text-[#1D2024] py-1"
+                      >
+                        <Github className="w-3.5 h-3.5" />
+                        <span>GITHUB</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-100 transition-all duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#1D2024]/40 transition-all origin-left scale-x-0 group-hover/link:scale-x-100" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* INTERACTIVE ABSTRACT PREVIEW VISUAL */}
+                  <div
+                    className={`lg:col-span-6 transition-transform duration-500 ease-out group-hover:scale-[1.015] ${
+                      isEven ? "lg:order-2" : "lg:order-1"
+                    }`}
                   >
-                    <Github className="w-3.5 h-3.5" />
-                    <span>GITHUB CODE</span>
-                  </a>
+                    <PreviewComp />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>
