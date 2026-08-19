@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
 import TechMarquee from "@/components/portfolio/TechMarquee";
@@ -12,19 +12,10 @@ import CustomCursor from "@/components/portfolio/CustomCursor";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 
 const Index = () => {
-  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+  // Always trigger the login loader on page load / reload
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
 
-  // Trigger login loader on initial session login if requested
-  useEffect(() => {
-    const hasSeenLogin = sessionStorage.getItem("portfolio_has_logged_in");
-    if (!hasSeenLogin) {
-      // Trigger login loader once per login session
-      setIsLoggingIn(true);
-      sessionStorage.setItem("portfolio_has_logged_in", "true");
-    }
-  }, []);
-
-  const handleSimulateLogin = () => {
+  const handleTriggerLogin = () => {
     setIsLoggingIn(true);
   };
 
@@ -37,8 +28,8 @@ const Index = () => {
       />
 
       <CustomCursor />
-      <Navbar onTriggerLogin={handleSimulateLogin} />
-      <main className={`transition-opacity duration-700 ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
+      <Navbar onTriggerLogin={handleTriggerLogin} />
+      <main className={`transition-opacity duration-1000 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <Hero />
         <TechMarquee />
         <About />

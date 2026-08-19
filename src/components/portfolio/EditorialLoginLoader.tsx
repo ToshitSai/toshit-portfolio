@@ -48,11 +48,9 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
   onLoadingComplete,
 }) => {
   const [currentMessage, setCurrentMessage] = useState<string>("");
-  const [dotsOffset, setDotsOffset] = useState<number>(0);
-  const [mouthOpen, setMouthOpen] = useState<boolean>(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
 
-  // Pick a fresh random message whenever isLoading flips to true
+  // Pick a fresh random message whenever isLoading becomes true
   useEffect(() => {
     if (isLoading) {
       setCurrentMessage(getRandomContextualMessage());
@@ -60,12 +58,12 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
       // Lock body scroll during fullscreen loader
       document.body.style.overflow = "hidden";
 
-      // Auto finish loading after 1.8 seconds
+      // Smooth finish timing (2.0s duration)
       const timer = setTimeout(() => {
         if (onLoadingComplete) {
           onLoadingComplete();
         }
-      }, 1800);
+      }, 2000);
 
       return () => {
         clearTimeout(timer);
@@ -76,7 +74,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     }
   }, [isLoading, onLoadingComplete]);
 
-  // Check prefers-reduced-motion
+  // Accessibility check for reduced motion
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
@@ -89,18 +87,6 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Pac-Man mouth bite & trailing dots animation interval (800ms loop)
-  useEffect(() => {
-    if (!isLoading || prefersReducedMotion) return;
-
-    const interval = setInterval(() => {
-      setMouthOpen((prev) => !prev);
-      setDotsOffset((prev) => (prev + 1) % 5);
-    }, 280);
-
-    return () => clearInterval(interval);
-  }, [isLoading, prefersReducedMotion]);
-
   return (
     <AnimatePresence>
       {isLoading && (
@@ -108,8 +94,8 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           key="login-loader-overlay"
           initial={{ opacity: 1, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.015 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           role="alert"
           aria-live="polite"
           aria-label={`Loading portfolio: ${currentMessage}`}
@@ -126,49 +112,60 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           }}
         >
           {/* CENTERED LOADER COMPOSITION */}
-          <div className="flex flex-col items-center justify-center space-y-5">
+          <div className="flex flex-col items-center justify-center space-y-6">
             {/* PAC-MAN SHAPE & TRAILING DOTS HORIZONTAL CONTAINER */}
-            <div className="flex items-center gap-2.5">
-              {/* YELLOW PAC-MAN-LIKE CHARACTER */}
+            <div className="flex items-center gap-3">
+              {/* YELLOW PAC-MAN-LIKE CHARACTER WITH FLUID CONTINUOUS MOUTH BITE */}
               <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center">
                 <svg
                   viewBox="0 0 36 36"
                   className="w-full h-full text-[#FFD42A]"
-                  style={{
-                    transform: "rotate(0deg)",
-                    transition: "transform 0.2s ease",
-                  }}
                 >
-                  {/* Circular Pac-Man body with animated SVG wedge mouth */}
-                  {prefersReducedMotion || !mouthOpen ? (
-                    // CLOSED MOUTH PAC-MAN
+                  {prefersReducedMotion ? (
                     <path
                       d="M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z"
                       fill="#FFD42A"
                     />
                   ) : (
-                    // GENTLY OPENED MOUTH PAC-MAN
-                    <path
-                      d="M 18 18 L 33.5 10 A 16 16 0 1 0 33.5 26 Z"
+                    <motion.path
                       fill="#FFD42A"
+                      animate={{
+                        d: [
+                          "M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z",
+                          "M 18 18 L 33.5 10 A 16 16 0 1 0 33.5 26 Z",
+                          "M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z",
+                        ],
+                      }}
+                      transition={{
+                        duration: 0.75,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
                     />
                   )}
                 </svg>
               </div>
 
-              {/* TRAILING DOTS (5 HORIZONTALLY ALIGNED DOTS WITH SEQUENTIAL OPACITY) */}
+              {/* TRAILING DOTS WITH FLUID STAGGERED OPACITY PULSE */}
               <div className="flex items-center gap-2 pl-1">
-                {[0.8, 0.55, 0.35, 0.25, 0.15].map((baseOpacity, idx) => {
-                  // Cycle opacity sequentially to create moving motion effect
-                  const activeIdx = (dotsOffset + idx) % 5;
-                  const opacities = [0.85, 0.6, 0.4, 0.25, 0.15];
-                  const currentOpacity = prefersReducedMotion ? baseOpacity : opacities[activeIdx];
-
+                {[0, 1, 2, 3, 4].map((idx) => {
                   return (
                     <motion.span
                       key={idx}
-                      animate={{ opacity: currentOpacity }}
-                      transition={{ duration: 0.25 }}
+                      animate={
+                        prefersReducedMotion
+                          ? { opacity: 0.5 }
+                          : {
+                              opacity: [0.2, 0.9, 0.2],
+                              scale: [0.95, 1.15, 0.95],
+                            }
+                      }
+                      transition={{
+                        duration: 0.9,
+                        repeat: Infinity,
+                        delay: idx * 0.15,
+                        ease: "easeInOut",
+                      }}
                       className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#D9A62C]"
                     />
                   );
@@ -177,12 +174,12 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
             </div>
 
             {/* CONTEXTUAL MONOSPACE MESSAGE */}
-            <div className="h-6 flex items-center justify-center pt-2">
+            <div className="h-6 flex items-center justify-center pt-1">
               <motion.p
                 key={currentMessage}
-                initial={{ opacity: 0, y: 4 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   fontFamily: "monospace",
                   fontSize: "11px",
