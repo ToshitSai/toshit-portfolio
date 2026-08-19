@@ -20,7 +20,11 @@ const NAV_TRANSITION = {
   ease: [0.22, 1, 0.36, 1] as const,
 };
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onTriggerLogin?: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
