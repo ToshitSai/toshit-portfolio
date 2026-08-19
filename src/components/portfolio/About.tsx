@@ -187,8 +187,7 @@ const About: React.FC = () => {
 
   const headlineLines = [
     "Building Software",
-    "at the Intersection",
-    "of Applied AI",
+    "at the Intersection of Applied AI",
     "& Modern Design.",
   ];
 
@@ -196,7 +195,7 @@ const About: React.FC = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="relative w-full py-28 sm:py-36 bg-cream text-ink overflow-hidden z-10 select-none"
+      className="relative w-full pt-36 sm:pt-44 lg:pt-48 pb-28 sm:pb-36 bg-cream text-ink overflow-hidden z-10 select-none"
     >
       {/* ATMOSPHERIC PAPER GRAIN OVERLAY */}
       <div className="absolute inset-0 opacity-[0.035] pointer-events-none mix-blend-multiply z-0">
@@ -234,7 +233,7 @@ const About: React.FC = () => {
         </div>
 
         {/* MAIN ASYMMETRIC CONTENT GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-start">
           {/* FAR LEFT VERTICAL INDEX MARKER (DESKTOP) */}
           <div className="hidden lg:flex lg:col-span-1 flex-col items-center pt-3 text-[#20252B]/30 font-mono text-xs tracking-widest">
             <span className="font-bold text-sm text-[#20252B]/70">01</span>
@@ -245,11 +244,11 @@ const About: React.FC = () => {
           </div>
 
           {/* MAIN EDITORIAL HEADLINE & CONTENT (LEFT & CENTER COLUMN) */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
+          <div className="lg:col-span-7 flex flex-col justify-between max-w-full lg:max-w-[850px]">
             {/* OVERSIZED INSTRUMENT SANS HEADLINE WITH STAGGERED LINE REVEAL */}
             <h2
               style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-              className="font-semibold text-[clamp(2.9rem,6.0vw,5.5rem)] leading-[1.05] tracking-[-0.035em] text-[#20252B] mb-12 sm:mb-16"
+              className="font-semibold text-[clamp(2.5rem,4.5vw,4.4rem)] leading-[0.98] tracking-[-0.035em] text-[#20252B] mb-12 sm:mb-16"
             >
               {headlineLines.map((line, idx) => (
                 <div key={`line-${idx}`} className="overflow-hidden py-0.5">
