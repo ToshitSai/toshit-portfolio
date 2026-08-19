@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
 
   // SINGLE PASSIVE rAF SCROLL DIRECTIONAL STATE MACHINE
   // - TOP (scrollY <= 5) -> "full"
-  // - SCROLL DOWN (delta > 5) -> "compact" (Work with me CTA only)
+  // - SCROLL DOWN (delta > 5) -> "compact" (Available for work status pill)
   // - SCROLL UP (delta < -5) -> "full" (Full Navbar from anywhere on page)
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
         const sections = [
           { id: "work", el: document.getElementById("work") || document.getElementById("projects") },
           { id: "about", el: document.getElementById("about") },
-          { id: "playground", el: document.getElementById("playground") || document.getElementById("skills") },
+          { id: "playground", el: document.getElementById("skills") || document.getElementById("skills") },
         ];
 
         const scrollPosition = currentScrollY + 250;
@@ -124,8 +124,8 @@ const Navbar: React.FC = () => {
       {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING CAPSULE NAVBAR */}
       <motion.nav
         animate={{
-          width: isCompact ? "195px" : "min(545px, calc(100vw - 24px))",
-          maxWidth: isCompact ? "195px" : "545px",
+          width: isCompact ? "305px" : "min(545px, calc(100vw - 24px))",
+          maxWidth: isCompact ? "305px" : "545px",
           height: "58px",
         }}
         transition={NAV_TRANSITION}
@@ -140,18 +140,17 @@ const Navbar: React.FC = () => {
           willChange: "transform, opacity, width",
           boxSizing: "border-box",
         }}
-        className="nav-container pointer-events-auto relative flex items-center justify-between border px-2 py-1.5 transition-colors overflow-hidden"
+        className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors overflow-hidden"
       >
-        {/* FULL NAVBAR CONTENT: AVATAR & NAV LINKS */}
+        {/* LAYER 1: FULL EXPANDED NAVBAR CONTENT */}
         <motion.div
           animate={{
             opacity: isCompact ? 0 : 1,
-            x: isCompact ? -20 : 0,
-            scale: isCompact ? 0.9 : 1,
+            scale: isCompact ? 0.95 : 1,
             pointerEvents: isCompact ? "none" : "auto",
           }}
           transition={NAV_TRANSITION}
-          className="flex items-center gap-2.5"
+          className="flex items-center justify-between w-full h-full"
         >
           {/* AVATAR / T MONOGRAM BADGE */}
           <a
@@ -166,7 +165,7 @@ const Navbar: React.FC = () => {
           </a>
 
           {/* DESKTOP NAV LINKS */}
-          <div className="hidden md:flex items-center gap-[24px] whitespace-nowrap">
+          <div className="hidden md:flex items-center gap-[24px] whitespace-nowrap ml-2.5">
             {NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
               return (
@@ -185,21 +184,13 @@ const Navbar: React.FC = () => {
               );
             })}
           </div>
-        </motion.div>
 
-        {/* WORK WITH ME CTA (CONTAINED & CENTERED WHEN COMPACT) */}
-        <motion.div
-          transition={NAV_TRANSITION}
-          className={`flex items-center justify-center ${
-            isCompact ? "absolute inset-0 px-2" : "relative flex-shrink-0 ml-[24px]"
-          }`}
-        >
+          {/* WORK WITH ME CTA BUTTON */}
           <a
             href="#contact"
             onClick={(e) => handleNavClick(e, "#contact")}
-            className="group flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md"
+            className="group flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto"
           >
-            {/* BLACK MAIL ENVELOPE SYMBOL */}
             <svg
               className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
               viewBox="0 0 20 14"
@@ -216,6 +207,53 @@ const Navbar: React.FC = () => {
               />
             </svg>
             <span className="text-[#20252B] font-semibold whitespace-nowrap">Work with me</span>
+          </a>
+        </motion.div>
+
+        {/* LAYER 2: COMPACT "AVAILABLE FOR WORK" STATUS BAR */}
+        <motion.div
+          animate={{
+            opacity: isCompact ? 1 : 0,
+            scale: isCompact ? 1 : 0.95,
+            pointerEvents: isCompact ? "auto" : "none",
+          }}
+          transition={NAV_TRANSITION}
+          className="absolute inset-0 flex items-center justify-between px-2 py-1.5 whitespace-nowrap"
+        >
+          {/* REUSED 44px YELLOW T AVATAR MONOGRAM */}
+          <a
+            href="#hero"
+            onClick={(e) => handleNavClick(e, "#hero")}
+            aria-label="Toshit Sai - Return to top"
+            className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
+          >
+            <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+              T
+            </span>
+          </a>
+
+          {/* "AVAILABLE FOR WORK" TEXT */}
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "#contact")}
+            className="flex-1 flex items-center justify-center px-2 group"
+          >
+            <span className="font-sans text-[17px] font-normal tracking-tight text-[#20252B] group-hover:opacity-80 transition-opacity whitespace-nowrap">
+              Available for work
+            </span>
+          </a>
+
+          {/* SUBTLE GLOWING YELLOW STATUS INDICATOR DOT */}
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "#contact")}
+            aria-label="Available for work status"
+            className="w-[30px] h-[30px] rounded-full border border-white/40 bg-white/20 backdrop-blur-xs flex items-center justify-center flex-shrink-0 mr-1 group"
+          >
+            <span className="relative flex h-[9px] w-[9px] items-center justify-center">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
+              <span className="relative inline-flex rounded-full h-[9px] w-[9px] bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
+            </span>
           </a>
         </motion.div>
 
