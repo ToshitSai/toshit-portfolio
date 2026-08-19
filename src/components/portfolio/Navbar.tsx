@@ -121,8 +121,8 @@ const Navbar: React.FC = () => {
       {/* COMPACT FLOATING PILL NAVBAR - EXACT REFERENCE PROPORTIONS */}
       <motion.nav
         animate={{
-          width: isScrolled ? "235px" : "min(545px, calc(100vw - 24px))",
-          maxWidth: isScrolled ? "235px" : "545px",
+          width: isScrolled ? "300px" : "min(545px, calc(100vw - 24px))",
+          maxWidth: isScrolled ? "300px" : "545px",
           height: "58px",
           backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.28)",
           borderColor: isScrolled ? "rgba(255, 255, 255, 0.50)" : "rgba(255, 255, 255, 0.45)",
@@ -216,7 +216,7 @@ const Navbar: React.FC = () => {
             </a>
           </motion.div>
 
-          {/* LAYER 2: COMPACT CTA BUTTON ("Work with me") */}
+          {/* LAYER 2: COMPACT AVAILABILITY STATUS ("Available for work 🟡") */}
           <motion.div
             initial={false}
             animate={{
@@ -226,29 +226,18 @@ const Navbar: React.FC = () => {
               pointerEvents: isScrolled ? "auto" : "none",
             }}
             transition={NAV_TRANSITION}
-            className="absolute inset-0 flex items-center justify-end whitespace-nowrap pr-1.5"
+            className="absolute inset-0 flex items-center justify-center whitespace-nowrap pr-2"
           >
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="group flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white text-[#20252B] text-[13.5px] font-semibold tracking-tight shadow-sm hover:bg-white/95 transition-all"
+              className="group flex items-center gap-2.5 px-1 py-1 text-[#20252B] hover:text-[#4A525D] transition-colors"
             >
-              <svg
-                className="w-[16px] h-[12px] flex-shrink-0 group-hover:rotate-6 transition-transform"
-                viewBox="0 0 20 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="20" height="14" rx="3" fill="#20252B" />
-                <path
-                  d="M3.5 4L10 9.5L16.5 4"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text-[#20252B] font-semibold whitespace-nowrap">Work with me</span>
+              <span className="font-semibold text-[15px] whitespace-nowrap">Available for work</span>
+              <span className="relative flex h-3 w-3 items-center justify-center flex-shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
+              </span>
             </a>
           </motion.div>
         </div>
