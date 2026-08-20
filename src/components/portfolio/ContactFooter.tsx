@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Send, CheckCircle2, Loader2, X, Sparkles } from "lucide-react";
 import ResumeModal from "./ResumeModal";
@@ -206,27 +207,29 @@ const ContactFooter: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 5. SLIDE-OVER DRAWER CONTACT FORM */}
-      <AnimatePresence>
-        {isDrawerOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsDrawerOpen(false)}
-              className="fixed inset-0 bg-[#14120C]/40 backdrop-blur-sm z-[1000]"
-            />
+      {/* 5. SLIDE-OVER DRAWER CONTACT FORM (PORTALED) */}
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {isDrawerOpen && (
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="fixed inset-0 bg-[#14120C]/40 backdrop-blur-sm z-[99998]"
+                />
 
-            {/* Slide-over Drawer */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-lg bg-[#FBF7ED] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[1001] p-8 sm:p-12 overflow-y-auto shadow-2xl flex flex-col justify-between"
-            >
+                {/* Slide-over Drawer */}
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  className="fixed top-0 right-0 bottom-0 w-full max-w-lg bg-[#FBF7ED] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-8 sm:p-12 overflow-y-auto shadow-2xl flex flex-col justify-between"
+                >
               <div>
                 {/* Header & Close */}
                 <div className="flex items-center justify-between pb-6 border-b border-[#1B1B18]/10 mb-8">
@@ -319,7 +322,9 @@ const ContactFooter: React.FC = () => {
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+    )}
 
       {/* RESUME MODAL INTEGRATION */}
       <ResumeModal
