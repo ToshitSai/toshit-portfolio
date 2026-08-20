@@ -85,7 +85,7 @@ const ContactFooter: React.FC = () => {
         >
           <h1
             style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
-            className="text-[clamp(22px,4.4vw,72px)] font-bold leading-tight tracking-[-0.03em] text-[#1B1B18] whitespace-nowrap max-w-full"
+            className="text-[clamp(18px,4.2vw,72px)] font-bold leading-tight tracking-[-0.03em] text-[#1B1B18] sm:whitespace-nowrap max-w-full"
           >
             Let's build your next system
           </h1>
