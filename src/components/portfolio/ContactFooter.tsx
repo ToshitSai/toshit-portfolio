@@ -1,82 +1,33 @@
 import React, { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { Send, CheckCircle2, ArrowUp, Github, Linkedin, Mail, ExternalLink, Loader2, AlertTriangle } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { Mail, ArrowUpRight, Send, CheckCircle2, MapPin, Clock, Github, Linkedin, FileText, Loader2 } from "lucide-react";
 import ResumeModal from "./ResumeModal";
 
-interface FormFieldError {
-  id: string;
-  fieldId: string;
-  msg: string;
-}
-
 const ContactFooter: React.FC = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [summaryErrors, setSummaryErrors] = useState<FormFieldError[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
-  const errorSummaryRef = useRef<HTMLDivElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const messageInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const validateForm = () => {
-    const errors: Record<string, string> = {};
-    const summary: FormFieldError[] = [];
-
-    if (!formData.name.trim()) {
-      errors.name = "Enter your full name.";
-      summary.push({ id: "name-err-summary", fieldId: "full-name", msg: "Enter your full name." });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
-      errors.email = "Enter a valid email address.";
-      summary.push({ id: "email-err-summary", fieldId: "email-address", msg: "Enter a valid email address." });
-    }
-
-    if (!formData.message.trim()) {
-      errors.message = "Enter your message.";
-      summary.push({ id: "message-err-summary", fieldId: "message-content", msg: "Enter your message." });
-    }
-
-    return { errors, summary };
-  };
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const { errors, summary } = validateForm();
-
-    setFieldErrors(errors);
-    setSummaryErrors(summary);
-
-    if (summary.length > 0) {
-      // Focus summary box for keyboard & screen reader accessibility
-      setTimeout(() => {
-        if (errorSummaryRef.current) {
-          errorSummaryRef.current.focus();
-        }
-      }, 50);
-      return;
-    }
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
 
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-      setFormData({ name: "", email: "", phone: "", message: "" });
-      setFieldErrors({});
-      setSummaryErrors([]);
-    }, 1200);
-  };
-
-  const handleSummaryLinkClick = (fieldId: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (fieldId === "full-name" && nameInputRef.current) nameInputRef.current.focus();
-    if (fieldId === "email-address" && emailInputRef.current) emailInputRef.current.focus();
-    if (fieldId === "message-content" && messageInputRef.current) messageInputRef.current.focus();
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    }, 900);
   };
 
   const scrollToTop = () => {
@@ -84,342 +35,314 @@ const ContactFooter: React.FC = () => {
   };
 
   return (
-    <footer id="contact" className="relative w-full bg-[#20252B] text-[#FFF8E8] overflow-hidden z-20 pt-20 pb-12 studio-noise-bg">
-      {/* Top Inverted Cream Rolling Waves */}
-      <div className="absolute top-0 left-0 right-0 w-full h-14 sm:h-20 overflow-hidden pointer-events-none -translate-y-[98%]">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          preserveAspectRatio="none"
-          className="w-full h-full block"
+    <footer
+      id="contact"
+      ref={ref}
+      style={{ backgroundColor: "#20252A" }}
+      className="relative w-full text-[#F5F0E6] overflow-hidden select-none z-20 font-sans border-t border-[#F5F0E6]/10"
+    >
+      {/* Subtle Noise Texture Overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.035] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 pb-16 relative z-10">
+        
+        {/* 1. SECTION LABEL */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-[0.18em] text-[#F5C518] mb-8 font-semibold uppercase"
         >
-          <path
-            d="M0,64L48,58.7C96,53,192,43,288,48C384,53,480,75,576,80C672,85,768,75,864,64C960,53,1056,43,1152,48C1248,53,1344,75,1392,80L1440,85L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
-            fill="#FFF8E8"
-          />
-        </svg>
-      </div>
+          <span className="w-2 h-2 rounded-full bg-[#F5C518] shadow-[0_0_8px_#F5C518]" />
+          <span>05 // GET IN TOUCH</span>
+        </motion.div>
 
-      <div className="container-narrow relative z-10 pt-8">
-        {/* Section Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-sm" />
-          <span className="label-mono text-[#FFD42A]">05 // GET IN TOUCH</span>
+        {/* 2. HEADLINE & EMAIL CTA COMPOSITION */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10 lg:gap-16 mb-12 sm:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-3xl"
+          >
+            <h2
+              style={{ fontFamily: "'Instrument Serif', 'Cormorant Garamond', Georgia, serif" }}
+              className="text-[clamp(44px,6.2vw,96px)] leading-[0.92] tracking-[-0.02em] font-normal text-[#F5F0E6] mb-6"
+            >
+              Let's build something <br className="hidden sm:block" />
+              remarkable together.
+            </h2>
+
+            <p
+              style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+              className="text-[#E5DED2]/85 text-lg sm:text-xl md:text-[22px] leading-relaxed max-w-[650px] font-normal"
+            >
+              Have a project in mind, open opportunities, or want to collaborate? Send me a message below or email directly.
+            </p>
+          </motion.div>
+
+          {/* EMAIL CTA BUTTON */}
+          <motion.div
+            initial={{ opacity: 0, x: 25 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full lg:w-auto flex-shrink-0"
+          >
+            <a
+              href="mailto:iamtoshitsai@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center justify-center gap-3 w-full lg:w-auto px-7 py-4 sm:px-9 sm:py-5 rounded-full bg-[#F5C518] hover:bg-[#FFD21F] text-[#1A1D21] font-mono text-xs sm:text-sm font-bold tracking-wider uppercase transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] shadow-xl shadow-[#F5C518]/15 border border-[#F5C518]"
+            >
+              <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#1A1D21] transition-transform group-hover:scale-110" />
+              <span>IAMTOSHITSAI@GMAIL.COM</span>
+              <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#1A1D21] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+            </a>
+          </motion.div>
         </div>
 
-        {/* Big Editorial Headline */}
-        <h2 id="contact-heading" className="text-display text-[clamp(2.6rem,8.5vw,6.5rem)] text-[#FFF8E8] mb-6 leading-[0.88] max-w-5xl">
-          Let's build something remarkable together.
-        </h2>
+        {/* 3. DIVIDER */}
+        <motion.hr
+          initial={{ scaleX: 0 }}
+          animate={isInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="border-none border-t border-[#F5F0E6]/18 my-12 sm:my-16 origin-left"
+        />
 
-        {/* Subtitle & Direct Mailto Button */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-16 pb-12 border-b border-white/20">
-          <p className="text-base sm:text-xl font-sans text-[#FFF8E8]/90 max-w-xl leading-relaxed">
-            Have a project in mind, open opportunities, or want to collaborate? Send me a message below or email directly.
-          </p>
-
-          <a
-            href="mailto:iamtoshitsai@gmail.com"
-            className="inline-flex items-center justify-center gap-3 px-6 py-4 rounded-full bg-[#FFD42A] text-[#20252B] font-mono text-xs sm:text-sm tracking-wider font-bold uppercase shadow-xl hover:-translate-y-1 hover:bg-[#FFF8E8] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#FFD42A] transition-all duration-300 w-max"
+        {/* 4. MAIN FORM & LOCATION INFO GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          
+          {/* CONTACT FORM AREA */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-7"
           >
-            <Mail className="w-4 h-4 text-[#20252B]" />
-            <span>iamtoshitsai@gmail.com ↗</span>
-          </a>
-        </div>
+            {!isSubmitted ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Name Input */}
+                  <div className="space-y-2">
+                    <label htmlFor="form-name" className="block font-mono text-xs tracking-wider text-[#A8A196] uppercase">
+                      YOUR NAME <span className="text-[#F5C518]">*</span>
+                    </label>
+                    <input
+                      id="form-name"
+                      type="text"
+                      placeholder="Jane Appleseed"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-[#171A1E]/80 border border-[#F5F0E6]/15 rounded-xl px-5 py-4 text-[#F5F0E6] placeholder-[#7E786E] font-sans text-base focus:outline-none focus:border-[#F5C518] focus:ring-1 focus:ring-[#F5C518] transition-all duration-200"
+                    />
+                  </div>
 
-        {/* Dynamic Focusable Error Summary Container */}
-        {summaryErrors.length > 0 && (
-          <div
-            ref={errorSummaryRef}
-            tabIndex={-1}
-            role="alert"
-            aria-labelledby="error-summary-title"
-            className="p-5 mb-8 rounded-2xl bg-red-950/80 border-2 border-red-500 text-red-200 focus:outline-none focus:ring-4 focus:ring-red-400"
-          >
-            <h3 id="error-summary-title" className="text-base font-mono font-bold text-red-100 flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-red-400" />
-              There is a problem with your submission
-            </h3>
-            <ul className="list-disc list-inside space-y-1 text-xs font-mono text-red-200">
-              {summaryErrors.map((err) => (
-                <li key={err.id}>
-                  <a
-                    href={`#${err.fieldId}`}
-                    onClick={handleSummaryLinkClick(err.fieldId)}
-                    className="underline hover:text-white focus:outline-none focus:text-white"
-                  >
-                    {err.msg}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Form & Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-20">
-          {/* Interactive Accessible Form Card */}
-          <div className="lg:col-span-7 bg-[#2A3038] border border-white/20 p-8 sm:p-10 rounded-3xl shadow-2xl">
-            <h3 className="text-2xl font-serif text-[#FFF8E8] mb-6">Send a Direct Message</h3>
-
-            {isSubmitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="py-12 text-center space-y-4"
-              >
-                <div className="w-16 h-16 rounded-full bg-[#FFD42A] text-[#20252B] mx-auto flex items-center justify-center shadow-lg">
-                  <CheckCircle2 className="w-10 h-10" />
-                </div>
-                <h4 className="text-2xl font-serif text-[#FFF8E8]">Message Sent Successfully!</h4>
-                <p className="text-sm font-sans text-[#FFF8E8]/80 max-w-md mx-auto">
-                  Thank you for reaching out, Toshit will get back to you shortly.
-                </p>
-                <button
-                  onClick={() => setIsSubmitted(false)}
-                  className="mt-4 px-6 py-2.5 rounded-full bg-[#FFD42A] text-[#20252B] text-xs font-mono font-semibold uppercase tracking-wider hover:bg-[#FFF8E8] transition-colors"
-                >
-                  Send Another Message
-                </button>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} noValidate className="space-y-6">
-                
-                {/* Field 1: Full Name */}
-                <div className={`space-y-2 ${fieldErrors.name ? "has-error" : ""}`}>
-                  <label
-                    htmlFor="full-name"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
-                  >
-                    Your Name <span className="text-red-400 font-bold" aria-hidden="true">*</span>
-                    <span className="sr-only">(Required)</span>
-                  </label>
-                  <input
-                    ref={nameInputRef}
-                    id="full-name"
-                    type="text"
-                    name="name"
-                    autoComplete="name"
-                    required
-                    aria-required="true"
-                    aria-invalid={fieldErrors.name ? "true" : "false"}
-                    aria-describedby={fieldErrors.name ? "full-name-error" : undefined}
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={`w-full min-h-[48px] bg-[#1F2329] border rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base ${
-                      fieldErrors.name ? "border-red-500 bg-red-950/20" : "border-white/20 focus:border-[#FFD42A]"
-                    }`}
-                    placeholder="e.g. Alex Morgan"
-                  />
-                  {fieldErrors.name && (
-                    <div id="full-name-error" className="flex items-center gap-1.5 text-xs font-mono text-red-300 mt-1 font-semibold">
-                      <span aria-hidden="true">⚠️</span>
-                      <span>{fieldErrors.name}</span>
-                    </div>
-                  )}
+                  {/* Email Input */}
+                  <div className="space-y-2">
+                    <label htmlFor="form-email" className="block font-mono text-xs tracking-wider text-[#A8A196] uppercase">
+                      EMAIL ADDRESS <span className="text-[#F5C518]">*</span>
+                    </label>
+                    <input
+                      id="form-email"
+                      type="email"
+                      placeholder="you@company.com"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full bg-[#171A1E]/80 border border-[#F5F0E6]/15 rounded-xl px-5 py-4 text-[#F5F0E6] placeholder-[#7E786E] font-sans text-base focus:outline-none focus:border-[#F5C518] focus:ring-1 focus:ring-[#F5C518] transition-all duration-200"
+                    />
+                  </div>
                 </div>
 
-                {/* Field 2: Email Address */}
-                <div className={`space-y-2 ${fieldErrors.email ? "has-error" : ""}`}>
-                  <label
-                    htmlFor="email-address"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
-                  >
-                    Your Email <span className="text-red-400 font-bold" aria-hidden="true">*</span>
-                    <span className="sr-only">(Required)</span>
-                  </label>
-                  <span id="email-hint" className="block text-xs font-mono text-white/50 mb-1">
-                    Example: name@domain.com
-                  </span>
-                  <input
-                    ref={emailInputRef}
-                    id="email-address"
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    required
-                    aria-required="true"
-                    aria-invalid={fieldErrors.email ? "true" : "false"}
-                    aria-describedby={`email-hint ${fieldErrors.email ? "email-error" : ""}`}
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`w-full min-h-[48px] bg-[#1F2329] border rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base ${
-                      fieldErrors.email ? "border-red-500 bg-red-950/20" : "border-white/20 focus:border-[#FFD42A]"
-                    }`}
-                    placeholder="alex@company.com"
-                  />
-                  {fieldErrors.email && (
-                    <div id="email-error" className="flex items-center gap-1.5 text-xs font-mono text-red-300 mt-1 font-semibold">
-                      <span aria-hidden="true">⚠️</span>
-                      <span>{fieldErrors.email}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Field 3: Phone Number (Optional) */}
+                {/* Subject Input */}
                 <div className="space-y-2">
-                  <label
-                    htmlFor="phone-number"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
-                  >
-                    Phone Number <span className="text-white/50 text-xs lowercase font-normal">(optional)</span>
+                  <label htmlFor="form-subject" className="block font-mono text-xs tracking-wider text-[#A8A196] uppercase">
+                    PROJECT / SUBJECT
                   </label>
                   <input
-                    id="phone-number"
-                    type="tel"
-                    name="phone"
-                    autoComplete="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full min-h-[48px] bg-[#1F2329] border border-white/20 rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:border-[#FFD42A] focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base"
-                    placeholder="+1 (555) 000-0000"
+                    id="form-subject"
+                    type="text"
+                    placeholder="AI System Development / Full-Time Role"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full bg-[#171A1E]/80 border border-[#F5F0E6]/15 rounded-xl px-5 py-4 text-[#F5F0E6] placeholder-[#7E786E] font-sans text-base focus:outline-none focus:border-[#F5C518] focus:ring-1 focus:ring-[#F5C518] transition-all duration-200"
                   />
                 </div>
 
-                {/* Field 4: Message */}
-                <div className={`space-y-2 ${fieldErrors.message ? "has-error" : ""}`}>
-                  <label
-                    htmlFor="message-content"
-                    className="block text-xs font-mono uppercase tracking-wider text-[#FFD42A] font-semibold"
-                  >
-                    Your Message <span className="text-red-400 font-bold" aria-hidden="true">*</span>
-                    <span className="sr-only">(Required)</span>
+                {/* Message Textarea */}
+                <div className="space-y-2">
+                  <label htmlFor="form-message" className="block font-mono text-xs tracking-wider text-[#A8A196] uppercase">
+                    MESSAGE <span className="text-[#F5C518]">*</span>
                   </label>
                   <textarea
-                    ref={messageInputRef}
-                    id="message-content"
-                    name="message"
-                    rows={4}
+                    id="form-message"
+                    rows={5}
+                    placeholder="Tell me about your vision, timeline, or requirements..."
                     required
-                    aria-required="true"
-                    aria-invalid={fieldErrors.message ? "true" : "false"}
-                    aria-describedby={fieldErrors.message ? "message-error" : undefined}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className={`w-full min-h-[120px] bg-[#1F2329] border rounded-xl px-4 py-3 text-[#FFF8E8] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD42A] transition-colors text-base resize-none ${
-                      fieldErrors.message ? "border-red-500 bg-red-950/20" : "border-white/20 focus:border-[#FFD42A]"
-                    }`}
-                    placeholder="Tell me about your project or opportunity..."
+                    className="w-full bg-[#171A1E]/80 border border-[#F5F0E6]/15 rounded-xl px-5 py-4 text-[#F5F0E6] placeholder-[#7E786E] font-sans text-base focus:outline-none focus:border-[#F5C518] focus:ring-1 focus:ring-[#F5C518] transition-all duration-200 resize-none"
                   />
-                  {fieldErrors.message && (
-                    <div id="message-error" className="flex items-center gap-1.5 text-xs font-mono text-red-300 mt-1 font-semibold">
-                      <span aria-hidden="true">⚠️</span>
-                      <span>{fieldErrors.message}</span>
-                    </div>
-                  )}
                 </div>
 
                 {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full min-h-[48px] py-4 rounded-full bg-[#FFD42A] text-[#20252B] font-mono text-xs font-bold uppercase tracking-[0.2em] shadow-lg hover:bg-[#FFF8E8] active:scale-[0.98] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#FFD42A] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#F5C518] hover:bg-[#FFD21F] text-[#1A1D21] font-mono text-xs sm:text-sm uppercase font-bold tracking-widest transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-[#F5C518]/20 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin text-[#20252B]" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[#1A1D21]" />
                       <span>SENDING MESSAGE...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4 text-[#20252B]" />
+                      <Send className="w-4 h-4 text-[#1A1D21]" />
                       <span>SEND MESSAGE</span>
                     </>
                   )}
                 </button>
               </form>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-[#171A1E]/90 border border-[#F5C518]/40 rounded-2xl p-8 sm:p-10 space-y-6 text-left"
+              >
+                <div className="w-12 h-12 rounded-full bg-[#F5C518]/15 border border-[#F5C518]/50 flex items-center justify-center text-[#F5C518]">
+                  <CheckCircle2 className="w-6 h-6 text-[#F5C518]" />
+                </div>
+                <div>
+                  <h3
+                    style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+                    className="text-3xl sm:text-4xl text-[#F5F0E6] font-normal mb-2"
+                  >
+                    Message Sent Successfully.
+                  </h3>
+                  <p className="text-[#E5DED2]/80 text-base leading-relaxed max-w-md">
+                    Thank you for getting in touch! I'll review your notes and respond within 24 to 48 hours.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 hover:bg-[#F5C518] hover:text-[#1A1D21] text-[#F5F0E6] font-mono text-xs uppercase tracking-wider transition-all duration-200 font-semibold"
+                >
+                  <span>Send another message</span>
+                </button>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
 
-          {/* Info Grid */}
-          <div className="lg:col-span-5 space-y-8 lg:pt-4">
-            <dl className="space-y-8">
+          {/* LOCATION & TIMEZONE / INFORMATION AREA */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-5 space-y-8"
+          >
+            <div className="bg-[#171A1E]/80 border border-[#F5F0E6]/12 rounded-2xl p-7 sm:p-9 space-y-8">
+              
+              {/* Location & Timezone Header */}
               <div>
-                <dt className="text-xs font-mono uppercase tracking-[0.2em] text-[#FFD42A] font-semibold mb-2">
-                  LOCATION & TIMEZONE
-                </dt>
-                <dd className="text-lg font-sans text-[#FFF8E8]">
-                  INDIA <span className="text-[#FFF8E8]/70 text-sm font-mono">(IST, UTC+5:30)</span>
-                </dd>
+                <div className="font-mono text-xs tracking-[0.18em] text-[#F5C518] uppercase font-semibold mb-4">
+                  LOCATION &amp; TIMEZONE
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-[#F5C518] shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-sans text-lg font-semibold text-[#F5F0E6]">Hyderabad, India</div>
+                      <div className="font-mono text-xs text-[#A8A196]">Open for Global Remote &amp; Relocation</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-[#F5C518] shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-sans text-lg font-semibold text-[#F5F0E6]">IST (UTC +5:30)</div>
+                      <div className="font-mono text-xs text-[#A8A196]">Flexible overlap for US &amp; EU timezones</div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
+              <hr className="border-none border-t border-[#F5F0E6]/10" />
+
+              {/* Status Indicator */}
+              <div className="flex items-center gap-3 bg-[#20252A] border border-[#F5C518]/25 p-4 rounded-xl">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse shrink-0" />
+                <span className="font-mono text-xs text-[#E5DED2] tracking-wider uppercase">
+                  Available for Full-time Roles &amp; AI Engineering Opportunities
+                </span>
+              </div>
+
+              {/* Quick Connect Links */}
               <div>
-                <dt className="text-xs font-mono uppercase tracking-[0.2em] text-[#FFD42A] font-semibold mb-3">
-                  ONLINE PRESENCE
-                </dt>
-                <dd className="flex flex-col space-y-3 font-mono text-sm">
+                <div className="font-mono text-xs tracking-[0.18em] text-[#A8A196] uppercase mb-4">
+                  DIRECT CHANNELS
+                </div>
+                <div className="flex flex-wrap gap-3">
                   <a
                     href="https://github.com/ToshitSai"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2.5 text-[#FFF8E8] hover:text-[#FFD42A] transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[#F5F0E6] hover:bg-[#F5C518] hover:text-[#1A1D21] hover:border-[#F5C518] font-mono text-xs tracking-wider transition-all duration-200"
                   >
-                    <Github className="w-4 h-4 text-[#FFD42A]" />
-                    <span>GitHub / ToshitSai ↗</span>
+                    <Github className="w-4 h-4" />
+                    <span>GitHub ↗</span>
                   </a>
+
                   <a
                     href="https://www.linkedin.com/in/toshit-sai-galam-177788276/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2.5 text-[#FFF8E8] hover:text-[#FFD42A] transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[#F5F0E6] hover:bg-[#F5C518] hover:text-[#1A1D21] hover:border-[#F5C518] font-mono text-xs tracking-wider transition-all duration-200"
                   >
-                    <Linkedin className="w-4 h-4 text-[#FFD42A]" />
-                    <span>LinkedIn / Toshit Sai Galam ↗</span>
+                    <Linkedin className="w-4 h-4" />
+                    <span>LinkedIn ↗</span>
                   </a>
-                  <a
-                    href="mailto:iamtoshitsai@gmail.com"
-                    className="inline-flex items-center gap-2.5 text-[#FFF8E8] hover:text-[#FFD42A] transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-[#FFD42A]" />
-                    <span>Email / iamtoshitsai@gmail.com ↗</span>
-                  </a>
-                </dd>
-              </div>
 
-              <div>
-                <dt className="text-xs font-mono uppercase tracking-[0.2em] text-[#FFD42A] font-semibold mb-3">
-                  RESUME / DOCUMENTATION
-                </dt>
-                <dd className="flex flex-wrap gap-4 font-mono text-xs">
                   <button
-                    type="button"
                     onClick={() => setIsResumeModalOpen(true)}
-                    className="px-4 py-2.5 rounded-full border border-white/30 text-[#FFF8E8] hover:bg-[#FFD42A] hover:text-[#20252B] hover:border-[#FFD42A] transition-all inline-flex items-center gap-1.5 font-semibold cursor-pointer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[#F5F0E6] hover:bg-[#F5C518] hover:text-[#1A1D21] hover:border-[#F5C518] font-mono text-xs tracking-wider transition-all duration-200"
                   >
-                    <span>View Resume</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <FileText className="w-4 h-4" />
+                    <span>Resume Viewer ↗</span>
                   </button>
-                </dd>
+                </div>
               </div>
-            </dl>
-          </div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* RESUME MODAL VIEWER */}
-        <ResumeModal
-          isOpen={isResumeModalOpen}
-          onClose={() => setIsResumeModalOpen(false)}
-        />
-
-        {/* Footer Bottom Row */}
-        <div className="pt-8 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#FFF8E8]/90">
-          <div>
-            © TOSHIT SAI GALAM · BUILT WITH CARE & APPLIED AI.
-          </div>
-
-          {/* Scroll to Top Button */}
+        {/* 5. BOTTOM FOOTER BAR */}
+        <div className="mt-20 pt-8 border-t border-[#F5F0E6]/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#A8A196]">
+          <span>© {new Date().getFullYear()} Toshit Sai Galam · Built in Hyderabad, India</span>
           <button
             onClick={scrollToTop}
-            className="px-4 py-2.5 rounded-full bg-[#FFD42A] text-[#20252B] hover:bg-[#FFF8E8] transition-all shadow-lg flex items-center justify-center gap-2 font-bold font-mono text-xs tracking-wider"
-            aria-label="Scroll to top"
+            className="hover:text-[#F5C518] transition-colors flex items-center gap-1 uppercase tracking-wider"
           >
-            <span>BACK TO TOP</span>
-            <ArrowUp className="w-4 h-4 text-[#20252B]" />
+            <span>Back to Top</span>
+            <span>↑</span>
           </button>
         </div>
       </div>
+
+      {/* RESUME MODAL */}
+      <ResumeModal
+        isOpen={isResumeModalOpen}
+        onClose={() => setIsResumeModalOpen(false)}
+      />
     </footer>
   );
 };
 
 export default ContactFooter;
+

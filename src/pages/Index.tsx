@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
 import TechMarquee from "@/components/portfolio/TechMarquee";
@@ -14,6 +14,18 @@ import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 const Index = () => {
   // Always trigger the login loader on page load / reload
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (window.location.hash === "#contact" || window.location.pathname === "/contact") {
+      const timer = setTimeout(() => {
+        const contactEl = document.getElementById("contact");
+        if (contactEl) {
+          contactEl.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleTriggerLogin = () => {
     setIsLoggingIn(true);

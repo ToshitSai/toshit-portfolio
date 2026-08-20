@@ -10,7 +10,7 @@ const projects = [
     technologies: ["Next.js", "Puppeteer", "Claude API", "Serper API"],
     role: "AI Full-Stack Development",
     liveUrl: "https://job-gem-grader.vercel.app",
-    githubUrl: "https://github.com/ToshitSai",
+    githubUrl: "https://github.com/ToshitSai/job-gem-grader",
     featured: true,
   },
   {
@@ -19,7 +19,7 @@ const projects = [
     technologies: ["React", "Vite", "Flask", "Groq API"],
     role: "Full-Stack & AI Integration",
     liveUrl: "https://toshit-greetly.vercel.app",
-    githubUrl: "https://github.com/ToshitSai",
+    githubUrl: "https://github.com/ToshitSai/greetly",
     featured: true,
   },
   {
