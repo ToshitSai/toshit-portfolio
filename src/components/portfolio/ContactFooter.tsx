@@ -56,21 +56,10 @@ const ContactFooter: React.FC = () => {
         initial={{ opacity: 0, y: -15 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full flex items-center justify-between font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
+        className="w-full flex items-center justify-start font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
       >
         <div className="flex items-center gap-2">
           <span>📍 HYDERABAD, IN</span>
-        </div>
-
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B1B18]/5 border border-[#1B1B18]/10">
-          <span className="w-5 h-5 rounded-full bg-[#1B1B18] text-[#F3EEE2] text-[10px] font-bold flex items-center justify-center">
-            TS
-          </span>
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D9A62C] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D9A62C]" />
-          </span>
-          <span className="font-semibold text-[#1B1B18]">Available for work</span>
         </div>
       </motion.div>
 
