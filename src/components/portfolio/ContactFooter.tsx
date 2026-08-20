@@ -49,7 +49,7 @@ const ContactFooter: React.FC = () => {
       id="contact"
       ref={ref}
       style={{ backgroundColor: "#F3EEE2", color: "#1B1B18" }}
-      className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden select-none z-20 font-sans px-6 sm:px-12 lg:px-20 py-10 sm:py-14"
+      className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden select-none z-20 font-sans px-6 sm:px-12 lg:px-20 pt-24 sm:pt-32 pb-10 sm:pb-14"
     >
       {/* 1. TOP METADATA BAR */}
       <motion.div
