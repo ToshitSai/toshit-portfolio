@@ -92,11 +92,11 @@ const ContactFooter: React.FC = () => {
           initial={{ opacity: 0, y: 25 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative inline-block mb-12 sm:mb-16"
+          className="relative inline-block max-w-full mb-12 sm:mb-16"
         >
           <h1
             style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
-            className="text-[clamp(40px,6.5vw,92px)] font-bold leading-[0.95] tracking-[-0.03em] text-[#1B1B18]"
+            className="text-[clamp(22px,4.4vw,72px)] font-bold leading-tight tracking-[-0.03em] text-[#1B1B18] whitespace-nowrap max-w-full"
           >
             Let's build your next system
           </h1>
