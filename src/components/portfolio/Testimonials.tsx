@@ -105,13 +105,13 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Infinite Auto Rotation Timer (Increased speed to 2.2 seconds per card)
+  // Silky Smooth Cadence Auto Rotation Timer (3.2s)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 2200);
+    }, 3200);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -173,35 +173,31 @@ const Testimonials: React.FC = () => {
               const isLeft = diff === -1;
               const isRight = diff === 1;
 
-              // Calculate positions & 3D transformations
+              // Ultra-clean 3D transformations optimized for GPU (no filter repaints)
               let xPos = "0%";
               let scale = 1;
               let rotateY = 0;
               let opacity = 1;
               let zIndex = 30;
-              let filter = "blur(0px)";
 
               if (isLeft) {
-                xPos = isMobile ? "-68%" : "-58%";
+                xPos = isMobile ? "-68%" : "-56%";
                 scale = 0.88;
-                rotateY = 10;
+                rotateY = 12;
                 opacity = 0.55;
                 zIndex = 10;
-                filter = "blur(0.5px)";
               } else if (isRight) {
-                xPos = isMobile ? "68%" : "58%";
+                xPos = isMobile ? "68%" : "56%";
                 scale = 0.88;
-                rotateY = -10;
+                rotateY = -12;
                 opacity = 0.55;
                 zIndex = 10;
-                filter = "blur(0.5px)";
               } else if (!isCenter) {
-                xPos = diff > 0 ? "120%" : "-120%";
+                xPos = diff > 0 ? "115%" : "-115%";
                 scale = 0.75;
                 rotateY = 0;
                 opacity = 0;
                 zIndex = 0;
-                filter = "blur(4px)";
               }
 
               return (
@@ -214,8 +210,8 @@ const Testimonials: React.FC = () => {
                   drag={isCenter ? "x" : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   onDragEnd={(_, info) => {
-                    if (info.offset.x < -40) handleNext();
-                    if (info.offset.x > 40) handlePrev();
+                    if (info.offset.x < -30) handleNext();
+                    if (info.offset.x > 30) handlePrev();
                   }}
                   animate={{
                     x: xPos,
@@ -223,14 +219,13 @@ const Testimonials: React.FC = () => {
                     rotateY: prefersReducedMotion ? 0 : rotateY,
                     opacity: opacity,
                     zIndex: zIndex,
-                    filter: filter,
                   }}
                   whileHover={
                     isCenter
                       ? {
-                          scale: 1.025,
-                          y: -6,
-                          transition: { duration: 0.2, ease: "easeOut" },
+                          scale: 1.02,
+                          y: -5,
+                          transition: { type: "spring", stiffness: 300, damping: 25 },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -238,12 +233,16 @@ const Testimonials: React.FC = () => {
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          duration: 0.45,
-                          ease: [0.22, 1, 0.36, 1],
+                          type: "spring",
+                          stiffness: 210,
+                          damping: 25,
+                          mass: 0.85,
                         }
                   }
                   style={{
                     transformStyle: "preserve-3d",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
                     willChange: "transform, opacity",
                   }}
                   className={`absolute top-0 w-full max-w-[620px] h-full p-6 sm:p-9 rounded-3xl border border-[#1B1B18]/15 bg-[#FFF8E8] text-[#1B1B18] shadow-[0_20px_50px_rgba(27,27,24,0.1)] flex flex-col justify-between select-none ${
@@ -279,7 +278,7 @@ const Testimonials: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* CARD FOOTER METADATA (STARS REMOVED FOR CLEAN MINIMALIST LOOK) */}
+                  {/* CARD FOOTER METADATA */}
                   <div className="flex items-center justify-between pt-3 border-t border-[#1B1B18]/10 text-xs font-mono text-[#85847C]">
                     <span>FEEDBACK // {item.badge}</span>
                     <span className="text-[#85847C]/70 text-[11px]">VERIFIED LOG</span>
@@ -302,7 +301,7 @@ const Testimonials: React.FC = () => {
               <motion.div
                 className="h-full bg-[#D9A62C] rounded-full"
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ type: "spring", stiffness: 220, damping: 26 }}
               />
             </div>
           </div>

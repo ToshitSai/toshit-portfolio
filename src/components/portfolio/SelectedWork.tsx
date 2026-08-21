@@ -336,29 +336,25 @@ const SelectedWork: React.FC = () => {
               let rotateY = 0;
               let opacity = 1;
               let zIndex = 30;
-              let filter = "blur(0px)";
 
               if (isLeft) {
-                xPos = isMobile ? "-68%" : "-58%";
+                xPos = isMobile ? "-68%" : "-56%";
                 scale = 0.88;
-                rotateY = 10;
+                rotateY = 12;
                 opacity = 0.55;
                 zIndex = 10;
-                filter = "blur(0.5px)";
               } else if (isRight) {
-                xPos = isMobile ? "68%" : "58%";
+                xPos = isMobile ? "68%" : "56%";
                 scale = 0.88;
-                rotateY = -10;
+                rotateY = -12;
                 opacity = 0.55;
                 zIndex = 10;
-                filter = "blur(0.5px)";
               } else if (!isCenter) {
-                xPos = diff > 0 ? "120%" : "-120%";
+                xPos = diff > 0 ? "115%" : "-115%";
                 scale = 0.75;
                 rotateY = 0;
                 opacity = 0;
                 zIndex = 0;
-                filter = "blur(4px)";
               }
 
               return (
@@ -371,8 +367,8 @@ const SelectedWork: React.FC = () => {
                   drag={isCenter ? "x" : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   onDragEnd={(_, info) => {
-                    if (info.offset.x < -40) handleNext();
-                    if (info.offset.x > 40) handlePrev();
+                    if (info.offset.x < -30) handleNext();
+                    if (info.offset.x > 30) handlePrev();
                   }}
                   animate={{
                     x: xPos,
@@ -380,14 +376,13 @@ const SelectedWork: React.FC = () => {
                     rotateY: prefersReducedMotion ? 0 : rotateY,
                     opacity: opacity,
                     zIndex: zIndex,
-                    filter: filter,
                   }}
                   whileHover={
                     isCenter
                       ? {
                           scale: 1.02,
-                          y: -6,
-                          transition: { duration: 0.25, ease: "easeOut" },
+                          y: -5,
+                          transition: { type: "spring", stiffness: 300, damping: 25 },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -395,12 +390,16 @@ const SelectedWork: React.FC = () => {
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          duration: 0.45,
-                          ease: [0.22, 1, 0.36, 1],
+                          type: "spring",
+                          stiffness: 210,
+                          damping: 25,
+                          mass: 0.85,
                         }
                   }
                   style={{
                     transformStyle: "preserve-3d",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
                     willChange: "transform, opacity",
                   }}
                   className={`absolute top-0 w-full max-w-[680px] h-full p-6 sm:p-8 rounded-3xl border border-[#1D2024]/15 bg-[#FFF8E8] text-[#1D2024] shadow-[0_20px_50px_rgba(27,27,24,0.12)] flex flex-col justify-between select-none ${
