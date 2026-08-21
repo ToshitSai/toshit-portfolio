@@ -27,6 +27,9 @@ const Index = () => {
     return true;
   });
 
+  // Global State for Contact Drawer Overlay (Opens smoothly from right on any "Work with me" click)
+  const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
+
   // Coordinate hash navigation AFTER loader finishes
   useEffect(() => {
     if (!isLoggingIn && typeof window !== "undefined") {
@@ -59,6 +62,10 @@ const Index = () => {
     }
   };
 
+  const handleOpenContactDrawer = () => {
+    setIsContactDrawerOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans relative">
       {/* CONTEXTUAL EDITORIAL LOGIN LOADER (FIRST VISIT PER SESSION ONLY) */}
@@ -68,7 +75,7 @@ const Index = () => {
       />
 
       <CustomCursor />
-      <Navbar onTriggerLogin={handleTriggerLogin} />
+      <Navbar onTriggerLogin={handleTriggerLogin} onOpenContact={handleOpenContactDrawer} />
       <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <Hero />
         <TechMarquee />
@@ -88,7 +95,7 @@ const Index = () => {
           <Testimonials />
         </Suspense>
       </main>
-      <ContactFooter />
+      <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
     </div>
   );
 };

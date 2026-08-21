@@ -22,9 +22,10 @@ const NAV_TRANSITION = {
 
 interface NavbarProps {
   onTriggerLogin?: () => void;
+  onOpenContact?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
+const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
@@ -33,9 +34,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
   const lastScrollYRef = useRef<number>(0);
 
   // SINGLE PASSIVE rAF SCROLL DIRECTIONAL STATE MACHINE
-  // - TOP (scrollY <= 5) -> "full"
-  // - SCROLL DOWN (delta > 5) -> "compact" (T + Available for work + status dot)
-  // - SCROLL UP (delta < -5) -> "full" (Full Navbar from anywhere on page)
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
     let ticking = false;
@@ -94,6 +92,17 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
 
     if (targetEl) {
       targetEl.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  // Dedicated handler for "Work with me" / "Available for work" buttons that opens the right drawer smoothly
+  const handleWorkWithMeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    if (onOpenContact) {
+      onOpenContact();
+    } else {
+      window.dispatchEvent(new CustomEvent("open-contact-drawer"));
     }
   };
 
@@ -165,11 +174,11 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
             })}
           </div>
 
-          {/* WORK WITH ME CTA BUTTON */}
-          <a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, "#contact")}
-            className="group flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto"
+          {/* WORK WITH ME CTA BUTTON — OPENS RIGHT DRAWER */}
+          <button
+            type="button"
+            onClick={handleWorkWithMeClick}
+            className="group flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
           >
             <svg
               className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
@@ -187,7 +196,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
               />
             </svg>
             <span className="text-[#20252B] font-semibold whitespace-nowrap">Work with me</span>
-          </a>
+          </button>
         </motion.div>
 
         {/* LAYER 2: COMPACT "AVAILABLE FOR WORK" STATUS BAR */}
@@ -212,29 +221,29 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
             </span>
           </a>
 
-          {/* "AVAILABLE FOR WORK" TEXT */}
-          <a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, "#contact")}
-            className="flex-1 flex items-center justify-center px-2 group"
+          {/* "AVAILABLE FOR WORK" TEXT BUTTON — OPENS RIGHT DRAWER */}
+          <button
+            type="button"
+            onClick={handleWorkWithMeClick}
+            className="flex-1 flex items-center justify-center px-2 group cursor-pointer"
           >
             <span className="font-sans text-[17px] font-normal tracking-tight text-[#20252B] group-hover:opacity-80 transition-opacity whitespace-nowrap">
               Available for work
             </span>
-          </a>
+          </button>
 
-          {/* SUBTLE GLOWING YELLOW STATUS INDICATOR DOT */}
-          <a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, "#contact")}
+          {/* SUBTLE GLOWING YELLOW STATUS INDICATOR DOT — OPENS RIGHT DRAWER */}
+          <button
+            type="button"
+            onClick={handleWorkWithMeClick}
             aria-label="Available for work status"
-            className="w-[30px] h-[30px] rounded-full border border-white/40 bg-white/20 backdrop-blur-xs flex items-center justify-center flex-shrink-0 mr-1 group"
+            className="w-[30px] h-[30px] rounded-full border border-white/40 bg-white/20 backdrop-blur-xs flex items-center justify-center flex-shrink-0 mr-1 group cursor-pointer"
           >
             <span className="relative flex h-[9px] w-[9px] items-center justify-center">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
               <span className="relative inline-flex rounded-full h-[9px] w-[9px] bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
             </span>
-          </a>
+          </button>
         </motion.div>
 
         {/* MOBILE CONTROLS */}
@@ -272,14 +281,14 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin }) => {
                 </a>
               );
             })}
-            <a
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "#contact")}
-              className="mt-1 px-4 py-2.5 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-semibold tracking-[0.14em] uppercase flex items-center justify-center gap-2 border border-white/80 shadow-xs hover:bg-white transition-colors"
+            <button
+              type="button"
+              onClick={handleWorkWithMeClick}
+              className="mt-1 px-4 py-2.5 rounded-full bg-[#FFF8E8] text-[#20252B] text-xs font-semibold tracking-[0.14em] uppercase flex items-center justify-center gap-2 border border-white/80 shadow-xs hover:bg-white transition-colors cursor-pointer"
             >
               <Mail className="w-3.5 h-3.5 text-[#20252B]" />
               <span>Work with me</span>
-            </a>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

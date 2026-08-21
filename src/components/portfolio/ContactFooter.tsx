@@ -1,11 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Twitter, Github, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 import ResumeModal from "./ResumeModal";
 
-const ContactFooter: React.FC = () => {
+interface ContactFooterProps {
+  isDrawerOpen?: boolean;
+  setIsDrawerOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ContactFooter: React.FC<ContactFooterProps> = ({
+  isDrawerOpen: controlledDrawerOpen,
+  setIsDrawerOpen: controlledSetIsDrawerOpen,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
@@ -14,7 +22,27 @@ const ContactFooter: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [internalDrawerOpen, setInternalDrawerOpen] = useState(false);
+
+  const isDrawerOpen = controlledDrawerOpen !== undefined ? controlledDrawerOpen : internalDrawerOpen;
+  const setIsDrawerOpen = (open: boolean | ((prev: boolean) => boolean)) => {
+    if (controlledSetIsDrawerOpen) {
+      if (typeof open === "function") {
+        controlledSetIsDrawerOpen(open(isDrawerOpen));
+      } else {
+        controlledSetIsDrawerOpen(open);
+      }
+    } else {
+      setInternalDrawerOpen(open);
+    }
+  };
+
+  // GLOBAL CUSTOM EVENT LISTENER TO OPEN DRAWER FROM ANYWHERE IN WEBSITE
+  useEffect(() => {
+    const handleOpenEvent = () => setIsDrawerOpen(true);
+    window.addEventListener("open-contact-drawer", handleOpenEvent);
+    return () => window.removeEventListener("open-contact-drawer", handleOpenEvent);
+  }, []);
 
   // System Node hover & cursor tracking state
   const [isHoveringStage, setIsHoveringStage] = useState(false);
