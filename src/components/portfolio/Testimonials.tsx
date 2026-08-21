@@ -105,13 +105,13 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Silky Smooth Cadence Auto Rotation Timer (3.2s)
+  // Faster, Smooth Auto Rotation Timer (2.0s per card)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 3200);
+    }, 2000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -136,7 +136,7 @@ const Testimonials: React.FC = () => {
     >
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
 
-        {/* HEADER ROW */}
+        {/* HEADER ROW (TOP COUNTER REMOVED) */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-[#1B1B18]/12 pb-8 mb-12 gap-4">
           <div>
             <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-wider text-[#4A4A45] mb-3">
@@ -149,13 +149,6 @@ const Testimonials: React.FC = () => {
             >
               Words from mentors &amp; collaborators.
             </h2>
-          </div>
-
-          <div className="font-mono text-xs sm:text-sm text-[#85847C] sm:text-right">
-            <b className="text-[#1B1B18] text-sm sm:text-base font-semibold">
-              {String(activeIndex + 1).padStart(2, "0")}
-            </b>{" "}
-            / {String(totalCount).padStart(2, "0")} entries
           </div>
         </div>
 
@@ -173,7 +166,7 @@ const Testimonials: React.FC = () => {
               const isLeft = diff === -1;
               const isRight = diff === 1;
 
-              // Ultra-clean 3D transformations optimized for GPU (no filter repaints)
+              // Ultra-clean 3D transformations optimized for GPU
               let xPos = "0%";
               let scale = 1;
               let rotateY = 0;
@@ -225,7 +218,7 @@ const Testimonials: React.FC = () => {
                       ? {
                           scale: 1.02,
                           y: -5,
-                          transition: { type: "spring", stiffness: 300, damping: 25 },
+                          transition: { type: "spring", stiffness: 350, damping: 25 },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -234,9 +227,9 @@ const Testimonials: React.FC = () => {
                       ? { duration: 0.1 }
                       : {
                           type: "spring",
-                          stiffness: 210,
-                          damping: 25,
-                          mass: 0.85,
+                          stiffness: 280,
+                          damping: 24,
+                          mass: 0.6,
                         }
                   }
                   style={{
@@ -301,7 +294,7 @@ const Testimonials: React.FC = () => {
               <motion.div
                 className="h-full bg-[#D9A62C] rounded-full"
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ type: "spring", stiffness: 220, damping: 26 }}
+                transition={{ type: "spring", stiffness: 280, damping: 24, mass: 0.6 }}
               />
             </div>
           </div>

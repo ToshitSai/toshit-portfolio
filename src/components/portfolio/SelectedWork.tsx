@@ -258,13 +258,13 @@ const SelectedWork: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Auto Rotation Timer (2.4s)
+  // Faster Auto Rotation Timer (2.0s)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 2400);
+    }, 2000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -289,7 +289,7 @@ const SelectedWork: React.FC = () => {
       <div id="projects" className="absolute -top-12 left-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
-        {/* EDITORIAL SECTION HEADER */}
+        {/* EDITORIAL SECTION HEADER (TOP COUNTER REMOVED) */}
         <div className="border-b border-[#1D2024]/15 pb-8 mb-12 sm:mb-16 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -305,13 +305,6 @@ const SelectedWork: React.FC = () => {
             >
               Projects that turn ideas into working systems.
             </h2>
-          </div>
-
-          <div className="font-mono text-xs sm:text-sm text-[#1D2024]/60 sm:text-right">
-            <b className="text-[#1D2024] text-sm sm:text-base font-semibold">
-              {String(activeIndex + 1).padStart(2, "0")}
-            </b>{" "}
-            / {String(totalCount).padStart(2, "0")} projects
           </div>
         </div>
 
@@ -382,7 +375,7 @@ const SelectedWork: React.FC = () => {
                       ? {
                           scale: 1.02,
                           y: -5,
-                          transition: { type: "spring", stiffness: 300, damping: 25 },
+                          transition: { type: "spring", stiffness: 350, damping: 25 },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -391,9 +384,9 @@ const SelectedWork: React.FC = () => {
                       ? { duration: 0.1 }
                       : {
                           type: "spring",
-                          stiffness: 210,
-                          damping: 25,
-                          mass: 0.85,
+                          stiffness: 280,
+                          damping: 24,
+                          mass: 0.6,
                         }
                   }
                   style={{
@@ -487,7 +480,7 @@ const SelectedWork: React.FC = () => {
               <motion.div
                 className="h-full bg-[#FFD42A] rounded-full"
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ type: "spring", stiffness: 280, damping: 24, mass: 0.6 }}
               />
             </div>
           </div>
