@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies & Build Output
 node_modules
 dist
 dist-ssr
@@ -23,4 +24,22 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
-.env*
+
+# Environment & Sensitive Credentials
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+!/.env.example
+*.pem
+*.key
+*oidc*
+*token*
+
+# Archive files (Do not zip secret files or node_modules)
+*.zip
+*.tar.gz
+*.rar
+*.7z

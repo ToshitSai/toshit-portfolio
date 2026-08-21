@@ -50,6 +50,27 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
 
+  const handleSkip = () => {
+    try {
+      sessionStorage.setItem("has_seen_loader", "true");
+    } catch {
+      // Ignore storage errors
+    }
+    if (onLoadingComplete) {
+      onLoadingComplete();
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isLoading) {
+        handleSkip();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isLoading]);
+
   // Pick a fresh random message whenever isLoading becomes true
   useEffect(() => {
     if (isLoading) {
@@ -58,12 +79,17 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
       // Lock body scroll during fullscreen loader
       document.body.style.overflow = "hidden";
 
-      // Smooth finish timing (2.0s duration)
+      // Smooth finish timing (1.8s duration)
       const timer = setTimeout(() => {
+        try {
+          sessionStorage.setItem("has_seen_loader", "true");
+        } catch {
+          // Ignore storage errors
+        }
         if (onLoadingComplete) {
           onLoadingComplete();
         }
-      }, 2000);
+      }, 1800);
 
       return () => {
         clearTimeout(timer);
@@ -95,7 +121,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           initial={{ opacity: 1, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.02 }}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           role="alert"
           aria-live="polite"
           aria-label={`Loading portfolio: ${currentMessage}`}
@@ -111,6 +137,15 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
             userSelect: "none",
           }}
         >
+          {/* TOP RIGHT SKIP BUTTON */}
+          <button
+            onClick={handleSkip}
+            className="absolute top-6 right-6 font-mono text-[11px] uppercase tracking-wider text-[#6F6C63] hover:text-[#1B1B18] px-3.5 py-1.5 rounded-full border border-[#6F6C63]/25 hover:border-[#1B1B18]/50 transition-all"
+            aria-label="Skip loader animation"
+          >
+            Skip [ESC]
+          </button>
+
           {/* CENTERED LOADER COMPOSITION */}
           <div className="flex flex-col items-center justify-center space-y-6">
             {/* PAC-MAN SHAPE & TRAILING DOTS HORIZONTAL CONTAINER */}

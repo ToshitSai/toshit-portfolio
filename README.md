@@ -1,4 +1,7 @@
-# Welcome to your Lovable project
+# Toshit Sai Galam Portfolio
+
+> [!CAUTION]
+> **SECURITY REMINDER**: NEVER zip, archive, or share this project directory without excluding `node_modules`, `.git`, `.env`, `.env.local`, `.env.example`, or any `.env*` files containing secret tokens! If any API credentials or tokens are ever exposed, revoke and rotate them immediately in their respective developer dashboards (Vercel, Resend, Upstash, etc.).
 
 ## Project info
 

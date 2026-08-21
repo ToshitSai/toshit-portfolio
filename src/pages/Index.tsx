@@ -1,54 +1,92 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
 import TechMarquee from "@/components/portfolio/TechMarquee";
 import About from "@/components/portfolio/About";
-import SelectedWork from "@/components/portfolio/SelectedWork";
 import AcademicJourney from "@/components/portfolio/AcademicJourney";
-import TechnicalSkills from "@/components/portfolio/TechnicalSkills";
-import Testimonials from "@/components/portfolio/Testimonials";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 
-const Index = () => {
-  // Always trigger the login loader on page load / reload
-  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
+// Lazy-loaded heavy sections for bundle optimization and code-splitting
+const SelectedWork = React.lazy(() => import("@/components/portfolio/SelectedWork"));
+const TechnicalSkills = React.lazy(() => import("@/components/portfolio/TechnicalSkills"));
+const Testimonials = React.lazy(() => import("@/components/portfolio/Testimonials"));
 
-  useEffect(() => {
-    if (window.location.hash === "#contact" || window.location.pathname === "/contact") {
-      const timer = setTimeout(() => {
-        const contactEl = document.getElementById("contact");
-        if (contactEl) {
-          contactEl.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 800);
-      return () => clearTimeout(timer);
+// Section Fallbacks to prevent cumulative layout shifts during lazy load
+const SelectedWorkFallback = () => <div className="min-h-[600px] w-full bg-cream" />;
+const TechnicalSkillsFallback = () => <div className="min-h-[500px] w-full bg-[#111317]" />;
+const TestimonialsFallback = () => <div className="min-h-[400px] w-full bg-cream" />;
+
+const Index = () => {
+  // Only trigger loader on first visit per session using sessionStorage
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return !sessionStorage.getItem("has_seen_loader") && !sessionStorage.getItem("hasVisited");
     }
-  }, []);
+    return true;
+  });
+
+  // Coordinate hash navigation AFTER loader finishes
+  useEffect(() => {
+    if (!isLoggingIn && typeof window !== "undefined") {
+      const hash = window.location.hash;
+      if (hash) {
+        const targetId = hash.replace("#", "");
+        let targetEl = document.getElementById(targetId);
+        if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
+        if (!targetEl && targetId === "playground") targetEl = document.getElementById("skills");
+
+        if (targetEl) {
+          const timer = setTimeout(() => {
+            targetEl?.scrollIntoView({ behavior: "smooth" });
+          }, 150);
+          return () => clearTimeout(timer);
+        }
+      }
+    }
+  }, [isLoggingIn]);
 
   const handleTriggerLogin = () => {
     setIsLoggingIn(true);
   };
 
+  const handleLoadingComplete = () => {
+    setIsLoggingIn(false);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("hasVisited", "true");
+      sessionStorage.setItem("has_seen_loader", "true");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans relative">
-      {/* CONTEXTUAL RANDOMIZED EDITORIAL LOGIN LOADER */}
+      {/* CONTEXTUAL EDITORIAL LOGIN LOADER (FIRST VISIT PER SESSION ONLY) */}
       <EditorialLoginLoader
         isLoading={isLoggingIn}
-        onLoadingComplete={() => setIsLoggingIn(false)}
+        onLoadingComplete={handleLoadingComplete}
       />
 
       <CustomCursor />
       <Navbar onTriggerLogin={handleTriggerLogin} />
-      <main className={`transition-opacity duration-1000 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
+      <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <Hero />
         <TechMarquee />
         <About />
-        <SelectedWork />
+
+        <Suspense fallback={<SelectedWorkFallback />}>
+          <SelectedWork />
+        </Suspense>
+
         <AcademicJourney />
-        <TechnicalSkills />
-        <Testimonials />
+
+        <Suspense fallback={<TechnicalSkillsFallback />}>
+          <TechnicalSkills />
+        </Suspense>
+
+        <Suspense fallback={<TestimonialsFallback />}>
+          <Testimonials />
+        </Suspense>
       </main>
       <ContactFooter />
     </div>
