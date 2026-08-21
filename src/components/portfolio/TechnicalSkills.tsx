@@ -180,22 +180,7 @@ const TechnicalSkills: React.FC = () => {
             </motion.p>
           </div>
 
-          {/* Right Status Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="self-start lg:self-auto p-4 rounded-2xl bg-cream border border-ink/15 shadow-sm font-mono"
-          >
-            <div className="flex items-center gap-2 text-[10px] text-ink/60 uppercase tracking-widest font-bold mb-1">
-              <span className="w-2 h-2 rounded-full bg-yellow-accent animate-pulse shadow-[0_0_6px_#FFD42A]" />
-              <span>CURRENTLY BUILDING WITH</span>
-            </div>
-            <div className="text-xs sm:text-sm font-bold text-ink tracking-wider">
-              PYTHON · GEMINI · LANGCHAIN · REACT
-            </div>
-          </motion.div>
+
         </div>
 
         {/* 2. CENTRAL INTERACTIVE CORE SYSTEM AI ARTIFACT */}
