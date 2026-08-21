@@ -167,6 +167,20 @@ const ContactFooter: React.FC = () => {
       style={{ backgroundColor: "#F3EEE2", color: "#1B1B18" }}
       className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden select-none z-20 font-sans px-6 sm:px-12 lg:px-20 pt-24 sm:pt-32 pb-10 sm:pb-14"
     >
+      {/* ORGANIC WAVE TOP SEPARATOR */}
+      <div className="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none -translate-y-[99%]">
+        <svg
+          className="relative block w-full h-8 sm:h-12 md:h-16 text-[#F3EEE2]"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,0 C150,90 350,-40 500,50 C650,140 900,10 1200,40 L1200,120 L0,120 Z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+
       {/* 1. TOP METADATA BAR */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
@@ -241,7 +255,7 @@ const ContactFooter: React.FC = () => {
           onMouseLeave={() => setIsHoveringStage(false)}
           onMouseMove={handleMouseMove}
           onClick={() => setIsDrawerOpen(true)}
-          className="relative w-full max-w-3xl h-[340px] sm:h-[400px] flex flex-col justify-between items-center cursor-pointer group select-none py-4 px-6"
+          className="relative w-full max-w-3xl h-[300px] sm:h-[360px] flex flex-col justify-between items-center cursor-pointer group select-none py-4 px-6 mb-10"
         >
           {/* Top Center Category Label */}
           <div className="font-mono text-xs text-[#1B1B18]/50 tracking-[0.25em] uppercase font-semibold">
@@ -303,9 +317,61 @@ const ContactFooter: React.FC = () => {
             </div>
           )}
         </motion.div>
+
+        {/* 4. MAIN PAGE "NOT A FAN OF FORMS?" REFERENCE SECTION */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.45, ease: "easeOut" }}
+          className="w-full max-w-3xl text-left pt-8 border-t border-[#1B1B18]/15"
+        >
+          <p className="font-mono text-xs sm:text-sm tracking-[0.2em] text-[#85847C] uppercase font-medium mb-3">
+            NOT A FAN OF FORMS?
+          </p>
+
+          <a
+            href="mailto:iamtoshitsai@gmail.com"
+            className="inline-block text-2xl sm:text-3xl font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/40 hover:decoration-[#1B1B18] hover:text-black transition-all mb-6 font-sans break-all sm:break-normal"
+          >
+            iamtoshitsai@gmail.com
+          </a>
+
+          <div className="flex flex-wrap items-center gap-6 sm:gap-8 font-mono text-xs sm:text-sm text-[#85847C]">
+            <a
+              href="https://www.linkedin.com/in/toshit-sai-galam-177788276/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+            >
+              <span>LinkedIn</span>
+              <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+            </a>
+
+            <a
+              href="https://github.com/ToshitSai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+            >
+              <span>GitHub</span>
+              <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+            </a>
+
+            <a
+              href="https://www.instagram.com/toshit.codespace/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+            >
+              <span>Instagram</span>
+              <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+            </a>
+          </div>
+        </motion.div>
+
       </div>
 
-      {/* 4. BOTTOM FOOTER BAR WITH BACK TO TOP */}
+      {/* 5. BOTTOM FOOTER BAR WITH BACK TO TOP */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -365,7 +431,7 @@ const ContactFooter: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 5. SLIDE-OVER CONTACT OVERLAY (WITH EXACT "NOT A FAN OF FORMS?" REFERENCE SECTION AT BOTTOM) */}
+      {/* 6. SLIDE-OVER CONTACT OVERLAY */}
       {typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
