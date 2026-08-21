@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { Send, CheckCircle2, Loader2, X, Sparkles, Mail, ExternalLink, ArrowUp, Twitter, Github, Linkedin } from "lucide-react";
+import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Twitter, Github, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 import ResumeModal from "./ResumeModal";
 
@@ -83,7 +83,6 @@ const ContactFooter: React.FC = () => {
     e.preventDefault();
     setSendError(null);
 
-    // 1. Client-side Validation
     if (!validateForm()) {
       toast.error("Please fix the errors in the form before submitting.");
       return;
@@ -96,7 +95,6 @@ const ContactFooter: React.FC = () => {
     const minAnimationDuration = new Promise((resolve) => setTimeout(resolve, 900));
 
     try {
-      // 2. Real Backend API Call to POST /api/contact
       const apiPromise = fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -108,14 +106,13 @@ const ContactFooter: React.FC = () => {
           email: formData.email.trim(),
           subject: `Portfolio Inquiry from ${formData.name.trim()}`,
           message: formData.message.trim(),
-          website: formData.website, // Honeypot field sent to backend
+          website: formData.website,
         }),
       });
 
       const [response] = await Promise.all([apiPromise, minAnimationDuration]);
       const data = (await response.json().catch(() => null)) as { success?: boolean; error?: string; message?: string } | null;
 
-      // 3. Process Server Response
       if (response.ok && data?.success) {
         setIsSubmitting(false);
         setIsSubmitted(true);
@@ -322,7 +319,6 @@ const ContactFooter: React.FC = () => {
             href="mailto:iamtoshitsai@gmail.com"
             className="hover:text-[#1B1B18] transition-colors flex items-center gap-1"
           >
-            <Mail className="w-3.5 h-3.5 text-[#D9A62C]" />
             <span>Email</span>
           </a>
           <a
@@ -369,7 +365,7 @@ const ContactFooter: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 5. SLIDE-OVER CONTACT OVERLAY (MATCHING REFERENCE IMAGE 2 EXACTLY) */}
+      {/* 5. SLIDE-OVER CONTACT OVERLAY (COMPACT, PERFECTED MATCH FOR REFERENCE IMAGE 2) */}
       {typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
@@ -391,16 +387,16 @@ const ContactFooter: React.FC = () => {
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ type: "spring", damping: 28, stiffness: 220 }}
-                  className="fixed top-0 right-0 bottom-0 w-full max-w-xl sm:max-w-2xl bg-[#FFFBF3] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-8 sm:p-12 lg:p-14 overflow-y-auto shadow-2xl flex flex-col justify-between"
+                  className="fixed top-0 right-0 bottom-0 w-full max-w-md sm:max-w-lg lg:max-w-[540px] bg-[#FFFBF3] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-6 sm:p-8 lg:p-10 overflow-y-auto shadow-2xl flex flex-col justify-between"
                 >
                   <div>
                     {/* TOP SECTION: AVAILABILITY & CIRCULAR CLOSE BUTTON */}
-                    <div className="flex items-center justify-between mb-8 sm:mb-10">
+                    <div className="flex items-center justify-between mb-6 sm:mb-8">
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.1 }}
-                        className="flex items-center gap-2 font-mono text-[11px] sm:text-xs text-[#85847C] uppercase tracking-[0.2em] font-medium"
+                        className="flex items-center gap-2 font-mono text-[10px] sm:text-[11px] text-[#85847C] uppercase tracking-[0.18em] font-medium"
                       >
                         <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] inline-block shadow-xs animate-pulse" />
                         <span>AVAILABLE FOR NEW PROJECTS</span>
@@ -415,9 +411,9 @@ const ContactFooter: React.FC = () => {
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setIsDrawerOpen(false)}
                         aria-label="Close contact overlay"
-                        className="w-11 h-11 rounded-full border border-[#1B1B18]/15 bg-white/50 text-[#1B1B18] flex items-center justify-center transition-colors hover:bg-white hover:border-[#1B1B18]/30 shadow-xs"
+                        className="w-10 h-10 rounded-full border border-[#1B1B18]/15 bg-white/50 text-[#1B1B18] flex items-center justify-center transition-colors hover:bg-white hover:border-[#1B1B18]/30 shadow-xs"
                       >
-                        <X className="w-5 h-5 stroke-[1.75]" />
+                        <X className="w-4 h-4 stroke-[1.75]" />
                       </motion.button>
                     </div>
 
@@ -427,7 +423,7 @@ const ContactFooter: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.15 }}
                       style={{ fontFamily: "'Instrument Serif', serif" }}
-                      className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.08] text-[#1B1B18] tracking-tight mb-4"
+                      className="text-3xl sm:text-4xl md:text-[46px] font-normal leading-[1.08] text-[#1B1B18] tracking-tight mb-3"
                     >
                       Grow together?
                     </motion.h2>
@@ -437,7 +433,7 @@ const ContactFooter: React.FC = () => {
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="text-base sm:text-lg text-[#1B1B18]/70 font-sans leading-relaxed max-w-xl mb-8"
+                      className="text-sm sm:text-base text-[#1B1B18]/70 font-sans leading-relaxed max-w-lg mb-6 sm:mb-8"
                     >
                       Tell me what you're growing — a product, a brand, a wild idea. I'll write back within 48 hours.
                     </motion.p>
@@ -447,7 +443,7 @@ const ContactFooter: React.FC = () => {
                       initial={{ opacity: 0, scaleX: 0 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       transition={{ duration: 0.5, delay: 0.25 }}
-                      className="w-full border-b border-[#1B1B18]/15 mb-10 origin-left"
+                      className="w-full border-b border-[#1B1B18]/15 mb-7 sm:mb-8 origin-left"
                     />
 
                     {/* FORM CONTENT */}
@@ -457,27 +453,27 @@ const ContactFooter: React.FC = () => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.4 }}
-                        className="py-8 space-y-6 text-left"
+                        className="py-6 space-y-5 text-left"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full bg-[#1B1B18] text-[#FFF8E8] flex items-center justify-center">
-                            <CheckCircle2 className="w-6 h-6 stroke-[2.2]" />
+                          <div className="w-11 h-11 rounded-full bg-[#1B1B18] text-[#FFF8E8] flex items-center justify-center">
+                            <CheckCircle2 className="w-5 h-5 stroke-[2.2]" />
                           </div>
                           <div>
-                            <h3 className="text-2xl font-serif text-[#1B1B18]">Message sent ✓</h3>
-                            <p className="text-sm font-mono text-[#85847C]">I'll respond within 48 hours.</p>
+                            <h3 className="text-xl font-serif text-[#1B1B18]">Message sent ✓</h3>
+                            <p className="text-xs font-mono text-[#85847C]">I'll respond within 48 hours.</p>
                           </div>
                         </div>
 
-                        <p className="text-base text-[#1B1B18]/80 leading-relaxed font-sans pt-2">
+                        <p className="text-sm text-[#1B1B18]/80 leading-relaxed font-sans pt-1">
                           Thank you for reaching out! Your message was delivered directly to{" "}
                           <strong className="font-mono text-[#1B1B18]">iamtoshitsai@gmail.com</strong>.
                         </p>
 
-                        <div className="pt-4 flex flex-col sm:flex-row gap-3">
+                        <div className="pt-3 flex flex-col sm:flex-row gap-2.5">
                           <button
                             onClick={() => setIsSubmitted(false)}
-                            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#1B1B18] text-[#FFF8E8] font-mono text-xs uppercase font-bold tracking-wider hover:bg-black transition-all"
+                            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[#1B1B18] text-[#FFF8E8] font-mono text-[11px] uppercase font-bold tracking-wider hover:bg-black transition-all"
                           >
                             Send another message
                           </button>
@@ -485,7 +481,7 @@ const ContactFooter: React.FC = () => {
                             href={getMailtoUrl()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[#1B1B18]/20 text-[#1B1B18] font-mono text-xs uppercase font-bold tracking-wider hover:border-[#1B1B18] transition-all"
+                            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full border border-[#1B1B18]/20 text-[#1B1B18] font-mono text-[11px] uppercase font-bold tracking-wider hover:border-[#1B1B18] transition-all"
                           >
                             <span>Open Mail App</span>
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -493,14 +489,14 @@ const ContactFooter: React.FC = () => {
                           <button
                             onClick={handleCopyMessage}
                             type="button"
-                            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#1B1B18]/5 text-[#1B1B18] font-mono text-xs uppercase font-bold tracking-wider hover:bg-[#1B1B18]/10 transition-all"
+                            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[#1B1B18]/5 text-[#1B1B18] font-mono text-[11px] uppercase font-bold tracking-wider hover:bg-[#1B1B18]/10 transition-all"
                           >
                             {copied ? "Copied! ✓" : "Copy Template"}
                           </button>
                         </div>
                       </motion.div>
                     ) : (
-                      <form onSubmit={handleSubmit} noValidate className="space-y-9">
+                      <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-7">
                         {/* Anti-Spam Honeypot Field */}
                         <div className="hidden opacity-0 pointer-events-none select-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
                           <label htmlFor="website">Website</label>
@@ -520,7 +516,7 @@ const ContactFooter: React.FC = () => {
                           <motion.div
                             initial={{ opacity: 0, y: -8 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 font-mono text-xs leading-relaxed"
+                            className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 font-mono text-xs leading-relaxed"
                           >
                             <strong>⚠️ Submission Error:</strong> {sendError}
                           </motion.div>
@@ -535,7 +531,7 @@ const ContactFooter: React.FC = () => {
                         >
                           <label
                             htmlFor="contact-name"
-                            className="block font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#85847C] uppercase font-medium mb-2"
+                            className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
                           >
                             YOUR NAME
                           </label>
@@ -551,10 +547,10 @@ const ContactFooter: React.FC = () => {
                             }}
                             className={`w-full bg-transparent border-0 border-b ${
                               formErrors.name ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
-                            } rounded-none px-0 py-3 text-lg sm:text-xl text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
+                            } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
                           />
                           {formErrors.name && (
-                            <p className="font-mono text-[11px] text-red-600 mt-1.5">{formErrors.name}</p>
+                            <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.name}</p>
                           )}
                         </motion.div>
 
@@ -567,7 +563,7 @@ const ContactFooter: React.FC = () => {
                         >
                           <label
                             htmlFor="contact-email"
-                            className="block font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#85847C] uppercase font-medium mb-2"
+                            className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
                           >
                             EMAIL
                           </label>
@@ -583,10 +579,10 @@ const ContactFooter: React.FC = () => {
                             }}
                             className={`w-full bg-transparent border-0 border-b ${
                               formErrors.email ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
-                            } rounded-none px-0 py-3 text-lg sm:text-xl text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
+                            } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
                           />
                           {formErrors.email && (
-                            <p className="font-mono text-[11px] text-red-600 mt-1.5">{formErrors.email}</p>
+                            <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.email}</p>
                           )}
                         </motion.div>
 
@@ -599,7 +595,7 @@ const ContactFooter: React.FC = () => {
                         >
                           <label
                             htmlFor="contact-message"
-                            className="block font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#85847C] uppercase font-medium mb-2"
+                            className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
                           >
                             WHAT ARE WE MAKING?
                           </label>
@@ -615,26 +611,26 @@ const ContactFooter: React.FC = () => {
                             }}
                             className={`w-full bg-transparent border-0 border-b ${
                               formErrors.message ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
-                            } rounded-none px-0 py-3 text-lg sm:text-xl text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none resize-none transition-colors duration-300`}
+                            } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none resize-none transition-colors duration-300`}
                           />
                           {formErrors.message && (
-                            <p className="font-mono text-[11px] text-red-600 mt-1.5">{formErrors.message}</p>
+                            <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.message}</p>
                           )}
                         </motion.div>
 
-                        {/* 4. SUBMIT BUTTON (COMPACT BLACK PILL WITH ENVELOPE ICON ON RIGHT) */}
+                        {/* 4. SUBMIT BUTTON (COMPACT BLACK PILL WITH PURE SVG WHITE ENVELOPE ICON) */}
                         <motion.div
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5, delay: 0.45 }}
-                          className="pt-4"
+                          className="pt-2 sm:pt-3"
                         >
                           <motion.button
                             type="submit"
                             disabled={isSubmitting}
                             whileHover={!isSubmitting ? { y: -2, scale: 1.02 } : {}}
                             whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                            className="inline-flex items-center gap-3 bg-[#1B1B18] text-[#FFF8E8] font-sans text-base font-medium px-7 py-3.5 rounded-full shadow-lg hover:bg-black transition-all group disabled:opacity-75 disabled:cursor-not-allowed"
+                            className="inline-flex items-center gap-3 bg-[#1B1B18] text-[#FFF8E8] font-sans text-sm font-medium px-6 py-3 rounded-full shadow-md hover:bg-black transition-all group disabled:opacity-75 disabled:cursor-not-allowed"
                           >
                             <span>
                               {isSubmitting ? "Sending..." : isSubmitted ? "Sent ✓" : "Send it over"}
@@ -643,7 +639,18 @@ const ContactFooter: React.FC = () => {
                             {isSubmitting ? (
                               <Loader2 className="w-4 h-4 animate-spin text-[#FFF8E8]" />
                             ) : (
-                              <Mail className="w-4 h-4 text-[#FFF8E8] fill-current group-hover:translate-x-0.5 transition-transform" />
+                              <svg
+                                className="w-4 h-4 text-[#FFF8E8] group-hover:translate-x-0.5 transition-transform flex-shrink-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                              </svg>
                             )}
                           </motion.button>
                         </motion.div>
