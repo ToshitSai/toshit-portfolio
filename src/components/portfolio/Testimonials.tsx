@@ -105,7 +105,7 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Faster, Smooth Auto Rotation Timer (2.0s per card)
+  // Fast & Smooth Auto Rotation Timer (2.0s per card)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
@@ -136,20 +136,14 @@ const Testimonials: React.FC = () => {
     >
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
 
-        {/* HEADER ROW (TOP COUNTER REMOVED) */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-[#1B1B18]/12 pb-8 mb-12 gap-4">
-          <div>
-            <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-wider text-[#4A4A45] mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#D9A62C]" />
-              <span>FEEDBACK LOG</span>
-            </div>
-            <h2
-              style={{ fontFamily: "'Instrument Serif', serif" }}
-              className="font-normal text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-[#1B1B18]"
-            >
-              Words from mentors &amp; collaborators.
-            </h2>
-          </div>
+        {/* HEADER ROW */}
+        <div className="border-b border-[#1B1B18]/12 pb-8 mb-12">
+          <h2
+            style={{ fontFamily: "'Instrument Serif', serif" }}
+            className="font-normal text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-[#1B1B18]"
+          >
+            Words from mentors &amp; collaborators.
+          </h2>
         </div>
 
         {/* 3D ANIMATED STACKED CARD CAROUSEL STAGE */}
@@ -218,7 +212,7 @@ const Testimonials: React.FC = () => {
                       ? {
                           scale: 1.02,
                           y: -5,
-                          transition: { type: "spring", stiffness: 350, damping: 25 },
+                          transition: { duration: 0.25, ease: "easeOut" },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -226,10 +220,8 @@ const Testimonials: React.FC = () => {
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          type: "spring",
-                          stiffness: 280,
-                          damping: 24,
-                          mass: 0.6,
+                          duration: 0.55,
+                          ease: [0.25, 1, 0.5, 1],
                         }
                   }
                   style={{
@@ -294,7 +286,7 @@ const Testimonials: React.FC = () => {
               <motion.div
                 className="h-full bg-[#D9A62C] rounded-full"
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ type: "spring", stiffness: 280, damping: 24, mass: 0.6 }}
+                transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
               />
             </div>
           </div>

@@ -258,7 +258,7 @@ const SelectedWork: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Faster Auto Rotation Timer (2.0s)
+  // Fast & Smooth Auto Rotation Timer (2.0s)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
@@ -289,23 +289,14 @@ const SelectedWork: React.FC = () => {
       <div id="projects" className="absolute -top-12 left-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
-        {/* EDITORIAL SECTION HEADER (TOP COUNTER REMOVED) */}
-        <div className="border-b border-[#1D2024]/15 pb-8 mb-12 sm:mb-16 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-xs" />
-              <span className="font-mono text-xs tracking-[0.2em] text-[#1D2024]/60 uppercase font-semibold">
-                02 // SELECTED WORK
-              </span>
-            </div>
-
-            <h2
-              style={{ fontFamily: "'Instrument Serif', serif" }}
-              className="font-normal text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-[#1D2024]"
-            >
-              Projects that turn ideas into working systems.
-            </h2>
-          </div>
+        {/* EDITORIAL SECTION HEADER */}
+        <div className="border-b border-[#1D2024]/15 pb-8 mb-12 sm:mb-16">
+          <h2
+            style={{ fontFamily: "'Instrument Serif', serif" }}
+            className="font-normal text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-[#1D2024]"
+          >
+            Projects that turn ideas into working systems.
+          </h2>
         </div>
 
         {/* 3D ANIMATED STACKED CAROUSEL STAGE */}
@@ -375,7 +366,7 @@ const SelectedWork: React.FC = () => {
                       ? {
                           scale: 1.02,
                           y: -5,
-                          transition: { type: "spring", stiffness: 350, damping: 25 },
+                          transition: { duration: 0.25, ease: "easeOut" },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -383,10 +374,8 @@ const SelectedWork: React.FC = () => {
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          type: "spring",
-                          stiffness: 280,
-                          damping: 24,
-                          mass: 0.6,
+                          duration: 0.55,
+                          ease: [0.25, 1, 0.5, 1],
                         }
                   }
                   style={{
@@ -480,7 +469,7 @@ const SelectedWork: React.FC = () => {
               <motion.div
                 className="h-full bg-[#FFD42A] rounded-full"
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ type: "spring", stiffness: 280, damping: 24, mass: 0.6 }}
+                transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
               />
             </div>
           </div>
