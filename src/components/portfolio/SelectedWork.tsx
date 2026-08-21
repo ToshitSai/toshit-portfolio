@@ -1,30 +1,46 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
 
-// --- ABSTRACT INTERACTIVE PROJECT PREVIEWS ---
+// --- DYNAMIC ANIMATED PROJECT PREVIEWS ---
 
-// 1. HireScope AI Preview Component
+// 1. HireScope AI Preview Component (Radar Scan + Animated Score Gauge)
 const HireScopePreview: React.FC = () => {
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EEF5FC] border border-[#5B9BD5]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#5B9BD5]/60 transition-colors">
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EEF5FC] border border-[#5B9BD5]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#5B9BD5]/70 transition-all duration-300">
+      {/* Laser Scanning Line Overlay */}
+      <motion.div
+        animate={{ y: ["0%", "260px", "0%"] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent opacity-60 pointer-events-none z-10 shadow-[0_0_12px_#3B82F6]"
+      />
+
       {/* Top Status Bar */}
       <div className="flex items-center justify-between border-b border-[#5B9BD5]/20 pb-3 font-mono text-[11px] tracking-wider text-[#2B6090]">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-ping" />
           <span className="font-semibold uppercase">RESUME ANALYSIS ENGINE</span>
         </div>
-        <span className="text-[10px] tracking-widest text-[#2B6090]/65 uppercase font-semibold">
-          SAMPLE OUTPUT
-        </span>
+        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-[#2B6090]/80 uppercase font-semibold">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
+          <span>LIVE EVALUATION</span>
+        </div>
       </div>
 
-      {/* Score & Matching Metrics */}
+      {/* Score & Matching Metrics with Animated Gauge */}
       <div className="my-auto py-2">
         <div className="flex items-end justify-between mb-2">
           <div>
             <span className="text-xs font-mono text-[#2B6090]/70 uppercase tracking-widest block">Overall Match</span>
-            <span className="text-3xl sm:text-4xl font-mono font-bold text-[#1E40AF]">92.4%</span>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl sm:text-4xl font-mono font-bold text-[#1E40AF] block"
+            >
+              92.4%
+            </motion.span>
           </div>
           <div className="text-right">
             <span className="text-xs font-mono text-[#2B6090]/70 uppercase tracking-widest block font-medium">Scoring Metric</span>
@@ -32,9 +48,18 @@ const HireScopePreview: React.FC = () => {
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="w-full h-2.5 bg-[#5B9BD5]/20 rounded-full overflow-hidden p-0.5">
-          <div className="h-full bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] rounded-full w-[92%] transition-all duration-1000 group-hover:w-[96%]" />
+        {/* Progress Bar with Animated Fill */}
+        <div className="w-full h-2.5 bg-[#5B9BD5]/20 rounded-full overflow-hidden p-0.5 relative">
+          <motion.div
+            initial={{ width: "0%" }}
+            whileInView={{ width: "92.4%" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            className="h-full bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] rounded-full relative"
+          >
+            {/* Glowing lead edge */}
+            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_8px_#FFF] animate-pulse" />
+          </motion.div>
         </div>
       </div>
 
@@ -56,51 +81,100 @@ const HireScopePreview: React.FC = () => {
   );
 };
 
-// 2. Greetly Preview Component
+// 2. Greetly Preview Component (Typewriter Output & Voice Wave Equalizer)
 const GreetlyPreview: React.FC = () => {
+  const quotes = [
+    "Wishing you an inspiring year filled with breakthrough ideas and seamless code!",
+    "Congratulations on the launch! May your product scale to millions effortlessly.",
+    "Happy Birthday! Crafting wonderful memories and building awesome tech together.",
+  ];
+
+  const [quoteIdx, setQuoteIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setQuoteIdx((prev) => (prev + 1) % quotes.length);
+    }, 3800);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#FFFBF0] border border-[#FFD42A]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#FFD42A] transition-colors">
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#FFFBF0] border border-[#FFD42A]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#FFD42A] transition-all duration-300">
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b border-[#FFD42A]/30 pb-3 font-mono text-[11px] tracking-wider text-[#8A6A00]">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-[#D9A700]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#D9A700] animate-spin" style={{ animationDuration: "6s" }} />
           <span className="font-semibold uppercase">GROQ API INFERENCE</span>
         </div>
-        <span className="text-[10px] tracking-widest text-[#8A6A00]/70 uppercase font-semibold">
-          SAMPLE OUTPUT // 42MS LATENCY
+        <span className="text-[10px] tracking-widest text-[#8A6A00]/80 uppercase font-semibold flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>42MS LATENCY</span>
         </span>
       </div>
 
-      {/* Greeting Preview Card */}
-      <div className="my-auto bg-white/80 backdrop-blur-xs border border-[#FFD42A]/30 p-4 rounded-md shadow-xs">
-        <span className="text-[10px] font-mono tracking-widest text-[#8A6A00] uppercase block mb-1">Generated Output</span>
-        <p className="font-sans text-sm sm:text-base text-[#1D2024] font-medium leading-snug">
-          "Wishing you an inspiring year filled with breakthrough ideas and seamless code!"
-        </p>
+      {/* Greeting Preview Box with Cycling Animations */}
+      <div className="my-auto bg-white/90 backdrop-blur-xs border border-[#FFD42A]/40 p-4 rounded-md shadow-xs min-h-[100px] flex flex-col justify-center">
+        <span className="text-[10px] font-mono tracking-widest text-[#8A6A00] uppercase block mb-1">
+          GENERATED OUTPUT
+        </span>
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={quoteIdx}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.35 }}
+            className="font-sans text-xs sm:text-sm text-[#1D2024] font-medium leading-relaxed"
+          >
+            "{quotes[quoteIdx]}"
+          </motion.p>
+        </AnimatePresence>
       </div>
 
-      {/* Audio/Video Waveform Graphic */}
+      {/* Animated Equalizer Waveform Graphic */}
       <div className="flex items-center justify-between pt-3 border-t border-[#FFD42A]/30 font-mono text-[11px]">
         <div className="flex items-center gap-1.5 text-[#8A6A00]">
           <span className="w-2 h-2 rounded-full bg-[#10B981]" />
           <span>READY FOR RENDER</span>
         </div>
-        <div className="flex items-center gap-1">
-          <div className="w-1 h-3 bg-[#FFD42A] rounded-full animate-pulse" />
-          <div className="w-1 h-5 bg-[#D9A700] rounded-full animate-pulse delay-75" />
-          <div className="w-1 h-2 bg-[#FFD42A] rounded-full animate-pulse delay-150" />
-          <div className="w-1 h-6 bg-[#D9A700] rounded-full animate-pulse delay-100" />
-          <div className="w-1 h-4 bg-[#FFD42A] rounded-full animate-pulse" />
+        <div className="flex items-center gap-1 h-5">
+          {[0.6, 1.2, 0.4, 1.6, 0.8].map((delay, i) => (
+            <motion.div
+              key={i}
+              animate={{ height: ["8px", "20px", "8px"] }}
+              transition={{
+                duration: delay + 0.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="w-1 bg-[#D9A700] rounded-full"
+            />
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-// 3. CourseForge AI Preview Component
+// 3. CourseForge AI Preview Component (Interactive Stepper & Active Module Highlighting)
 const CourseForgePreview: React.FC = () => {
+  const [activeModule, setActiveModule] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveModule((prev) => (prev + 1) % 3);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const modules = [
+    "01. Introduction to Applied AI Systems",
+    "02. Neural Architectures & Transformers",
+    "03. Context Windowing & Vector Search",
+  ];
+
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EBF6F4] border border-[#0F766E]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#0F766E]/60 transition-colors">
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EBF6F4] border border-[#0F766E]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#0F766E]/60 transition-all duration-300">
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b border-[#0F766E]/20 pb-3 font-mono text-[11px] tracking-wider text-[#0D5C56]">
         <div className="flex items-center gap-2">
@@ -108,60 +182,122 @@ const CourseForgePreview: React.FC = () => {
           <span className="font-semibold uppercase">AI CURRICULUM GENERATOR</span>
         </div>
         <span className="text-[10px] tracking-widest text-[#0D5C56]/70 uppercase font-semibold">
-          SAMPLE OUTPUT // 4 LESSONS
+          4 LESSONS
         </span>
       </div>
 
-      {/* Generated Modules Tree */}
+      {/* Generated Modules Tree with Active Highlight */}
       <div className="my-auto space-y-2">
-        {[
-          "01. Introduction to Applied AI Systems",
-          "02. Neural Architectures & Transformers",
-          "03. Context Windowing & Vector Search",
-        ].map((module, idx) => (
-          <div key={idx} className="flex items-center justify-between bg-white/75 border border-[#0F766E]/15 px-3 py-1.5 rounded text-xs font-mono text-[#0D5C56]">
-            <span className="truncate pr-2">{module}</span>
-            <Play className="w-3 h-3 text-[#0F766E] flex-shrink-0" />
-          </div>
-        ))}
+        {modules.map((modTitle, idx) => {
+          const isActive = idx === activeModule;
+          return (
+            <motion.div
+              key={idx}
+              animate={{
+                backgroundColor: isActive ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.65)",
+                scale: isActive ? 1.02 : 1,
+              }}
+              transition={{ duration: 0.3 }}
+              className={`flex items-center justify-between border px-3 py-2 rounded text-xs font-mono transition-all ${
+                isActive ? "border-[#0F766E] text-[#0D5C56] shadow-xs font-bold" : "border-[#0F766E]/15 text-[#0D5C56]/70"
+              }`}
+            >
+              <div className="flex items-center gap-2 overflow-hidden">
+                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#0F766E] animate-pulse" : "bg-[#0F766E]/30"}`} />
+                <span className="truncate">{modTitle}</span>
+              </div>
+              <Play className={`w-3 h-3 flex-shrink-0 transition-transform ${isActive ? "text-[#0F766E] scale-110" : "text-[#0F766E]/40"}`} />
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Status Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-[#0F766E]/20 font-mono text-[11px] text-[#0D5C56]">
-        <span className="font-semibold">QUIZ GENERATED</span>
+        <span className="font-semibold flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-teal-500 animate-ping" />
+          <span>QUIZ GENERATED</span>
+        </span>
         <span className="opacity-80">YOUTUBE CURATED</span>
       </div>
     </div>
   );
 };
 
-// 4. Doom Protocol WebGL 3D Preview Component (Sophisticated Deep Crimson Integration)
+// 4. Doom Protocol WebGL 3D Preview Component (Dynamic 3D Concentric Orbit & Particle Burst)
 const DoomProtocolPreview: React.FC = () => {
+  const [fps, setFps] = useState(60);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFps(59 + Math.floor(Math.random() * 3));
+    }, 1200);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#8A1334] border border-[#BE123C]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#FB7185]/80 transition-colors text-white">
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#8A1334] border border-[#BE123C]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#FB7185]/80 transition-all duration-300 text-white">
+      {/* Floating Particles Animation */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              y: ["260px", "-20px"],
+              opacity: [0, 0.8, 0],
+            }}
+            transition={{
+              duration: 3 + i * 0.7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.4,
+            }}
+            className="absolute w-1 h-1 rounded-full bg-[#FFE4E6]"
+            style={{ left: `${15 + i * 16}%` }}
+          />
+        ))}
+      </div>
+
       {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-white/20 pb-3 font-mono text-[11px] tracking-widest text-white/90">
+      <div className="flex items-center justify-between border-b border-white/20 pb-3 font-mono text-[11px] tracking-widest text-white/90 z-10">
         <div className="flex items-center gap-2">
           <Activity className="w-3.5 h-3.5 text-[#FFE4E6] animate-pulse" />
           <span className="font-semibold uppercase">3D MULTIVERSE CANVAS</span>
         </div>
-        <span className="text-[10px] tracking-widest text-white/75 uppercase font-semibold">
-          SAMPLE OUTPUT // 60 FPS
+        <span className="text-[10px] tracking-widest text-white/80 uppercase font-semibold">
+          {fps} FPS // LIVE RENDER
         </span>
       </div>
 
-      {/* Central 3D Wireframe Visual Effect */}
-      <div className="my-auto flex items-center justify-center relative py-2">
-        <div className="w-20 h-20 rounded-full border border-white/30 border-dashed animate-[spin_12s_linear_infinite] flex items-center justify-center">
-          <div className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-[#FFE4E6] shadow-[0_0_12px_#FFF]" />
-          </div>
-        </div>
-        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase font-medium">DOOM PROTOCOL</span>
+      {/* Central 3D Concentric Rotating Orbit Visual */}
+      <div className="my-auto flex items-center justify-center relative py-2 z-10">
+        {/* Outer Orbit */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+          className="w-24 h-24 rounded-full border border-white/30 border-dashed flex items-center justify-center"
+        >
+          {/* Inner Counter-Orbit */}
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="w-14 h-14 rounded-full border border-white/60 flex items-center justify-center"
+          >
+            {/* Glowing Core */}
+            <motion.div
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="w-4 h-4 rounded-full bg-[#FFE4E6] shadow-[0_0_16px_#FFF]"
+            />
+          </motion.div>
+        </motion.div>
+        <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/80 uppercase font-bold">
+          DOOM PROTOCOL
+        </span>
       </div>
 
       {/* Tech Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-white/20 font-mono text-[11px] text-white/80">
+      <div className="flex items-center justify-between pt-3 border-t border-white/20 font-mono text-[11px] text-white/80 z-10">
         <span>REACT THREE FIBER</span>
         <span>GSAP LENIS</span>
       </div>
@@ -330,7 +466,7 @@ const SelectedWork: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* EDITORIAL TECH TAGS (MONOSPACE / NO SaaS PILLS) */}
+                    {/* EDITORIAL TECH TAGS */}
                     <div className="mb-8 font-mono text-[11px] sm:text-xs tracking-wider text-[#1D2024]/60 uppercase flex flex-wrap gap-x-3 gap-y-1">
                       {project.tech.map((t, tIdx) => (
                         <React.Fragment key={t}>
@@ -369,14 +505,14 @@ const SelectedWork: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* INTERACTIVE ABSTRACT PREVIEW VISUAL */}
-                  <div
-                    className={`lg:col-span-6 transition-transform duration-500 ease-out group-hover:scale-[1.015] ${
-                      isEven ? "lg:order-2" : "lg:order-1"
-                    }`}
+                  {/* INTERACTIVE ABSTRACT ANIMATED PREVIEW VISUAL */}
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    className={`lg:col-span-6 ${isEven ? "lg:order-2" : "lg:order-1"}`}
                   >
                     <PreviewComp />
-                  </div>
+                  </motion.div>
                 </div>
               </motion.article>
             );
