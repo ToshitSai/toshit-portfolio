@@ -365,7 +365,7 @@ const ContactFooter: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 5. SLIDE-OVER CONTACT OVERLAY (COMPACT, PERFECTED MATCH FOR REFERENCE IMAGE 2) */}
+      {/* 5. SLIDE-OVER CONTACT OVERLAY (WITH EXACT "NOT A FAN OF FORMS?" REFERENCE SECTION AT BOTTOM) */}
       {typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
@@ -656,6 +656,58 @@ const ContactFooter: React.FC = () => {
                         </motion.div>
                       </form>
                     )}
+
+                    {/* 5. NOT A FAN OF FORMS? SECTION (MATCHING REFERENCE IMAGE EXACTLY) */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+                      className="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-[#1B1B18]/15"
+                    >
+                      <p className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-[#85847C] uppercase font-medium mb-3">
+                        NOT A FAN OF FORMS?
+                      </p>
+
+                      <a
+                        href="mailto:iamtoshitsai@gmail.com"
+                        className="inline-block text-xl sm:text-2xl font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/40 hover:decoration-[#1B1B18] hover:text-black transition-all mb-5 font-sans break-all sm:break-normal"
+                      >
+                        iamtoshitsai@gmail.com
+                      </a>
+
+                      <div className="flex flex-wrap items-center gap-6 sm:gap-8 font-mono text-xs sm:text-sm text-[#85847C]">
+                        <a
+                          href="https://www.linkedin.com/in/toshit-sai-galam-177788276/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+                        >
+                          <span>LinkedIn</span>
+                          <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                        </a>
+
+                        <a
+                          href="https://github.com/ToshitSai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+                        >
+                          <span>GitHub</span>
+                          <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                        </a>
+
+                        <a
+                          href="https://instagram.com/toshitsai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+                        >
+                          <span>Instagram</span>
+                          <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                        </a>
+                      </div>
+                    </motion.div>
+
                   </div>
                 </motion.div>
               </>
