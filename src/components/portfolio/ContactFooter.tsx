@@ -697,7 +697,7 @@ const ContactFooter: React.FC = () => {
                         </a>
 
                         <a
-                          href="https://instagram.com/toshitsai"
+                          href="https://www.instagram.com/toshit.codespace/"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
