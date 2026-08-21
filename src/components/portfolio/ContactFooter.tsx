@@ -192,13 +192,13 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     <footer
       id="contact"
       ref={ref}
-      style={{ backgroundColor: "#F3EEE2", color: "#1B1B18" }}
+      style={{ backgroundColor: "#EFEAD8", color: "#1B1B18" }}
       className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden select-none z-20 font-sans px-6 sm:px-12 lg:px-20 pt-24 sm:pt-32 pb-10 sm:pb-14"
     >
       {/* ORGANIC WAVE TOP SEPARATOR */}
       <div className="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none -translate-y-[99%]">
         <svg
-          className="relative block w-full h-8 sm:h-12 md:h-16 text-[#F3EEE2]"
+          className="relative block w-full h-8 sm:h-12 md:h-16 text-[#EFEAD8]"
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
         >
@@ -267,7 +267,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           whileHover={{ scale: 1.04, y: -2 }}
           whileTap={{ scale: 0.96 }}
           transition={{ duration: 0.3 }}
-          className="mb-8 px-7 py-3.5 rounded-full bg-[#1B1B18] text-[#F3EEE2] font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2.5 shadow-xl border border-[#D9A62C]/40 hover:border-[#D9A62C] transition-all group"
+          className="mb-8 px-7 py-3.5 rounded-full bg-[#1B1B18] text-[#EFEAD8] font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2.5 shadow-xl border border-[#D9A62C]/40 hover:border-[#D9A62C] transition-all group"
         >
           <Send className="w-4 h-4 text-[#D9A62C] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           <span>Send Message Directly ✉</span>
@@ -309,12 +309,12 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
               <line x1="300" y1="160" x2="395" y2="250" stroke="rgba(27,27,24,0.2)" strokeWidth="1" />
 
               {/* Nodes */}
-              <circle cx="225" cy="65" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#F3EEE2]"}`} />
-              <circle cx="385" cy="55" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#F3EEE2]"}`} />
-              <circle cx="145" cy="160" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#F3EEE2]"}`} />
-              <circle cx="455" cy="160" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#F3EEE2]"}`} />
-              <circle cx="205" cy="255" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#F3EEE2]"}`} />
-              <circle cx="395" cy="250" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#F3EEE2]"}`} />
+              <circle cx="225" cy="65" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#EFEAD8]"}`} />
+              <circle cx="385" cy="55" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#EFEAD8]"}`} />
+              <circle cx="145" cy="160" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#EFEAD8]"}`} />
+              <circle cx="455" cy="160" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#EFEAD8]"}`} />
+              <circle cx="205" cy="255" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#EFEAD8]"}`} />
+              <circle cx="395" cy="250" r="7" stroke="#1B1B18" strokeWidth="1.5" className={`transition-all duration-300 ${isHoveringStage ? "fill-[#D9A62C]" : "fill-[#EFEAD8]"}`} />
 
               {/* Center Core Node */}
               <circle cx="300" cy="160" r="18" fill="none" stroke="rgba(217,166,44,0.5)" strokeWidth="1.5" className="animate-ping origin-center" />
@@ -346,12 +346,12 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           )}
         </motion.div>
 
-        {/* 4. MAIN PAGE "NOT A FAN OF FORMS?" REFERENCE SECTION */}
+        {/* 4. MAIN PAGE "NOT A FAN OF FORMS?" REFERENCE SECTION (EXACT WARM CREAM BACKGROUND) */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.45, ease: "easeOut" }}
-          className="w-full max-w-3xl text-left pt-8 border-t border-[#1B1B18]/15"
+          className="w-full max-w-3xl text-left pt-8 border-t border-[#1B1B18]/15 bg-[#EFEAD8] rounded-2xl p-6 sm:p-8"
         >
           <p className="font-mono text-xs sm:text-sm tracking-[0.2em] text-[#85847C] uppercase font-medium mb-3">
             NOT A FAN OF FORMS?
@@ -459,7 +459,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
         </div>
       </motion.div>
 
-      {/* 6. SLIDE-OVER CONTACT OVERLAY */}
+      {/* 6. SLIDE-OVER CONTACT OVERLAY (EXACT WARM CREAM BACKGROUND) */}
       {typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
@@ -481,7 +481,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ type: "spring", damping: 28, stiffness: 220 }}
-                  className="fixed top-0 right-0 bottom-0 w-full max-w-md sm:max-w-lg lg:max-w-[540px] bg-[#FFFBF3] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-6 sm:p-8 lg:p-10 overflow-y-auto shadow-2xl flex flex-col justify-between"
+                  className="fixed top-0 right-0 bottom-0 w-full max-w-md sm:max-w-lg lg:max-w-[540px] bg-[#EFEAD8] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-6 sm:p-8 lg:p-10 overflow-y-auto shadow-2xl flex flex-col justify-between"
                 >
                   <div>
                     {/* TOP SECTION: AVAILABILITY & CIRCULAR CLOSE BUTTON */}
@@ -751,12 +751,12 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                       </form>
                     )}
 
-                    {/* 5. NOT A FAN OF FORMS? SECTION (MATCHING REFERENCE IMAGE EXACTLY) */}
+                    {/* 5. NOT A FAN OF FORMS? SECTION (MATCHING REFERENCE IMAGE EXACTLY WITH WARM CREAM BG) */}
                     <motion.div
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-                      className="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-[#1B1B18]/15"
+                      className="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-[#1B1B18]/15 bg-[#EFEAD8]"
                     >
                       <p className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-[#85847C] uppercase font-medium mb-3">
                         NOT A FAN OF FORMS?
