@@ -32,7 +32,6 @@ const ContactFooter: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
     message: "",
     website: "", // Anti-Spam Honeypot Field
   });
@@ -46,7 +45,6 @@ const ContactFooter: React.FC = () => {
   const [lastSubmittedData, setLastSubmittedData] = useState<{
     name: string;
     email: string;
-    subject?: string;
     message: string;
   } | null>(null);
 
@@ -67,7 +65,7 @@ const ContactFooter: React.FC = () => {
     } else {
       const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
       if (!emailRegex.test(formData.email.trim())) {
-        errors.email = "Please enter a valid email address (e.g. name@company.com).";
+        errors.email = "Please enter a valid email address.";
       }
     }
 
@@ -95,7 +93,7 @@ const ContactFooter: React.FC = () => {
     const submittedDetails = { ...formData };
     setLastSubmittedData(submittedDetails);
 
-    const minAnimationDuration = new Promise((resolve) => setTimeout(resolve, 1100));
+    const minAnimationDuration = new Promise((resolve) => setTimeout(resolve, 900));
 
     try {
       // 2. Real Backend API Call to POST /api/contact
@@ -108,7 +106,7 @@ const ContactFooter: React.FC = () => {
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim(),
-          subject: formData.subject.trim() || `Portfolio Inquiry from ${formData.name.trim()}`,
+          subject: `Portfolio Inquiry from ${formData.name.trim()}`,
           message: formData.message.trim(),
           website: formData.website, // Honeypot field sent to backend
         }),
@@ -123,7 +121,7 @@ const ContactFooter: React.FC = () => {
         setIsSubmitted(true);
         setSendError(null);
         setFormErrors({});
-        setFormData({ name: "", email: "", subject: "", message: "", website: "" });
+        setFormData({ name: "", email: "", message: "", website: "" });
         toast.success("Message dispatched successfully to Toshit!");
       } else {
         const errorMsg =
@@ -149,7 +147,7 @@ const ContactFooter: React.FC = () => {
 
   const getMailtoUrl = () => {
     const data = lastSubmittedData || formData;
-    const subj = encodeURIComponent(data.subject || `Portfolio Message from ${data.name || "Visitor"}`);
+    const subj = encodeURIComponent(`Portfolio Message from ${data.name || "Visitor"}`);
     const body = encodeURIComponent(
       `Hi Toshit,\n\n${data.message || ""}\n\n---\nSender Name: ${data.name || ""}\nSender Email: ${data.email || ""}`
     );
@@ -158,7 +156,7 @@ const ContactFooter: React.FC = () => {
 
   const handleCopyMessage = () => {
     const data = lastSubmittedData || formData;
-    const textToCopy = `To: iamtoshitsai@gmail.com\nSubject: ${data.subject || "Portfolio Inquiry"}\n\nHi Toshit,\n${data.message}\n\nSender: ${data.name} (${data.email})`;
+    const textToCopy = `To: iamtoshitsai@gmail.com\nSubject: Portfolio Inquiry\n\nHi Toshit,\n${data.message}\n\nSender: ${data.name} (${data.email})`;
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     toast.success("Message template copied to clipboard!");
@@ -371,7 +369,7 @@ const ContactFooter: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 5. SLIDE-OVER DRAWER CONTACT FORM (PORTALED) */}
+      {/* 5. SLIDE-OVER CONTACT OVERLAY (MATCHING REFERENCE IMAGE 2 EXACTLY) */}
       {typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
@@ -382,111 +380,104 @@ const ContactFooter: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
                   onClick={() => setIsDrawerOpen(false)}
-                  className="fixed inset-0 bg-[#14120C]/40 backdrop-blur-sm z-[99998]"
+                  className="fixed inset-0 bg-[#14120C]/40 backdrop-blur-xs z-[99998]"
                 />
 
-                {/* Slide-over Drawer */}
+                {/* Slide-over Container */}
                 <motion.div
                   initial={{ x: "100%" }}
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
-                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="fixed top-0 right-0 bottom-0 w-full max-w-lg bg-[#FBF7ED] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-8 sm:p-12 overflow-y-auto shadow-2xl flex flex-col justify-between"
+                  transition={{ type: "spring", damping: 28, stiffness: 220 }}
+                  className="fixed top-0 right-0 bottom-0 w-full max-w-xl sm:max-w-2xl bg-[#FFFBF3] text-[#1B1B18] border-l border-[#1B1B18]/15 z-[99999] p-8 sm:p-12 lg:p-14 overflow-y-auto shadow-2xl flex flex-col justify-between"
                 >
                   <div>
-                    {/* Header & Close */}
-                    <div className="flex items-center justify-between pb-6 border-b border-[#1B1B18]/10 mb-8">
-                      <div className="flex items-center gap-2 font-mono text-xs text-[#1B1B18] uppercase tracking-widest font-bold">
-                        <span className="w-2 h-2 rounded-full bg-[#D9A62C]" />
-                        <span>AVAILABLE FOR NEW PROJECTS</span>
-                      </div>
-                      <button
-                        onClick={() => setIsDrawerOpen(false)}
-                        className="w-9 h-9 rounded-full bg-[#1B1B18]/5 hover:bg-[#1B1B18] hover:text-[#FBF7ED] text-[#1B1B18] flex items-center justify-center transition-colors border border-[#1B1B18]/10"
+                    {/* TOP SECTION: AVAILABILITY & CIRCULAR CLOSE BUTTON */}
+                    <div className="flex items-center justify-between mb-8 sm:mb-10">
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                        className="flex items-center gap-2 font-mono text-[11px] sm:text-xs text-[#85847C] uppercase tracking-[0.2em] font-medium"
                       >
-                        <X className="w-5 h-5" />
-                      </button>
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] inline-block shadow-xs animate-pulse" />
+                        <span>AVAILABLE FOR NEW PROJECTS</span>
+                      </motion.div>
+
+                      {/* CIRCULAR CLOSE BUTTON */}
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                        whileHover={{ rotate: 90, scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setIsDrawerOpen(false)}
+                        aria-label="Close contact overlay"
+                        className="w-11 h-11 rounded-full border border-[#1B1B18]/15 bg-white/50 text-[#1B1B18] flex items-center justify-center transition-colors hover:bg-white hover:border-[#1B1B18]/30 shadow-xs"
+                      >
+                        <X className="w-5 h-5 stroke-[1.75]" />
+                      </motion.button>
                     </div>
 
-                    <h2
+                    {/* MAIN HEADING: "Grow together?" */}
+                    <motion.h2
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.15 }}
                       style={{ fontFamily: "'Instrument Serif', serif" }}
-                      className="text-3xl sm:text-4xl font-bold mb-4 text-[#1B1B18]"
+                      className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.08] text-[#1B1B18] tracking-tight mb-4"
                     >
-                      Let's connect.
-                    </h2>
-                    <p className="text-[#1B1B18]/70 text-sm leading-relaxed mb-8">
-                      Tell me what you're building — a product, a research idea, a role worth exploring. Your message will be sent directly to my personal email (<strong className="text-[#1B1B18]">iamtoshitsai@gmail.com</strong>).
-                    </p>
+                      Grow together?
+                    </motion.h2>
 
-                    {/* Form inside Drawer */}
+                    {/* DESCRIPTION */}
+                    <motion.p
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="text-base sm:text-lg text-[#1B1B18]/70 font-sans leading-relaxed max-w-xl mb-8"
+                    >
+                      Tell me what you're growing — a product, a brand, a wild idea. I'll write back within 48 hours.
+                    </motion.p>
+
+                    {/* THIN HORIZONTAL DIVIDER */}
+                    <motion.div
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      transition={{ duration: 0.5, delay: 0.25 }}
+                      className="w-full border-b border-[#1B1B18]/15 mb-10 origin-left"
+                    />
+
+                    {/* FORM CONTENT */}
                     {isSubmitted ? (
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.94, y: 15 }}
+                        initial={{ opacity: 0, scale: 0.96, y: 15 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="p-8 rounded-3xl bg-[#F3EEE2] border-2 border-[#D9A62C]/40 text-left space-y-6 shadow-xl relative overflow-hidden"
+                        transition={{ duration: 0.4 }}
+                        className="py-8 space-y-6 text-left"
                       >
-                        {/* Success Header Icon & Sparkle Pill */}
-                        <div className="flex items-center justify-between">
-                          <motion.div
-                            initial={{ scale: 0, rotate: -45 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.1 }}
-                            className="w-14 h-14 rounded-full bg-[#D9A62C] text-[#1B1B18] flex items-center justify-center shadow-lg"
-                          >
-                            <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
-                          </motion.div>
-
-                          <motion.div
-                            animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.05, 1] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#D9A62C] bg-[#1B1B18] px-3.5 py-1.5 rounded-full shadow-md"
-                          >
-                            <Sparkles className="w-3.5 h-3.5" />
-                            <span>DIRECTLY DISPATCHED</span>
-                          </motion.div>
-                        </div>
-
-                        <div>
-                          <motion.h3
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-2xl font-bold text-[#1B1B18] tracking-tight mb-2"
-                          >
-                            Message sent to Toshit! 🚀
-                          </motion.h3>
-                          <motion.p
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-sm text-[#1B1B18]/80 leading-relaxed"
-                          >
-                            Thank you for reaching out! Your message has been sent directly to{" "}
-                            <strong className="text-[#1B1B18] font-mono underline decoration-[#D9A62C] underline-offset-2">
-                              iamtoshitsai@gmail.com
-                            </strong>
-                            . I'll read your note and write back to you within 48 hours.
-                          </motion.p>
-                        </div>
-
-                        {/* Recipient status badge */}
-                        <div className="bg-[#1B1B18]/5 rounded-xl p-3.5 border border-[#1B1B18]/10 flex flex-col gap-2">
-                          <div className="flex items-center gap-3">
-                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="font-mono text-xs font-semibold text-[#1B1B18]/80">
-                              RECIPIENT: iamtoshitsai@gmail.com
-                            </span>
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-full bg-[#1B1B18] text-[#FFF8E8] flex items-center justify-center">
+                            <CheckCircle2 className="w-6 h-6 stroke-[2.2]" />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-serif text-[#1B1B18]">Message sent ✓</h3>
+                            <p className="text-sm font-mono text-[#85847C]">I'll respond within 48 hours.</p>
                           </div>
                         </div>
 
-                        {/* Action buttons */}
-                        <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                        <p className="text-base text-[#1B1B18]/80 leading-relaxed font-sans pt-2">
+                          Thank you for reaching out! Your message was delivered directly to{" "}
+                          <strong className="font-mono text-[#1B1B18]">iamtoshitsai@gmail.com</strong>.
+                        </p>
+
+                        <div className="pt-4 flex flex-col sm:flex-row gap-3">
                           <button
                             onClick={() => setIsSubmitted(false)}
-                            className="flex-1 py-3.5 px-4 rounded-full bg-[#1B1B18] text-[#F3EEE2] font-mono text-xs uppercase font-bold tracking-wider hover:bg-[#20252A] transition-all text-center shadow-md"
+                            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#1B1B18] text-[#FFF8E8] font-mono text-xs uppercase font-bold tracking-wider hover:bg-black transition-all"
                           >
                             Send another message
                           </button>
@@ -494,7 +485,7 @@ const ContactFooter: React.FC = () => {
                             href={getMailtoUrl()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="py-3.5 px-4 rounded-full border-2 border-[#1B1B18] text-[#1B1B18] font-mono text-xs uppercase font-bold tracking-wider hover:bg-[#1B1B18] hover:text-[#F3EEE2] transition-all text-center flex items-center justify-center gap-1.5"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[#1B1B18]/20 text-[#1B1B18] font-mono text-xs uppercase font-bold tracking-wider hover:border-[#1B1B18] transition-all"
                           >
                             <span>Open Mail App</span>
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -502,15 +493,15 @@ const ContactFooter: React.FC = () => {
                           <button
                             onClick={handleCopyMessage}
                             type="button"
-                            className="py-3.5 px-4 rounded-full bg-[#D9A62C]/20 border border-[#D9A62C]/50 text-[#1B1B18] font-mono text-xs uppercase font-bold tracking-wider hover:bg-[#D9A62C] transition-all text-center"
+                            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#1B1B18]/5 text-[#1B1B18] font-mono text-xs uppercase font-bold tracking-wider hover:bg-[#1B1B18]/10 transition-all"
                           >
-                            {copied ? "Copied! ✓" : "Copy Text"}
+                            {copied ? "Copied! ✓" : "Copy Template"}
                           </button>
                         </div>
                       </motion.div>
                     ) : (
-                      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                        {/* Anti-Spam Honeypot Field (Hidden from legitimate users) */}
+                      <form onSubmit={handleSubmit} noValidate className="space-y-9">
+                        {/* Anti-Spam Honeypot Field */}
                         <div className="hidden opacity-0 pointer-events-none select-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
                           <label htmlFor="website">Website</label>
                           <input
@@ -524,25 +515,29 @@ const ContactFooter: React.FC = () => {
                           />
                         </div>
 
-                        {/* API Submission Error Banner */}
+                        {/* API Error Banner */}
                         {sendError && (
                           <motion.div
-                            initial={{ opacity: 0, y: -10 }}
+                            initial={{ opacity: 0, y: -8 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-mono leading-relaxed flex items-start gap-2.5"
+                            className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 font-mono text-xs leading-relaxed"
                           >
-                            <span className="font-bold">⚠️</span>
-                            <div>
-                              <p className="font-bold mb-0.5">Submission Failed</p>
-                              <p>{sendError}</p>
-                            </div>
+                            <strong>⚠️ Submission Error:</strong> {sendError}
                           </motion.div>
                         )}
 
-                        {/* Name Field */}
-                        <div className="space-y-1.5">
-                          <label className="block font-mono text-xs text-[#1B1B18]/80 uppercase font-semibold">
-                            YOUR NAME <span className="text-red-500">*</span>
+                        {/* 1. NAME FIELD (MINIMAL UNDERLINE INPUT) */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.3 }}
+                          className="group"
+                        >
+                          <label
+                            htmlFor="contact-name"
+                            className="block font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#85847C] uppercase font-medium mb-2"
+                          >
+                            YOUR NAME
                           </label>
                           <input
                             type="text"
@@ -554,18 +549,27 @@ const ContactFooter: React.FC = () => {
                               setFormData({ ...formData, name: e.target.value });
                               if (formErrors.name) setFormErrors({ ...formErrors, name: undefined });
                             }}
-                            className={`w-full bg-[#F3EEE2] border ${formErrors.name ? "border-red-500 ring-1 ring-red-500/50" : "border-[#1B1B18]/20"
-                              } rounded-xl p-3.5 text-[#1B1B18] placeholder-[#1B1B18]/40 text-sm focus:border-[#1B1B18] outline-none transition-all focus:ring-2 focus:ring-[#D9A62C]/40`}
+                            className={`w-full bg-transparent border-0 border-b ${
+                              formErrors.name ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
+                            } rounded-none px-0 py-3 text-lg sm:text-xl text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
                           />
                           {formErrors.name && (
-                            <p className="font-mono text-[11px] text-red-600 font-medium">{formErrors.name}</p>
+                            <p className="font-mono text-[11px] text-red-600 mt-1.5">{formErrors.name}</p>
                           )}
-                        </div>
+                        </motion.div>
 
-                        {/* Email Field */}
-                        <div className="space-y-1.5">
-                          <label className="block font-mono text-xs text-[#1B1B18]/80 uppercase font-semibold">
-                            EMAIL ADDRESS <span className="text-red-500">*</span>
+                        {/* 2. EMAIL FIELD (MINIMAL UNDERLINE INPUT) */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.35 }}
+                          className="group"
+                        >
+                          <label
+                            htmlFor="contact-email"
+                            className="block font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#85847C] uppercase font-medium mb-2"
+                          >
+                            EMAIL
                           </label>
                           <input
                             type="email"
@@ -577,107 +581,72 @@ const ContactFooter: React.FC = () => {
                               setFormData({ ...formData, email: e.target.value });
                               if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
                             }}
-                            className={`w-full bg-[#F3EEE2] border ${formErrors.email ? "border-red-500 ring-1 ring-red-500/50" : "border-[#1B1B18]/20"
-                              } rounded-xl p-3.5 text-[#1B1B18] placeholder-[#1B1B18]/40 text-sm focus:border-[#1B1B18] outline-none transition-all focus:ring-2 focus:ring-[#D9A62C]/40`}
+                            className={`w-full bg-transparent border-0 border-b ${
+                              formErrors.email ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
+                            } rounded-none px-0 py-3 text-lg sm:text-xl text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
                           />
                           {formErrors.email && (
-                            <p className="font-mono text-[11px] text-red-600 font-medium">{formErrors.email}</p>
+                            <p className="font-mono text-[11px] text-red-600 mt-1.5">{formErrors.email}</p>
                           )}
-                        </div>
+                        </motion.div>
 
-                        {/* Subject Field */}
-                        <div className="space-y-1.5">
-                          <label className="block font-mono text-xs text-[#1B1B18]/80 uppercase font-semibold">
-                            SUBJECT / PROJECT TYPE <span className="text-[#1B1B18]/40 font-normal">(OPTIONAL)</span>
-                          </label>
-                          <input
-                            type="text"
-                            id="contact-subject"
-                            name="subject"
-                            placeholder="e.g. AI System Collaboration / Role Inquiry"
-                            value={formData.subject}
-                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                            className="w-full bg-[#F3EEE2] border border-[#1B1B18]/20 rounded-xl p-3.5 text-[#1B1B18] placeholder-[#1B1B18]/40 text-sm focus:border-[#1B1B18] outline-none transition-all focus:ring-2 focus:ring-[#D9A62C]/40"
-                          />
-                        </div>
-
-                        {/* Message Field */}
-                        <div className="space-y-1.5">
-                          <label className="block font-mono text-xs text-[#1B1B18]/80 uppercase font-semibold">
-                            WHAT ARE WE BUILDING? <span className="text-red-500">*</span>
+                        {/* 3. MESSAGE FIELD (MINIMAL UNDERLINE TEXTAREA) */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.4 }}
+                          className="group"
+                        >
+                          <label
+                            htmlFor="contact-message"
+                            className="block font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#85847C] uppercase font-medium mb-2"
+                          >
+                            WHAT ARE WE MAKING?
                           </label>
                           <textarea
                             id="contact-message"
                             name="message"
-                            rows={4}
-                            placeholder="A few lines about your project, timeline, or budget..."
+                            rows={3}
+                            placeholder="A few lines about your project, timeline, or budget"
                             value={formData.message}
                             onChange={(e) => {
                               setFormData({ ...formData, message: e.target.value });
                               if (formErrors.message) setFormErrors({ ...formErrors, message: undefined });
                             }}
-                            className={`w-full bg-[#F3EEE2] border ${formErrors.message ? "border-red-500 ring-1 ring-red-500/50" : "border-[#1B1B18]/20"
-                              } rounded-xl p-3.5 text-[#1B1B18] placeholder-[#1B1B18]/40 text-sm focus:border-[#1B1B18] outline-none resize-none transition-all focus:ring-2 focus:ring-[#D9A62C]/40`}
+                            className={`w-full bg-transparent border-0 border-b ${
+                              formErrors.message ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
+                            } rounded-none px-0 py-3 text-lg sm:text-xl text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none resize-none transition-colors duration-300`}
                           />
                           {formErrors.message && (
-                            <p className="font-mono text-[11px] text-red-600 font-medium">{formErrors.message}</p>
+                            <p className="font-mono text-[11px] text-red-600 mt-1.5">{formErrors.message}</p>
                           )}
-                        </div>
+                        </motion.div>
 
-                        {/* SEND IT OVER BUTTON WITH SMOOTH MICRO-ANIMATIONS */}
-                        <motion.button
-                          type="submit"
-                          disabled={isSubmitting}
-                          whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                          whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                          className="relative w-full py-4 rounded-full bg-[#1B1B18] text-[#FBF7ED] font-mono text-sm font-bold tracking-wider uppercase overflow-hidden shadow-xl border border-[#D9A62C]/40 transition-all hover:bg-[#20252A] group disabled:opacity-80 disabled:cursor-not-allowed"
+                        {/* 4. SUBMIT BUTTON (COMPACT BLACK PILL WITH ENVELOPE ICON ON RIGHT) */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.45 }}
+                          className="pt-4"
                         >
-                          {/* Animated Shimmer beam moving across button during submitting */}
-                          <AnimatePresence>
-                            {isSubmitting && (
-                              <motion.div
-                                initial={{ x: "-100%" }}
-                                animate={{ x: "100%" }}
-                                transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D9A62C]/35 to-transparent z-0"
-                              />
-                            )}
-                          </AnimatePresence>
+                          <motion.button
+                            type="submit"
+                            disabled={isSubmitting}
+                            whileHover={!isSubmitting ? { y: -2, scale: 1.02 } : {}}
+                            whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                            className="inline-flex items-center gap-3 bg-[#1B1B18] text-[#FFF8E8] font-sans text-base font-medium px-7 py-3.5 rounded-full shadow-lg hover:bg-black transition-all group disabled:opacity-75 disabled:cursor-not-allowed"
+                          >
+                            <span>
+                              {isSubmitting ? "Sending..." : isSubmitted ? "Sent ✓" : "Send it over"}
+                            </span>
 
-                          <div className="relative z-10 flex items-center justify-center gap-3">
                             {isSubmitting ? (
-                              <>
-                                <motion.div
-                                  initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
-                                  animate={{
-                                    x: [0, 35, 110],
-                                    y: [0, -20, -55],
-                                    scale: [1, 1.35, 0.2],
-                                    opacity: [1, 1, 0],
-                                  }}
-                                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                                  className="flex items-center justify-center"
-                                >
-                                  <Send className="w-5 h-5 text-[#D9A62C] transform -rotate-45" />
-                                </motion.div>
-
-                                <motion.div
-                                  animate={{ opacity: [0.5, 1, 0.5] }}
-                                  transition={{ duration: 0.8, repeat: Infinity }}
-                                  className="flex items-center gap-2 font-mono text-xs text-[#D9A62C] tracking-widest font-bold"
-                                >
-                                  <Loader2 className="w-4 h-4 animate-spin text-[#D9A62C]" />
-                                  <span>SENDING...</span>
-                                </motion.div>
-                              </>
+                              <Loader2 className="w-4 h-4 animate-spin text-[#FFF8E8]" />
                             ) : (
-                              <>
-                                <Send className="w-4 h-4 text-[#D9A62C] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                <span>SEND MESSAGE</span>
-                              </>
+                              <Mail className="w-4 h-4 text-[#FFF8E8] fill-current group-hover:translate-x-0.5 transition-transform" />
                             )}
-                          </div>
-                        </motion.button>
+                          </motion.button>
+                        </motion.div>
                       </form>
                     )}
                   </div>
