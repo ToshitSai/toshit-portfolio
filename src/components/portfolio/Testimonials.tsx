@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface FeedbackLogEntry {
   id: string;
@@ -105,13 +105,13 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Infinite Auto Rotation Timer (3.5 Seconds per card)
+  // Infinite Auto Rotation Timer (Increased speed to 2.2 seconds per card)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 3500);
+    }, 2200);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -230,7 +230,7 @@ const Testimonials: React.FC = () => {
                       ? {
                           scale: 1.025,
                           y: -6,
-                          transition: { duration: 0.25, ease: "easeOut" },
+                          transition: { duration: 0.2, ease: "easeOut" },
                         }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
@@ -238,7 +238,7 @@ const Testimonials: React.FC = () => {
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          duration: 0.75,
+                          duration: 0.45,
                           ease: [0.22, 1, 0.36, 1],
                         }
                   }
@@ -279,10 +279,10 @@ const Testimonials: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* CARD FOOTER METADATA */}
+                  {/* CARD FOOTER METADATA (STARS REMOVED FOR CLEAN MINIMALIST LOOK) */}
                   <div className="flex items-center justify-between pt-3 border-t border-[#1B1B18]/10 text-xs font-mono text-[#85847C]">
                     <span>FEEDBACK // {item.badge}</span>
-                    <span className="text-[#D9A62C] font-bold">★ ★ ★ ★ ★</span>
+                    <span className="text-[#85847C]/70 text-[11px]">VERIFIED LOG</span>
                   </div>
                 </motion.div>
               );
@@ -302,7 +302,7 @@ const Testimonials: React.FC = () => {
               <motion.div
                 className="h-full bg-[#D9A62C] rounded-full"
                 animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               />
             </div>
           </div>

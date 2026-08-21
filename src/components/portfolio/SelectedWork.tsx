@@ -258,13 +258,13 @@ const SelectedWork: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Auto Rotation Timer (4.0s)
+  // Auto Rotation Timer (2.4s)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 4000);
+    }, 2400);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -395,7 +395,7 @@ const SelectedWork: React.FC = () => {
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          duration: 0.75,
+                          duration: 0.45,
                           ease: [0.22, 1, 0.36, 1],
                         }
                   }
