@@ -2,15 +2,14 @@ import React, { useEffect, useRef } from "react";
 
 const About: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const block0Ref = useRef<HTMLParagraphElement>(null);
-  const block1Ref = useRef<HTMLParagraphElement>(null);
-  const block2Ref = useRef<HTMLHeadingElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
+  const statementRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     // Check if user prefers reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const blocks = [block0Ref.current, block1Ref.current, block2Ref.current];
+    const blocks = [paragraphRef.current, statementRef.current];
 
     if (prefersReducedMotion) {
       blocks.forEach((el) => {
@@ -39,10 +38,10 @@ const About: React.FC = () => {
         const elCenter = rect.top + rect.height / 2;
 
         // Activation zone calculation:
-        // Starts activating when elCenter is at 92% of viewport height
-        // Reaches 100% active state when elCenter is at 52% of viewport height
-        const startPoint = vh * 0.92;
-        const endPoint = vh * 0.52;
+        // Starts activating when elCenter is at 90% of viewport height
+        // Reaches 100% active state when elCenter is at 50% of viewport height
+        const startPoint = vh * 0.90;
+        const endPoint = vh * 0.50;
 
         let rawProgress = (startPoint - elCenter) / (startPoint - endPoint);
         const progress = Math.max(0, Math.min(1, rawProgress));
@@ -56,7 +55,7 @@ const About: React.FC = () => {
         const g = Math.round(startG + (endG - startG) * eased);
         const b = Math.round(startB + (endB - startB) * eased);
         const opacity = (0.35 + 0.65 * eased).toFixed(3);
-        const translateY = ((1 - eased) * 16).toFixed(2);
+        const translateY = ((1 - eased) * 14).toFixed(2);
 
         el.style.color = `rgb(${r}, ${g}, ${b})`;
         el.style.opacity = opacity;
@@ -84,7 +83,7 @@ const About: React.FC = () => {
       ref={sectionRef}
       id="about"
       style={{ backgroundColor: "#FAF6ED" }}
-      className="relative w-full py-24 sm:py-32 lg:py-40 text-[#1F2328] overflow-hidden z-10 select-none"
+      className="relative w-full py-28 sm:py-36 lg:py-44 text-[#1F2328] overflow-hidden z-10 select-none"
     >
       {/* SUBTLE PAPER NOISE OVERLAY */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply z-0">
@@ -98,52 +97,36 @@ const About: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10 flex flex-col items-center text-center">
         
-        {/* BLOCK 0: FIRST BIO SENTENCE */}
+        {/* PARAGRAPH 1: MAIN BIO TEXT (EXACT STRUCTURE AS REFERENCE) */}
         <p
-          ref={block0Ref}
+          ref={paragraphRef}
           style={{
             fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
             fontWeight: 400,
-            fontSize: "clamp(20px, 2.5vw, 32px)",
-            lineHeight: 1.4,
-            letterSpacing: "-0.015em",
+            fontSize: "clamp(22px, 3.2vw, 38px)",
+            lineHeight: 1.38,
+            letterSpacing: "-0.018em",
             willChange: "transform, opacity, color",
           }}
-          className="max-w-[880px] text-center mx-auto mb-6 sm:mb-8 transition-none"
+          className="max-w-[1020px] text-center mx-auto mb-14 sm:mb-18 lg:mb-20 transition-none"
         >
-          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning.
+          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning, building what&apos;s next – from intelligent automation tools and prompt-engineered workflows to context-aware web applications and scalable AI-powered products.
         </p>
 
-        {/* BLOCK 1: SECOND BIO SENTENCE */}
-        <p
-          ref={block1Ref}
-          style={{
-            fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
-            fontWeight: 400,
-            fontSize: "clamp(20px, 2.5vw, 32px)",
-            lineHeight: 1.4,
-            letterSpacing: "-0.015em",
-            willChange: "transform, opacity, color",
-          }}
-          className="max-w-[880px] text-center mx-auto mb-10 sm:mb-12 lg:mb-14 transition-none"
-        >
-          I design and build intelligent digital tools and web applications, turning complex ideas into scalable experiences.
-        </p>
-
-        {/* BLOCK 2: BOLD PERSONAL STATEMENT (POSITIONED CLOSER UP) */}
+        {/* PARAGRAPH 2: BOLD PERSONAL STATEMENT (EXACT STRUCTURE AS REFERENCE) */}
         <h3
-          ref={block2Ref}
+          ref={statementRef}
           style={{
             fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
             fontWeight: 700,
-            fontSize: "clamp(19px, 2.2vw, 28px)",
-            lineHeight: 1.35,
-            letterSpacing: "-0.02em",
+            fontSize: "clamp(22px, 3vw, 36px)",
+            lineHeight: 1.3,
+            letterSpacing: "-0.022em",
             willChange: "transform, opacity, color",
           }}
-          className="max-w-[780px] text-center mx-auto transition-none"
+          className="max-w-[950px] text-center mx-auto transition-none"
         >
-          I believe the best software happens when machine intelligence meets thoughtful engineering — and I&apos;m here to keep building mine.
+          I believe every great design forms the basis for an even greater story and I&apos;m here to keep writing mine.
         </h3>
 
       </div>
