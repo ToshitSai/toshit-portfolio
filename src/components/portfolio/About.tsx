@@ -6,48 +6,38 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const planeRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(".gsap-scrub-line", { color: "#1F2328", opacity: 1 });
+      return;
+    }
+
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 75%",
-          end: "bottom 40%",
-          toggleActions: "play none none reverse",
-        },
-      });
+      const lines = gsap.utils.toArray<HTMLElement>(".gsap-scrub-line");
 
-      // Animate text lines sliding up from mask
-      tl.to(
-        ".gsap-bio-line",
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          stagger: 0.15,
-        },
-        0
-      );
-
-      // Animate the floating plane along a curved path
-      if (planeRef.current) {
-        tl.fromTo(
-          planeRef.current,
-          { opacity: 0, x: -50, y: 30, rotation: -20 },
+      lines.forEach((line) => {
+        gsap.fromTo(
+          line,
           {
-            opacity: 1,
-            x: 120,
-            y: -40,
-            rotation: 10,
-            duration: 2.2,
-            ease: "power1.out",
+            color: "#C5BEB3",
+            opacity: 0.35,
           },
-          0.2
+          {
+            color: "#1F2328",
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: line,
+              start: "top 88%",
+              end: "top 55%",
+              scrub: 0.5,
+            },
+          }
         );
-      }
+      });
     }, containerRef);
 
     return () => ctx.revert();
@@ -57,7 +47,7 @@ const About: React.FC = () => {
     <section
       id="about"
       style={{ backgroundColor: "#FAF6ED" }}
-      className="relative w-full py-24 sm:py-32 lg:py-40 text-[#1F2328] overflow-hidden z-10 select-none"
+      className="relative w-full py-28 sm:py-36 lg:py-44 text-[#1F2328] overflow-hidden z-10 select-none"
     >
       {/* SUBTLE PAPER NOISE OVERLAY */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply z-0">
@@ -71,52 +61,33 @@ const About: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="relative max-w-[880px] mx-auto px-6 text-center z-10"
+        className="relative max-w-[840px] mx-auto px-6 text-center z-10 flex flex-col items-center"
         style={{
           fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
         }}
       >
-        {/* SVG Paper Plane / Accent */}
-        <svg
-          ref={planeRef}
-          className="absolute top-0 left-[10%] sm:left-[15%] w-10 h-10 sm:w-12 sm:h-12 pointer-events-none opacity-0 z-20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M2 12L22 2L13 22L11 13L2 12Z" fill="#F4B5A4" />
-        </svg>
-
-        {/* PARAGRAPH 1 MASKED LINES */}
-        <div className="overflow-hidden block mb-1.5 sm:mb-2">
-          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+        {/* PARAGRAPH 1 SENTENCE LINES */}
+        <div className="mb-10 sm:mb-12 lg:mb-14 flex flex-col items-center gap-1.5 sm:gap-2">
+          <span className="gsap-scrub-line block font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.45] tracking-[-0.015em]">
             I&apos;m Toshit Sai, a Computer Science Engineering student specializing
           </span>
-        </div>
-        <div className="overflow-hidden block mb-1.5 sm:mb-2">
-          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+          <span className="gsap-scrub-line block font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.45] tracking-[-0.015em]">
             in Artificial Intelligence &amp; Machine Learning, building what&apos;s next
           </span>
-        </div>
-        <div className="overflow-hidden block mb-1.5 sm:mb-2">
-          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+          <span className="gsap-scrub-line block font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.45] tracking-[-0.015em]">
             from intelligent automation tools and prompt engineered workflows
           </span>
-        </div>
-        <div className="overflow-hidden block mb-8 sm:mb-10">
-          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+          <span className="gsap-scrub-line block font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.45] tracking-[-0.015em]">
             to context aware web applications and scalable AI powered products.
           </span>
         </div>
 
-        {/* BOLD STATEMENT MASKED LINES */}
-        <div className="overflow-hidden block mb-1.5 sm:mb-2">
-          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-bold text-[19px] sm:text-[23px] md:text-[27px] leading-[1.4] text-[#1F2328]">
+        {/* BOLD PERSONAL STATEMENT LINES */}
+        <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+          <span className="gsap-scrub-line block font-bold text-[18px] sm:text-[22px] md:text-[25px] leading-[1.38] tracking-[-0.02em]">
             I believe every great design forms the basis for an even greater story
           </span>
-        </div>
-        <div className="overflow-hidden block">
-          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-bold text-[19px] sm:text-[23px] md:text-[27px] leading-[1.4] text-[#1F2328]">
+          <span className="gsap-scrub-line block font-bold text-[18px] sm:text-[22px] md:text-[25px] leading-[1.38] tracking-[-0.02em]">
             and I&apos;m here to keep writing mine.
           </span>
         </div>
