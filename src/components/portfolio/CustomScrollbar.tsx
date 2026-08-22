@@ -1,198 +1,140 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const CustomScrollbar: React.FC = () => {
-  const [thumbTop, setThumbTop] = useState(0);
-  const [thumbHeight, setThumbHeight] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const pathRef = useRef<SVGPathElement>(null);
+  const activePathRef = useRef<SVGPathElement>(null);
+  const markerRef = useRef<SVGCircleElement>(null);
+  const pathLengthRef = useRef<number>(0);
 
-  const dragStartYRef = useRef<number>(0);
-  const dragStartScrollTopRef = useRef<number>(0);
+  const pathD = "M 22,0 C -12,220 58,440 14,640 C -18,800 48,940 22,1000";
 
-  const updateScrollbar = useCallback(() => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-    const scrollHeight = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.offsetHeight,
-      document.body.clientHeight,
-      document.documentElement.clientHeight
-    );
-    const clientHeight = window.innerHeight || 1;
-    const maxScroll = Math.max(1, scrollHeight - clientHeight);
-
-    const heightRatio = clientHeight / scrollHeight;
-    const minThumbHeight = 44;
-    const calculatedHeight = Math.max(heightRatio * clientHeight, minThumbHeight);
-    const maxThumbTop = Math.max(1, clientHeight - calculatedHeight);
-    const calculatedTop = (scrollTop / maxScroll) * maxThumbTop;
-
-    setThumbHeight(calculatedHeight);
-    setThumbTop(calculatedTop);
+  useEffect(() => {
+    if (pathRef.current) {
+      pathLengthRef.current = pathRef.current.getTotalLength();
+    }
   }, []);
 
-  // Initial load animation, ResizeObserver, and scroll monitoring
   useEffect(() => {
-    setIsMounted(true);
-    updateScrollbar();
-
     let animationFrameId: number;
-    let scrollTimeout: NodeJS.Timeout;
+
+    const updatePosition = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      const scrollHeight = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight,
+        document.body.clientHeight,
+        document.documentElement.clientHeight
+      );
+      const clientHeight = window.innerHeight || 1;
+      const maxScroll = Math.max(1, scrollHeight - clientHeight);
+      const progress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+
+      setScrollProgress(progress);
+
+      // Check if scrolled down near/below Bio section (#about)
+      const aboutSection = document.getElementById("about");
+      if (aboutSection) {
+        const aboutRect = aboutSection.getBoundingClientRect();
+        // Activate when scroll enters or passes Bio section
+        setIsVisible(aboutRect.top <= clientHeight * 0.7);
+      } else {
+        setIsVisible(scrollTop > 180);
+      }
+
+      // Update active path dash offset & tiny marker dot along curve
+      if (pathRef.current && pathLengthRef.current > 0) {
+        const currentLength = progress * pathLengthRef.current;
+        const point = pathRef.current.getPointAtLength(currentLength);
+
+        if (markerRef.current) {
+          markerRef.current.setAttribute("cx", point.x.toString());
+          markerRef.current.setAttribute("cy", point.y.toString());
+        }
+
+        if (activePathRef.current) {
+          activePathRef.current.style.strokeDasharray = `${currentLength} ${pathLengthRef.current}`;
+        }
+      }
+    };
 
     const handleScroll = () => {
-      setIsScrolling(true);
-
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
-      }, 950);
-
       if (!animationFrameId) {
         animationFrameId = requestAnimationFrame(() => {
-          updateScrollbar();
+          updatePosition();
           animationFrameId = 0;
         });
       }
     };
 
-    const handleResize = () => {
-      updateScrollbar();
-    };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize, { passive: true });
-
-    // Poll to capture lazy-loaded components (SelectedWork, TechnicalSkills, etc.)
-    const timers = [100, 300, 700, 1500, 3000].map((delay) =>
-      setTimeout(updateScrollbar, delay)
-    );
-
-    // Observe body height changes
-    let resizeObserver: ResizeObserver | null = null;
-    if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(() => {
-        updateScrollbar();
-      });
-      resizeObserver.observe(document.body);
-    }
+    window.addEventListener("resize", handleScroll, { passive: true });
+    updatePosition();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-      timers.forEach(clearTimeout);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.removeEventListener("resize", handleScroll);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      if (resizeObserver) resizeObserver.disconnect();
     };
-  }, [updateScrollbar]);
+  }, []);
 
-  // Dragging logic
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-    dragStartYRef.current = e.clientY;
-    dragStartScrollTopRef.current = window.scrollY || document.documentElement.scrollTop || 0;
-    document.body.style.userSelect = "none";
-    document.body.style.cursor = "grabbing";
-  };
+  // Check if reduced motion is requested
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const clientHeight = window.innerHeight;
-      const scrollHeight = Math.max(
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight
-      );
-      const maxScroll = Math.max(1, scrollHeight - clientHeight);
-      const heightRatio = clientHeight / scrollHeight;
-      const minThumbHeight = 44;
-      const calculatedHeight = Math.max(heightRatio * clientHeight, minThumbHeight);
-      const maxThumbTop = Math.max(1, clientHeight - calculatedHeight);
-
-      const deltaY = e.clientY - dragStartYRef.current;
-      const scrollDelta = (deltaY / maxThumbTop) * maxScroll;
-      const targetScrollTop = Math.min(Math.max(0, dragStartScrollTopRef.current + scrollDelta), maxScroll);
-
-      window.scrollTo({ top: targetScrollTop });
-    };
-
-    const handleMouseUp = () => {
-      if (isDragging) {
-        setIsDragging(false);
-        document.body.style.userSelect = "";
-        document.body.style.cursor = "";
-      }
-    };
-
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove, { passive: true });
-      window.addEventListener("mouseup", handleMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging]);
-
-  // Handle track click (jump scroll)
-  const handleTrackClick = (e: React.MouseEvent) => {
-    if (e.target !== e.currentTarget) return;
-    const clientHeight = window.innerHeight;
-    const scrollHeight = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight
-    );
-    const maxScroll = Math.max(1, scrollHeight - clientHeight);
-    const clickY = e.clientY;
-    const targetScrollTop = (clickY / clientHeight) * maxScroll;
-
-    window.scrollTo({ top: targetScrollTop, behavior: "smooth" });
-  };
-
-  // Hide custom scrollbar if body is scroll-locked (e.g. during loader overlay)
-  const isScrollLocked =
-    typeof document !== "undefined" && document.body.style.overflow === "hidden";
-
-  if (isScrollLocked) return null;
-
-  // Determine active opacity and width
-  const isActive = isScrolling || isHovered || isDragging;
-  const opacityStyle = isActive ? 0.75 : isMounted ? 0.2 : 0;
-  const widthPx = isHovered || isDragging ? 4 : 2;
+  if (prefersReducedMotion) return null;
 
   return (
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={handleTrackClick}
       aria-hidden="true"
-      aria-label="Custom Viewport Scrollbar"
-      className="hidden md:block fixed right-0 top-0 bottom-0 w-3 z-[99999] pointer-events-auto select-none"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+      className="fixed left-0 top-0 bottom-0 w-12 sm:w-20 md:w-24 z-[99999] pointer-events-none select-none overflow-hidden"
     >
-      {/* 1. Track: Extremely Thin Muted Line (only slightly visible on hover or scroll) */}
-      <div
-        style={{ opacity: isActive ? 0.15 : 0.04 }}
-        className="absolute right-0 top-0 bottom-0 w-[1px] bg-[#1D2024] pointer-events-none transition-opacity duration-300"
-      />
+      <svg
+        className="w-full h-full"
+        viewBox="0 0 100 1000"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Base Dashed Trajectory Curve */}
+        <path
+          ref={pathRef}
+          d={pathD}
+          fill="none"
+          stroke="#1F2328"
+          strokeWidth="1.3"
+          strokeDasharray="4 6"
+          strokeLinecap="round"
+          className="opacity-25"
+        />
 
-      {/* 2. Scroll Thumb: Refined Minimal 2px Overlay */}
-      <div
-        onMouseDown={handleMouseDown}
-        style={{
-          transform: `translate3d(0, ${thumbTop}px, 0)`,
-          height: `${thumbHeight || 44}px`,
-          width: `${widthPx}px`,
-          opacity: opacityStyle,
-          backgroundColor: "#1D2024",
-        }}
-        className="absolute right-0 top-0 rounded-full cursor-grab active:cursor-grabbing transition-all duration-200 ease-out"
-      />
+        {/* Active Progress Overlay on Dashed Trajectory */}
+        <path
+          ref={activePathRef}
+          d={pathD}
+          fill="none"
+          stroke="#1F2328"
+          strokeWidth="1.8"
+          strokeDasharray="4 6"
+          strokeLinecap="round"
+          className="opacity-80 transition-none"
+        />
+
+        {/* Tiny Progress Dot Marker */}
+        <circle
+          ref={markerRef}
+          r="3"
+          fill="#1F2328"
+          className="opacity-90 transition-none"
+        />
+      </svg>
     </div>
   );
 };
