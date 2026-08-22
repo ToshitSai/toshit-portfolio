@@ -510,51 +510,92 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                     {/* FORM CONTENT */}
                     {isSubmitted ? (
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.96, y: 15 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.4 }}
-                        className="py-6 space-y-5 text-left"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="py-4 text-left space-y-6 sm:space-y-7"
+                        aria-live="polite"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-full bg-[#1B1B18] text-[#FFF8E8] flex items-center justify-center">
-                            <CheckCircle2 className="w-5 h-5 stroke-[2.2]" />
-                          </div>
-                          <div>
-                            <h3 className="text-xl font-serif text-[#1B1B18]">Message sent ✓</h3>
-                            <p className="text-xs font-mono text-[#85847C]">I'll respond within 48 hours.</p>
-                          </div>
-                        </div>
+                        {/* 1. EDITORIAL MONO LABEL WITH YELLOW ACCENT & ANIMATED DRAWN SVG CHECK */}
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.4, delay: 0.1 }}
+                          className="flex items-center gap-2.5"
+                        >
+                          <span className="w-2 h-2 rounded-full bg-[#D9A62C] shadow-[0_0_8px_#D9A62C]" />
+                          <span className="font-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#85847C] uppercase font-semibold">
+                            MESSAGE RECEIVED
+                          </span>
+                          <span className="ml-auto flex items-center justify-center w-7 h-7 rounded-full bg-[#1B1B18]/5 border border-[#1B1B18]/10">
+                            <svg className="w-3.5 h-3.5 text-[#1B1B18]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <motion.path
+                                d="M20 6L9 17l-5-5"
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                animate={{ pathLength: 1, opacity: 1 }}
+                                transition={{ duration: 0.45, delay: 0.25, ease: "easeOut" }}
+                              />
+                            </svg>
+                          </span>
+                        </motion.div>
 
-                        <p className="text-sm text-[#1B1B18]/80 leading-relaxed font-sans pt-1">
-                          Thank you for reaching out! Your message was delivered directly to{" "}
-                          <strong className="font-mono text-[#1B1B18]">iamtoshitsai@gmail.com</strong>.
-                        </p>
+                        {/* 2. LARGE EDITORIAL TYPOGRAPHIC HEADING */}
+                        <motion.h3
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.2 }}
+                          className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#1B1B18] tracking-tight leading-none font-normal"
+                        >
+                          Message sent.
+                        </motion.h3>
 
-                        <div className="pt-3 flex flex-col sm:flex-row gap-2.5">
+                        {/* 3. HUMAN SUPPORTING COPY WITH INTEGRATED EMAIL */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.35 }}
+                          className="space-y-2 pt-1"
+                        >
+                          <p className="text-base sm:text-lg text-[#1B1B18]/85 font-sans leading-relaxed">
+                            Thank you for reaching out! Your message was delivered directly to{" "}
+                            <a
+                              href="mailto:iamtoshitsai@gmail.com"
+                              className="font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/30 hover:decoration-[#1B1B18] transition-colors"
+                            >
+                              iamtoshitsai@gmail.com
+                            </a>.
+                          </p>
+                          <p className="font-mono text-xs sm:text-sm text-[#85847C]">
+                            I'll get back to you within 48 hours.
+                          </p>
+                        </motion.div>
+
+                        {/* 4. SINGLE EDITORIAL PRIMARY ACTION + SUBTLE SECONDARY LINK */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.5 }}
+                          className="pt-4 flex flex-wrap items-center gap-5 sm:gap-6"
+                        >
                           <button
                             onClick={() => setIsSubmitted(false)}
-                            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[#1B1B18] text-[#FFF8E8] font-mono text-[11px] uppercase font-bold tracking-wider hover:bg-black transition-all"
+                            className="group inline-flex items-center gap-3 px-6 py-3.5 rounded-lg bg-[#1B1B18] text-[#FFF8E8] font-mono text-xs uppercase font-bold tracking-wider hover:bg-black hover:-translate-y-0.5 transition-all shadow-sm cursor-pointer"
                           >
-                            Send another message
+                            <span>Send another message</span>
+                            <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
                           </button>
+
                           <a
                             href={getMailtoUrl()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full border border-[#1B1B18]/20 text-[#1B1B18] font-mono text-[11px] uppercase font-bold tracking-wider hover:border-[#1B1B18] transition-all"
+                            className="inline-flex items-center gap-1.5 font-mono text-xs text-[#85847C] hover:text-[#1B1B18] transition-colors underline-offset-4 hover:underline"
                           >
-                            <span>Open Mail App</span>
-                            <ExternalLink className="w-3.5 h-3.5" />
+                            <span>Open mail app</span>
+                            <ExternalLink className="w-3 h-3" />
                           </a>
-                          <button
-                            onClick={handleCopyMessage}
-                            type="button"
-                            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[#1B1B18]/5 text-[#1B1B18] font-mono text-[11px] uppercase font-bold tracking-wider hover:bg-[#1B1B18]/10 transition-all"
-                          >
-                            {copied ? "Copied! ✓" : "Copy Template"}
-                          </button>
-                        </div>
+                        </motion.div>
                       </motion.div>
                     ) : (
                       <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-7">
