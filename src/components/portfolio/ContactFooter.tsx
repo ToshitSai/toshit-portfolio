@@ -218,11 +218,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
         className="w-full flex items-center justify-between font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
       >
         <div className="flex items-center gap-2">
-          <span>📍 Based in Hyderabad, India • 17.3850° N, 78.4867° E</span>
-        </div>
-        <div className="flex items-center gap-2 text-[#1B1B18]/60">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="hidden sm:inline">DIRECT MAIL READY</span>
+          <span>📍 Based in Hyderabad, India</span>
         </div>
       </motion.div>
 
@@ -259,20 +255,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
             className="h-[3px] bg-[#1B1B18] w-full mt-3 origin-center rounded-full"
           />
         </motion.div>
-
-        {/* DIRECT SEND MAIL ACTION BUTTON */}
-        <motion.button
-          onClick={() => setIsDrawerOpen(true)}
-          initial={{ opacity: 0, y: 15 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          whileHover={{ scale: 1.04, y: -2 }}
-          whileTap={{ scale: 0.96 }}
-          transition={{ duration: 0.3 }}
-          className="mb-8 px-7 py-3.5 rounded-full bg-[#1B1B18] text-[#EFEAD8] font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2.5 shadow-xl border border-[#D9A62C]/40 hover:border-[#D9A62C] transition-all group"
-        >
-          <Send className="w-4 h-4 text-[#D9A62C] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          <span>Send Message Directly ✉</span>
-        </motion.button>
 
         {/* 3. INTERACTIVE SYSTEM NODE DIAGRAM STAGE */}
         <motion.div

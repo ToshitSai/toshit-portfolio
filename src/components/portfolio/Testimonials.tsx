@@ -27,7 +27,7 @@ const feedbackLogs: FeedbackLogEntry[] = [
     name: "Arjun Kapoor",
     roleLine1: "SENIOR ENGINEER",
     roleLine2: "NIAT FACULTY",
-    quote: "Solid grasp of system design for someone early in their degree — the API architecture on CourseForge held up well under review.",
+    quote: "Solid grasp of system design for someone early in their degree the API architecture on CourseForge held up well under review.",
     metaTag: "RE: CourseForge",
   },
   {
@@ -125,8 +125,6 @@ const Testimonials: React.FC = () => {
     return diff;
   };
 
-  const progressPercent = ((activeIndex + 1) / totalCount) * 100;
-
   return (
     <section
       id="feedback"
@@ -210,19 +208,19 @@ const Testimonials: React.FC = () => {
                   whileHover={
                     isCenter
                       ? {
-                          scale: 1.02,
-                          y: -5,
-                          transition: { duration: 0.25, ease: "easeOut" },
-                        }
+                        scale: 1.02,
+                        y: -5,
+                        transition: { duration: 0.25, ease: "easeOut" },
+                      }
                       : { opacity: 0.8, cursor: "pointer" }
                   }
                   transition={
                     prefersReducedMotion
                       ? { duration: 0.1 }
                       : {
-                          duration: 0.55,
-                          ease: [0.25, 1, 0.5, 1],
-                        }
+                        duration: 0.55,
+                        ease: [0.25, 1, 0.5, 1],
+                      }
                   }
                   style={{
                     transformStyle: "preserve-3d",
@@ -230,9 +228,8 @@ const Testimonials: React.FC = () => {
                     WebkitBackfaceVisibility: "hidden",
                     willChange: "transform, opacity",
                   }}
-                  className={`absolute top-0 w-full max-w-[620px] h-full p-6 sm:p-9 rounded-3xl border border-[#1B1B18]/15 bg-[#FFF8E8] text-[#1B1B18] shadow-[0_20px_50px_rgba(27,27,24,0.1)] flex flex-col justify-between select-none ${
-                    isCenter ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
-                  }`}
+                  className={`absolute top-0 w-full max-w-[620px] h-full p-6 sm:p-9 rounded-3xl border border-[#1B1B18]/15 bg-[#FFF8E8] text-[#1B1B18] shadow-[0_20px_50px_rgba(27,27,24,0.1)] flex flex-col justify-between select-none ${isCenter ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
+                    }`}
                 >
                   {/* CARD TOP HEADER ROW */}
                   <div className="flex items-center justify-between">
@@ -275,21 +272,7 @@ const Testimonials: React.FC = () => {
         </div>
 
         {/* FOOTER NAVIGATION & DOTS */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-4">
-
-          {/* PROGRESS BAR & COUNTER */}
-          <div className="font-mono text-xs text-[#85847C] flex items-center gap-3">
-            <span>
-              {String(activeIndex + 1).padStart(2, "0")} / {String(totalCount).padStart(2, "0")}
-            </span>
-            <div className="w-[120px] h-[3px] bg-[#1B1B18]/12 rounded-full relative overflow-hidden">
-              <motion.div
-                className="h-full bg-[#D9A62C] rounded-full"
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-              />
-            </div>
-          </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 pt-6 mt-4">
 
           {/* PAGINATION DOT INDICATORS */}
           <div className="flex items-center gap-2">
@@ -300,9 +283,8 @@ const Testimonials: React.FC = () => {
                   key={idx}
                   onClick={() => setActiveIndex(idx)}
                   aria-label={`Go to feedback slide ${idx + 1}`}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    isActive ? "w-7 bg-[#D9A62C]" : "w-2.5 bg-[#1B1B18]/25 hover:bg-[#1B1B18]/50"
-                  }`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${isActive ? "w-7 bg-[#D9A62C]" : "w-2.5 bg-[#1B1B18]/25 hover:bg-[#1B1B18]/50"
+                    }`}
                 />
               );
             })}

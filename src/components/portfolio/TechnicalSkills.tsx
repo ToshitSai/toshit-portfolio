@@ -132,13 +132,7 @@ const TechnicalSkills: React.FC = () => {
       {/* Subtle Blueprint Grid Pattern Overlay */}
       <div className="absolute inset-0 opacity-[0.025] pointer-events-none bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:32px_32px]" />
 
-      {/* Blueprint Technical Corner Marks */}
-      <div className="absolute top-6 left-6 text-[9px] font-mono text-ink/40 tracking-widest hidden md:block select-none pointer-events-none font-bold">
-        + SYS: ACTIVE // 12.04° N 77.59° E
-      </div>
-      <div className="absolute top-6 right-6 text-[9px] font-mono text-ink/40 tracking-widest hidden md:block select-none pointer-events-none font-bold">
-        REF: BLUEPRINT_03 +
-      </div>
+
 
       <div className="container-narrow relative z-10 px-4 sm:px-6 md:px-8 flex-1 flex flex-col justify-between">
         {/* 1. HEADER SECTION & CURRENT STACK ANNOTATION */}
