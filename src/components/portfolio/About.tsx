@@ -55,7 +55,7 @@ const AISystemVisual: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-auto"
+      className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-auto select-none"
     >
       {/* ALWAYS READABLE UPRIGHT TOP-ARC TEXT */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -143,7 +143,7 @@ const AISystemVisual: React.FC = () => {
         <circle cx="150" cy="150" r="3" fill="#1F2328" />
       </svg>
 
-      {/* Tight Corner Crop Markers */}
+      {/* Tight Corner Crop Markers (Exactly like reference) */}
       <span className="absolute top-2 left-2 w-2.5 h-2.5 border-t border-l border-[#1F2328]/40" />
       <span className="absolute top-2 right-2 w-2.5 h-2.5 border-t border-r border-[#1F2328]/40" />
       <span className="absolute bottom-2 left-2 w-2.5 h-2.5 border-b border-l border-[#1F2328]/40" />
@@ -162,7 +162,7 @@ const About: React.FC = () => {
       ref={sectionRef}
       id="about"
       style={{ backgroundColor: "#F7F1E5" }}
-      className="relative w-full pt-28 sm:pt-36 lg:pt-40 pb-24 sm:pb-32 text-[#1F2328] overflow-hidden z-10 select-none"
+      className="relative w-full pt-24 sm:pt-32 lg:pt-36 pb-24 sm:pb-32 text-[#1F2328] overflow-hidden z-10 select-none"
     >
       {/* ATMOSPHERIC PAPER GRAIN OVERLAY */}
       <div className="absolute inset-0 opacity-[0.035] pointer-events-none mix-blend-multiply z-0">
@@ -175,70 +175,81 @@ const About: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
-        {/* MAIN ASYMMETRIC GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          {/* FAR LEFT VERTICAL INDEX MARKER (DESKTOP) */}
-          <div className="hidden lg:flex lg:col-span-1 flex-col items-center pt-2 text-[#1F2328]/40 font-mono text-xs tracking-widest">
-            <span className="font-bold text-sm text-[#1F2328]/70">01</span>
-            <div className="w-[1px] h-20 bg-[#1F2328]/15 my-4" />
-            <span className="[writing-mode:vertical-lr] rotate-180 uppercase tracking-[0.25em] font-medium text-[11px]">
-              ABOUT
-            </span>
-          </div>
-
-          {/* MAIN HEADLINE & CONTENT (LEFT/CENTER COLUMN) */}
-          <div className="lg:col-span-7 flex flex-col max-w-full lg:max-w-[780px]">
-            {/* INSTRUMENT SANS HEADLINE */}
+        {/* MAIN ASYMMETRIC EDITORIAL GRID MATCHING REFERENCE */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          
+          {/* MAIN EDITORIAL CONTENT (LEFT / CENTER COLUMN - 8 COLUMNS) */}
+          <div className="lg:col-span-8 flex flex-col max-w-full lg:max-w-[820px]">
+            
+            {/* 1. LARGE HERO TYPOGRAPHY HEADLINE */}
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 25 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               style={{
-                fontFamily: "'Instrument Sans', sans-serif",
-                fontWeight: 600,
-                fontSize: "clamp(42px, 4.5vw, 68px)",
-                lineHeight: 0.98,
-                letterSpacing: "-0.035em",
+                fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(38px, 4.8vw, 64px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
                 color: "#1F2328",
               }}
-              className="mb-8 sm:mb-10 text-left max-w-[800px]"
+              className="mb-8 sm:mb-10 text-left"
             >
               Building Software <br />
               at the Intersection of <br />
               Applied AI <br />
-              & Modern Design.
+              &amp; Modern Design.
             </motion.h2>
 
-            {/* FOCUS METADATA STRIP */}
+            {/* 2. FOCUS METADATA DIVIDER STRIP */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex items-center gap-3 py-3 border-t border-[#1F2328]/15 max-w-xl mb-6 font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#1F2328]/60 uppercase"
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="flex items-center gap-3 pt-4 pb-4 border-t border-[#1F2328]/15 max-w-2xl mb-8 font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#1F2328]/60 uppercase"
             >
               <span className="text-[#C49A00] font-bold">FOCUS</span>
               <span>//</span>
               <span className="font-medium text-[#1F2328]/80">AI / FULL-STACK / CREATIVE TECHNOLOGY</span>
             </motion.div>
 
-            {/* BODY PARAGRAPH */}
+            {/* 3. MAIN EDITORIAL BIO PARAGRAPH (TRUTHFUL PERSONAL BIO) */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
               style={{
-                fontFamily: "'Instrument Sans', sans-serif",
+                fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
                 fontWeight: 400,
                 color: "#1F2328",
               }}
-              className="text-[19px] sm:text-[21px] lg:text-[22px] leading-[1.4] tracking-[-0.015em] max-w-[650px] text-left opacity-90"
+              className="text-[19px] sm:text-[21px] lg:text-[23px] leading-[1.45] tracking-[-0.015em] max-w-[760px] text-left opacity-90 mb-12"
             >
-              I design and build intelligent digital products — from AI-powered tools and automation systems to context-aware web applications, turning complex ideas into useful, scalable experiences.
+              I&apos;m Toshit Sai, a B.Tech Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I design and build intelligent digital products — from AI-powered tools and automation systems to context-aware web applications, turning complex algorithms into useful, scalable experiences.
             </motion.p>
+
+            {/* 4. SECOND BOLD PERSONAL PHILOSOPHY STATEMENT */}
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(22px, 2.4vw, 32px)",
+                lineHeight: 1.25,
+                letterSpacing: "-0.02em",
+                color: "#1F2328",
+              }}
+              className="text-left max-w-[720px] pt-6 border-t border-[#1F2328]/10"
+            >
+              I believe the best software happens when machine intelligence meets thoughtful engineering — and I&apos;m here to keep building mine.
+            </motion.h3>
           </div>
 
-          {/* RIGHT COLUMN: AI SYSTEM RADAR VISUAL */}
-          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-start pt-4 lg:pt-4">
+          {/* RIGHT COLUMN: AI SYSTEM RADAR VISUAL GRAPHIC (4 COLUMNS) */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-start pt-2 lg:pt-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
@@ -254,6 +265,7 @@ const About: React.FC = () => {
               </div>
             </motion.div>
           </div>
+
         </div>
       </div>
     </section>
