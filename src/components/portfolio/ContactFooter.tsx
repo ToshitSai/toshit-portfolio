@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Twitter, Github, Linkedin } from "lucide-react";
+import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
 import { toast } from "sonner";
 import ResumeModal from "./ResumeModal";
 
@@ -411,12 +411,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
         <div className="flex items-center gap-5 sm:gap-6 font-medium">
           <a
-            href="mailto:iamtoshitsai@gmail.com"
-            className="hover:text-[#1B1B18] transition-colors flex items-center gap-1"
-          >
-            <span>Email</span>
-          </a>
-          <a
             href="https://github.com/ToshitSai"
             target="_blank"
             rel="noopener noreferrer"
@@ -435,13 +429,13 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
             <span>LinkedIn</span>
           </a>
           <a
-            href="https://x.com/toshitsai"
+            href="https://www.instagram.com/toshit.codespace/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-[#1B1B18] transition-colors flex items-center gap-1"
           >
-            <Twitter className="w-3.5 h-3.5" />
-            <span>X/Twitter</span>
+            <Instagram className="w-3.5 h-3.5" />
+            <span>Instagram</span>
           </a>
           <button
             onClick={() => setIsResumeModalOpen(true)}
