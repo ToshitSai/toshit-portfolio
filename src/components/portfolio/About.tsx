@@ -39,7 +39,7 @@ const About: React.FC = () => {
           }}
           className="max-w-[1100px] text-center mx-auto opacity-95"
         >
-          I&apos;m Toshit Sai, a B.Tech Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I design and build intelligent digital products — from AI-powered tools and automation systems to context-aware web applications, turning complex algorithms into useful, scalable experiences.
+          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I design and build intelligent digital tools and web applications, turning complex ideas into scalable experiences.
         </motion.p>
 
         {/* 2. SUBTLE ELEGANT DIVIDER / ARROW SPACING */}
