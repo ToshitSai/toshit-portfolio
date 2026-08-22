@@ -1,4 +1,3 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
 import dotenv from "dotenv";
 import { processContactSubmission } from "../src/server/contactHandler.js";
 
@@ -6,7 +5,23 @@ dotenv.config({ path: [".env.local", ".env"] });
 
 const MAX_BODY_BYTES = 12 * 1024;
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+interface ContactVercelRequest {
+  method?: string;
+  headers: Record<string, string | string[] | undefined>;
+  body?: unknown;
+  socket?: {
+    remoteAddress?: string;
+  };
+}
+
+interface ContactVercelResponse {
+  setHeader(name: string, value: string | string[]): void;
+  status(code: number): {
+    json(data: unknown): void;
+  };
+}
+
+export default async function handler(req: ContactVercelRequest, res: ContactVercelResponse) {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
     return res.status(405).json({ success: false, error: "Method Not Allowed" });
