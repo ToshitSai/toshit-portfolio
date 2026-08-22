@@ -13,26 +13,28 @@ const CustomScrollbar: React.FC = () => {
 
   const updateScrollbar = useCallback(() => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-    const scrollHeight = document.documentElement.scrollHeight || 1;
+    const scrollHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight,
+      document.body.clientHeight,
+      document.documentElement.clientHeight
+    );
     const clientHeight = window.innerHeight || 1;
     const maxScroll = Math.max(1, scrollHeight - clientHeight);
 
     const heightRatio = clientHeight / scrollHeight;
-    if (heightRatio >= 1) {
-      setThumbHeight(0);
-      return;
-    }
-
     const minThumbHeight = 44;
     const calculatedHeight = Math.max(heightRatio * clientHeight, minThumbHeight);
-    const maxThumbTop = clientHeight - calculatedHeight;
+    const maxThumbTop = Math.max(1, clientHeight - calculatedHeight);
     const calculatedTop = (scrollTop / maxScroll) * maxThumbTop;
 
     setThumbHeight(calculatedHeight);
     setThumbTop(calculatedTop);
   }, []);
 
-  // Initial load animation & scroll monitoring
+  // Initial load animation, ResizeObserver, and scroll monitoring
   useEffect(() => {
     setIsMounted(true);
     updateScrollbar();
@@ -63,11 +65,27 @@ const CustomScrollbar: React.FC = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize, { passive: true });
 
+    // Poll to capture lazy-loaded components (SelectedWork, TechnicalSkills, etc.)
+    const timers = [100, 300, 700, 1500, 3000].map((delay) =>
+      setTimeout(updateScrollbar, delay)
+    );
+
+    // Observe body height changes
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        updateScrollbar();
+      });
+      resizeObserver.observe(document.body);
+    }
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
+      timers.forEach(clearTimeout);
       if (scrollTimeout) clearTimeout(scrollTimeout);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (resizeObserver) resizeObserver.disconnect();
     };
   }, [updateScrollbar]);
 
@@ -86,7 +104,10 @@ const CustomScrollbar: React.FC = () => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
       const clientHeight = window.innerHeight;
-      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollHeight = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      );
       const maxScroll = Math.max(1, scrollHeight - clientHeight);
       const heightRatio = clientHeight / scrollHeight;
       const minThumbHeight = 44;
@@ -123,7 +144,10 @@ const CustomScrollbar: React.FC = () => {
   const handleTrackClick = (e: React.MouseEvent) => {
     if (e.target !== e.currentTarget) return;
     const clientHeight = window.innerHeight;
-    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
     const maxScroll = Math.max(1, scrollHeight - clientHeight);
     const clickY = e.clientY;
     const targetScrollTop = (clickY / clientHeight) * maxScroll;
@@ -131,12 +155,10 @@ const CustomScrollbar: React.FC = () => {
     window.scrollTo({ top: targetScrollTop, behavior: "smooth" });
   };
 
-  if (thumbHeight <= 0) return null;
-
   // Determine active opacity and width
   const isActive = isScrolling || isHovered || isDragging;
-  const opacityClass = isActive ? "opacity-90" : isMounted ? "opacity-25" : "opacity-0";
-  const widthClass = isHovered || isDragging ? "w-1.5" : "w-0.5";
+  const opacityClass = isActive ? "opacity-90" : isMounted ? "opacity-35" : "opacity-0";
+  const widthClass = isHovered || isDragging ? "w-2.5" : "w-1";
 
   return (
     <div
@@ -145,19 +167,19 @@ const CustomScrollbar: React.FC = () => {
       onClick={handleTrackClick}
       aria-hidden="true"
       aria-label="Custom Viewport Scrollbar"
-      className="hidden md:block fixed right-0 top-0 bottom-0 w-3 z-[9999] pointer-events-auto select-none transition-opacity duration-500 ease-out"
+      className="hidden md:block fixed right-0 top-0 bottom-0 w-4 z-[99999] pointer-events-auto select-none transition-opacity duration-300 ease-out"
     >
       {/* 1. Track: Extremely Thin Subtle Vertical Line */}
-      <div className="absolute right-0 top-0 bottom-0 w-[1.5px] bg-[#1D2024]/[0.08] pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-[2px] bg-[#1D2024]/15 pointer-events-none" />
 
       {/* 2. Scroll Thumb: Custom Animated Minimal Indicator */}
       <div
         onMouseDown={handleMouseDown}
         style={{
           transform: `translate3d(0, ${thumbTop}px, 0)`,
-          height: `${thumbHeight}px`,
+          height: `${thumbHeight || 50}px`,
         }}
-        className={`absolute right-0 top-0 rounded-full bg-[#1D2024] cursor-grab active:cursor-grabbing transition-all duration-300 ease-out ${widthClass} ${opacityClass}`}
+        className={`absolute right-0 top-0 rounded-full bg-[#1D2024] cursor-grab active:cursor-grabbing transition-all duration-200 ease-out ${widthClass} ${opacityClass}`}
       />
     </div>
   );
