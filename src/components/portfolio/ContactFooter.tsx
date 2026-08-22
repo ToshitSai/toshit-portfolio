@@ -235,7 +235,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     setSendError(null);
 
     if (!validateForm()) {
-      toast.error("Please fix the errors in the form before submitting.");
       return;
     }
 
@@ -282,14 +281,12 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           "Something went wrong while sending your message. Please check your network or try again.";
         setSendError(errorMsg);
         setIsSubmitting(false);
-        toast.error(errorMsg);
       }
     } catch (error: unknown) {
       const networkErr = "Network error: Unable to reach contact API server. Please try again.";
       void error;
       setSendError(networkErr);
       setIsSubmitting(false);
-      toast.error(networkErr);
     }
   };
 
