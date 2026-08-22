@@ -9,87 +9,93 @@ interface ContactFooterProps {
   setIsDrawerOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DispatchedSignalIllustration: React.FC = () => {
+const SignalReceivedIllustration: React.FC = () => {
   return (
     <svg
-      width="140"
-      height="95"
-      viewBox="0 0 140 95"
+      width="180"
+      height="90"
+      viewBox="0 0 180 90"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="my-3 sm:my-4 overflow-visible select-none"
+      className="my-3 sm:my-5 overflow-visible select-none"
       aria-hidden="true"
     >
-      {/* Flight Trajectory Arc (Dashed Line Drawing Upward) */}
+      {/* 1. Organic Hand-Drawn Signal Path (Thin Charcoal, Slightly Imperfect Arc) */}
       <motion.path
-        d="M 15 80 C 35 80 45 42 105 22"
-        stroke="#85847C"
-        strokeWidth="2"
-        strokeDasharray="4 4"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.7 }}
-        transition={{ duration: 0.7, ease: "easeInOut" }}
-      />
-
-      {/* Yellow Glowing Accent Dot at launch point */}
-      <motion.circle
-        cx="15"
-        cy="80"
-        r="3.5"
-        fill="#FFD42A"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      />
-
-      {/* Origami Paper Plane taking flight */}
-      <motion.g
-        initial={{ x: -20, y: 25, scale: 0.6, opacity: 0, rotate: -20 }}
-        animate={{ x: 0, y: 0, scale: 1, opacity: 1, rotate: 0 }}
-        transition={{ duration: 0.65, delay: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-        style={{ transformOrigin: "105px 22px" }}
-      >
-        {/* Main Wing Body */}
-        <polygon
-          points="105,22 60,37 80,59"
-          fill="#FFF8E8"
-          stroke="#1B1B18"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-
-        {/* Top Wing Fold */}
-        <polygon
-          points="105,22 45,15 60,37"
-          fill="#FFFFFF"
-          stroke="#1B1B18"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-
-        {/* Shaded Underwing */}
-        <polygon
-          points="60,37 80,59 72,45"
-          fill="#E5DEC9"
-          stroke="#1B1B18"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-        />
-
-        {/* Signature Yellow Spark Point */}
-        <circle cx="105" cy="22" r="2.5" fill="#FFD42A" />
-      </motion.g>
-
-      {/* Motion Lines Behind Plane */}
-      <motion.path
-        d="M 52 32 L 42 35 M 58 45 L 48 49"
+        d="M 20 20 C 70 10, 145 15, 145 42 C 145 68, 95 55, 115 76"
         stroke="#1B1B18"
         strokeWidth="1.5"
         strokeLinecap="round"
-        initial={{ opacity: 0, pathLength: 0 }}
-        animate={{ opacity: 0.5, pathLength: 1 }}
-        transition={{ duration: 0.4, delay: 0.7 }}
+        strokeLinejoin="round"
+        initial={{ pathLength: 0, opacity: 0.15 }}
+        animate={{ pathLength: 1, opacity: 0.45 }}
+        transition={{ duration: 0.7, delay: 0.2, ease: "easeInOut" }}
+      />
+
+      {/* 2. Start Point Yellow Accent Dot (Appears at 100ms) */}
+      <motion.circle
+        cx="20"
+        cy="20"
+        r="3.5"
+        fill="#FFD42A"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.2, delay: 0.1 }}
+      />
+
+      {/* 3. Traveling Yellow Signal Dot (200ms -> 900ms) */}
+      <motion.circle
+        r="4"
+        fill="#FFD42A"
+        initial={{ cx: 20, cy: 20, opacity: 0 }}
+        animate={{
+          cx: [20, 80, 145, 110, 115],
+          cy: [20, 14, 42, 60, 76],
+          opacity: [0, 1, 1, 1, 1],
+        }}
+        transition={{
+          duration: 0.7,
+          delay: 0.2,
+          ease: "easeInOut",
+          times: [0, 0.35, 0.65, 0.85, 1],
+        }}
+      />
+
+      {/* 4. Final Destination Yellow Accent Dot (900ms) */}
+      <motion.circle
+        cx="115"
+        cy="76"
+        r="4"
+        fill="#FFD42A"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.2, delay: 0.9 }}
+      />
+
+      {/* 5. Destination Ripple Ring 1 (Yellow, 900ms -> 1100ms) */}
+      <motion.circle
+        cx="115"
+        cy="76"
+        r="14"
+        stroke="#FFD42A"
+        strokeWidth="1.5"
+        fill="none"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1.8], opacity: [0.85, 0] }}
+        transition={{ duration: 0.35, delay: 0.9, ease: "easeOut" }}
+      />
+
+      {/* 6. Destination Ripple Ring 2 (Charcoal, 950ms -> 1150ms) */}
+      <motion.circle
+        cx="115"
+        cy="76"
+        r="22"
+        stroke="#1B1B18"
+        strokeWidth="1"
+        fill="none"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1.6], opacity: [0.5, 0] }}
+        transition={{ duration: 0.4, delay: 0.95, ease: "easeOut" }}
       />
     </svg>
   );
@@ -565,76 +571,98 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                       </motion.button>
                     </div>
 
-                    {/* MAIN HEADING: "Grow together?" */}
-                    <motion.h2
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.15 }}
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
-                      className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.05] text-[#1B1B18] tracking-tight mb-3"
-                    >
-                      Grow together?
-                    </motion.h2>
-
-                    {/* DESCRIPTION */}
-                    <motion.p
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      className="text-base sm:text-lg text-[#1B1B18]/75 font-sans leading-relaxed max-w-lg mb-6 sm:mb-8"
-                    >
-                      Tell me what you're growing — a product, a brand, a wild idea. I'll write back within 48 hours.
-                    </motion.p>
-
-                    {/* FORM CONTENT OR BOTANICAL SUCCESS STATE */}
-                    {isSubmitted ? (
-                      <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        className="pt-2 pb-4 text-left space-y-6 sm:space-y-7"
-                        aria-live="polite"
-                      >
-                        {/* ORIGAMI SIGNAL FLIGHT ILLUSTRATION */}
-                        <div className="flex justify-start py-2">
-                          <DispatchedSignalIllustration />
-                        </div>
-
-                        {/* "DISPATCHED!" SECONDARY DISPLAY HEADING */}
-                        <motion.h3
+                    {/* MAIN HEADING & DESCRIPTION (Form state only) */}
+                    {!isSubmitted && (
+                      <>
+                        <motion.h2
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.65 }}
+                          transition={{ duration: 0.5, delay: 0.15 }}
                           style={{ fontFamily: "'Instrument Serif', serif" }}
-                          className="text-4xl sm:text-5xl lg:text-[54px] font-normal leading-tight text-[#1B1B18] tracking-tight"
+                          className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.05] text-[#1B1B18] tracking-tight mb-3"
                         >
-                          Dispatched!
-                        </motion.h3>
+                          Grow together?
+                        </motion.h2>
 
-                        {/* FINAL RESPONSE MESSAGE */}
                         <motion.p
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.75 }}
-                          className="text-base sm:text-lg text-[#1B1B18]/75 font-sans leading-relaxed max-w-md"
+                          transition={{ duration: 0.5, delay: 0.2 }}
+                          className="text-base sm:text-lg text-[#1B1B18]/75 font-sans leading-relaxed max-w-lg mb-6 sm:mb-8"
                         >
-                          Your note is in flight. I'll write back within 48 hours.
+                          Tell me what you're growing — a product, a brand, a wild idea. I'll write back within 48 hours.
                         </motion.p>
+                      </>
+                    )}
 
-                        {/* UNDERSTATED TEXT LINK TO SEND ANOTHER MESSAGE */}
+                    {/* FORM CONTENT OR SIGNAL RECEIVED SUCCESS STATE */}
+                    {isSubmitted ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="pt-2 pb-4 text-left space-y-6 sm:space-y-7"
+                        aria-live="polite"
+                      >
+                        {/* 1. MINIMAL ABSTRACT SIGNAL RECEIVED SVG ANIMATION */}
+                        <div className="flex justify-start py-1">
+                          <SignalReceivedIllustration />
+                        </div>
+
+                        {/* 2. MAIN DISPLAY HEADING: "GOT IT." (FOCAL POINT: 72–96px desktop / 48–60px mobile) */}
+                        <motion.h3
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 1.05, ease: "easeOut" }}
+                          style={{ fontFamily: "'Instrument Serif', serif" }}
+                          className="text-[48px] sm:text-[72px] lg:text-[88px] font-normal leading-[0.92] text-[#1B1B18] tracking-tight"
+                        >
+                          GOT IT.
+                        </motion.h3>
+
+                        {/* 3. SECONDARY HUMAN SUPPORTING MESSAGE */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 1.2, ease: "easeOut" }}
+                          className="space-y-1 text-base sm:text-lg text-[#1B1B18]/80 font-sans leading-relaxed"
+                        >
+                          <p>Your note is on its way.</p>
+                          <p>I'll get back to you within 48 hours.</p>
+                        </motion.div>
+
+                        {/* 4. EMAIL CONFIRMATION (DELIVERED DIRECTLY TO) */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 1.35, ease: "easeOut" }}
+                          className="pt-2 sm:pt-3 space-y-0.5"
+                        >
+                          <p className="text-xs sm:text-sm font-sans text-[#85847C]">
+                            Delivered directly to
+                          </p>
+                          <a
+                            href="mailto:iamtoshitsai@gmail.com"
+                            className="inline-block text-base sm:text-lg font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/30 hover:decoration-[#1B1B18] transition-colors font-sans"
+                          >
+                            iamtoshitsai@gmail.com
+                          </a>
+                        </motion.div>
+
+                        {/* 5. EDITORIAL TEXT LINK: "SEND ANOTHER MESSAGE →" */}
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ duration: 0.4, delay: 0.9 }}
-                          className="pt-4"
+                          transition={{ duration: 0.4, delay: 1.45 }}
+                          className="pt-5 sm:pt-6"
                         >
                           <button
                             onClick={() => setIsSubmitted(false)}
                             className="group inline-flex items-center gap-2 font-mono text-xs text-[#85847C] hover:text-[#1B1B18] transition-colors uppercase tracking-wider font-semibold cursor-pointer"
                           >
-                            <span>Send another message</span>
-                            <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
+                            <span>SEND ANOTHER MESSAGE</span>
+                            <span className="group-hover:translate-x-1.5 transition-transform duration-200">→</span>
                           </button>
                         </motion.div>
                       </motion.div>
