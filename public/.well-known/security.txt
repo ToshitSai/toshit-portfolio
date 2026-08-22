@@ -1,0 +1,6 @@
+# Security Contact for Toshit Sai Galam Portfolio
+Contact: mailto:iamtoshitsai@gmail.com
+Preferred-Languages: en
+Canonical: https://toshitsai.com/.well-known/security.txt
+Policy: https://toshitsai.com/security
+Expires: 2027-12-31T23:59:59.000Z

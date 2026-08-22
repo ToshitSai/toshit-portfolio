@@ -104,6 +104,13 @@ export function validateAndSanitizeContactInput(
   }
 
   const payload = body as Record<string, unknown>;
+  const stringFields = ["name", "email", "subject", "message", "website"];
+
+  for (const field of stringFields) {
+    if (payload[field] !== undefined && typeof payload[field] !== "string") {
+      return { isValid: false, error: "Invalid form payload." };
+    }
+  }
 
   // 1. Anti-Spam Honeypot Check
   const website = String(payload.website ?? "").trim();

@@ -6,7 +6,6 @@ import About from "@/components/portfolio/About";
 import AcademicJourney from "@/components/portfolio/AcademicJourney";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
-import CustomScrollbar from "@/components/portfolio/CustomScrollbar";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 
 // Lazy-loaded heavy sections for bundle optimization and code-splitting
@@ -76,7 +75,6 @@ const Index = () => {
       />
 
       <CustomCursor />
-      <CustomScrollbar />
       <Navbar onTriggerLogin={handleTriggerLogin} onOpenContact={handleOpenContactDrawer} />
       <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <Hero />

@@ -109,6 +109,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setSendError(null);
 
     if (!validateForm()) {
@@ -152,14 +154,13 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
         const errorMsg =
           data?.error ||
           "Something went wrong while sending your message. Please check your network or try again.";
-        console.error("[Form Submission API Error]:", errorMsg);
         setSendError(errorMsg);
         setIsSubmitting(false);
         toast.error(errorMsg);
       }
     } catch (error: unknown) {
       const networkErr = "Network error: Unable to reach contact API server. Please try again.";
-      console.error("[Form Submission Network Error]:", error);
+      void error;
       setSendError(networkErr);
       setIsSubmitting(false);
       toast.error(networkErr);
