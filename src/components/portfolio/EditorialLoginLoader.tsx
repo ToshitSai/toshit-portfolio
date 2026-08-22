@@ -137,14 +137,6 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
             userSelect: "none",
           }}
         >
-          {/* TOP RIGHT SKIP BUTTON */}
-          <button
-            onClick={handleSkip}
-            className="absolute top-6 right-6 font-mono text-[11px] uppercase tracking-wider text-[#6F6C63] hover:text-[#1B1B18] px-3.5 py-1.5 rounded-full border border-[#6F6C63]/25 hover:border-[#1B1B18]/50 transition-all"
-            aria-label="Skip loader animation"
-          >
-            Skip [ESC]
-          </button>
 
           {/* CENTERED LOADER COMPOSITION */}
           <div className="flex flex-col items-center justify-center space-y-6">
