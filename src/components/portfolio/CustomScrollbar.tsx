@@ -155,10 +155,16 @@ const CustomScrollbar: React.FC = () => {
     window.scrollTo({ top: targetScrollTop, behavior: "smooth" });
   };
 
+  // Hide custom scrollbar if body is scroll-locked (e.g. during loader overlay)
+  const isScrollLocked =
+    typeof document !== "undefined" && document.body.style.overflow === "hidden";
+
+  if (isScrollLocked) return null;
+
   // Determine active opacity and width
   const isActive = isScrolling || isHovered || isDragging;
-  const opacityClass = isActive ? "opacity-90" : isMounted ? "opacity-35" : "opacity-0";
-  const widthClass = isHovered || isDragging ? "w-2.5" : "w-1";
+  const opacityStyle = isActive ? 0.75 : isMounted ? 0.2 : 0;
+  const widthPx = isHovered || isDragging ? 4 : 2;
 
   return (
     <div
@@ -167,19 +173,25 @@ const CustomScrollbar: React.FC = () => {
       onClick={handleTrackClick}
       aria-hidden="true"
       aria-label="Custom Viewport Scrollbar"
-      className="hidden md:block fixed right-0 top-0 bottom-0 w-4 z-[99999] pointer-events-auto select-none transition-opacity duration-300 ease-out"
+      className="hidden md:block fixed right-0 top-0 bottom-0 w-3 z-[99999] pointer-events-auto select-none"
     >
-      {/* 1. Track: Extremely Thin Subtle Vertical Line */}
-      <div className="absolute right-0 top-0 bottom-0 w-[2px] bg-[#1D2024]/15 pointer-events-none" />
+      {/* 1. Track: Extremely Thin Muted Line (only slightly visible on hover or scroll) */}
+      <div
+        style={{ opacity: isActive ? 0.15 : 0.04 }}
+        className="absolute right-0 top-0 bottom-0 w-[1px] bg-[#1D2024] pointer-events-none transition-opacity duration-300"
+      />
 
-      {/* 2. Scroll Thumb: Custom Animated Minimal Indicator */}
+      {/* 2. Scroll Thumb: Refined Minimal 2px Overlay */}
       <div
         onMouseDown={handleMouseDown}
         style={{
           transform: `translate3d(0, ${thumbTop}px, 0)`,
-          height: `${thumbHeight || 50}px`,
+          height: `${thumbHeight || 44}px`,
+          width: `${widthPx}px`,
+          opacity: opacityStyle,
+          backgroundColor: "#1D2024",
         }}
-        className={`absolute right-0 top-0 rounded-full bg-[#1D2024] cursor-grab active:cursor-grabbing transition-all duration-200 ease-out ${widthClass} ${opacityClass}`}
+        className="absolute right-0 top-0 rounded-full cursor-grab active:cursor-grabbing transition-all duration-200 ease-out"
       />
     </div>
   );
