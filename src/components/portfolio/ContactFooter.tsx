@@ -9,6 +9,86 @@ interface ContactFooterProps {
   setIsDrawerOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const BotanicalFlower: React.FC = () => {
+  return (
+    <svg
+      width="90"
+      height="120"
+      viewBox="0 0 90 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="my-3 sm:my-4 overflow-visible select-none"
+      aria-hidden="true"
+    >
+      {/* 1. Organic Brown Stem */}
+      <motion.path
+        d="M45 112 C45 88 46 68 45 46"
+        stroke="#6E473B"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.65, ease: "easeOut" }}
+      />
+
+      {/* 2. Left Olive Leaf */}
+      <motion.path
+        d="M45 94 C30 84 18 76 18 64 C30 67 39 79 45 90"
+        fill="#2E4A35"
+        stroke="#1F3324"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.45, delay: 0.35, ease: "backOut" }}
+      />
+
+      {/* 3. Right Olive Leaf */}
+      <motion.path
+        d="M45 98 C60 88 72 80 72 68 C60 71 51 83 45 94"
+        fill="#2E4A35"
+        stroke="#1F3324"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.45, delay: 0.45, ease: "backOut" }}
+      />
+
+      {/* 4. Flower Head Bloom */}
+      <motion.g
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.55, delay: 0.55, ease: "backOut" }}
+        style={{ transformOrigin: "45px 46px" }}
+      >
+        {/* 12 Soft Cream Petals */}
+        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => (
+          <ellipse
+            key={i}
+            cx="45"
+            cy="24"
+            rx="5.5"
+            ry="15"
+            fill="#FFFDF7"
+            stroke="#E5E0D5"
+            strokeWidth="1"
+            transform={`rotate(${angle} 45 46)`}
+          />
+        ))}
+
+        {/* Warm Orange/Yellow Flower Center */}
+        <circle cx="45" cy="46" r="10.5" fill="#E59B28" stroke="#D18318" strokeWidth="1.5" />
+        <circle cx="42.5" cy="43.5" r="3.2" fill="#F4BD44" />
+        {/* Organic texture dots */}
+        <circle cx="47" cy="47" r="0.9" fill="#B2650C" />
+        <circle cx="43" cy="50" r="0.9" fill="#B2650C" />
+        <circle cx="48" cy="43" r="0.9" fill="#B2650C" />
+      </motion.g>
+    </svg>
+  );
+};
+
 const ContactFooter: React.FC<ContactFooterProps> = ({
   isDrawerOpen: controlledDrawerOpen,
   setIsDrawerOpen: controlledSetIsDrawerOpen,
@@ -457,9 +537,11 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.1 }}
-                        className="flex items-center gap-2 font-mono text-[10px] sm:text-[11px] text-[#85847C] uppercase tracking-[0.18em] font-medium"
+                        className="flex items-center gap-2.5 font-mono text-[10px] sm:text-[11px] text-[#85847C] uppercase tracking-[0.18em] font-medium"
                       >
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] inline-block shadow-xs animate-pulse" />
+                        <span className="relative flex items-center justify-center w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-[#D9A62C] bg-transparent shrink-0">
+                          <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#FFD42A] shadow-[0_0_6px_#FFD42A]" />
+                        </span>
                         <span>AVAILABLE FOR NEW PROJECTS</span>
                       </motion.div>
 
@@ -468,11 +550,11 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3, delay: 0.1 }}
-                        whileHover={{ rotate: 90, scale: 1.05 }}
+                        whileHover={{ rotate: 10, scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setIsDrawerOpen(false)}
-                        aria-label="Close contact overlay"
-                        className="w-10 h-10 rounded-full border border-[#1B1B18]/15 bg-white/50 text-[#1B1B18] flex items-center justify-center transition-colors hover:bg-white hover:border-[#1B1B18]/30 shadow-xs"
+                        aria-label="Close"
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[#1B1B18]/20 bg-transparent text-[#1B1B18] flex items-center justify-center transition-colors hover:bg-white/60 hover:border-[#1B1B18]/40 shadow-xs cursor-pointer"
                       >
                         <X className="w-4 h-4 stroke-[1.75]" />
                       </motion.button>
@@ -484,7 +566,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.15 }}
                       style={{ fontFamily: "'Instrument Serif', serif" }}
-                      className="text-3xl sm:text-4xl md:text-[46px] font-normal leading-[1.08] text-[#1B1B18] tracking-tight mb-3"
+                      className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.05] text-[#1B1B18] tracking-tight mb-3"
                     >
                       Grow together?
                     </motion.h2>
@@ -494,110 +576,72 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="text-sm sm:text-base text-[#1B1B18]/70 font-sans leading-relaxed max-w-lg mb-6 sm:mb-8"
+                      className="text-base sm:text-lg text-[#1B1B18]/75 font-sans leading-relaxed max-w-lg mb-6 sm:mb-8"
                     >
                       Tell me what you're growing — a product, a brand, a wild idea. I'll write back within 48 hours.
                     </motion.p>
 
-                    {/* THIN HORIZONTAL DIVIDER */}
-                    <motion.div
-                      initial={{ opacity: 0, scaleX: 0 }}
-                      animate={{ opacity: 1, scaleX: 1 }}
-                      transition={{ duration: 0.5, delay: 0.25 }}
-                      className="w-full border-b border-[#1B1B18]/15 mb-7 sm:mb-8 origin-left"
-                    />
-
-                    {/* FORM CONTENT */}
+                    {/* FORM CONTENT OR BOTANICAL SUCCESS STATE */}
                     {isSubmitted ? (
                       <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        className="py-4 text-left space-y-6 sm:space-y-7"
+                        className="pt-2 pb-4 text-left space-y-6 sm:space-y-7"
                         aria-live="polite"
                       >
-                        {/* 1. EDITORIAL MONO LABEL WITH YELLOW ACCENT & ANIMATED DRAWN SVG CHECK */}
-                        <motion.div
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: 0.1 }}
-                          className="flex items-center gap-2.5"
-                        >
-                          <span className="w-2 h-2 rounded-full bg-[#D9A62C] shadow-[0_0_8px_#D9A62C]" />
-                          <span className="font-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#85847C] uppercase font-semibold">
-                            MESSAGE RECEIVED
-                          </span>
-                          <span className="ml-auto flex items-center justify-center w-7 h-7 rounded-full bg-[#1B1B18]/5 border border-[#1B1B18]/10">
-                            <svg className="w-3.5 h-3.5 text-[#1B1B18]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <motion.path
-                                d="M20 6L9 17l-5-5"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 1 }}
-                                transition={{ duration: 0.45, delay: 0.25, ease: "easeOut" }}
-                              />
-                            </svg>
-                          </span>
-                        </motion.div>
+                        {/* HAND-DRAWN BOTANICAL DAISY FLOWER ILLUSTRATION */}
+                        <div className="flex justify-start py-2">
+                          <BotanicalFlower />
+                        </div>
 
-                        {/* 2. LARGE EDITORIAL TYPOGRAPHIC HEADING */}
+                        {/* "PLANTED!" SECONDARY DISPLAY HEADING */}
                         <motion.h3
-                          initial={{ opacity: 0, y: 12 }}
+                          initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.2 }}
-                          className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#1B1B18] tracking-tight leading-none font-normal"
+                          transition={{ duration: 0.5, delay: 0.65 }}
+                          style={{ fontFamily: "'Instrument Serif', serif" }}
+                          className="text-4xl sm:text-5xl lg:text-[54px] font-normal leading-tight text-[#1B1B18] tracking-tight"
                         >
-                          Message sent.
+                          Planted!
                         </motion.h3>
 
-                        {/* 3. HUMAN SUPPORTING COPY WITH INTEGRATED EMAIL */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 12 }}
+                        {/* FINAL RESPONSE MESSAGE */}
+                        <motion.p
+                          initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.35 }}
-                          className="space-y-2 pt-1"
+                          transition={{ duration: 0.5, delay: 0.75 }}
+                          className="text-base sm:text-lg text-[#1B1B18]/75 font-sans leading-relaxed max-w-md"
                         >
-                          <p className="text-base sm:text-lg text-[#1B1B18]/85 font-sans leading-relaxed">
-                            Thank you for reaching out! Your message was delivered directly to{" "}
-                            <a
-                              href="mailto:iamtoshitsai@gmail.com"
-                              className="font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/30 hover:decoration-[#1B1B18] transition-colors"
-                            >
-                              iamtoshitsai@gmail.com
-                            </a>.
-                          </p>
-                          <p className="font-mono text-xs sm:text-sm text-[#85847C]">
-                            I'll get back to you within 48 hours.
-                          </p>
-                        </motion.div>
+                          Your note is on its way. I'll write back within 48 hours.
+                        </motion.p>
 
-                        {/* 4. SINGLE EDITORIAL PRIMARY ACTION + SUBTLE SECONDARY LINK */}
+                        {/* UNDERSTATED TEXT LINK TO SEND ANOTHER MESSAGE */}
                         <motion.div
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.5 }}
-                          className="pt-4 flex flex-wrap items-center gap-5 sm:gap-6"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.4, delay: 0.9 }}
+                          className="pt-4"
                         >
                           <button
                             onClick={() => setIsSubmitted(false)}
-                            className="group inline-flex items-center gap-3 px-6 py-3.5 rounded-lg bg-[#1B1B18] text-[#FFF8E8] font-mono text-xs uppercase font-bold tracking-wider hover:bg-black hover:-translate-y-0.5 transition-all shadow-sm cursor-pointer"
+                            className="group inline-flex items-center gap-2 font-mono text-xs text-[#85847C] hover:text-[#1B1B18] transition-colors uppercase tracking-wider font-semibold cursor-pointer"
                           >
                             <span>Send another message</span>
                             <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
                           </button>
-
-                          <a
-                            href={getMailtoUrl()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 font-mono text-xs text-[#85847C] hover:text-[#1B1B18] transition-colors underline-offset-4 hover:underline"
-                          >
-                            <span>Open mail app</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
                         </motion.div>
                       </motion.div>
                     ) : (
+                      <>
+                        {/* THIN HORIZONTAL DIVIDER */}
+                        <motion.div
+                          initial={{ opacity: 0, scaleX: 0 }}
+                          animate={{ opacity: 1, scaleX: 1 }}
+                          transition={{ duration: 0.5, delay: 0.25 }}
+                          className="w-full border-b border-[#1B1B18]/15 mb-7 sm:mb-8 origin-left"
+                        />
                       <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-7">
                         {/* Anti-Spam Honeypot Field */}
                         <div className="hidden opacity-0 pointer-events-none select-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
@@ -757,6 +801,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           </motion.button>
                         </motion.div>
                       </form>
+                    </>
                     )}
 
                     {/* NOT A FAN OF FORMS? SECTION */}
