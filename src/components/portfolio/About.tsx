@@ -97,34 +97,34 @@ const About: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10 flex flex-col items-center text-center">
         
-        {/* PARAGRAPH 1: MAIN BIO TEXT (EXACT STRUCTURE AS REFERENCE) */}
+        {/* PARAGRAPH 1: MAIN BIO TEXT */}
         <p
           ref={paragraphRef}
           style={{
             fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
             fontWeight: 400,
-            fontSize: "clamp(22px, 3.2vw, 38px)",
-            lineHeight: 1.38,
-            letterSpacing: "-0.018em",
+            fontSize: "clamp(18px, 2.2vw, 27px)",
+            lineHeight: 1.4,
+            letterSpacing: "-0.015em",
             willChange: "transform, opacity, color",
           }}
-          className="max-w-[1020px] text-center mx-auto mb-14 sm:mb-18 lg:mb-20 transition-none"
+          className="max-w-[820px] text-center mx-auto mb-10 sm:mb-12 lg:mb-14 transition-none"
         >
-          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning, building what&apos;s next – from intelligent automation tools and prompt-engineered workflows to context-aware web applications and scalable AI-powered products.
+          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning, building what&apos;s next from intelligent automation tools and prompt engineered workflows to context aware web applications and scalable AI powered products.
         </p>
 
-        {/* PARAGRAPH 2: BOLD PERSONAL STATEMENT (EXACT STRUCTURE AS REFERENCE) */}
+        {/* PARAGRAPH 2: BOLD PERSONAL STATEMENT */}
         <h3
           ref={statementRef}
           style={{
             fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
             fontWeight: 700,
-            fontSize: "clamp(22px, 3vw, 36px)",
-            lineHeight: 1.3,
-            letterSpacing: "-0.022em",
+            fontSize: "clamp(18px, 2.1vw, 25px)",
+            lineHeight: 1.35,
+            letterSpacing: "-0.02em",
             willChange: "transform, opacity, color",
           }}
-          className="max-w-[950px] text-center mx-auto transition-none"
+          className="max-w-[760px] text-center mx-auto transition-none"
         >
           I believe every great design forms the basis for an even greater story and I&apos;m here to keep writing mine.
         </h3>
