@@ -1,89 +1,63 @@
 import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const About: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const statementRef = useRef<HTMLHeadingElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const planeRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    // Check if user prefers reduced motion
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const blocks = [paragraphRef.current, statementRef.current];
-
-    if (prefersReducedMotion) {
-      blocks.forEach((el) => {
-        if (el) {
-          el.style.color = "#1F2328";
-          el.style.opacity = "1";
-          el.style.transform = "translate3d(0, 0px, 0)";
-        }
-      });
-      return;
-    }
-
-    let animationFrameId: number;
-
-    const updateScrollAnimation = () => {
-      const vh = window.innerHeight || 800;
-
-      // Inactive: #C2BBB0, Active: #1F2328
-      const startR = 194, startG = 187, startB = 176;
-      const endR = 31, endG = 35, endB = 40;
-
-      blocks.forEach((el) => {
-        if (!el) return;
-
-        const rect = el.getBoundingClientRect();
-        const elCenter = rect.top + rect.height / 2;
-
-        // Activation zone calculation:
-        // Starts activating when elCenter is at 90% of viewport height
-        // Reaches 100% active state when elCenter is at 50% of viewport height
-        const startPoint = vh * 0.90;
-        const endPoint = vh * 0.50;
-
-        let rawProgress = (startPoint - elCenter) / (startPoint - endPoint);
-        const progress = Math.max(0, Math.min(1, rawProgress));
-
-        // Smooth cubic easing for fluid color progression
-        const eased = progress < 0.5
-          ? 4 * progress * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-        const r = Math.round(startR + (endR - startR) * eased);
-        const g = Math.round(startG + (endG - startG) * eased);
-        const b = Math.round(startB + (endB - startB) * eased);
-        const opacity = (0.35 + 0.65 * eased).toFixed(3);
-        const translateY = ((1 - eased) * 14).toFixed(2);
-
-        el.style.color = `rgb(${r}, ${g}, ${b})`;
-        el.style.opacity = opacity;
-        el.style.transform = `translate3d(0, ${translateY}px, 0)`;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 75%",
+          end: "bottom 40%",
+          toggleActions: "play none none reverse",
+        },
       });
 
-      animationFrameId = requestAnimationFrame(updateScrollAnimation);
-    };
+      // Animate text lines sliding up from mask
+      tl.to(
+        ".gsap-bio-line",
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.15,
+        },
+        0
+      );
 
-    window.addEventListener("scroll", updateScrollAnimation, { passive: true });
-    window.addEventListener("resize", updateScrollAnimation, { passive: true });
+      // Animate the floating plane along a curved path
+      if (planeRef.current) {
+        tl.fromTo(
+          planeRef.current,
+          { opacity: 0, x: -50, y: 30, rotation: -20 },
+          {
+            opacity: 1,
+            x: 120,
+            y: -40,
+            rotation: 10,
+            duration: 2.2,
+            ease: "power1.out",
+          },
+          0.2
+        );
+      }
+    }, containerRef);
 
-    // Initial trigger
-    updateScrollAnimation();
-
-    return () => {
-      window.removeEventListener("scroll", updateScrollAnimation);
-      window.removeEventListener("resize", updateScrollAnimation);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
     <section
-      ref={sectionRef}
       id="about"
       style={{ backgroundColor: "#FAF6ED" }}
-      className="relative w-full py-28 sm:py-36 lg:py-44 text-[#1F2328] overflow-hidden z-10 select-none"
+      className="relative w-full py-24 sm:py-32 lg:py-40 text-[#1F2328] overflow-hidden z-10 select-none"
     >
       {/* SUBTLE PAPER NOISE OVERLAY */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply z-0">
@@ -95,39 +69,57 @@ const About: React.FC = () => {
         </svg>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10 flex flex-col items-center text-center">
-        
-        {/* PARAGRAPH 1: MAIN BIO TEXT */}
-        <p
-          ref={paragraphRef}
-          style={{
-            fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
-            fontWeight: 400,
-            fontSize: "clamp(18px, 2.2vw, 27px)",
-            lineHeight: 1.4,
-            letterSpacing: "-0.015em",
-            willChange: "transform, opacity, color",
-          }}
-          className="max-w-[820px] text-center mx-auto mb-10 sm:mb-12 lg:mb-14 transition-none"
+      <div
+        ref={containerRef}
+        className="relative max-w-[880px] mx-auto px-6 text-center z-10"
+        style={{
+          fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
+        }}
+      >
+        {/* SVG Paper Plane / Accent */}
+        <svg
+          ref={planeRef}
+          className="absolute top-0 left-[10%] sm:left-[15%] w-10 h-10 sm:w-12 sm:h-12 pointer-events-none opacity-0 z-20"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning, building what&apos;s next from intelligent automation tools and prompt engineered workflows to context aware web applications and scalable AI powered products.
-        </p>
+          <path d="M2 12L22 2L13 22L11 13L2 12Z" fill="#F4B5A4" />
+        </svg>
 
-        {/* PARAGRAPH 2: BOLD PERSONAL STATEMENT */}
-        <h3
-          ref={statementRef}
-          style={{
-            fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: "clamp(18px, 2.1vw, 25px)",
-            lineHeight: 1.35,
-            letterSpacing: "-0.02em",
-            willChange: "transform, opacity, color",
-          }}
-          className="max-w-[760px] text-center mx-auto transition-none"
-        >
-          I believe every great design forms the basis for an even greater story and I&apos;m here to keep writing mine.
-        </h3>
+        {/* PARAGRAPH 1 MASKED LINES */}
+        <div className="overflow-hidden block mb-1.5 sm:mb-2">
+          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+            I&apos;m Toshit Sai, a Computer Science Engineering student specializing
+          </span>
+        </div>
+        <div className="overflow-hidden block mb-1.5 sm:mb-2">
+          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+            in Artificial Intelligence &amp; Machine Learning, building what&apos;s next
+          </span>
+        </div>
+        <div className="overflow-hidden block mb-1.5 sm:mb-2">
+          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+            from intelligent automation tools and prompt engineered workflows
+          </span>
+        </div>
+        <div className="overflow-hidden block mb-8 sm:mb-10">
+          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-normal text-[18px] sm:text-[22px] md:text-[26px] leading-[1.5] text-[#1F2328]">
+            to context aware web applications and scalable AI powered products.
+          </span>
+        </div>
+
+        {/* BOLD STATEMENT MASKED LINES */}
+        <div className="overflow-hidden block mb-1.5 sm:mb-2">
+          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-bold text-[19px] sm:text-[23px] md:text-[27px] leading-[1.4] text-[#1F2328]">
+            I believe every great design forms the basis for an even greater story
+          </span>
+        </div>
+        <div className="overflow-hidden block">
+          <span className="gsap-bio-line block transform translate-y-full opacity-0 font-bold text-[19px] sm:text-[23px] md:text-[27px] leading-[1.4] text-[#1F2328]">
+            and I&apos;m here to keep writing mine.
+          </span>
+        </div>
 
       </div>
     </section>
