@@ -5,8 +5,10 @@ import React, { useState, useEffect, useRef } from "react";
  * 
  * Replaces the native browser scrollbar with a left-aligned, fixed SVG curved
  * dashed trajectory that responds smoothly to actual page scroll progress.
+ * Fades in only once the user scrolls down to/past the Bio section (#about).
  */
 const CustomScrollbar: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
   const pathRef = useRef<SVGPathElement>(null);
   const activePathRef = useRef<SVGPathElement>(null);
   const markerRef = useRef<SVGCircleElement>(null);
@@ -47,6 +49,16 @@ const CustomScrollbar: React.FC = () => {
       
       // Clamp progress between 0 and 1
       const progress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+
+      // HIDE IN HERO SECTION — ONLY SHOW BELOW BIO SECTION (#about)
+      const aboutEl = document.getElementById("about");
+      if (aboutEl) {
+        const aboutRect = aboutEl.getBoundingClientRect();
+        // Show ONLY when user has scrolled down into or past the Bio section
+        setIsVisible(aboutRect.top <= clientHeight * 0.5);
+      } else {
+        setIsVisible(scrollTop > 500);
+      }
 
       // Update marker position and active path along SVG curve
       if (pathRef.current && pathLengthRef.current > 0) {
@@ -100,6 +112,10 @@ const CustomScrollbar: React.FC = () => {
   return (
     <div
       aria-hidden="true"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transition: "opacity 0.4s ease-in-out",
+      }}
       className="fixed left-0 top-0 bottom-0 w-12 sm:w-16 md:w-20 z-50 pointer-events-none select-none overflow-hidden"
     >
       <svg
