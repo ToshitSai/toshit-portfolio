@@ -107,6 +107,37 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     return Object.keys(errors).length === 0;
   };
 
+  const sendWithFormSubmit = async () => {
+    const response = await fetch("https://formsubmit.co/ajax/iamtoshitsai@gmail.com", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        _replyto: formData.email.trim(),
+        _subject: `Portfolio Inquiry from ${formData.name.trim()}`,
+        _captcha: "false",
+        _template: "table",
+        message: [
+          "New Portfolio Contact Inquiry",
+          "",
+          `Name: ${formData.name.trim()}`,
+          `Email: ${formData.email.trim()}`,
+          `Subject: Portfolio Inquiry from ${formData.name.trim()}`,
+          "",
+          "Message:",
+          formData.message.trim(),
+        ].join("\n"),
+      }),
+    });
+
+    const data = (await response.json().catch(() => null)) as { success?: boolean | string; message?: string } | null;
+    return response.ok && (data?.success === true || data?.success === "true");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -143,7 +174,13 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
       const [response] = await Promise.all([apiPromise, minAnimationDuration]);
       const data = (await response.json().catch(() => null)) as { success?: boolean; error?: string; message?: string } | null;
 
-      if (response.ok && data?.success) {
+      let didSend = response.ok && data?.success;
+
+      if (!didSend && response.status === 502) {
+        didSend = await sendWithFormSubmit();
+      }
+
+      if (didSend) {
         setIsSubmitting(false);
         setIsSubmitted(true);
         setSendError(null);
@@ -329,56 +366,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           )}
         </motion.div>
 
-        {/* MAIN PAGE "NOT A FAN OF FORMS?" REFERENCE SECTION */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.45, ease: "easeOut" }}
-          className="w-full max-w-3xl text-left pt-8 border-t border-[#1B1B18]/15 bg-[#EFEAD8] rounded-2xl p-6 sm:p-8"
-        >
-          <p className="font-mono text-xs sm:text-sm tracking-[0.2em] text-[#85847C] uppercase font-medium mb-3">
-            NOT A FAN OF FORMS?
-          </p>
 
-          <a
-            href="mailto:iamtoshitsai@gmail.com"
-            className="inline-block text-2xl sm:text-3xl font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/40 hover:decoration-[#1B1B18] hover:text-black transition-all mb-6 font-sans break-all sm:break-normal"
-          >
-            iamtoshitsai@gmail.com
-          </a>
-
-          <div className="flex flex-wrap items-center gap-6 sm:gap-8 font-mono text-xs sm:text-sm text-[#85847C]">
-            <a
-              href="https://www.linkedin.com/in/toshit-sai-galam-177788276/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
-            >
-              <span>LinkedIn</span>
-              <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
-            </a>
-
-            <a
-              href="https://github.com/ToshitSai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
-            >
-              <span>GitHub</span>
-              <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
-            </a>
-
-            <a
-              href="https://www.instagram.com/toshit.codespace/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
-            >
-              <span>Instagram</span>
-              <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
-            </a>
-          </div>
-        </motion.div>
 
 
 
