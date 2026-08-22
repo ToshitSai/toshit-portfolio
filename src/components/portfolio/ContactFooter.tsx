@@ -264,7 +264,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
         setSendError(null);
         setFormErrors({});
         setFormData({ name: "", email: "", message: "", website: "" });
-        toast.success("Message dispatched successfully to Toshit!");
       } else {
         const errorMsg =
           data?.error ||
