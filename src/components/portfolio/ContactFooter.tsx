@@ -9,82 +9,88 @@ interface ContactFooterProps {
   setIsDrawerOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const BotanicalFlower: React.FC = () => {
+const DispatchedSignalIllustration: React.FC = () => {
   return (
     <svg
-      width="90"
-      height="120"
-      viewBox="0 0 90 120"
+      width="140"
+      height="95"
+      viewBox="0 0 140 95"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="my-3 sm:my-4 overflow-visible select-none"
       aria-hidden="true"
     >
-      {/* 1. Organic Brown Stem */}
+      {/* Flight Trajectory Arc (Dashed Line Drawing Upward) */}
       <motion.path
-        d="M45 112 C45 88 46 68 45 46"
-        stroke="#6E473B"
-        strokeWidth="3.2"
+        d="M 15 80 C 35 80 45 42 105 22"
+        stroke="#85847C"
+        strokeWidth="2"
+        strokeDasharray="4 4"
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 0.65, ease: "easeOut" }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.7 }}
+        transition={{ duration: 0.7, ease: "easeInOut" }}
       />
 
-      {/* 2. Left Olive Leaf */}
-      <motion.path
-        d="M45 94 C30 84 18 76 18 64 C30 67 39 79 45 90"
-        fill="#2E4A35"
-        stroke="#1F3324"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.45, delay: 0.35, ease: "backOut" }}
+      {/* Yellow Glowing Accent Dot at launch point */}
+      <motion.circle
+        cx="15"
+        cy="80"
+        r="3.5"
+        fill="#FFD42A"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
       />
 
-      {/* 3. Right Olive Leaf */}
-      <motion.path
-        d="M45 98 C60 88 72 80 72 68 C60 71 51 83 45 94"
-        fill="#2E4A35"
-        stroke="#1F3324"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.45, delay: 0.45, ease: "backOut" }}
-      />
-
-      {/* 4. Flower Head Bloom */}
+      {/* Origami Paper Plane taking flight */}
       <motion.g
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.55, delay: 0.55, ease: "backOut" }}
-        style={{ transformOrigin: "45px 46px" }}
+        initial={{ x: -20, y: 25, scale: 0.6, opacity: 0, rotate: -20 }}
+        animate={{ x: 0, y: 0, scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ duration: 0.65, delay: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+        style={{ transformOrigin: "105px 22px" }}
       >
-        {/* 12 Soft Cream Petals */}
-        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => (
-          <ellipse
-            key={i}
-            cx="45"
-            cy="24"
-            rx="5.5"
-            ry="15"
-            fill="#FFFDF7"
-            stroke="#E5E0D5"
-            strokeWidth="1"
-            transform={`rotate(${angle} 45 46)`}
-          />
-        ))}
+        {/* Main Wing Body */}
+        <polygon
+          points="105,22 60,37 80,59"
+          fill="#FFF8E8"
+          stroke="#1B1B18"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
 
-        {/* Warm Orange/Yellow Flower Center */}
-        <circle cx="45" cy="46" r="10.5" fill="#E59B28" stroke="#D18318" strokeWidth="1.5" />
-        <circle cx="42.5" cy="43.5" r="3.2" fill="#F4BD44" />
-        {/* Organic texture dots */}
-        <circle cx="47" cy="47" r="0.9" fill="#B2650C" />
-        <circle cx="43" cy="50" r="0.9" fill="#B2650C" />
-        <circle cx="48" cy="43" r="0.9" fill="#B2650C" />
+        {/* Top Wing Fold */}
+        <polygon
+          points="105,22 45,15 60,37"
+          fill="#FFFFFF"
+          stroke="#1B1B18"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+
+        {/* Shaded Underwing */}
+        <polygon
+          points="60,37 80,59 72,45"
+          fill="#E5DEC9"
+          stroke="#1B1B18"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+
+        {/* Signature Yellow Spark Point */}
+        <circle cx="105" cy="22" r="2.5" fill="#FFD42A" />
       </motion.g>
+
+      {/* Motion Lines Behind Plane */}
+      <motion.path
+        d="M 52 32 L 42 35 M 58 45 L 48 49"
+        stroke="#1B1B18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        initial={{ opacity: 0, pathLength: 0 }}
+        animate={{ opacity: 0.5, pathLength: 1 }}
+        transition={{ duration: 0.4, delay: 0.7 }}
+      />
     </svg>
   );
 };
@@ -590,12 +596,12 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                         className="pt-2 pb-4 text-left space-y-6 sm:space-y-7"
                         aria-live="polite"
                       >
-                        {/* HAND-DRAWN BOTANICAL DAISY FLOWER ILLUSTRATION */}
+                        {/* ORIGAMI SIGNAL FLIGHT ILLUSTRATION */}
                         <div className="flex justify-start py-2">
-                          <BotanicalFlower />
+                          <DispatchedSignalIllustration />
                         </div>
 
-                        {/* "PLANTED!" SECONDARY DISPLAY HEADING */}
+                        {/* "DISPATCHED!" SECONDARY DISPLAY HEADING */}
                         <motion.h3
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -603,7 +609,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           style={{ fontFamily: "'Instrument Serif', serif" }}
                           className="text-4xl sm:text-5xl lg:text-[54px] font-normal leading-tight text-[#1B1B18] tracking-tight"
                         >
-                          Planted!
+                          Dispatched!
                         </motion.h3>
 
                         {/* FINAL RESPONSE MESSAGE */}
@@ -613,7 +619,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           transition={{ duration: 0.5, delay: 0.75 }}
                           className="text-base sm:text-lg text-[#1B1B18]/75 font-sans leading-relaxed max-w-md"
                         >
-                          Your note is on its way. I'll write back within 48 hours.
+                          Your note is in flight. I'll write back within 48 hours.
                         </motion.p>
 
                         {/* UNDERSTATED TEXT LINK TO SEND ANOTHER MESSAGE */}
