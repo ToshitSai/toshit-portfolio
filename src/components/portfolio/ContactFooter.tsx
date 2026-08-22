@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
 import { toast } from "sonner";
-import ResumeModal from "./ResumeModal";
 
 interface ContactFooterProps {
   isDrawerOpen?: boolean;
@@ -21,7 +20,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
-  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [internalDrawerOpen, setInternalDrawerOpen] = useState(false);
 
   const isDrawerOpen = controlledDrawerOpen !== undefined ? controlledDrawerOpen : internalDrawerOpen;
@@ -409,12 +407,14 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
             <Instagram className="w-3.5 h-3.5" />
             <span>Instagram</span>
           </a>
-          <button
-            onClick={() => setIsResumeModalOpen(true)}
+          <a
+            href="/resume/Toshit_Sai_Galam_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:text-[#1B1B18] transition-colors"
           >
             Resume
-          </button>
+          </a>
           <button
             onClick={scrollToTop}
             className="flex items-center gap-1 ml-2 text-[#1B1B18] hover:text-[#D9A62C] transition-colors font-bold uppercase tracking-wider"
@@ -778,12 +778,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           </AnimatePresence>,
           document.body
         )}
-
-      {/* RESUME MODAL INTEGRATION */}
-      <ResumeModal
-        isOpen={isResumeModalOpen}
-        onClose={() => setIsResumeModalOpen(false)}
-      />
     </footer>
   );
 };
