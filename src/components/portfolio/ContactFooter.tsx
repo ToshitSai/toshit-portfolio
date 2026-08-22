@@ -266,7 +266,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
       let didSend = response.ok && data?.success;
 
-      if (!didSend && response.status === 502) {
+      if (!didSend) {
         didSend = await sendWithFormSubmit();
       }
 
