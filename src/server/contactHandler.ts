@@ -19,7 +19,8 @@ export interface ContactApiResponse {
 
 export async function processContactSubmission(
   body: ContactRequestBody,
-  clientIp: string = "127.0.0.1"
+  clientIp: string = "127.0.0.1",
+  siteOrigin: string = "https://toshit-portfolio.vercel.app"
 ): Promise<{ status: number; data: ContactApiResponse }> {
   // 1. Rate Limiting Guard (5 requests per IP per 15 minutes via Upstash Redis or Memory Fallback)
   if (await isRateLimited(clientIp)) {
@@ -53,7 +54,6 @@ export async function processContactSubmission(
 
   const { name, email, subject, message } = validation.data;
   const recipientEmail = process.env.CONTACT_EMAIL?.trim();
-  const web3FormsAccessKey = process.env.WEB3FORMS_ACCESS_KEY?.trim();
 
   if (!recipientEmail) {
     console.error("[Contact Configuration Error]: CONTACT_EMAIL is not configured.");
@@ -66,32 +66,25 @@ export async function processContactSubmission(
     };
   }
 
-  if (!web3FormsAccessKey) {
-    console.error("[Contact Configuration Error]: WEB3FORMS_ACCESS_KEY is not configured.");
-    return {
-      status: 503,
-      data: {
-        success: false,
-        error: "Contact delivery is not configured. Please try again later.",
-      },
-    };
-  }
-
-  // 3. Email Delivery via Web3Forms API
+  // 3. Email Delivery via FormSubmit
   try {
     const emailSubject = subject || `New Portfolio Message from ${name}`;
-    const response = await fetch("https://api.web3forms.com/submit", {
+    const normalizedOrigin = siteOrigin.replace(/\/$/, "");
+    const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(recipientEmail)}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        Origin: normalizedOrigin,
+        Referer: `${normalizedOrigin}/contact`,
       },
       body: JSON.stringify({
-        access_key: web3FormsAccessKey,
         name,
         email,
-        replyto: email,
-        subject: emailSubject,
+        _replyto: email,
+        _subject: emailSubject,
+        _captcha: "false",
+        _template: "table",
         message: [
           "New Portfolio Contact Inquiry",
           "",
@@ -102,18 +95,16 @@ export async function processContactSubmission(
           "Message:",
           message,
         ].join("\n"),
-        from_name: "Portfolio Contact Form",
-        botcheck: "",
       }),
     });
 
     const data = (await response.json().catch(() => null)) as {
-      success?: boolean;
+      success?: boolean | string;
       message?: string;
     } | null;
 
-    if (!response.ok || !data?.success) {
-      console.error("[Web3Forms Error]:", data?.message || `HTTP ${response.status}`);
+    if (!response.ok || data?.success !== true && data?.success !== "true") {
+      console.error("[FormSubmit Error]:", data?.message || `HTTP ${response.status}`);
       return {
         status: 502,
         data: {
@@ -123,7 +114,7 @@ export async function processContactSubmission(
       };
     }
 
-    console.log("[Web3Forms Email Sent Successfully]");
+    console.log("[FormSubmit Email Sent Successfully]");
     return {
       status: 200,
       data: {
@@ -132,7 +123,7 @@ export async function processContactSubmission(
       },
     };
   } catch (err: unknown) {
-    console.error("[Web3Forms Exception]:", err instanceof Error ? err.message : err);
+    console.error("[FormSubmit Exception]:", err instanceof Error ? err.message : err);
     return {
       status: 502,
       data: {

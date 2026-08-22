@@ -46,7 +46,10 @@ export default async function handler(req: ContactVercelRequest, res: ContactVer
       return res.status(400).json({ success: false, error: "Invalid form payload." });
     }
 
-    const result = await processContactSubmission(body, clientIp);
+    const protocol = (req.headers["x-forwarded-proto"] as string) || "https";
+    const host = (req.headers.host as string) || "toshit-portfolio.vercel.app";
+    const origin = (req.headers.origin as string) || `${protocol}://${host}`;
+    const result = await processContactSubmission(body, clientIp, origin);
     return res.status(result.status).json(result.data);
   } catch (err: unknown) {
     if (err instanceof SyntaxError) {
