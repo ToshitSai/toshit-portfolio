@@ -77,6 +77,21 @@
     color: #20252B !important;
   }
 
+  /* Complete Native Scrollbar Suppression for Premium Custom Scrollbar */
+  html, body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
   html {
     scroll-behavior: smooth;
     background-color: #FFF8E8;
