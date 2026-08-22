@@ -138,7 +138,7 @@ export default {
         "fade-in": "fade-in 0.6s ease-out forwards",
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
         "scale-in": "scale-in 0.4s ease-out forwards",
-        "marquee-x": "marquee 32s linear infinite",
+        "marquee-x": "marquee 42s linear infinite",
         "spin-slow": "spin-slow 24s linear infinite",
         "float-cloud": "float-cloud 8s ease-in-out infinite",
       },
