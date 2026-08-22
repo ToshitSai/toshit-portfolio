@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 const CustomScrollbar: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
   const pathRef = useRef<SVGPathElement>(null);
   const activePathRef = useRef<SVGPathElement>(null);
   const markerRef = useRef<SVGCircleElement>(null);
   const pathLengthRef = useRef<number>(0);
 
-  const pathD = "M 22,0 C -12,220 58,440 14,640 C -18,800 48,940 22,1000";
+  // Organic curved trajectory staying within [10, 80] X range (no clipping!)
+  const pathD = "M 40,0 C 10,220 80,440 25,640 C 5,800 70,940 35,1000";
 
   useEffect(() => {
     if (pathRef.current) {
@@ -35,17 +35,7 @@ const CustomScrollbar: React.FC = () => {
 
       setScrollProgress(progress);
 
-      // Check if scrolled down near/below Bio section (#about)
-      const aboutSection = document.getElementById("about");
-      if (aboutSection) {
-        const aboutRect = aboutSection.getBoundingClientRect();
-        // Activate when scroll enters or passes Bio section
-        setIsVisible(aboutRect.top <= clientHeight * 0.7);
-      } else {
-        setIsVisible(scrollTop > 180);
-      }
-
-      // Update active path dash offset & tiny marker dot along curve
+      // Update active path dash offset & dot marker along curve
       if (pathRef.current && pathLengthRef.current > 0) {
         const currentLength = progress * pathLengthRef.current;
         const point = pathRef.current.getPointAtLength(currentLength);
@@ -91,11 +81,7 @@ const CustomScrollbar: React.FC = () => {
   return (
     <div
       aria-hidden="true"
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-      }}
-      className="fixed left-0 top-0 bottom-0 w-12 sm:w-20 md:w-24 z-[99999] pointer-events-none select-none overflow-hidden"
+      className="fixed left-2 sm:left-4 top-0 bottom-0 w-12 sm:w-16 md:w-20 z-[99999] pointer-events-none select-none overflow-visible"
     >
       <svg
         className="w-full h-full"
@@ -109,10 +95,10 @@ const CustomScrollbar: React.FC = () => {
           d={pathD}
           fill="none"
           stroke="#1F2328"
-          strokeWidth="1.3"
-          strokeDasharray="4 6"
+          strokeWidth="2"
+          strokeDasharray="6 8"
           strokeLinecap="round"
-          className="opacity-25"
+          className="opacity-35"
         />
 
         {/* Active Progress Overlay on Dashed Trajectory */}
@@ -121,18 +107,20 @@ const CustomScrollbar: React.FC = () => {
           d={pathD}
           fill="none"
           stroke="#1F2328"
-          strokeWidth="1.8"
-          strokeDasharray="4 6"
+          strokeWidth="2.5"
+          strokeDasharray="6 8"
           strokeLinecap="round"
-          className="opacity-80 transition-none"
+          className="opacity-95 transition-none"
         />
 
-        {/* Tiny Progress Dot Marker */}
+        {/* Progress Dot Marker */}
         <circle
           ref={markerRef}
-          r="3"
+          r="4.5"
           fill="#1F2328"
-          className="opacity-90 transition-none"
+          stroke="#FAF6ED"
+          strokeWidth="1.5"
+          className="opacity-100 transition-none drop-shadow-sm"
         />
       </svg>
     </div>
