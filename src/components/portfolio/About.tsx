@@ -24,7 +24,7 @@ const About: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10 flex flex-col items-center text-center">
         
-        {/* 1. MAIN EDITORIAL PARAGRAPH (REDUCED FONT SIZE) */}
+        {/* 1. MAIN EDITORIAL PARAGRAPH */}
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -37,27 +37,16 @@ const About: React.FC = () => {
             letterSpacing: "-0.015em",
             color: "#1F2328",
           }}
-          className="max-w-[880px] text-center mx-auto opacity-95"
+          className="max-w-[880px] text-center mx-auto opacity-95 mb-16 sm:mb-20 lg:mb-24"
         >
           I&apos;m Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I design and build intelligent digital tools and web applications, turning complex ideas into scalable experiences.
         </motion.p>
 
-        {/* 2. SUBTLE ELEGANT DIVIDER / ARROW SPACING */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="my-12 sm:my-14 lg:my-16 flex flex-col items-center gap-3"
-        >
-          <div className="w-[1px] h-10 sm:h-12 bg-[#1F2328]/20" />
-          <span className="font-mono text-xs tracking-widest text-[#1F2328]/40">↓</span>
-        </motion.div>
-
-        {/* 3. SECOND BOLD PERSONAL STATEMENT (REDUCED FONT SIZE) */}
+        {/* 2. SECOND BOLD PERSONAL STATEMENT */}
         <motion.h3
           initial={{ opacity: 0, y: 25 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
-          transition={{ duration: 0.85, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           style={{
             fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
             fontWeight: 700,
