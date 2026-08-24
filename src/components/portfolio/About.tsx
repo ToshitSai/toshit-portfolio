@@ -1,149 +1,62 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 
 const About: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const statementRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    // Check if user prefers reduced motion
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const blocks = [paragraphRef.current, statementRef.current];
-
-    if (prefersReducedMotion) {
-      blocks.forEach((el) => {
-        if (el) {
-          el.style.color = "#1F2328";
-          el.style.opacity = "1";
-          el.style.transform = "translate3d(0, 0px, 0)";
-        }
-      });
-      return;
-    }
-
-    let animationFrameId: number;
-
-    const updateScrollAnimation = () => {
-      const vh = window.innerHeight || 800;
-
-      // Inactive: #C2BBB0, Active: #1F2328
-      const startR = 194, startG = 187, startB = 176;
-      const endR = 31, endG = 35, endB = 40;
-
-      blocks.forEach((el) => {
-        if (!el) return;
-
-        const rect = el.getBoundingClientRect();
-        const elCenter = rect.top + rect.height / 2;
-
-        // Activation zone calculation:
-        // Starts activating when elCenter is at 90% of viewport height
-        // Reaches 100% active state when elCenter is at 50% of viewport height
-        const startPoint = vh * 0.90;
-        const endPoint = vh * 0.50;
-
-        let rawProgress = (startPoint - elCenter) / (startPoint - endPoint);
-        const progress = Math.max(0, Math.min(1, rawProgress));
-
-        // Smooth cubic easing for fluid color progression
-        const eased = progress < 0.5
-          ? 4 * progress * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-        const r = Math.round(startR + (endR - startR) * eased);
-        const g = Math.round(startG + (endG - startG) * eased);
-        const b = Math.round(startB + (endB - startB) * eased);
-        const opacity = (0.35 + 0.65 * eased).toFixed(3);
-        const translateY = ((1 - eased) * 14).toFixed(2);
-
-        el.style.color = `rgb(${r}, ${g}, ${b})`;
-        el.style.opacity = opacity;
-        el.style.transform = `translate3d(0, ${translateY}px, 0)`;
-      });
-
-      animationFrameId = requestAnimationFrame(updateScrollAnimation);
-    };
-
-    window.addEventListener("scroll", updateScrollAnimation, { passive: true });
-    window.addEventListener("resize", updateScrollAnimation, { passive: true });
-
-    // Initial trigger
-    updateScrollAnimation();
-
-    return () => {
-      window.removeEventListener("scroll", updateScrollAnimation);
-      window.removeEventListener("resize", updateScrollAnimation);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   return (
-    <section
-      ref={sectionRef}
-      id="about"
-      style={{ backgroundColor: "#FAF6ED" }}
-      className="relative w-full py-28 sm:py-36 lg:py-44 text-[#1F2328] overflow-hidden z-10 select-none"
-    >
-      {/* SUBTLE PAPER NOISE OVERLAY */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply z-0">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-          <filter id="aboutNoiseFilterClean">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#aboutNoiseFilterClean)" />
+    <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-ink overflow-hidden z-10">
+      {/* Drifting Background Cloud Graphic */}
+      <div className="absolute top-12 right-[-5%] w-72 sm:w-96 opacity-30 pointer-events-none z-0">
+        <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">
+          <path
+            d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
+            fill="#82BCE5"
+          />
         </svg>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10 flex flex-col items-center text-center">
-        
-        {/* PARAGRAPH 1: MAIN BIO TEXT (EXACT STRUCTURE AS REFERENCE) */}
-        <p
-          ref={paragraphRef}
-          style={{
-            fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
-            fontWeight: 400,
-            fontSize: "clamp(22px, 3.2vw, 38px)",
-            lineHeight: 1.38,
-            letterSpacing: "-0.018em",
-            willChange: "transform, opacity, color",
-          }}
-          className="max-w-[1020px] text-center mx-auto mb-14 sm:mb-18 lg:mb-20 transition-none"
-        >
-          I&apos;m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning, building what&apos;s next – from intelligent automation tools and prompt-engineered workflows to context-aware web applications and scalable AI-powered products.
-        </p>
-
-        {/* PARAGRAPH 2: BOLD PERSONAL STATEMENT WITH DECORATIVE DASHED ARC */}
-        <div className="relative max-w-[950px] mx-auto">
-          <h3
-            ref={statementRef}
-            style={{
-              fontFamily: "'Instrument Sans', 'Plus Jakarta Sans', sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(22px, 3vw, 36px)",
-              lineHeight: 1.3,
-              letterSpacing: "-0.022em",
-              willChange: "transform, opacity, color",
-            }}
-            className="text-center transition-none"
-          >
-            I believe every great design forms the basis for an even greater story and I&apos;m here to keep writing mine.
-          </h3>
-
-          {/* DECORATIVE DASHED SVG ARC ON THE RIGHT (MATCHING REFERENCE SCREENSHOT) */}
-          <div aria-hidden="true" className="absolute -right-8 sm:-right-16 -bottom-6 sm:-bottom-8 w-20 h-20 sm:w-28 sm:h-28 pointer-events-none opacity-40">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-              <path
-                d="M 10 20 C 40 10, 80 30, 95 75"
-                stroke="#1F2328"
-                strokeWidth="1.5"
-                strokeDasharray="4 4"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
+      <div className="container-narrow relative z-10">
+        {/* Section Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
+          <span className="label-mono text-ink-light">01 // ABOUT ME</span>
         </div>
 
+        {/* H2 Headline */}
+        <h2 className="text-display text-[clamp(2.2rem,5.5vw,4.2rem)] text-ink mb-12 sm:mb-16 max-w-4xl">
+          Building Software at the Intersection of Applied AI & Modern Design.
+        </h2>
+
+        {/* Editorial Bio Feature Block */}
+        <div className="space-y-8 max-w-4xl">
+          <p className="text-xl sm:text-2xl lg:text-3xl text-ink font-sans leading-relaxed sm:leading-relaxed tracking-[-0.015em] font-normal">
+            Building software at the intersection of applied AI & modern design — from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pt-4">
+            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
+              I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>. Driven by a deep passion for high-performance software engineering and autonomous AI agents.
+            </p>
+            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
+              My featured work spans intelligent tools like <strong className="text-ink font-semibold">HireScope AI</strong> for automated resume evaluation and <strong className="text-ink font-semibold">Greetly AI</strong> for personalized context-aware message generation.
+            </p>
+          </div>
+
+          {/* Quick Highlight Stats Pill */}
+          <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl">
+            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
+              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">100%</div>
+              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Code Quality Focus</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
+              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Applied AI</div>
+              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Full-Stack Engineering</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors col-span-2 sm:col-span-1">
+              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Hyderabad</div>
+              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Based in IN</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
