@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-ink overflow-hidden z-10">
+    <section id="about" className="relative w-full py-28 sm:py-36 md:py-44 bg-cream text-ink overflow-hidden z-10">
       {/* Drifting Background Cloud Graphic */}
-      <div className="absolute top-12 right-[-5%] w-72 sm:w-96 opacity-30 pointer-events-none z-0">
+      <div className="absolute top-12 right-[-5%] w-72 sm:w-96 opacity-25 pointer-events-none z-0">
         <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">
           <path
             d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
@@ -14,52 +14,61 @@ const About: React.FC = () => {
         </svg>
       </div>
 
-      <div className="container-narrow relative z-10">
-        {/* Section Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-sm" />
-          <span className="label-mono text-ink-light">01 // ABOUT ME</span>
-        </div>
+      <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
+        {/* Section Header Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center gap-3 mb-12 sm:mb-16"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-sm" />
+          <span className="text-xs font-mono tracking-[0.2em] uppercase text-ink-light font-semibold">
+            01 // ABOUT ME
+          </span>
+        </motion.div>
 
-        {/* H2 Headline */}
-        <h2 className="text-display text-[clamp(2.2rem,5.5vw,4.2rem)] text-ink mb-12 sm:mb-16 max-w-4xl">
-          Building Software at the Intersection of Applied AI & Modern Design.
-        </h2>
+        {/* Top Main Paragraph - Styled exactly like Image 2 Top Paragraph */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] text-ink font-sans leading-[1.45] sm:leading-[1.45] tracking-[-0.015em] font-normal max-w-4xl text-center"
+        >
+          Computer Science student at NxtWave Institute of Advanced Technologies (NIAT), building software at the intersection of applied AI & modern design – from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
+        </motion.p>
 
-        {/* Editorial Bio Feature Block */}
-        <div className="space-y-8 max-w-4xl">
-          <p className="text-xl sm:text-2xl lg:text-3xl text-ink font-sans leading-relaxed sm:leading-relaxed tracking-[-0.015em] font-normal">
-            Building software at the intersection of applied AI & modern design — from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
-          </p>
+        {/* Bottom Impact Statement - Styled exactly like Image 2 Bottom Paragraph */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative max-w-3xl text-center mt-12 sm:mt-16 md:mt-20"
+        >
+          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] text-ink font-sans leading-[1.3] tracking-[-0.015em] font-bold">
+            I believe every great design forms the basis for an even greater story and I'm here to keep writing mine.
+          </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pt-4">
-            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
-              I'm <strong className="text-ink font-semibold">Toshit Sai Galam</strong>, a Computer Science student at <span className="underline decoration-yellow-accent decoration-2 underline-offset-4 font-medium text-ink">NxtWave Institute of Advanced Technologies (NIAT), Chaitanya Deemed to be University</span>. Driven by a deep passion for high-performance software engineering and autonomous AI agents.
-            </p>
-            <p className="text-base sm:text-lg text-ink/80 leading-relaxed font-sans tracking-[-0.01em]">
-              My featured work spans intelligent tools like <strong className="text-ink font-semibold">HireScope AI</strong> for automated resume evaluation and <strong className="text-ink font-semibold">Greetly AI</strong> for personalized context-aware message generation.
-            </p>
+          {/* Floating Dashed SVG Line Accent matching Image 2 */}
+          <div className="absolute -bottom-8 -right-6 sm:-bottom-10 sm:-right-10 md:-right-16 pointer-events-none opacity-50 select-none">
+            <svg width="64" height="42" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M4 8 C 24 20, 44 14, 58 38"
+                stroke="#20252B"
+                strokeWidth="2"
+                strokeDasharray="4 4"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
-
-          {/* Quick Highlight Stats Pill */}
-          <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl">
-            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
-              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">100%</div>
-              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Code Quality Focus</div>
-            </div>
-            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors">
-              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Applied AI</div>
-              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Full-Stack Engineering</div>
-            </div>
-            <div className="p-4 rounded-2xl bg-cream-paper border border-ink/10 shadow-sm hover:border-yellow-accent transition-colors col-span-2 sm:col-span-1">
-              <div className="text-2xl sm:text-3xl font-serif text-ink font-bold">Hyderabad</div>
-              <div className="text-xs font-mono tracking-wider text-ink-light uppercase mt-1">Based in IN</div>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
 export default About;
+
