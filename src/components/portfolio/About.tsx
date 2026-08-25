@@ -46,24 +46,11 @@ const About: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative max-w-2xl text-center mt-10 sm:mt-12 md:mt-14"
+          className="max-w-2xl text-center mt-10 sm:mt-12 md:mt-14"
         >
           <h3 className="text-base sm:text-lg md:text-xl lg:text-[1.45rem] text-ink font-sans leading-[1.4] tracking-[-0.015em] font-bold">
             I believe every great design forms the basis for an even greater story and I'm here to keep writing mine.
           </h3>
-
-          {/* Floating Dashed SVG Line Accent matching Image 2 */}
-          <div className="absolute -bottom-8 -right-4 sm:-bottom-9 sm:-right-8 md:-right-12 pointer-events-none opacity-50 select-none">
-            <svg width="56" height="36" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M4 8 C 24 20, 44 14, 58 38"
-                stroke="#20252B"
-                strokeWidth="2"
-                strokeDasharray="4 4"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
         </motion.div>
       </div>
     </section>
