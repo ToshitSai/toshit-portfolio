@@ -407,11 +407,11 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
 
       {/* 2. MAIN HEADING & HAND-DRAWN YELLOW SVG SKETCH ANNOTATION */}
       <div className="relative">
-        <h2 className="font-extrabold text-[clamp(42px,6.5vw,98px)] leading-[0.96] tracking-[-0.04em] text-[#1D2024] font-sans flex flex-col items-start gap-1 sm:gap-2">
+        <h2 className="font-bold text-[clamp(28px,3.8vw,56px)] leading-[1.08] tracking-[-0.03em] text-[#1D2024] font-sans flex flex-col items-start gap-0.5 sm:gap-1">
           {headingLines.map((line, idx) => (
-            <div key={idx} className="overflow-hidden py-1">
+            <div key={idx} className="overflow-hidden py-0.5">
               <motion.span
-                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 70 }}
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
                 animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
                 transition={{
                   duration: 0.8,
@@ -427,23 +427,23 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
         </h2>
 
         {/* Hand-Drawn Yellow SVG Line Sketch Annotation Accent */}
-        <div className="absolute right-0 sm:right-8 -bottom-4 sm:bottom-0 pointer-events-none z-0">
+        <div className="absolute right-0 sm:right-8 -bottom-3 sm:bottom-0 pointer-events-none z-0">
           <svg
-            width="240"
-            height="55"
-            viewBox="0 0 240 55"
+            width="180"
+            height="40"
+            viewBox="0 0 180 40"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-44 sm:w-60 h-auto"
+            className="w-32 sm:w-40 h-auto"
           >
-            <motion.path
-              d="M10 42 C 55 14, 120 48, 195 20 C 210 14, 222 18, 228 26"
+            <path
+              d="M6 30 C 40 10, 90 35, 145 14 C 158 10, 168 12, 172 18"
               stroke="#FFC700"
-              strokeWidth="3.5"
+              strokeWidth="3"
               strokeLinecap="round"
-              initial={shouldReduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
-              animate={isInView || shouldReduceMotion ? { pathLength: 1 } : {}}
-              transition={{ duration: 1.2, delay: 0.45, ease: "easeInOut" }}
+              className={`transition-opacity duration-1000 delay-300 ${
+                isInView ? "opacity-100" : "opacity-0"
+              }`}
             />
           </svg>
         </div>

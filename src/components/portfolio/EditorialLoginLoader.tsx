@@ -142,36 +142,33 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           <div className="flex flex-col items-center justify-center space-y-6">
             {/* PAC-MAN SHAPE & TRAILING DOTS HORIZONTAL CONTAINER */}
             <div className="flex items-center gap-3">
-              {/* YELLOW PAC-MAN-LIKE CHARACTER WITH FLUID CONTINUOUS MOUTH BITE */}
-              <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center">
+              {/* YELLOW PAC-MAN-LIKE CHARACTER WITH FLUID CONTINUOUS BITE */}
+              <motion.div
+                animate={
+                  prefersReducedMotion
+                    ? {}
+                    : {
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 8, 0],
+                      }
+                }
+                transition={{
+                  duration: 0.75,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center"
+              >
                 <svg
                   viewBox="0 0 36 36"
                   className="w-full h-full text-[#FFD42A]"
                 >
-                  {prefersReducedMotion ? (
-                    <path
-                      d="M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z"
-                      fill="#FFD42A"
-                    />
-                  ) : (
-                    <motion.path
-                      fill="#FFD42A"
-                      animate={{
-                        d: [
-                          "M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z",
-                          "M 18 18 L 33.5 10 A 16 16 0 1 0 33.5 26 Z",
-                          "M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z",
-                        ],
-                      }}
-                      transition={{
-                        duration: 0.75,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  )}
+                  <path
+                    d="M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z"
+                    fill="#FFD42A"
+                  />
                 </svg>
-              </div>
+              </motion.div>
 
               {/* TRAILING DOTS WITH FLUID STAGGERED OPACITY PULSE */}
               <div className="flex items-center gap-2 pl-1">
