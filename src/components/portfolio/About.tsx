@@ -29,15 +29,15 @@ const About: React.FC = () => {
           </span>
         </motion.div>
 
-        {/* Top Main Paragraph - Styled exactly like Image 2 Top Paragraph */}
+        {/* Top Main Paragraph - Shortened, punchy & compact matching Image 2 style */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] text-ink font-sans leading-[1.45] sm:leading-[1.45] tracking-[-0.015em] font-normal max-w-4xl text-center"
+          className="text-lg sm:text-2xl md:text-[1.85rem] text-ink font-sans leading-[1.5] tracking-[-0.015em] font-normal max-w-3xl text-center"
         >
-          Computer Science student at NxtWave Institute of Advanced Technologies (NIAT), building software at the intersection of applied AI & modern design – from AI-powered resume evaluators to intelligent context-aware applications, bringing scalable full-stack web experiences to life.
+          Computer Science student at NIAT, building software at the intersection of applied AI & modern design – from AI-powered tools to context-aware applications, shipping scalable web experiences.
         </motion.p>
 
         {/* Bottom Impact Statement - Styled exactly like Image 2 Bottom Paragraph */}
