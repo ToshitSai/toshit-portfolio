@@ -42,7 +42,7 @@ const About: React.FC = () => {
           }
           className="w-full max-w-[880px] mx-auto text-lg sm:text-xl md:text-2xl lg:text-[1.75rem] text-ink font-sans leading-[1.55] tracking-[-0.015em] font-normal text-center"
         >
-          I'm a Computer Science Engineering student specializing in Artificial Intelligence & Machine Learning, building at the intersection of Generative AI, intelligent automation, prompt engineering, and modern web experiences. From AI-powered applications and LLM workflows to interactive web interfaces, I enjoy turning ideas into products that feel useful, fast, and genuinely human.
+          I'm Toshit Sai, a Computer Science Engineering student specializing in AI & Machine Learning. I build with Generative AI, explore intelligent systems, and turn ideas into useful digital experiences.
         </motion.p>
 
         {/* Second Bold Statement — Personal Highlight */}
