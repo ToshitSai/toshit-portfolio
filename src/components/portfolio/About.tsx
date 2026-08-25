@@ -1,55 +1,64 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 
 const About: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  // Scroll-linked motion connected directly to viewport scroll position
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start 85%", "center 45%"],
+  });
+
+  const { scrollYProgress: statementProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start 65%", "center 30%"],
+  });
+
+  // Smooth scroll-driven opacity and vertical transform
+  const paragraphOpacity = useTransform(scrollYProgress, [0, 1], [0.2, 1]);
+  const paragraphY = useTransform(scrollYProgress, [0, 1], [35, 0]);
+
+  const statementOpacity = useTransform(statementProgress, [0, 1], [0, 1]);
+  const statementY = useTransform(statementProgress, [0, 1], [35, 0]);
+
   return (
-    <section id="about" className="relative w-full py-20 sm:py-28 md:py-36 bg-cream text-ink overflow-hidden z-10">
-      {/* Drifting Background Cloud Graphic */}
-      <div className="absolute top-12 right-[-5%] w-72 sm:w-96 opacity-25 pointer-events-none z-0">
-        <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">
-          <path
-            d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
-            fill="#82BCE5"
-          />
-        </svg>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
-        {/* Section Header Indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex items-center gap-3 mb-10 sm:mb-12"
-        >
-          <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-sm" />
-          <span className="text-xs font-mono tracking-[0.2em] uppercase text-ink-light font-semibold">
-            01 // ABOUT ME
-          </span>
-        </motion.div>
-
-        {/* Top Main Paragraph - Smaller, refined editorial font */}
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative w-full py-24 sm:py-32 md:py-40 min-h-[70vh] flex flex-col justify-center items-center bg-cream text-ink overflow-hidden z-10 select-none"
+    >
+      <div className="w-full max-w-[1340px] mx-auto px-6 sm:px-10 md:px-14 lg:px-18 flex flex-col items-center justify-center text-center">
+        {/* Large Introductory Paragraph — Modern Sans-Serif Editorial Typography */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-base sm:text-lg md:text-xl lg:text-[1.35rem] text-ink font-sans leading-[1.6] tracking-[-0.01em] font-normal max-w-2xl text-center"
+          style={
+            shouldReduceMotion
+              ? {}
+              : {
+                  opacity: paragraphOpacity,
+                  y: paragraphY,
+                }
+          }
+          className="w-[92%] max-w-[1240px] mx-auto text-[clamp(1.5rem,3.4vw,3.25rem)] text-ink font-sans leading-[1.3] tracking-[-0.015em] font-normal text-center"
         >
-          Computer Science student at NIAT, building software at the intersection of applied AI & modern design – from AI-powered tools to context-aware applications, shipping scalable web experiences.
+          I'm a Computer Science Engineering student specializing in Artificial Intelligence & Machine Learning, building at the intersection of Generative AI, intelligent automation, prompt engineering, and modern web experiences. From AI-powered applications and LLM workflows to interactive web interfaces, I enjoy turning ideas into products that feel useful, fast, and genuinely human.
         </motion.p>
 
-        {/* Bottom Impact Statement - Smaller, refined bold font */}
+        {/* Second Bold Statement — Personal Highlight */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="max-w-2xl text-center mt-10 sm:mt-12 md:mt-14"
+          style={
+            shouldReduceMotion
+              ? {}
+              : {
+                  opacity: statementOpacity,
+                  y: statementY,
+                }
+          }
+          className="w-[88%] max-w-[1050px] mx-auto mt-14 sm:mt-20 md:mt-24 text-center"
         >
-          <h3 className="text-base sm:text-lg md:text-xl lg:text-[1.45rem] text-ink font-sans leading-[1.4] tracking-[-0.015em] font-bold">
-            I believe every great design forms the basis for an even greater story and I'm here to keep writing mine.
+          <h3 className="text-[clamp(1.25rem,2.5vw,2.35rem)] text-ink font-sans leading-[1.3] tracking-[-0.02em] font-bold">
+            I believe great technology should feel simple, useful, and human — and I'm here to keep building mine.
           </h3>
         </motion.div>
       </div>
@@ -58,4 +67,5 @@ const About: React.FC = () => {
 };
 
 export default About;
+
 
