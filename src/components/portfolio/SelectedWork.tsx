@@ -385,7 +385,7 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
 
   return (
     <div ref={containerRef} className="relative pb-10 mb-20 sm:mb-28">
-      {/* 1. TOP METADATA BAR: Editorial Label + Dynamic Project Count */}
+      {/* 1. TOP METADATA BAR: Editorial Label */}
       <div className="flex items-center justify-between font-mono text-xs sm:text-sm tracking-[0.22em] text-[#1D2024]/70 uppercase mb-8 sm:mb-12">
         <div className="flex items-center gap-3">
           <motion.span
@@ -396,13 +396,6 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
           />
           <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK</span>
         </div>
-
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="flex items-center gap-2 cursor-pointer font-mono font-bold text-xs tracking-[0.2em] text-[#1D2024]/70 bg-[#1D2024]/5 px-3 py-1.5 rounded-full hover:bg-[#1D2024]/10 transition-colors"
-        >
-          <span>{projectCount.toString().padStart(2, "0")} BUILDS</span>
-        </motion.div>
       </div>
 
       {/* 2. MAIN HEADING & HAND-DRAWN YELLOW SVG SKETCH ANNOTATION */}
