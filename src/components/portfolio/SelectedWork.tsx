@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
 
 // --- DYNAMIC ANIMATED PROJECT PREVIEWS ---
@@ -371,6 +371,108 @@ const projects: ProjectItem[] = [
   },
 ];
 
+// --- EDITORIAL PROJECTS INTRO HEADER WITH SCROLL REVEAL & SKETCH ACCENT ---
+const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const isInView = useInView(containerRef, { once: true, margin: "-60px" });
+
+  const headingLines = [
+    "Things I built",
+    "because I had",
+    "to know if they worked.",
+  ];
+
+  return (
+    <div ref={containerRef} className="relative pb-10 mb-20 sm:mb-28">
+      {/* 1. TOP METADATA BAR: Editorial Label + Dynamic Project Count */}
+      <div className="flex items-center justify-between font-mono text-xs sm:text-sm tracking-[0.22em] text-[#1D2024]/70 uppercase mb-8 sm:mb-12">
+        <div className="flex items-center gap-3">
+          <motion.span
+            initial={{ scale: 0.8 }}
+            animate={isInView ? { scale: [1, 1.4, 1] } : {}}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-xs inline-block"
+          />
+          <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK</span>
+        </div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center gap-2 cursor-pointer font-mono font-bold text-xs tracking-[0.2em] text-[#1D2024]/70 bg-[#1D2024]/5 px-3 py-1.5 rounded-full hover:bg-[#1D2024]/10 transition-colors"
+        >
+          <span>{projectCount.toString().padStart(2, "0")} BUILDS</span>
+        </motion.div>
+      </div>
+
+      {/* 2. MAIN HEADING & HAND-DRAWN YELLOW SVG SKETCH ANNOTATION */}
+      <div className="relative">
+        <h2 className="font-extrabold text-[clamp(42px,6.5vw,98px)] leading-[0.96] tracking-[-0.04em] text-[#1D2024] font-sans flex flex-col items-start gap-1 sm:gap-2">
+          {headingLines.map((line, idx) => (
+            <div key={idx} className="overflow-hidden py-1">
+              <motion.span
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 70 }}
+                animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.8,
+                  delay: idx * 0.14,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="block"
+              >
+                {line}
+              </motion.span>
+            </div>
+          ))}
+        </h2>
+
+        {/* Hand-Drawn Yellow SVG Line Sketch Annotation Accent */}
+        <div className="absolute right-0 sm:right-8 -bottom-4 sm:bottom-0 pointer-events-none z-0">
+          <svg
+            width="240"
+            height="55"
+            viewBox="0 0 240 55"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-44 sm:w-60 h-auto"
+          >
+            <motion.path
+              d="M10 42 C 55 14, 120 48, 195 20 C 210 14, 222 18, 228 26"
+              stroke="#FFC700"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              initial={shouldReduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
+              animate={isInView || shouldReduceMotion ? { pathLength: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.45, ease: "easeInOut" }}
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* 3. SMALL PERSONAL EDITORIAL ANNOTATION */}
+      <div className="flex justify-end mt-6 sm:mt-8 mb-8">
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: -15 }}
+          animate={isInView || shouldReduceMotion ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="font-mono text-xs sm:text-sm tracking-widest text-[#1D2024]/60 uppercase flex items-center gap-2"
+        >
+          <span className="text-[#FFC700] font-bold text-sm">↳</span>
+          <span>built → tested → shipped</span>
+        </motion.div>
+      </div>
+
+      {/* 4. ANIMATED HORIZONTAL DIVIDER */}
+      <motion.div
+        initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
+        animate={isInView || shouldReduceMotion ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.75, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full h-[1.5px] bg-[#1D2024]/15 origin-left"
+      />
+    </div>
+  );
+};
+
 const SelectedWork: React.FC = () => {
   return (
     <section
@@ -382,22 +484,7 @@ const SelectedWork: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
         {/* EDITORIAL SECTION HEADER */}
-        <div className="border-b border-[#1D2024]/15 pb-10 mb-20 sm:mb-28">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs" />
-            <span className="font-mono text-xs tracking-[0.2em] text-[#1D2024]/60 uppercase font-semibold">
-              02 // SELECTED WORK
-            </span>
-          </div>
-
-          <h2
-            style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-            className="font-semibold text-[clamp(34px,4.8vw,68px)] leading-[1.04] tracking-[-0.035em] text-[#1D2024] max-w-3xl"
-          >
-            Projects that turn <br className="hidden sm:block" />
-            ideas into working systems.
-          </h2>
-        </div>
+        <ProjectsHeader projectCount={projects.length} />
 
         {/* CASE STUDY INDEX - ASYMMETRIC SPACING & LAYOUT */}
         <div className="space-y-24 sm:space-y-32 lg:space-y-40">
