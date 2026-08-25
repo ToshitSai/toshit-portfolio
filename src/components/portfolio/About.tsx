@@ -55,10 +55,10 @@ const About: React.FC = () => {
                   y: statementY,
                 }
           }
-          className="w-full max-w-[750px] mx-auto mt-10 sm:mt-14 md:mt-16 text-center"
+          className="w-full max-w-[750px] mx-auto mt-5 sm:mt-7 md:mt-8 text-center"
         >
           <h3 className="text-base sm:text-lg md:text-xl lg:text-[1.5rem] text-ink font-sans leading-[1.4] tracking-[-0.02em] font-bold">
-            I believe great technology should feel simple, useful, and human — and I'm here to keep building mine.
+            I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
           </h3>
         </motion.div>
       </div>
