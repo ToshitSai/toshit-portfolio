@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="relative w-full py-28 sm:py-36 md:py-44 bg-cream text-ink overflow-hidden z-10">
+    <section id="about" className="relative w-full py-20 sm:py-28 md:py-36 bg-cream text-ink overflow-hidden z-10">
       {/* Drifting Background Cloud Graphic */}
       <div className="absolute top-12 right-[-5%] w-72 sm:w-96 opacity-25 pointer-events-none z-0">
         <svg viewBox="0 0 200 110" fill="none" className="w-full animate-float-cloud">
@@ -14,14 +14,14 @@ const About: React.FC = () => {
         </svg>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
+      <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
         {/* Section Header Indicator */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex items-center gap-3 mb-12 sm:mb-16"
+          className="flex items-center gap-3 mb-10 sm:mb-12"
         >
           <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-sm" />
           <span className="text-xs font-mono tracking-[0.2em] uppercase text-ink-light font-semibold">
@@ -29,32 +29,32 @@ const About: React.FC = () => {
           </span>
         </motion.div>
 
-        {/* Top Main Paragraph - Shortened, punchy & compact matching Image 2 style */}
+        {/* Top Main Paragraph - Smaller, refined editorial font */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-lg sm:text-2xl md:text-[1.85rem] text-ink font-sans leading-[1.5] tracking-[-0.015em] font-normal max-w-3xl text-center"
+          className="text-base sm:text-lg md:text-xl lg:text-[1.35rem] text-ink font-sans leading-[1.6] tracking-[-0.01em] font-normal max-w-2xl text-center"
         >
           Computer Science student at NIAT, building software at the intersection of applied AI & modern design – from AI-powered tools to context-aware applications, shipping scalable web experiences.
         </motion.p>
 
-        {/* Bottom Impact Statement - Styled exactly like Image 2 Bottom Paragraph */}
+        {/* Bottom Impact Statement - Smaller, refined bold font */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative max-w-3xl text-center mt-12 sm:mt-16 md:mt-20"
+          className="relative max-w-2xl text-center mt-10 sm:mt-12 md:mt-14"
         >
-          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] text-ink font-sans leading-[1.3] tracking-[-0.015em] font-bold">
+          <h3 className="text-base sm:text-lg md:text-xl lg:text-[1.45rem] text-ink font-sans leading-[1.4] tracking-[-0.015em] font-bold">
             I believe every great design forms the basis for an even greater story and I'm here to keep writing mine.
           </h3>
 
           {/* Floating Dashed SVG Line Accent matching Image 2 */}
-          <div className="absolute -bottom-8 -right-6 sm:-bottom-10 sm:-right-10 md:-right-16 pointer-events-none opacity-50 select-none">
-            <svg width="64" height="42" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div className="absolute -bottom-8 -right-4 sm:-bottom-9 sm:-right-8 md:-right-12 pointer-events-none opacity-50 select-none">
+            <svg width="56" height="36" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M4 8 C 24 20, 44 14, 58 38"
                 stroke="#20252B"
