@@ -27,10 +27,10 @@ const About: React.FC = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full py-24 sm:py-32 md:py-40 min-h-[70vh] flex flex-col justify-center items-center bg-cream text-ink overflow-hidden z-10 select-none"
+      className="relative w-full py-18 sm:py-24 md:py-32 min-h-[50vh] flex flex-col justify-center items-center bg-cream text-ink overflow-hidden z-10 select-none"
     >
-      <div className="w-full max-w-[1340px] mx-auto px-6 sm:px-10 md:px-14 lg:px-18 flex flex-col items-center justify-center text-center">
-        {/* Large Introductory Paragraph — Modern Sans-Serif Editorial Typography */}
+      <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 md:px-14 flex flex-col items-center justify-center text-center">
+        {/* Introductory Paragraph — Scaled Down Editorial Typography */}
         <motion.p
           style={
             shouldReduceMotion
@@ -40,7 +40,7 @@ const About: React.FC = () => {
                   y: paragraphY,
                 }
           }
-          className="w-[92%] max-w-[1240px] mx-auto text-[clamp(1.5rem,3.4vw,3.25rem)] text-ink font-sans leading-[1.3] tracking-[-0.015em] font-normal text-center"
+          className="w-full max-w-[880px] mx-auto text-lg sm:text-xl md:text-2xl lg:text-[1.75rem] text-ink font-sans leading-[1.55] tracking-[-0.015em] font-normal text-center"
         >
           I'm a Computer Science Engineering student specializing in Artificial Intelligence & Machine Learning, building at the intersection of Generative AI, intelligent automation, prompt engineering, and modern web experiences. From AI-powered applications and LLM workflows to interactive web interfaces, I enjoy turning ideas into products that feel useful, fast, and genuinely human.
         </motion.p>
@@ -55,9 +55,9 @@ const About: React.FC = () => {
                   y: statementY,
                 }
           }
-          className="w-[88%] max-w-[1050px] mx-auto mt-14 sm:mt-20 md:mt-24 text-center"
+          className="w-full max-w-[750px] mx-auto mt-10 sm:mt-14 md:mt-16 text-center"
         >
-          <h3 className="text-[clamp(1.25rem,2.5vw,2.35rem)] text-ink font-sans leading-[1.3] tracking-[-0.02em] font-bold">
+          <h3 className="text-base sm:text-lg md:text-xl lg:text-[1.5rem] text-ink font-sans leading-[1.4] tracking-[-0.02em] font-bold">
             I believe great technology should feel simple, useful, and human — and I'm here to keep building mine.
           </h3>
         </motion.div>
