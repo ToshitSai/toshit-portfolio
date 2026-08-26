@@ -19,13 +19,12 @@ const TechnicalSkillsFallback = () => <div className="min-h-[500px] w-full bg-[#
 const TestimonialsFallback = () => <div className="min-h-[400px] w-full bg-cream" />;
 
 const Index = () => {
-  // Only trigger loader on first visit per session using sessionStorage (or if ?loader=true in URL)
+  // Only trigger loader on first visit per session using sessionStorage
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
-      if (window.location.search.includes("loader=true")) return true;
       return !sessionStorage.getItem("has_seen_loader") && !sessionStorage.getItem("hasVisited");
     }
-    return true;
+    return false;
   });
 
   // Global State for Contact Drawer Overlay (Opens smoothly from right on any "Work with me" click)

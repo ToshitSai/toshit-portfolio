@@ -82,27 +82,22 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
       // Lock body scroll during fullscreen loader
       document.body.style.overflow = "hidden";
 
-      // Controlled primary loader timing (1.8s) unless persistent preview flag ?loader=true is set
-      const isPersistentPreview =
-        typeof window !== "undefined" && window.location.search.includes("loader=true");
+      // Controlled primary loader timing (1.8s duration)
+      const timer = setTimeout(() => {
+        try {
+          sessionStorage.setItem("has_seen_loader", "true");
+        } catch {
+          // Ignore storage errors
+        }
+        if (onLoadingComplete) {
+          onLoadingComplete();
+        }
+      }, 1800);
 
-      if (!isPersistentPreview) {
-        const timer = setTimeout(() => {
-          try {
-            sessionStorage.setItem("has_seen_loader", "true");
-          } catch {
-            // Ignore storage errors
-          }
-          if (onLoadingComplete) {
-            onLoadingComplete();
-          }
-        }, 1800);
-
-        return () => {
-          clearTimeout(timer);
-          document.body.style.overflow = "";
-        };
-      }
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = "";
+      };
     } else {
       document.body.style.overflow = "";
     }
