@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
+import ProjectsCarousel, { CarouselProjectItem } from "./ProjectsCarousel";
 
 // --- DYNAMIC ANIMATED PROJECT PREVIEWS ---
 
@@ -431,6 +432,8 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
 };
 
 const SelectedWork: React.FC = () => {
+  const [viewMode, setViewMode] = useState<"stacked" | "carousel">("carousel");
+
   return (
     <section
       id="work"
@@ -443,8 +446,44 @@ const SelectedWork: React.FC = () => {
         {/* EDITORIAL SECTION HEADER */}
         <ProjectsHeader projectCount={projects.length} />
 
-        {/* CASE STUDY INDEX - ASYMMETRIC SPACING & LAYOUT */}
-        <div className="space-y-24 sm:space-y-32 lg:space-y-40">
+        {/* VIEW MODE TOGGLE BAR */}
+        <div className="flex items-center justify-between mb-10 border-b border-[#1D2024]/10 pb-4">
+          <div className="font-mono text-xs tracking-[0.18em] text-[#1D2024]/60 uppercase">
+            <span>SHOWCASE DISPLAY MODE</span>
+          </div>
+
+          <div className="flex items-center gap-2 p-1 rounded-lg bg-[#EFE6D6] border border-[#1D2024]/15">
+            <button
+              type="button"
+              onClick={() => setViewMode("carousel")}
+              className={`px-3 py-1.5 rounded-md font-mono text-xs tracking-wider transition-all duration-200 ${
+                viewMode === "carousel"
+                  ? "bg-[#1D2024] text-[#F8F2E6] shadow-xs font-semibold"
+                  : "text-[#1D2024]/70 hover:text-[#1D2024]"
+              }`}
+            >
+              ↻ CAROUSEL VIEW
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("stacked")}
+              className={`px-3 py-1.5 rounded-md font-mono text-xs tracking-wider transition-all duration-200 ${
+                viewMode === "stacked"
+                  ? "bg-[#1D2024] text-[#F8F2E6] shadow-xs font-semibold"
+                  : "text-[#1D2024]/70 hover:text-[#1D2024]"
+              }`}
+            >
+              ≡ STACKED VIEW
+            </button>
+          </div>
+        </div>
+
+        {/* CAROUSEL VIEW */}
+        {viewMode === "carousel" ? (
+          <ProjectsCarousel projects={projects} autoRotate={true} rotateInterval={5000} />
+        ) : (
+          /* STACKED CASE STUDY INDEX */
+          <div className="space-y-24 sm:space-y-32 lg:space-y-40">
           {projects.map((project, idx) => {
             const PreviewComp = project.PreviewComponent;
             const isEven = idx % 2 === 0;
@@ -553,6 +592,7 @@ const SelectedWork: React.FC = () => {
             );
           })}
         </div>
+        )}
       </div>
     </section>
   );
