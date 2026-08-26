@@ -400,11 +400,7 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
         {/* Left Column: Refined Editorial Heading */}
         <div className="lg:col-span-8 max-w-[760px]">
           <h2
-            style={{
-              fontFamily: "'Instrument Sans', 'Inter', 'Helvetica Neue', sans-serif",
-              fontWeight: 650,
-            }}
-            className="text-[38px] sm:text-[56px] lg:text-[68px] xl:text-[76px] leading-[0.99] tracking-[-0.035em] text-[#1D2024] flex flex-col items-start gap-0.5"
+            className="font-serif font-medium text-[clamp(28px,3.6vw,50px)] leading-[1.15] tracking-[-0.01em] text-[#1D2024] flex flex-col items-start gap-0.5"
           >
             {headingLines.map((line, idx) => (
               <div key={idx} className="overflow-hidden py-0.5">
