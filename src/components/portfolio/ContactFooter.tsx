@@ -366,12 +366,13 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           From early prototypes to production systems, I help teams ship AI-powered products that are fast, thoughtful, and built to scale.
         </motion.p>
 
-        {/* H1 Main Title with Underline */}
+        {/* H1 Main Title with Underline on Hover */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative inline-block max-w-full mb-6 sm:mb-8"
+          onClick={() => setIsDrawerOpen(true)}
+          className="relative inline-block max-w-full mb-6 sm:mb-8 cursor-pointer group"
         >
           <h1
             style={{ fontFamily: "'Instrument Serif', serif" }}
@@ -379,11 +380,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           >
             Let's build something thoughtful together
           </h1>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="h-[3px] bg-[#1B1B18] w-full mt-3 origin-center rounded-full"
+          <div
+            className="h-[3px] bg-[#1B1B18] w-full mt-3 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out rounded-full"
           />
         </motion.div>
 

@@ -395,64 +395,28 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
         <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK</span>
       </div>
 
-      {/* 2. MAIN HEADING & RIGHT ANNOTATION COMPOSITION */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end mb-6 sm:mb-8">
-        {/* Left Column: Refined Editorial Heading */}
-        <div className="lg:col-span-8 max-w-[760px]">
-          <h2
-            className="font-serif font-medium text-[clamp(28px,3.6vw,50px)] leading-[1.15] tracking-[-0.01em] text-[#1D2024] flex flex-col items-start gap-0.5"
-          >
-            {headingLines.map((line, idx) => (
-              <div key={idx} className="overflow-hidden py-0.5">
-                <motion.span
-                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
-                  animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
-                  transition={{
-                    duration: 0.75,
-                    delay: idx * 0.1,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="block"
-                >
-                  {line}
-                </motion.span>
-              </div>
-            ))}
-          </h2>
-        </div>
-
-        {/* Right Column: Hand-Drawn Yellow Line & "built → tested → shipped" Annotation */}
-        <div className="lg:col-span-4 flex flex-col items-start lg:items-end justify-end space-y-2 pt-2 lg:pt-0">
-          <div className="relative">
-            <svg
-              width="140"
-              height="30"
-              viewBox="0 0 180 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-28 sm:w-36 h-auto opacity-90"
-            >
-              <path
-                d="M6 30 C 40 10, 90 35, 145 14 C 158 10, 168 12, 172 18"
-                stroke="#FFC700"
-                strokeWidth="3"
-                strokeLinecap="round"
-                className={`transition-opacity duration-700 delay-300 ${isInView ? "opacity-100" : "opacity-0"
-                  }`}
-              />
-            </svg>
-          </div>
-
-          <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
-            animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.45 }}
-            className="font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#1D2024]/60 uppercase flex items-center gap-1.5"
-          >
-            <span className="text-[#FFC700] font-bold text-xs">↳</span>
-            <span>built → tested → shipped</span>
-          </motion.div>
-        </div>
+      {/* 2. MAIN HEADING */}
+      <div className="max-w-[760px] mb-6 sm:mb-8">
+        <h2
+          className="font-serif font-medium text-[clamp(28px,3.6vw,50px)] leading-[1.15] tracking-[-0.01em] text-[#1D2024] flex flex-col items-start gap-0.5"
+        >
+          {headingLines.map((line, idx) => (
+            <div key={idx} className="overflow-hidden py-0.5">
+              <motion.span
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
+                animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.75,
+                  delay: idx * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="block"
+              >
+                {line}
+              </motion.span>
+            </div>
+          ))}
+        </h2>
       </div>
 
       {/* 3. SUBTLE 1PX HORIZONTAL DIVIDER */}
