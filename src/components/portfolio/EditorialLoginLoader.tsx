@@ -82,7 +82,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
       // Lock body scroll during fullscreen loader
       document.body.style.overflow = "hidden";
 
-      // Controlled primary loader timing (2.2s) unless persistent preview flag ?loader=true is set
+      // Controlled primary loader timing (1.8s) unless persistent preview flag ?loader=true is set
       const isPersistentPreview =
         typeof window !== "undefined" && window.location.search.includes("loader=true");
 
@@ -96,7 +96,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           if (onLoadingComplete) {
             onLoadingComplete();
           }
-        }, 2200);
+        }, 1800);
 
         return () => {
           clearTimeout(timer);
@@ -121,8 +121,8 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Slowed-down, premium chomping cycle duration (0.95s per bite)
-  const BITE_DURATION = 0.95;
+  // Balanced, smooth chomping cycle duration (0.58s per bite)
+  const BITE_DURATION = 0.58;
 
   return (
     <AnimatePresence>
@@ -132,7 +132,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.01, filter: "blur(3px)" }}
-          transition={{ duration: 0.7, ease: EASE_CUBIC }}
+          transition={{ duration: 0.5, ease: EASE_CUBIC }}
           role="alert"
           aria-live="polite"
           aria-label={`Loading portfolio: ${currentMessage}`}
