@@ -384,83 +384,89 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
   ];
 
   return (
-    <div ref={containerRef} className="relative pb-10 mb-20 sm:mb-28">
-      {/* 1. TOP METADATA BAR: Editorial Label */}
-      <div className="flex items-center justify-between font-mono text-xs sm:text-sm tracking-[0.22em] text-[#1D2024]/70 uppercase mb-8 sm:mb-12">
-        <div className="flex items-center gap-3">
-          <motion.span
-            initial={{ scale: 0.8 }}
-            animate={isInView ? { scale: [1, 1.4, 1] } : {}}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-xs inline-block"
-          />
-          <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK</span>
-        </div>
+    <div ref={containerRef} className="relative pb-4 mb-12 sm:mb-16">
+      {/* 1. TOP METADATA BAR: Refined Monospace Section Label */}
+      <div className="flex items-center gap-2.5 font-mono text-xs sm:text-[13px] tracking-[0.18em] text-[#1D2024]/75 uppercase mb-6 sm:mb-8">
+        <motion.span
+          initial={{ scale: 0.8 }}
+          animate={isInView ? { scale: [1, 1.3, 1] } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block flex-shrink-0"
+        />
+        <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK</span>
       </div>
 
-      {/* 2. MAIN HEADING & HAND-DRAWN YELLOW SVG SKETCH ANNOTATION */}
-      <div className="relative">
-        <h2 className="font-bold text-[clamp(28px,3.8vw,56px)] leading-[1.08] tracking-[-0.03em] text-[#1D2024] font-sans flex flex-col items-start gap-0.5 sm:gap-1">
-          {headingLines.map((line, idx) => (
-            <div key={idx} className="overflow-hidden py-0.5">
-              <motion.span
-                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-                animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.8,
-                  delay: idx * 0.14,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="block"
-              >
-                {line}
-              </motion.span>
-            </div>
-          ))}
-        </h2>
-
-        {/* Hand-Drawn Yellow SVG Line Sketch Annotation Accent */}
-        <div className="absolute right-0 sm:right-8 -bottom-3 sm:bottom-0 pointer-events-none z-0">
-          <svg
-            width="180"
-            height="40"
-            viewBox="0 0 180 40"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-32 sm:w-40 h-auto"
+      {/* 2. MAIN HEADING & RIGHT ANNOTATION COMPOSITION */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end mb-6 sm:mb-8">
+        {/* Left Column: Refined Editorial Heading */}
+        <div className="lg:col-span-8 max-w-[760px]">
+          <h2
+            style={{
+              fontFamily: "'Instrument Sans', 'Inter', 'Helvetica Neue', sans-serif",
+              fontWeight: 650,
+            }}
+            className="text-[38px] sm:text-[56px] lg:text-[68px] xl:text-[76px] leading-[0.99] tracking-[-0.035em] text-[#1D2024] flex flex-col items-start gap-0.5"
           >
-            <path
-              d="M6 30 C 40 10, 90 35, 145 14 C 158 10, 168 12, 172 18"
-              stroke="#FFC700"
-              strokeWidth="3"
-              strokeLinecap="round"
-              className={`transition-opacity duration-1000 delay-300 ${
-                isInView ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          </svg>
+            {headingLines.map((line, idx) => (
+              <div key={idx} className="overflow-hidden py-0.5">
+                <motion.span
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
+                  animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
+                  transition={{
+                    duration: 0.75,
+                    delay: idx * 0.1,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="block"
+                >
+                  {line}
+                </motion.span>
+              </div>
+            ))}
+          </h2>
+        </div>
+
+        {/* Right Column: Hand-Drawn Yellow Line & "built → tested → shipped" Annotation */}
+        <div className="lg:col-span-4 flex flex-col items-start lg:items-end justify-end space-y-2 pt-2 lg:pt-0">
+          <div className="relative">
+            <svg
+              width="140"
+              height="30"
+              viewBox="0 0 180 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-28 sm:w-36 h-auto opacity-90"
+            >
+              <path
+                d="M6 30 C 40 10, 90 35, 145 14 C 158 10, 168 12, 172 18"
+                stroke="#FFC700"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className={`transition-opacity duration-700 delay-300 ${
+                  isInView ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            </svg>
+          </div>
+
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
+            animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="font-mono text-[11px] sm:text-[12px] tracking-[0.16em] text-[#1D2024]/60 uppercase flex items-center gap-1.5"
+          >
+            <span className="text-[#FFC700] font-bold text-xs">↳</span>
+            <span>built → tested → shipped</span>
+          </motion.div>
         </div>
       </div>
 
-      {/* 3. SMALL PERSONAL EDITORIAL ANNOTATION */}
-      <div className="flex justify-end mt-6 sm:mt-8 mb-8">
-        <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: -15 }}
-          animate={isInView || shouldReduceMotion ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.55 }}
-          className="font-mono text-xs sm:text-sm tracking-widest text-[#1D2024]/60 uppercase flex items-center gap-2"
-        >
-          <span className="text-[#FFC700] font-bold text-sm">↳</span>
-          <span>built → tested → shipped</span>
-        </motion.div>
-      </div>
-
-      {/* 4. ANIMATED HORIZONTAL DIVIDER */}
+      {/* 3. SUBTLE 1PX HORIZONTAL DIVIDER */}
       <motion.div
         initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
         animate={isInView || shouldReduceMotion ? { scaleX: 1 } : {}}
-        transition={{ duration: 0.75, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full h-[1.5px] bg-[#1D2024]/15 origin-left"
+        transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full h-[1px] bg-[#1D2024]/12 origin-left"
       />
     </div>
   );
@@ -471,7 +477,7 @@ const SelectedWork: React.FC = () => {
     <section
       id="work"
       style={{ backgroundColor: "#F8F2E6" }}
-      className="relative w-full py-28 sm:py-36 lg:py-44 text-[#1D2024] overflow-hidden z-10 select-none"
+      className="relative w-full py-20 sm:py-28 lg:py-32 text-[#1D2024] overflow-hidden z-10 select-none"
     >
       <div id="projects" className="absolute -top-12 left-0" />
 
