@@ -43,6 +43,9 @@ export const getRandomContextualMessage = (): string => {
   return CONTEXTUAL_MESSAGES[randomIndex];
 };
 
+// Premium, controlled cubic-bezier easing curve for smooth intentional movement
+const EASE_CUBIC = [0.65, 0, 0.35, 1] as const;
+
 const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
   isLoading,
   onLoadingComplete,
@@ -79,8 +82,9 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
       // Lock body scroll during fullscreen loader
       document.body.style.overflow = "hidden";
 
-      // Smooth finish timing (2.0s duration unless persistent preview flag ?loader=true is present)
-      const isPersistentPreview = typeof window !== "undefined" && window.location.search.includes("loader=true");
+      // Controlled primary loader timing (2.2s) unless persistent preview flag ?loader=true is set
+      const isPersistentPreview =
+        typeof window !== "undefined" && window.location.search.includes("loader=true");
 
       if (!isPersistentPreview) {
         const timer = setTimeout(() => {
@@ -92,7 +96,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           if (onLoadingComplete) {
             onLoadingComplete();
           }
-        }, 2000);
+        }, 2200);
 
         return () => {
           clearTimeout(timer);
@@ -117,8 +121,8 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Duration of one chomping mouth cycle (open & shut) in seconds
-  const BITE_DURATION = 0.32;
+  // Slowed-down, premium chomping cycle duration (0.95s per bite)
+  const BITE_DURATION = 0.95;
 
   return (
     <AnimatePresence>
@@ -127,8 +131,8 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           key="login-loader-overlay"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.02, filter: "blur(4px)" }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          exit={{ opacity: 0, scale: 1.01, filter: "blur(3px)" }}
+          transition={{ duration: 0.7, ease: EASE_CUBIC }}
           role="alert"
           aria-live="polite"
           aria-label={`Loading portfolio: ${currentMessage}`}
@@ -148,60 +152,42 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
           <div className="flex flex-col items-center justify-center space-y-7">
             {/* PAC-MAN SHAPE & CONTINUOUS TRAILING DOT STREAM */}
             <div className="flex items-center space-x-3.5 pl-2">
-              {/* PAC-MAN CHARACTER WITH ANIMATED DYNAMIC TOP & BOTTOM JAWS */}
+              {/* PAC-MAN CHARACTER WITH ANIMATED DYNAMIC TOP & BOTTOM JAWS (NO EYE / NO BLACK DOT) */}
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0">
                 <svg
                   viewBox="0 0 36 36"
                   className="w-full h-full overflow-visible"
                 >
-                  {/* TOP JAW (Upper Semicircle) */}
+                  {/* TOP JAW (Upper Yellow Semicircle) */}
                   <motion.path
                     d="M 18 18 L 34 18 A 16 16 0 0 0 2 18 Z"
                     fill="#FFD42A"
                     style={{ transformOrigin: "18px 18px" }}
                     animate={
                       prefersReducedMotion
-                        ? { rotate: -20 }
-                        : { rotate: [0, -36, 0] }
+                        ? { rotate: -15 }
+                        : { rotate: [0, -32, 0] }
                     }
                     transition={{
                       duration: BITE_DURATION,
                       repeat: Infinity,
-                      ease: "easeInOut",
+                      ease: EASE_CUBIC,
                     }}
                   />
-                  {/* PAC-MAN EYE (Attached to & rotating with Top Jaw) */}
-                  <motion.circle
-                    cx="19"
-                    cy="10"
-                    r="1.8"
-                    fill="#1C1F24"
-                    style={{ transformOrigin: "18px 18px" }}
-                    animate={
-                      prefersReducedMotion
-                        ? { rotate: -20 }
-                        : { rotate: [0, -36, 0] }
-                    }
-                    transition={{
-                      duration: BITE_DURATION,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                  {/* BOTTOM JAW (Lower Semicircle) */}
+                  {/* BOTTOM JAW (Lower Yellow Semicircle) */}
                   <motion.path
                     d="M 18 18 L 34 18 A 16 16 0 0 1 2 18 Z"
                     fill="#FFD42A"
                     style={{ transformOrigin: "18px 18px" }}
                     animate={
                       prefersReducedMotion
-                        ? { rotate: 20 }
-                        : { rotate: [0, 36, 0] }
+                        ? { rotate: 15 }
+                        : { rotate: [0, 32, 0] }
                     }
                     transition={{
                       duration: BITE_DURATION,
                       repeat: Infinity,
-                      ease: "easeInOut",
+                      ease: EASE_CUBIC,
                     }}
                   />
                 </svg>
@@ -219,7 +205,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
                   transition={{
                     duration: BITE_DURATION,
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: EASE_CUBIC,
                   }}
                 >
                   {[0, 1, 2, 3, 4, 5].map((idx) => {
@@ -231,12 +217,12 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
                           prefersReducedMotion
                             ? { opacity: 0.7 }
                             : isFirst
-                            ? { opacity: [1, 0], scale: [1, 0.2] }
+                            ? { opacity: [1, 0], scale: [1, 0.3] }
                             : { opacity: 0.85, scale: 1 }
                         }
                         transition={
                           isFirst && !prefersReducedMotion
-                            ? { duration: BITE_DURATION, repeat: Infinity, ease: "linear" }
+                            ? { duration: BITE_DURATION, repeat: Infinity, ease: EASE_CUBIC }
                             : {}
                         }
                         className="w-2 h-2 rounded-full bg-[#D9A62C] flex-shrink-0"
@@ -253,7 +239,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
                 key={currentMessage}
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.5, ease: EASE_CUBIC }}
                 style={{
                   fontFamily: "monospace",
                   fontSize: "11px",
