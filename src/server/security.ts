@@ -34,22 +34,31 @@ const MAX_REQUESTS_PER_WINDOW = 5;
 
 /**
  * Checks whether an IP address is rate-limited (5 requests per 15 mins).
- * Uses Upstash Redis if configured, otherwise falls back to sliding-window memory store.
+ * Uses Upstash Redis if configured. Fails safe (BLOCKS access) if Redis is unreachable or missing in production.
  */
 export async function isRateLimited(ip: string): Promise<boolean> {
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+
   if (ratelimit) {
     try {
       const { success } = await ratelimit.limit(ip);
       return !success;
     } catch (err: unknown) {
       console.error(
-        "[Upstash RateLimit Error]: Falling back to memory limiter.",
+        "[Upstash RateLimit Error]: Redis unreachable. Failing safe (blocking request).",
         err instanceof Error ? err.message : err
       );
+      // Fail safe in production: block request if Redis fails
+      if (isProd) {
+        return true;
+      }
     }
+  } else if (isProd) {
+    console.error("[RateLimit Warning]: Upstash Redis credentials not set in production. Failing safe (blocking request).");
+    return true; // Fail safe in production if Upstash is not configured
   }
 
-  // Fallback in-memory rate limiter
+  // Fallback in-memory rate limiter for local development only
   const now = Date.now();
   const timestamps = (rateLimitMap.get(ip) || []).filter((ts) => now - ts < WINDOW_MS);
 
@@ -70,7 +79,7 @@ export function sanitizeHeaderValue(value: string): string {
 }
 
 /**
- * Escapes HTML characters to prevent XSS in HTML email templates
+ * Escapes HTML characters to prevent XSS in HTML email templates and external webhooks
  */
 export function escapeHtml(text: string): string {
   return text
@@ -82,7 +91,7 @@ export function escapeHtml(text: string): string {
 }
 
 /**
- * Strict Input Validation and Length Constraints
+ * Strict Input Validation, Length Constraints, Anti-Bot Timestamp, and Server-Side HTML Sanitization
  */
 export interface ValidatedContactData {
   name: string;
@@ -121,13 +130,24 @@ export function validateAndSanitizeContactInput(
     };
   }
 
-  // 2. Extract & Sanitize Input Fields
+  // 2. Anti-Bot Time-based Latency Check (Reject submissions completed in < 3000ms from form mount)
+  const MIN_FORM_FILL_MS = 3000;
+  const now = Date.now();
+  const formTimestamp = Number(payload._ts);
+  if (formTimestamp && (!Number.isFinite(formTimestamp) || formTimestamp > now || now - formTimestamp < MIN_FORM_FILL_MS)) {
+    return {
+      isValid: false,
+      isSpamBot: true,
+    };
+  }
+
+  // 3. Extract & Sanitize Input Fields
   const rawName = String(payload.name ?? "").trim();
   const rawEmail = String(payload.email ?? "").trim();
   const rawSubject = String(payload.subject ?? "").trim();
   const rawMessage = String(payload.message ?? "").trim();
 
-  // 3. Required Field Validation
+  // 4. Required Field Validation
   if (!rawName) {
     return { isValid: false, error: "Name is required." };
   }
@@ -138,7 +158,7 @@ export function validateAndSanitizeContactInput(
     return { isValid: false, error: "Message cannot be empty." };
   }
 
-  // 4. Maximum Length Enforcement
+  // 5. Maximum Length Enforcement
   if (rawName.length > 100) {
     return { isValid: false, error: "Name cannot exceed 100 characters." };
   }
@@ -152,18 +172,18 @@ export function validateAndSanitizeContactInput(
     return { isValid: false, error: "Message cannot exceed 5000 characters." };
   }
 
-  // 5. Strict Email Format Regex Validation (RFC 5322 Compliant subset)
+  // 6. Strict Email Format Regex Validation (RFC 5322 Compliant subset)
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!emailRegex.test(rawEmail)) {
     return { isValid: false, error: "Please enter a valid email address." };
   }
 
-  // 6. Header Injection Protection
-  const name = sanitizeHeaderValue(rawName);
-  const email = sanitizeHeaderValue(rawEmail);
-  const subject = sanitizeHeaderValue(rawSubject);
-  const message = rawMessage;
+  // 7. Header Injection Protection & Complete Server-Side HTML Sanitization
+  const name = escapeHtml(sanitizeHeaderValue(rawName));
+  const email = escapeHtml(sanitizeHeaderValue(rawEmail));
+  const subject = escapeHtml(sanitizeHeaderValue(rawSubject));
+  const message = escapeHtml(rawMessage);
 
   return {
     isValid: true,

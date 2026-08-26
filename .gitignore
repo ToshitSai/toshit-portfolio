@@ -32,7 +32,6 @@ dist-ssr
 .env.development
 .env.production
 .env.test
-!/.env.example
 *.pem
 *.key
 *oidc*

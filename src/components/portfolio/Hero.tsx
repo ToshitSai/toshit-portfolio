@@ -68,7 +68,7 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
   },
   {
     id: "hirescope",
-    title: "HireScope AI",
+    title: "HireScope",
     subtitle: "AI-powered portfolio & resume analysis",
     url: "https://job-gem-grader.vercel.app/",
   },
@@ -319,18 +319,16 @@ const Hero: React.FC = () => {
                 onMouseEnter={() => setLeftDiscHovered(true)}
                 onMouseLeave={() => setLeftDiscHovered(false)}
                 aria-label="Previous Project"
-                className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${
-                  leftDiscHovered
+                className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${leftDiscHovered
                     ? "-rotate-12 scale-110 shadow-lg"
                     : isCardHovered
-                    ? "animate-[spin_6s_linear_infinite]"
-                    : "animate-[spin_12s_linear_infinite]"
-                }`}
+                      ? "animate-[spin_6s_linear_infinite]"
+                      : "animate-[spin_12s_linear_infinite]"
+                  }`}
               >
                 <div
-                  className={`w-2.5 h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${
-                    leftDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
-                  }`}
+                  className={`w-2.5 h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${leftDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
+                    }`}
                 />
               </button>
 
@@ -407,18 +405,16 @@ const Hero: React.FC = () => {
                 onMouseEnter={() => setRightDiscHovered(true)}
                 onMouseLeave={() => setRightDiscHovered(false)}
                 aria-label="Next Project"
-                className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${
-                  rightDiscHovered
+                className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${rightDiscHovered
                     ? "rotate-12 scale-110 shadow-lg"
                     : isCardHovered
-                    ? "animate-[spin_6s_linear_infinite]"
-                    : "animate-[spin_12s_linear_infinite]"
-                }`}
+                      ? "animate-[spin_6s_linear_infinite]"
+                      : "animate-[spin_12s_linear_infinite]"
+                  }`}
               >
                 <div
-                  className={`w-2.5 h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${
-                    rightDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
-                  }`}
+                  className={`w-2.5 h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${rightDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
+                    }`}
                 />
               </button>
 

@@ -147,12 +147,19 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     });
   };
 
+  const [formMountedAt, setFormMountedAt] = useState<number>(Date.now());
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
     website: "", // Anti-Spam Honeypot Field
   });
+
+  useEffect(() => {
+    if (isDrawerOpen) {
+      setFormMountedAt(Date.now());
+    }
+  }, [isDrawerOpen]);
 
   const [formErrors, setFormErrors] = useState<{
     name?: string;
@@ -257,6 +264,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           subject: `Portfolio Inquiry from ${formData.name.trim()}`,
           message: formData.message.trim(),
           website: formData.website,
+          _ts: formMountedAt,
         }),
       });
 
@@ -672,166 +680,163 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           transition={{ duration: 0.5, delay: 0.25 }}
                           className="w-full border-b border-[#1B1B18]/15 mb-7 sm:mb-8 origin-left"
                         />
-                      <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-7">
-                        {/* Anti-Spam Honeypot Field */}
-                        <div className="hidden opacity-0 pointer-events-none select-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
-                          <label htmlFor="website">Website</label>
-                          <input
-                            type="text"
-                            id="website"
-                            name="website"
-                            tabIndex={-1}
-                            autoComplete="off"
-                            value={formData.website}
-                            onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                          />
-                        </div>
+                        <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-7">
+                          {/* Anti-Spam Honeypot Field */}
+                          <div className="hidden opacity-0 pointer-events-none select-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                            <label htmlFor="website">Website</label>
+                            <input
+                              type="text"
+                              id="website"
+                              name="website"
+                              tabIndex={-1}
+                              autoComplete="off"
+                              value={formData.website}
+                              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                            />
+                          </div>
 
-                        {/* API Error Banner */}
-                        {sendError && (
+                          {/* API Error Banner */}
+                          {sendError && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 font-mono text-xs leading-relaxed"
+                            >
+                              <strong>⚠️ Submission Error:</strong> {sendError}
+                            </motion.div>
+                          )}
+
+                          {/* 1. NAME FIELD (MINIMAL UNDERLINE INPUT) */}
                           <motion.div
-                            initial={{ opacity: 0, y: -8 }}
+                            initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 font-mono text-xs leading-relaxed"
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="group"
                           >
-                            <strong>⚠️ Submission Error:</strong> {sendError}
-                          </motion.div>
-                        )}
-
-                        {/* 1. NAME FIELD (MINIMAL UNDERLINE INPUT) */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.3 }}
-                          className="group"
-                        >
-                          <label
-                            htmlFor="contact-name"
-                            className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
-                          >
-                            YOUR NAME
-                          </label>
-                          <input
-                            type="text"
-                            id="contact-name"
-                            name="name"
-                            placeholder="Jane Appleseed"
-                            value={formData.name}
-                            onChange={(e) => {
-                              setFormData({ ...formData, name: e.target.value });
-                              if (formErrors.name) setFormErrors({ ...formErrors, name: undefined });
-                            }}
-                            className={`w-full bg-transparent border-0 border-b ${
-                              formErrors.name ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
-                            } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
-                          />
-                          {formErrors.name && (
-                            <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.name}</p>
-                          )}
-                        </motion.div>
-
-                        {/* 2. EMAIL FIELD (MINIMAL UNDERLINE INPUT) */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.35 }}
-                          className="group"
-                        >
-                          <label
-                            htmlFor="contact-email"
-                            className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
-                          >
-                            EMAIL
-                          </label>
-                          <input
-                            type="email"
-                            id="contact-email"
-                            name="email"
-                            placeholder="you@company.com"
-                            value={formData.email}
-                            onChange={(e) => {
-                              setFormData({ ...formData, email: e.target.value });
-                              if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
-                            }}
-                            className={`w-full bg-transparent border-0 border-b ${
-                              formErrors.email ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
-                            } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
-                          />
-                          {formErrors.email && (
-                            <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.email}</p>
-                          )}
-                        </motion.div>
-
-                        {/* 3. MESSAGE FIELD (MINIMAL UNDERLINE TEXTAREA) */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.4 }}
-                          className="group"
-                        >
-                          <label
-                            htmlFor="contact-message"
-                            className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
-                          >
-                            WHAT ARE WE MAKING?
-                          </label>
-                          <textarea
-                            id="contact-message"
-                            name="message"
-                            rows={3}
-                            placeholder="A few lines about your project, timeline, or budget"
-                            value={formData.message}
-                            onChange={(e) => {
-                              setFormData({ ...formData, message: e.target.value });
-                              if (formErrors.message) setFormErrors({ ...formErrors, message: undefined });
-                            }}
-                            className={`w-full bg-transparent border-0 border-b ${
-                              formErrors.message ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
-                            } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none resize-none transition-colors duration-300`}
-                          />
-                          {formErrors.message && (
-                            <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.message}</p>
-                          )}
-                        </motion.div>
-
-                        {/* 4. SUBMIT BUTTON (COMPACT BLACK PILL WITH PURE SVG WHITE ENVELOPE ICON) */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.45 }}
-                          className="pt-2 sm:pt-3"
-                        >
-                          <motion.button
-                            type="submit"
-                            disabled={isSubmitting}
-                            whileHover={!isSubmitting ? { y: -2, scale: 1.02 } : {}}
-                            whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                            className="inline-flex items-center gap-3 bg-[#1B1B18] text-[#FFF8E8] font-sans text-sm font-medium px-6 py-3 rounded-full shadow-md hover:bg-black transition-all group disabled:opacity-75 disabled:cursor-not-allowed"
-                          >
-                            <span>
-                              {isSubmitting ? "Sending..." : isSubmitted ? "Sent ✓" : "Send it over"}
-                            </span>
-
-                            {isSubmitting ? (
-                              <Loader2 className="w-4 h-4 animate-spin text-[#FFF8E8]" />
-                            ) : (
-                              <svg
-                                className="w-4 h-4 text-[#FFF8E8] group-hover:translate-x-0.5 transition-transform flex-shrink-0"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <rect width="20" height="16" x="2" y="4" rx="2" />
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                              </svg>
+                            <label
+                              htmlFor="contact-name"
+                              className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
+                            >
+                              YOUR NAME
+                            </label>
+                            <input
+                              type="text"
+                              id="contact-name"
+                              name="name"
+                              placeholder="Jane Appleseed"
+                              value={formData.name}
+                              onChange={(e) => {
+                                setFormData({ ...formData, name: e.target.value });
+                                if (formErrors.name) setFormErrors({ ...formErrors, name: undefined });
+                              }}
+                              className={`w-full bg-transparent border-0 border-b ${formErrors.name ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
+                                } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
+                            />
+                            {formErrors.name && (
+                              <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.name}</p>
                             )}
-                          </motion.button>
-                        </motion.div>
-                      </form>
-                    </>
+                          </motion.div>
+
+                          {/* 2. EMAIL FIELD (MINIMAL UNDERLINE INPUT) */}
+                          <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.35 }}
+                            className="group"
+                          >
+                            <label
+                              htmlFor="contact-email"
+                              className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
+                            >
+                              EMAIL
+                            </label>
+                            <input
+                              type="email"
+                              id="contact-email"
+                              name="email"
+                              placeholder="you@company.com"
+                              value={formData.email}
+                              onChange={(e) => {
+                                setFormData({ ...formData, email: e.target.value });
+                                if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
+                              }}
+                              className={`w-full bg-transparent border-0 border-b ${formErrors.email ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
+                                } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
+                            />
+                            {formErrors.email && (
+                              <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.email}</p>
+                            )}
+                          </motion.div>
+
+                          {/* 3. MESSAGE FIELD (MINIMAL UNDERLINE TEXTAREA) */}
+                          <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.4 }}
+                            className="group"
+                          >
+                            <label
+                              htmlFor="contact-message"
+                              className="block font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-[#85847C] uppercase font-medium mb-1.5"
+                            >
+                              WHAT ARE WE MAKING?
+                            </label>
+                            <textarea
+                              id="contact-message"
+                              name="message"
+                              rows={3}
+                              placeholder="A few lines about your project, timeline, or budget"
+                              value={formData.message}
+                              onChange={(e) => {
+                                setFormData({ ...formData, message: e.target.value });
+                                if (formErrors.message) setFormErrors({ ...formErrors, message: undefined });
+                              }}
+                              className={`w-full bg-transparent border-0 border-b ${formErrors.message ? "border-red-500" : "border-[#1B1B18]/20 focus:border-[#1B1B18]"
+                                } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none resize-none transition-colors duration-300`}
+                            />
+                            {formErrors.message && (
+                              <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.message}</p>
+                            )}
+                          </motion.div>
+
+                          {/* 4. SUBMIT BUTTON (COMPACT BLACK PILL WITH PURE SVG WHITE ENVELOPE ICON) */}
+                          <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.45 }}
+                            className="pt-2 sm:pt-3"
+                          >
+                            <motion.button
+                              type="submit"
+                              disabled={isSubmitting}
+                              whileHover={!isSubmitting ? { y: -2, scale: 1.02 } : {}}
+                              whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                              className="inline-flex items-center gap-3 bg-[#1B1B18] text-[#FFF8E8] font-sans text-sm font-medium px-6 py-3 rounded-full shadow-md hover:bg-black transition-all group disabled:opacity-75 disabled:cursor-not-allowed"
+                            >
+                              <span>
+                                {isSubmitting ? "Sending..." : isSubmitted ? "Sent ✓" : "Send it over"}
+                              </span>
+
+                              {isSubmitting ? (
+                                <Loader2 className="w-4 h-4 animate-spin text-[#FFF8E8]" />
+                              ) : (
+                                <svg
+                                  className="w-4 h-4 text-[#FFF8E8] group-hover:translate-x-0.5 transition-transform flex-shrink-0"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                </svg>
+                              )}
+                            </motion.button>
+                          </motion.div>
+                        </form>
+                      </>
                     )}
 
                     {/* NOT A FAN OF FORMS? SECTION */}

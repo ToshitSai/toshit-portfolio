@@ -179,7 +179,7 @@ const CourseForgePreview: React.FC = () => {
       <div className="flex items-center justify-between border-b border-[#0F766E]/20 pb-3 font-mono text-[11px] tracking-wider text-[#0D5C56]">
         <div className="flex items-center gap-2">
           <Cpu className="w-3.5 h-3.5 text-[#0F766E]" />
-          <span className="font-semibold uppercase">AI CURRICULUM GENERATOR</span>
+          <span className="font-semibold uppercase">CURRICULUM GENERATOR</span>
         </div>
         <span className="text-[10px] tracking-widest text-[#0D5C56]/70 uppercase font-semibold">
           4 LESSONS
@@ -198,9 +198,8 @@ const CourseForgePreview: React.FC = () => {
                 scale: isActive ? 1.02 : 1,
               }}
               transition={{ duration: 0.3 }}
-              className={`flex items-center justify-between border px-3 py-2 rounded text-xs font-mono transition-all ${
-                isActive ? "border-[#0F766E] text-[#0D5C56] shadow-xs font-bold" : "border-[#0F766E]/15 text-[#0D5C56]/70"
-              }`}
+              className={`flex items-center justify-between border px-3 py-2 rounded text-xs font-mono transition-all ${isActive ? "border-[#0F766E] text-[#0D5C56] shadow-xs font-bold" : "border-[#0F766E]/15 text-[#0D5C56]/70"
+                }`}
             >
               <div className="flex items-center gap-2 overflow-hidden">
                 <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#0F766E] animate-pulse" : "bg-[#0F766E]/30"}`} />
@@ -324,9 +323,9 @@ const projects: ProjectItem[] = [
   {
     id: "hirescope",
     number: "01",
-    category: "AI CAREER TOOL",
-    titleMain: "HireScope AI",
-    description: "AI-powered resume evaluation and job matching with automated scoring, analysis, and intelligent candidate-to-role recommendations.",
+    category: "CAREER TOOL",
+    titleMain: "HireScope",
+    description: "Resume evaluation and job matching with automated scoring, analysis, and intelligent candidate-to-role recommendations.",
     tech: ["NEXT.JS", "PUPPETEER", "CLAUDE API", "SERPER API"],
     liveUrl: "https://job-gem-grader.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
@@ -336,9 +335,9 @@ const projects: ProjectItem[] = [
   {
     id: "greetly",
     number: "02",
-    category: "AI GREETING TOOL",
+    category: "GREETING TOOL",
     titleMain: "Greetly",
-    description: "Personalized AI greetings and messages generated from contextual inputs using high-speed inference and a lightweight Flask service.",
+    description: "Personalized greetings and messages generated from contextual inputs using high-speed inference and a lightweight Flask service.",
     tech: ["REACT", "VITE", "FLASK", "GROQ API"],
     liveUrl: "https://toshit-greetly.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
@@ -348,10 +347,10 @@ const projects: ProjectItem[] = [
   {
     id: "courseforge",
     number: "03",
-    category: "AI COURSE BUILDER",
-    titleMain: "CourseForge AI",
-    description: "AI-generated courses with structured lessons, automated quizzes, and curated educational content for faster learning.",
-    tech: ["REACT", "VITE", "PYTHON", "AI ENGINE"],
+    category: "COURSE BUILDER",
+    titleMain: "CourseForge",
+    description: "Interactive courses with structured lessons, automated quizzes, and curated educational content for faster learning.",
+    tech: ["REACT", "VITE", "PYTHON", "INTELLIGENCE ENGINE"],
     liveUrl: "https://courseforge-ai-pied.vercel.app/",
     githubUrl: "https://github.com/ToshitSai/courseforge-ai",
     PreviewComponent: CourseForgePreview,
@@ -442,9 +441,8 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
                 stroke="#FFC700"
                 strokeWidth="3"
                 strokeLinecap="round"
-                className={`transition-opacity duration-700 delay-300 ${
-                  isInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`transition-opacity duration-700 delay-300 ${isInView ? "opacity-100" : "opacity-0"
+                  }`}
               />
             </svg>
           </div>
@@ -524,9 +522,8 @@ const SelectedWork: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                   {/* LEFT / RIGHT ALTERNATING TITLE & DESCRIPTION */}
                   <div
-                    className={`lg:col-span-6 flex flex-col justify-between ${
-                      isEven ? "lg:order-1" : "lg:order-2"
-                    }`}
+                    className={`lg:col-span-6 flex flex-col justify-between ${isEven ? "lg:order-1" : "lg:order-2"
+                      }`}
                   >
                     <div>
                       <h3
