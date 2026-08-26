@@ -856,7 +856,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
                       <a
                         href="mailto:iamtoshitsai@gmail.com"
-                        className="inline-block text-xl sm:text-2xl font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/40 hover:decoration-[#1B1B18] hover:text-black transition-all mb-5 font-sans break-all sm:break-normal"
+                        className="inline-block text-xl sm:text-2xl font-medium text-[#1B1B18] underline underline-offset-4 decoration-[#1B1B18]/40 hover:decoration-[#B87B11] hover:text-[#B87B11] transition-all mb-5 font-sans break-all sm:break-normal"
                       >
                         iamtoshitsai@gmail.com
                       </a>
@@ -866,7 +866,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           href="https://www.linkedin.com/in/toshit-sai-galam-177788276/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+                          className="inline-flex items-center gap-1 hover:text-[#B87B11] transition-colors group"
                         >
                           <span>LinkedIn</span>
                           <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
@@ -876,7 +876,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           href="https://github.com/ToshitSai"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+                          className="inline-flex items-center gap-1 hover:text-[#B87B11] transition-colors group"
                         >
                           <span>GitHub</span>
                           <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
@@ -886,7 +886,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           href="https://www.instagram.com/toshit.codespace/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 hover:text-[#1B1B18] transition-colors group"
+                          className="inline-flex items-center gap-1 hover:text-[#B87B11] transition-colors group"
                         >
                           <span>Instagram</span>
                           <span className="text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
