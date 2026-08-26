@@ -79,22 +79,26 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
       // Lock body scroll during fullscreen loader
       document.body.style.overflow = "hidden";
 
-      // Smooth finish timing (1.8s duration)
-      const timer = setTimeout(() => {
-        try {
-          sessionStorage.setItem("has_seen_loader", "true");
-        } catch {
-          // Ignore storage errors
-        }
-        if (onLoadingComplete) {
-          onLoadingComplete();
-        }
-      }, 1800);
+      // Smooth finish timing (2.0s duration unless persistent preview flag ?loader=true is present)
+      const isPersistentPreview = typeof window !== "undefined" && window.location.search.includes("loader=true");
 
-      return () => {
-        clearTimeout(timer);
-        document.body.style.overflow = "";
-      };
+      if (!isPersistentPreview) {
+        const timer = setTimeout(() => {
+          try {
+            sessionStorage.setItem("has_seen_loader", "true");
+          } catch {
+            // Ignore storage errors
+          }
+          if (onLoadingComplete) {
+            onLoadingComplete();
+          }
+        }, 2000);
+
+        return () => {
+          clearTimeout(timer);
+          document.body.style.overflow = "";
+        };
+      }
     } else {
       document.body.style.overflow = "";
     }
@@ -113,15 +117,18 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  // Duration of one chomping mouth cycle (open & shut) in seconds
+  const BITE_DURATION = 0.32;
+
   return (
     <AnimatePresence>
       {isLoading && (
         <motion.div
           key="login-loader-overlay"
-          initial={{ opacity: 1, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.02 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.02, filter: "blur(4px)" }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           role="alert"
           aria-live="polite"
           aria-label={`Loading portfolio: ${currentMessage}`}
@@ -137,63 +144,106 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
             userSelect: "none",
           }}
         >
-
           {/* CENTERED LOADER COMPOSITION */}
-          <div className="flex flex-col items-center justify-center space-y-6">
-            {/* PAC-MAN SHAPE & TRAILING DOTS HORIZONTAL CONTAINER */}
-            <div className="flex items-center gap-3">
-              {/* YELLOW PAC-MAN-LIKE CHARACTER WITH FLUID CONTINUOUS BITE */}
-              <motion.div
-                animate={
-                  prefersReducedMotion
-                    ? {}
-                    : {
-                        scale: [1, 1.1, 1],
-                        rotate: [0, 8, 0],
-                      }
-                }
-                transition={{
-                  duration: 0.75,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center"
-              >
+          <div className="flex flex-col items-center justify-center space-y-7">
+            {/* PAC-MAN SHAPE & CONTINUOUS TRAILING DOT STREAM */}
+            <div className="flex items-center space-x-3.5 pl-2">
+              {/* PAC-MAN CHARACTER WITH ANIMATED DYNAMIC TOP & BOTTOM JAWS */}
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0">
                 <svg
                   viewBox="0 0 36 36"
-                  className="w-full h-full text-[#FFD42A]"
+                  className="w-full h-full overflow-visible"
                 >
-                  <path
-                    d="M 18 18 L 34 18 A 16 16 0 1 0 33.8 20 Z"
+                  {/* TOP JAW (Upper Semicircle) */}
+                  <motion.path
+                    d="M 18 18 L 34 18 A 16 16 0 0 0 2 18 Z"
                     fill="#FFD42A"
+                    style={{ transformOrigin: "18px 18px" }}
+                    animate={
+                      prefersReducedMotion
+                        ? { rotate: -20 }
+                        : { rotate: [0, -36, 0] }
+                    }
+                    transition={{
+                      duration: BITE_DURATION,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  {/* PAC-MAN EYE (Attached to & rotating with Top Jaw) */}
+                  <motion.circle
+                    cx="19"
+                    cy="10"
+                    r="1.8"
+                    fill="#1C1F24"
+                    style={{ transformOrigin: "18px 18px" }}
+                    animate={
+                      prefersReducedMotion
+                        ? { rotate: -20 }
+                        : { rotate: [0, -36, 0] }
+                    }
+                    transition={{
+                      duration: BITE_DURATION,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  {/* BOTTOM JAW (Lower Semicircle) */}
+                  <motion.path
+                    d="M 18 18 L 34 18 A 16 16 0 0 1 2 18 Z"
+                    fill="#FFD42A"
+                    style={{ transformOrigin: "18px 18px" }}
+                    animate={
+                      prefersReducedMotion
+                        ? { rotate: 20 }
+                        : { rotate: [0, 36, 0] }
+                    }
+                    transition={{
+                      duration: BITE_DURATION,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                   />
                 </svg>
-              </motion.div>
+              </div>
 
-              {/* TRAILING DOTS WITH FLUID STAGGERED OPACITY PULSE */}
-              <div className="flex items-center gap-2 pl-1">
-                {[0, 1, 2, 3, 4].map((idx) => {
-                  return (
-                    <motion.span
-                      key={idx}
-                      animate={
-                        prefersReducedMotion
-                          ? { opacity: 0.5 }
-                          : {
-                              opacity: [0.2, 0.9, 0.2],
-                              scale: [0.95, 1.15, 0.95],
-                            }
-                      }
-                      transition={{
-                        duration: 0.9,
-                        repeat: Infinity,
-                        delay: idx * 0.15,
-                        ease: "easeInOut",
-                      }}
-                      className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#D9A62C]"
-                    />
-                  );
-                })}
+              {/* TRAILING DOTS CONVEYOR STREAM (EATEN IN PERFECT SYNC WITH BITE) */}
+              <div className="relative w-28 sm:w-32 h-5 overflow-hidden flex items-center">
+                <motion.div
+                  className="flex items-center gap-3.5 absolute left-0"
+                  animate={
+                    prefersReducedMotion
+                      ? {}
+                      : { x: [0, -18] }
+                  }
+                  transition={{
+                    duration: BITE_DURATION,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  {[0, 1, 2, 3, 4, 5].map((idx) => {
+                    const isFirst = idx === 0;
+                    return (
+                      <motion.span
+                        key={idx}
+                        animate={
+                          prefersReducedMotion
+                            ? { opacity: 0.7 }
+                            : isFirst
+                            ? { opacity: [1, 0], scale: [1, 0.2] }
+                            : { opacity: 0.85, scale: 1 }
+                        }
+                        transition={
+                          isFirst && !prefersReducedMotion
+                            ? { duration: BITE_DURATION, repeat: Infinity, ease: "linear" }
+                            : {}
+                        }
+                        className="w-2 h-2 rounded-full bg-[#D9A62C] flex-shrink-0"
+                      />
+                    );
+                  })}
+                </motion.div>
               </div>
             </div>
 
@@ -201,14 +251,14 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
             <div className="h-6 flex items-center justify-center pt-1">
               <motion.p
                 key={currentMessage}
-                initial={{ opacity: 0, y: 6 }}
+                initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   fontFamily: "monospace",
                   fontSize: "11px",
-                  letterSpacing: "0.08em",
-                  fontWeight: 400,
+                  letterSpacing: "0.09em",
+                  fontWeight: 500,
                   color: "#6F6C63",
                 }}
                 className="text-center px-4 max-w-xs sm:max-w-md uppercase tracking-wider"
@@ -216,6 +266,11 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
                 {currentMessage}
               </motion.p>
             </div>
+          </div>
+
+          {/* ESC HINT AT BOTTOM */}
+          <div className="absolute bottom-6 text-[10px] text-[#A09C93] font-mono tracking-widest uppercase opacity-60">
+            Press ESC to skip
           </div>
         </motion.div>
       )}

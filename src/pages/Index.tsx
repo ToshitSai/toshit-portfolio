@@ -19,9 +19,10 @@ const TechnicalSkillsFallback = () => <div className="min-h-[500px] w-full bg-[#
 const TestimonialsFallback = () => <div className="min-h-[400px] w-full bg-cream" />;
 
 const Index = () => {
-  // Only trigger loader on first visit per session using sessionStorage
+  // Only trigger loader on first visit per session using sessionStorage (or if ?loader=true in URL)
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
+      if (window.location.search.includes("loader=true")) return true;
       return !sessionStorage.getItem("has_seen_loader") && !sessionStorage.getItem("hasVisited");
     }
     return true;

@@ -25,7 +25,7 @@ interface NavbarProps {
   onOpenContact?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
+const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
@@ -144,7 +144,10 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
           {/* AVATAR / T MONOGRAM BADGE */}
           <a
             href="#hero"
-            onClick={(e) => handleNavClick(e, "#hero")}
+            onClick={(e) => {
+              handleNavClick(e, "#hero");
+              if (onTriggerLogin && e.detail === 2) onTriggerLogin();
+            }}
             aria-label="Toshit Sai - Return to top"
             className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
@@ -212,7 +215,10 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
           {/* REUSED 44px YELLOW T AVATAR MONOGRAM */}
           <a
             href="#hero"
-            onClick={(e) => handleNavClick(e, "#hero")}
+            onClick={(e) => {
+              handleNavClick(e, "#hero");
+              if (onTriggerLogin && e.detail === 2) onTriggerLogin();
+            }}
             aria-label="Toshit Sai - Return to top"
             className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
