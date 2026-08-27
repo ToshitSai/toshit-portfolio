@@ -18,12 +18,14 @@ interface ProjectsCarouselProps {
   projects: CarouselProjectItem[];
   autoRotate?: boolean;
   rotateInterval?: number; // duration in ms, default 5000ms
+  onOpenStory?: (slug: string) => void;
 }
 
 export const ProjectsCarousel: React.FC<ProjectsCarouselProps> = ({
   projects,
   autoRotate = true,
   rotateInterval = 5000,
+  onOpenStory,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -95,7 +97,7 @@ export const ProjectsCarousel: React.FC<ProjectsCarouselProps> = ({
       scale: 1,
       transition: {
         duration: shouldReduceMotion ? 0.1 : 0.6,
-        ease: [0.16, 1, 0.3, 1], // Power3 ease-out
+        ease: [0.16, 1, 0.3, 1] as const, // Power3 ease-out
       },
     },
     exit: (dir: number) => ({
@@ -104,7 +106,7 @@ export const ProjectsCarousel: React.FC<ProjectsCarouselProps> = ({
       scale: shouldReduceMotion ? 1 : 0.98,
       transition: {
         duration: shouldReduceMotion ? 0.1 : 0.5,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as const,
       },
     }),
   };
@@ -232,7 +234,18 @@ export const ProjectsCarousel: React.FC<ProjectsCarouselProps> = ({
               </div>
 
               {/* Editorial Underline Links */}
-              <div className="flex items-center gap-6 font-mono text-xs tracking-widest font-semibold uppercase pt-2">
+              <div className="flex flex-wrap items-center gap-6 font-mono text-xs tracking-widest font-semibold uppercase pt-2">
+                {onOpenStory && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenStory(currentProject.id)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1D2024] text-[#F8F2E6] hover:bg-black transition-all cursor-pointer shadow-xs"
+                  >
+                    <span>VIEW STORY</span>
+                    <ArrowUpRight className="w-4 h-4 text-[#FFD42A]" />
+                  </button>
+                )}
+
                 <a
                   href={currentProject.liveUrl}
                   target="_blank"
@@ -263,9 +276,17 @@ export const ProjectsCarousel: React.FC<ProjectsCarouselProps> = ({
               <motion.div
                 whileHover={{ scale: 1.015 }}
                 transition={{ duration: 0.3 }}
-                className="w-full rounded-xl overflow-hidden shadow-sm"
+                onClick={() => onOpenStory && onOpenStory(currentProject.id)}
+                className="w-full rounded-xl overflow-hidden shadow-sm cursor-pointer group/preview relative"
               >
                 <PreviewComp />
+                {onOpenStory && (
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                    <span className="px-4 py-2 rounded-full bg-white text-black font-mono text-xs font-bold tracking-widest uppercase shadow-lg">
+                      CLICK TO OPEN STORY ↗
+                    </span>
+                  </div>
+                )}
               </motion.div>
             </div>
           </motion.div>

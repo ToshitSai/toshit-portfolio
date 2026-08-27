@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
 import ProjectsCarousel, { CarouselProjectItem } from "./ProjectsCarousel";
+import ProjectStoryViewer from "./ProjectStoryViewer";
+import ProjectGrid from "./ProjectGrid";
 
 // --- DYNAMIC ANIMATED PROJECT PREVIEWS ---
 
@@ -432,7 +435,19 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
 };
 
 const SelectedWork: React.FC = () => {
-  const [viewMode, setViewMode] = useState<"stacked" | "carousel">("carousel");
+  const [viewMode, setViewMode] = useState<"grid" | "carousel" | "stacked">("grid");
+  const { slug } = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
+
+  const activeSlug = slug || "";
+
+  const handleOpenStory = (projectSlug: string) => {
+    navigate(`/work/${projectSlug}`);
+  };
+
+  const handleCloseStory = () => {
+    navigate("/");
+  };
 
   return (
     <section
@@ -440,6 +455,14 @@ const SelectedWork: React.FC = () => {
       style={{ backgroundColor: "#F8F2E6" }}
       className="relative w-full py-20 sm:py-28 lg:py-32 text-[#1D2024] overflow-hidden z-10 select-none"
     >
+      {/* STORY VIEWER OVERLAY */}
+      <ProjectStoryViewer
+        projectSlug={activeSlug}
+        isOpen={Boolean(activeSlug)}
+        onClose={handleCloseStory}
+        onSelectProject={handleOpenStory}
+      />
+
       <div id="projects" className="absolute -top-12 left-0" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
@@ -452,7 +475,18 @@ const SelectedWork: React.FC = () => {
             <span>SHOWCASE DISPLAY MODE</span>
           </div>
 
-          <div className="flex items-center gap-2 p-1 rounded-lg bg-[#EFE6D6] border border-[#1D2024]/15">
+          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[#EFE6D6] border border-[#1D2024]/15">
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className={`px-3 py-1.5 rounded-md font-mono text-xs tracking-wider transition-all duration-200 ${
+                viewMode === "grid"
+                  ? "bg-[#1D2024] text-[#F8F2E6] shadow-xs font-semibold"
+                  : "text-[#1D2024]/70 hover:text-[#1D2024]"
+              }`}
+            >
+              ✦ FROSTED CARDS
+            </button>
             <button
               type="button"
               onClick={() => setViewMode("carousel")}
@@ -462,7 +496,7 @@ const SelectedWork: React.FC = () => {
                   : "text-[#1D2024]/70 hover:text-[#1D2024]"
               }`}
             >
-              ↻ CAROUSEL VIEW
+              ↻ CAROUSEL
             </button>
             <button
               type="button"
@@ -473,125 +507,157 @@ const SelectedWork: React.FC = () => {
                   : "text-[#1D2024]/70 hover:text-[#1D2024]"
               }`}
             >
-              ≡ STACKED VIEW
+              ≡ STACKED
             </button>
           </div>
         </div>
 
-        {/* CAROUSEL VIEW */}
-        {viewMode === "carousel" ? (
-          <ProjectsCarousel projects={projects} autoRotate={true} rotateInterval={5000} />
+        {/* RENDER VIEW BASED ON SELECTION */}
+        {viewMode === "grid" ? (
+          <ProjectGrid onOpenStory={handleOpenStory} />
+        ) : viewMode === "carousel" ? (
+          <ProjectsCarousel
+            projects={projects}
+            autoRotate={true}
+            rotateInterval={5000}
+            onOpenStory={handleOpenStory}
+          />
         ) : (
           /* STACKED CASE STUDY INDEX */
           <div className="space-y-24 sm:space-y-32 lg:space-y-40">
-          {projects.map((project, idx) => {
-            const PreviewComp = project.PreviewComponent;
-            const isEven = idx % 2 === 0;
+            {projects.map((project, idx) => {
+              const PreviewComp = project.PreviewComponent;
+              const isEven = idx % 2 === 0;
 
-            return (
-              <motion.article
-                key={project.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{
-                  duration: 0.85,
-                  delay: idx * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="group relative border-b border-[#1D2024]/10 pb-16 sm:pb-24"
-              >
-                {/* TOP METADATA BAR */}
-                <div className="flex items-center justify-between mb-8 font-mono text-xs tracking-[0.18em] text-[#1D2024]/60 uppercase">
-                  <div className="flex items-center gap-4">
-                    <span className="font-mono font-bold text-sm text-[#1D2024]">
-                      {project.number}
-                    </span>
-                    <span>/</span>
-                    <span className="font-semibold text-[#1D2024]/80">
-                      {project.category}
-                    </span>
+              return (
+                <motion.article
+                  key={project.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{
+                    duration: 0.85,
+                    delay: idx * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="group relative border-b border-[#1D2024]/10 pb-16 sm:pb-24"
+                >
+                  {/* TOP METADATA BAR */}
+                  <div className="flex items-center justify-between mb-8 font-mono text-xs tracking-[0.18em] text-[#1D2024]/60 uppercase">
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono font-bold text-sm text-[#1D2024]">
+                        {project.number}
+                      </span>
+                      <span>/</span>
+                      <span className="font-semibold text-[#1D2024]/80">
+                        {project.category}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenStory(project.id)}
+                      className="text-xs font-mono font-bold tracking-widest text-[#1D2024] hover:text-black uppercase flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>OPEN STORY REEL</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#FFD42A]" />
+                    </button>
                   </div>
-                  <span className="hidden sm:inline-block text-[#1D2024]/40">
-                    CASE STUDY PREVIEW
-                  </span>
-                </div>
 
-                {/* MAIN GRID CONTENT */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                  {/* LEFT / RIGHT ALTERNATING TITLE & DESCRIPTION */}
-                  <div
-                    className={`lg:col-span-6 flex flex-col justify-between ${isEven ? "lg:order-1" : "lg:order-2"
+                  {/* MAIN GRID CONTENT */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                    {/* LEFT / RIGHT ALTERNATING TITLE & DESCRIPTION */}
+                    <div
+                      className={`lg:col-span-6 flex flex-col justify-between ${
+                        isEven ? "lg:order-1" : "lg:order-2"
                       }`}
-                  >
-                    <div>
-                      <h3
-                        style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                        className="text-[clamp(32px,4vw,56px)] font-medium leading-[1.05] tracking-[-0.04em] text-[#1D2024] mb-4 group-hover:text-black transition-colors"
-                      >
-                        <span>{project.titleMain}</span>
-                      </h3>
+                    >
+                      <div>
+                        <h3
+                          style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+                          onClick={() => handleOpenStory(project.id)}
+                          className="text-[clamp(32px,4vw,56px)] font-medium leading-[1.05] tracking-[-0.04em] text-[#1D2024] mb-4 group-hover:text-black transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                          <span>{project.titleMain}</span>
+                          <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity text-[#D9A700]" />
+                        </h3>
 
-                      <p
-                        style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-                        className="text-[17px] sm:text-[18px] leading-[1.45] text-[#1D2024]/85 max-w-[520px] min-h-[76px] mb-8 font-normal"
-                      >
-                        {project.description}
-                      </p>
+                        <p
+                          style={{ fontFamily: "'Instrument Sans', sans-serif" }}
+                          className="text-[17px] sm:text-[18px] leading-[1.45] text-[#1D2024]/85 max-w-[520px] min-h-[76px] mb-8 font-normal"
+                        >
+                          {project.description}
+                        </p>
+                      </div>
+
+                      {/* EDITORIAL TECH TAGS */}
+                      <div className="mb-8 font-mono text-[11px] sm:text-xs tracking-wider text-[#1D2024]/60 uppercase flex flex-wrap gap-x-3 gap-y-1">
+                        {project.tech.map((t, tIdx) => (
+                          <React.Fragment key={t}>
+                            <span>{t}</span>
+                            {tIdx < project.tech.length - 1 && (
+                              <span className="text-[#1D2024]/30">/</span>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+
+                      {/* EDITORIAL UNDERLINE LINKS */}
+                      <div className="flex flex-wrap items-center gap-6 font-mono text-xs tracking-widest font-semibold uppercase">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenStory(project.id)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1D2024] text-[#F8F2E6] hover:bg-black transition-all cursor-pointer shadow-xs"
+                        >
+                          <span>VIEW STORY</span>
+                          <ArrowUpRight className="w-4 h-4 text-[#FFD42A]" />
+                        </button>
+
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024] hover:text-black py-1"
+                        >
+                          <span>LIVE DEMO</span>
+                          <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
+                          <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1D2024] transition-all origin-left scale-x-100 group-hover/link:scale-x-110" />
+                        </a>
+
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024]/80 hover:text-[#1D2024] py-1"
+                        >
+                          <Github className="w-4 h-4 text-[#1D2024]" />
+                          <span>GITHUB CODE</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-100 transition-all duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                          <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#1D2024]/40 transition-all origin-left scale-x-0 group-hover/link:scale-x-100" />
+                        </a>
+                      </div>
                     </div>
 
-                    {/* EDITORIAL TECH TAGS */}
-                    <div className="mb-8 font-mono text-[11px] sm:text-xs tracking-wider text-[#1D2024]/60 uppercase flex flex-wrap gap-x-3 gap-y-1">
-                      {project.tech.map((t, tIdx) => (
-                        <React.Fragment key={t}>
-                          <span>{t}</span>
-                          {tIdx < project.tech.length - 1 && (
-                            <span className="text-[#1D2024]/30">/</span>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </div>
-
-                    {/* EDITORIAL UNDERLINE LINKS */}
-                    <div className="flex items-center gap-8 font-mono text-xs tracking-widest font-semibold uppercase">
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024] hover:text-black py-1"
-                      >
-                        <span>LIVE DEMO</span>
-                        <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
-                        <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1D2024] transition-all origin-left scale-x-100 group-hover/link:scale-x-110" />
-                      </a>
-
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/link relative inline-flex items-center gap-1.5 text-[#1D2024]/80 hover:text-[#1D2024] py-1"
-                      >
-                        <Github className="w-4 h-4 text-[#1D2024]" />
-                        <span>GITHUB CODE</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-100 transition-all duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#1D2024]/40 transition-all origin-left scale-x-0 group-hover/link:scale-x-100" />
-                      </a>
-                    </div>
+                    {/* INTERACTIVE ABSTRACT ANIMATED PREVIEW VISUAL */}
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      onClick={() => handleOpenStory(project.id)}
+                      className={`lg:col-span-6 ${
+                        isEven ? "lg:order-2" : "lg:order-1"
+                      } cursor-pointer relative group/preview`}
+                    >
+                      <PreviewComp />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none rounded-lg">
+                        <span className="px-4 py-2 rounded-full bg-white text-black font-mono text-xs font-bold tracking-widest uppercase shadow-lg">
+                          CLICK TO OPEN STORY ↗
+                        </span>
+                      </div>
+                    </motion.div>
                   </div>
-
-                  {/* INTERACTIVE ABSTRACT ANIMATED PREVIEW VISUAL */}
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                    className={`lg:col-span-6 ${isEven ? "lg:order-2" : "lg:order-1"}`}
-                  >
-                    <PreviewComp />
-                  </motion.div>
-                </div>
-              </motion.article>
-            );
-          })}
-        </div>
+                </motion.article>
+              );
+            })}
+          </div>
         )}
       </div>
     </section>
