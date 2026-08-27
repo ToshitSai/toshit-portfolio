@@ -59,7 +59,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpenStory }
               className="w-2 h-2 rounded-full inline-block"
             />
             <span className="font-bold text-white/90 text-sm tracking-wider font-mono">
-              {project.number} <span className="text-white/40 font-normal">/ 05</span>
+              {project.number} <span className="text-white/40 font-normal">/ 04</span>
             </span>
           </div>
 
