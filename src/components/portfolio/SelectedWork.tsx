@@ -1,166 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu } from "lucide-react";
-import ProjectsCarousel, { CarouselProjectItem } from "./ProjectsCarousel";
+import { ArrowUpRight, Github, Sparkles, CheckCircle2, Play, Activity, Cpu, Code2 } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import ProjectsCarousel from "./ProjectsCarousel";
 import ProjectStoryViewer from "./ProjectStoryViewer";
 import ProjectGrid from "./ProjectGrid";
 
+gsap.registerPlugin(ScrollTrigger);
+
 // --- DYNAMIC ANIMATED PROJECT PREVIEWS ---
 
-// 1. HireScope AI Preview Component (Radar Scan + Animated Score Gauge)
-const HireScopePreview: React.FC = () => {
-  return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EEF5FC] border border-[#5B9BD5]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#5B9BD5]/70 transition-all duration-300">
-      {/* Laser Scanning Line Overlay */}
-      <motion.div
-        animate={{ y: ["0%", "260px", "0%"] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent opacity-60 pointer-events-none z-10 shadow-[0_0_12px_#3B82F6]"
-      />
-
-      {/* Top Status Bar */}
-      <div className="flex items-center justify-between border-b border-[#5B9BD5]/20 pb-3 font-mono text-[11px] tracking-wider text-[#2B6090]">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-ping" />
-          <span className="font-semibold uppercase">RESUME ANALYSIS ENGINE</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-[#2B6090]/80 uppercase font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
-          <span>LIVE EVALUATION</span>
-        </div>
-      </div>
-
-      {/* Score & Matching Metrics with Animated Gauge */}
-      <div className="my-auto py-2">
-        <div className="flex items-end justify-between mb-2">
-          <div>
-            <span className="text-xs font-mono text-[#2B6090]/70 uppercase tracking-widest block">Overall Match</span>
-            <motion.span
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl sm:text-4xl font-mono font-bold text-[#1E40AF] block"
-            >
-              92.4%
-            </motion.span>
-          </div>
-          <div className="text-right">
-            <span className="text-xs font-mono text-[#2B6090]/70 uppercase tracking-widest block font-medium">Scoring Metric</span>
-            <span className="text-sm font-mono font-semibold text-[#1E40AF]">87 / 100 PTS</span>
-          </div>
-        </div>
-
-        {/* Progress Bar with Animated Fill */}
-        <div className="w-full h-2.5 bg-[#5B9BD5]/20 rounded-full overflow-hidden p-0.5 relative">
-          <motion.div
-            initial={{ width: "0%" }}
-            whileInView={{ width: "92.4%" }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="h-full bg-gradient-to-r from-[#3B82F6] to-[#60A5FA] rounded-full relative"
-          >
-            {/* Glowing lead edge */}
-            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_8px_#FFF] animate-pulse" />
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Extracted Skills Badges */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#5B9BD5]/20 font-mono text-[11px]">
-        <div className="flex items-center gap-1.5 text-[#1E40AF]">
-          <CheckCircle2 className="w-3.5 h-3.5" />
-          <span>Claude API Scored</span>
-        </div>
-        <div className="flex gap-2 text-[#2B6090]/80">
-          <span>REACT</span>
-          <span>•</span>
-          <span>PUPPETEER</span>
-          <span>•</span>
-          <span>SERPER</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// 2. Greetly Preview Component (Typewriter Output & Voice Wave Equalizer)
-const GreetlyPreview: React.FC = () => {
-  const quotes = [
-    "Wishing you an inspiring year filled with breakthrough ideas and seamless code!",
-    "Congratulations on the launch! May your product scale to millions effortlessly.",
-    "Happy Birthday! Crafting wonderful memories and building awesome tech together.",
-  ];
-
-  const [quoteIdx, setQuoteIdx] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setQuoteIdx((prev) => (prev + 1) % quotes.length);
-    }, 3800);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#FFFBF0] border border-[#FFD42A]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#FFD42A] transition-all duration-300">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-[#FFD42A]/30 pb-3 font-mono text-[11px] tracking-wider text-[#8A6A00]">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-[#D9A700] animate-spin" style={{ animationDuration: "6s" }} />
-          <span className="font-semibold uppercase">GROQ API INFERENCE</span>
-        </div>
-        <span className="text-[10px] tracking-widest text-[#8A6A00]/80 uppercase font-semibold flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>42MS LATENCY</span>
-        </span>
-      </div>
-
-      {/* Greeting Preview Box with Cycling Animations */}
-      <div className="my-auto bg-white/90 backdrop-blur-xs border border-[#FFD42A]/40 p-4 rounded-md shadow-xs min-h-[100px] flex flex-col justify-center">
-        <span className="text-[10px] font-mono tracking-widest text-[#8A6A00] uppercase block mb-1">
-          GENERATED OUTPUT
-        </span>
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={quoteIdx}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.35 }}
-            className="font-sans text-xs sm:text-sm text-[#1D2024] font-medium leading-relaxed"
-          >
-            "{quotes[quoteIdx]}"
-          </motion.p>
-        </AnimatePresence>
-      </div>
-
-      {/* Animated Equalizer Waveform Graphic */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#FFD42A]/30 font-mono text-[11px]">
-        <div className="flex items-center gap-1.5 text-[#8A6A00]">
-          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-          <span>READY FOR RENDER</span>
-        </div>
-        <div className="flex items-center gap-1 h-5">
-          {[0.6, 1.2, 0.4, 1.6, 0.8].map((delay, i) => (
-            <motion.div
-              key={i}
-              animate={{ height: ["8px", "20px", "8px"] }}
-              transition={{
-                duration: delay + 0.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-1 bg-[#D9A700] rounded-full"
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// 3. CourseForge AI Preview Component (Interactive Stepper & Active Module Highlighting)
+// 1. CourseForge AI Preview Component
 const CourseForgePreview: React.FC = () => {
   const [activeModule, setActiveModule] = useState(0);
 
@@ -178,19 +31,17 @@ const CourseForgePreview: React.FC = () => {
   ];
 
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EBF6F4] border border-[#0F766E]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#0F766E]/60 transition-all duration-300">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-[#0F766E]/20 pb-3 font-mono text-[11px] tracking-wider text-[#0D5C56]">
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#EBF5FF] border border-[#3B82F6]/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#3B82F6]/70 transition-all duration-300">
+      <div className="flex items-center justify-between border-b border-[#3B82F6]/20 pb-3 font-mono text-[11px] tracking-wider text-[#1E40AF]">
         <div className="flex items-center gap-2">
-          <Cpu className="w-3.5 h-3.5 text-[#0F766E]" />
-          <span className="font-semibold uppercase">CURRICULUM GENERATOR</span>
+          <Cpu className="w-3.5 h-3.5 text-[#3B82F6]" />
+          <span className="font-semibold uppercase">AI CURRICULUM GENERATOR</span>
         </div>
-        <span className="text-[10px] tracking-widest text-[#0D5C56]/70 uppercase font-semibold">
-          4 LESSONS
+        <span className="text-[10px] tracking-widest text-[#1E40AF]/70 uppercase font-semibold">
+          GEMINI 1.5 PRO
         </span>
       </div>
 
-      {/* Generated Modules Tree with Active Highlight */}
       <div className="my-auto space-y-2">
         {modules.map((modTitle, idx) => {
           const isActive = idx === activeModule;
@@ -202,24 +53,24 @@ const CourseForgePreview: React.FC = () => {
                 scale: isActive ? 1.02 : 1,
               }}
               transition={{ duration: 0.3 }}
-              className={`flex items-center justify-between border px-3 py-2 rounded text-xs font-mono transition-all ${isActive ? "border-[#0F766E] text-[#0D5C56] shadow-xs font-bold" : "border-[#0F766E]/15 text-[#0D5C56]/70"
-                }`}
+              className={`flex items-center justify-between border px-3 py-2 rounded text-xs font-mono transition-all ${
+                isActive ? "border-[#3B82F6] text-[#1E40AF] shadow-xs font-bold" : "border-[#3B82F6]/15 text-[#1E40AF]/70"
+              }`}
             >
               <div className="flex items-center gap-2 overflow-hidden">
-                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#0F766E] animate-pulse" : "bg-[#0F766E]/30"}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#3B82F6] animate-pulse" : "bg-[#3B82F6]/30"}`} />
                 <span className="truncate">{modTitle}</span>
               </div>
-              <Play className={`w-3 h-3 flex-shrink-0 transition-transform ${isActive ? "text-[#0F766E] scale-110" : "text-[#0F766E]/40"}`} />
+              <Play className={`w-3 h-3 flex-shrink-0 transition-transform ${isActive ? "text-[#3B82F6] scale-110" : "text-[#3B82F6]/40"}`} />
             </motion.div>
           );
         })}
       </div>
 
-      {/* Status Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#0F766E]/20 font-mono text-[11px] text-[#0D5C56]">
+      <div className="flex items-center justify-between pt-3 border-t border-[#3B82F6]/20 font-mono text-[11px] text-[#1E40AF]">
         <span className="font-semibold flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-teal-500 animate-ping" />
-          <span>QUIZ GENERATED</span>
+          <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-ping" />
+          <span>QUIZZES GENERATED</span>
         </span>
         <span className="opacity-80">YOUTUBE CURATED</span>
       </div>
@@ -227,7 +78,181 @@ const CourseForgePreview: React.FC = () => {
   );
 };
 
-// 4. Doom Protocol WebGL 3D Preview Component (Dynamic 3D Concentric Orbit & Particle Burst)
+// 2. Personal Portfolio Preview Component
+const PortfolioPreview: React.FC = () => {
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#FFFBEB] border border-[#F6C545]/40 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#F6C545]/80 transition-all duration-300">
+      <div className="flex items-center justify-between border-b border-[#F6C545]/30 pb-3 font-mono text-[11px] tracking-wider text-[#92400E]">
+        <div className="flex items-center gap-2">
+          <Code2 className="w-3.5 h-3.5 text-[#B45309]" />
+          <span className="font-semibold uppercase">EDITORIAL PORTFOLIO ENGINE</span>
+        </div>
+        <span className="text-[10px] tracking-widest text-[#92400E]/80 uppercase font-semibold">
+          REACT + VITE
+        </span>
+      </div>
+
+      <div className="my-auto py-2 flex flex-col justify-center">
+        <span className="text-xs font-mono text-[#92400E]/70 uppercase tracking-widest block mb-1">Architecture</span>
+        <span className="text-2xl sm:text-3xl font-mono font-bold text-[#78350F] block">
+          Editorial Typography & Pin Stage
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between pt-3 border-t border-[#F6C545]/30 font-mono text-[11px] text-[#92400E]">
+        <span>REACT 18</span>
+        <span>•</span>
+        <span>GSAP SCROLLTRIGGER</span>
+        <span>•</span>
+        <span>TAILWIND</span>
+      </div>
+    </div>
+  );
+};
+
+// 3. HireScope AI Preview Component
+const HireScopePreview: React.FC = () => {
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#E6F4F1] border border-[#38B2AC]/40 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#38B2AC]/70 transition-all duration-300">
+      <motion.div
+        animate={{ y: ["0%", "260px", "0%"] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#38B2AC] to-transparent opacity-60 pointer-events-none z-10 shadow-[0_0_12px_#38B2AC]"
+      />
+
+      <div className="flex items-center justify-between border-b border-[#38B2AC]/20 pb-3 font-mono text-[11px] tracking-wider text-[#0D5C56]">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#38B2AC] animate-ping" />
+          <span className="font-semibold uppercase">RESUME ANALYSIS ENGINE</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-[#0D5C56]/80 uppercase font-semibold">
+          <span>LIVE EVALUATION</span>
+        </div>
+      </div>
+
+      <div className="my-auto py-2">
+        <div className="flex items-end justify-between mb-2">
+          <div>
+            <span className="text-xs font-mono text-[#0D5C56]/70 uppercase tracking-widest block">Overall Match</span>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl sm:text-4xl font-mono font-bold text-[#0F766E] block"
+            >
+              92.4%
+            </motion.span>
+          </div>
+          <div className="text-right">
+            <span className="text-xs font-mono text-[#0D5C56]/70 uppercase tracking-widest block font-medium">Scoring Metric</span>
+            <span className="text-sm font-mono font-semibold text-[#0F766E]">87 / 100 PTS</span>
+          </div>
+        </div>
+
+        <div className="w-full h-2.5 bg-[#38B2AC]/20 rounded-full overflow-hidden p-0.5 relative">
+          <motion.div
+            initial={{ width: "0%" }}
+            whileInView={{ width: "92.4%" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            className="h-full bg-gradient-to-r from-[#38B2AC] to-[#2DD4BF] rounded-full relative"
+          >
+            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_8px_#FFF] animate-pulse" />
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between pt-3 border-t border-[#38B2AC]/20 font-mono text-[11px]">
+        <div className="flex items-center gap-1.5 text-[#0F766E]">
+          <CheckCircle2 className="w-3.5 h-3.5" />
+          <span>Claude API Scored</span>
+        </div>
+        <div className="flex gap-2 text-[#0D5C56]/80">
+          <span>REACT</span>
+          <span>•</span>
+          <span>PUPPETEER</span>
+          <span>•</span>
+          <span>SERPER</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 4. Greetly Preview Component
+const GreetlyPreview: React.FC = () => {
+  const quotes = [
+    "Wishing you an inspiring year filled with breakthrough ideas and seamless code!",
+    "Congratulations on the launch! May your product scale to millions effortlessly.",
+    "Happy Birthday! Crafting wonderful memories and building awesome tech together.",
+  ];
+
+  const [quoteIdx, setQuoteIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setQuoteIdx((prev) => (prev + 1) % quotes.length);
+    }, 3800);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#FFF0F0] border border-[#F06C64]/40 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-xs group-hover:border-[#F06C64]/80 transition-all duration-300">
+      <div className="flex items-center justify-between border-b border-[#F06C64]/30 pb-3 font-mono text-[11px] tracking-wider text-[#991B1B]">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-3.5 h-3.5 text-[#F06C64] animate-spin" style={{ animationDuration: "6s" }} />
+          <span className="font-semibold uppercase">GROQ API INFERENCE</span>
+        </div>
+        <span className="text-[10px] tracking-widest text-[#991B1B]/80 uppercase font-semibold flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>42MS LATENCY</span>
+        </span>
+      </div>
+
+      <div className="my-auto bg-white/90 backdrop-blur-xs border border-[#F06C64]/30 p-4 rounded-md shadow-xs min-h-[100px] flex flex-col justify-center">
+        <span className="text-[10px] font-mono tracking-widest text-[#991B1B] uppercase block mb-1">
+          GENERATED OUTPUT
+        </span>
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={quoteIdx}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.35 }}
+            className="font-sans text-xs sm:text-sm text-[#1D2024] font-medium leading-relaxed"
+          >
+            "{quotes[quoteIdx]}"
+          </motion.p>
+        </AnimatePresence>
+      </div>
+
+      <div className="flex items-center justify-between pt-3 border-t border-[#F06C64]/30 font-mono text-[11px]">
+        <div className="flex items-center gap-1.5 text-[#991B1B]">
+          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <span>READY FOR RENDER</span>
+        </div>
+        <div className="flex items-center gap-1 h-5">
+          {[0.6, 1.2, 0.4, 1.6, 0.8].map((delay, i) => (
+            <motion.div
+              key={i}
+              animate={{ height: ["8px", "20px", "8px"] }}
+              transition={{
+                duration: delay + 0.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="w-1 bg-[#F06C64] rounded-full"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 5. Avengers Doomsday Preview Component
 const DoomProtocolPreview: React.FC = () => {
   const [fps, setFps] = useState(60);
 
@@ -239,8 +264,7 @@ const DoomProtocolPreview: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#8A1334] border border-[#BE123C]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#FB7185]/80 transition-all duration-300 text-white">
-      {/* Floating Particles Animation */}
+    <div className="relative w-full h-[260px] sm:h-[300px] bg-[#4C0519] border border-[#C0392B]/50 rounded-lg p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-md group-hover:border-[#E11D48]/80 transition-all duration-300 text-white">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(6)].map((_, i) => (
           <motion.div
@@ -261,7 +285,6 @@ const DoomProtocolPreview: React.FC = () => {
         ))}
       </div>
 
-      {/* Top Bar */}
       <div className="flex items-center justify-between border-b border-white/20 pb-3 font-mono text-[11px] tracking-widest text-white/90 z-10">
         <div className="flex items-center gap-2">
           <Activity className="w-3.5 h-3.5 text-[#FFE4E6] animate-pulse" />
@@ -272,21 +295,17 @@ const DoomProtocolPreview: React.FC = () => {
         </span>
       </div>
 
-      {/* Central 3D Concentric Rotating Orbit Visual */}
       <div className="my-auto flex items-center justify-center relative py-2 z-10">
-        {/* Outer Orbit */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
           className="w-24 h-24 rounded-full border border-white/30 border-dashed flex items-center justify-center"
         >
-          {/* Inner Counter-Orbit */}
           <motion.div
             animate={{ rotate: -360 }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
             className="w-14 h-14 rounded-full border border-white/60 flex items-center justify-center"
           >
-            {/* Glowing Core */}
             <motion.div
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -295,20 +314,19 @@ const DoomProtocolPreview: React.FC = () => {
           </motion.div>
         </motion.div>
         <span className="absolute font-mono text-[10px] tracking-[0.25em] text-white/80 uppercase font-bold">
-          DOOM PROTOCOL
+          AVENGERS DOOMSDAY
         </span>
       </div>
 
-      {/* Tech Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-white/20 font-mono text-[11px] text-white/80 z-10">
-        <span>REACT THREE FIBER</span>
+        <span>THREE.JS WEBGL</span>
         <span>GSAP LENIS</span>
       </div>
     </div>
   );
 };
 
-// --- MAIN PROJECTS CASE-STUDY COMPOSITION ---
+// --- MAIN PROJECTS CASE-STUDY DATA ---
 
 interface ProjectItem {
   id: string;
@@ -316,6 +334,7 @@ interface ProjectItem {
   category: string;
   titleMain: string;
   description: string;
+  accentColor: string;
   tech: string[];
   liveUrl: string;
   githubUrl: string;
@@ -325,11 +344,38 @@ interface ProjectItem {
 
 const projects: ProjectItem[] = [
   {
-    id: "hirescope",
+    id: "courseforge-ai",
     number: "01",
-    category: "CAREER TOOL",
-    titleMain: "HireScope",
-    description: "Resume evaluation and job matching with automated scoring, analysis, and intelligent candidate-to-role recommendations.",
+    category: "AI COURSE GENERATOR",
+    titleMain: "CourseForge AI",
+    accentColor: "#3B82F6",
+    description: "AI-powered course generator that creates complete lesson plans, quizzes, and syllabi in seconds powered by Gemini API.",
+    tech: ["REACT", "GEMINI API", "VERCEL", "YOUTUBE API"],
+    liveUrl: "https://courseforge-ai-pied.vercel.app/",
+    githubUrl: "https://github.com/ToshitSai/courseforge-ai",
+    PreviewComponent: CourseForgePreview,
+    layoutVariant: "compact",
+  },
+  {
+    id: "personal-portfolio",
+    number: "02",
+    category: "PORTFOLIO & EDITORIAL",
+    titleMain: "Personal Portfolio",
+    accentColor: "#F6C545",
+    description: "My web portfolio – AI/ML & web development projects showcased with creative typography and fluid physics animations.",
+    tech: ["REACT", "VITE", "TAILWIND CSS", "FRAMER MOTION"],
+    liveUrl: "https://toshitsai.dev",
+    githubUrl: "https://github.com/ToshitSai/toshit-portfolio",
+    PreviewComponent: PortfolioPreview,
+    layoutVariant: "compact",
+  },
+  {
+    id: "hirescope-ai",
+    number: "03",
+    category: "AI RESUME ANALYZER",
+    titleMain: "HireScope AI",
+    accentColor: "#38B2AC",
+    description: "Smart resume & portfolio analyzer delivering instant AI-driven ATS match scoring, gap analysis, and keyword feedback.",
     tech: ["NEXT.JS", "PUPPETEER", "CLAUDE API", "SERPER API"],
     liveUrl: "https://job-gem-grader.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
@@ -338,10 +384,11 @@ const projects: ProjectItem[] = [
   },
   {
     id: "greetly",
-    number: "02",
-    category: "GREETING TOOL",
+    number: "04",
+    category: "NEO-BRUTALIST AI TOOL",
     titleMain: "Greetly",
-    description: "Personalized greetings and messages generated from contextual inputs using high-speed inference and a lightweight Flask service.",
+    accentColor: "#F06C64",
+    description: "AI-powered greeting generator crafting personalized messages for any celebration or milestone using Groq Llama 3.",
     tech: ["REACT", "VITE", "FLASK", "GROQ API"],
     liveUrl: "https://toshit-greetly.vercel.app",
     githubUrl: "https://github.com/ToshitSai",
@@ -349,24 +396,13 @@ const projects: ProjectItem[] = [
     layoutVariant: "compact",
   },
   {
-    id: "courseforge",
-    number: "03",
-    category: "COURSE BUILDER",
-    titleMain: "CourseForge",
-    description: "Interactive courses with structured lessons, automated quizzes, and curated educational content for faster learning.",
-    tech: ["REACT", "VITE", "PYTHON", "INTELLIGENCE ENGINE"],
-    liveUrl: "https://courseforge-ai-pied.vercel.app/",
-    githubUrl: "https://github.com/ToshitSai/courseforge-ai",
-    PreviewComponent: CourseForgePreview,
-    layoutVariant: "compact",
-  },
-  {
-    id: "doom-protocol",
-    number: "04",
-    category: "WEBGL & 3D EXPERIENCE",
-    titleMain: "Doom Protocol",
-    description: "Cinematic WebGL experience combining 3D scenes, scroll-driven storytelling, animation systems, and immersive interactive environments.",
-    tech: ["NEXT.JS", "R3F", "THREE.JS", "GSAP", "LENIS"],
+    id: "avengers-doomsday",
+    number: "05",
+    category: "CINEMATIC DESIGN DEMO",
+    titleMain: "Avengers Doomsday",
+    accentColor: "#C0392B",
+    description: "Cinematic Marvel web experience exploring 3D WebGL dynamics, GLSL green particle portals, and scroll-scrubbed trailers.",
+    tech: ["NEXT.JS", "THREE.JS", "GSAP", "LENIS PHYSICS"],
     liveUrl: "https://avengers-doomsday-rose.vercel.app/",
     githubUrl: "https://github.com/ToshitSai/Avengers-DoomsDay-",
     PreviewComponent: DoomProtocolPreview,
@@ -374,7 +410,7 @@ const projects: ProjectItem[] = [
   },
 ];
 
-// --- EDITORIAL PROJECTS INTRO HEADER WITH SCROLL REVEAL & SKETCH ACCENT ---
+// --- EDITORIAL PROJECTS INTRO HEADER ---
 const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -388,7 +424,6 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
 
   return (
     <div ref={containerRef} className="relative pb-4 mb-12 sm:mb-16">
-      {/* 1. TOP METADATA BAR: Refined Monospace Section Label */}
       <div className="flex items-center gap-2.5 font-mono text-xs sm:text-[13px] tracking-[0.18em] text-[#1D2024]/75 uppercase mb-6 sm:mb-8">
         <motion.span
           initial={{ scale: 0.8 }}
@@ -396,14 +431,11 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block flex-shrink-0"
         />
-        <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK</span>
+        <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK ({projectCount} PROJECTS)</span>
       </div>
 
-      {/* 2. MAIN HEADING */}
       <div className="max-w-[760px] mb-6 sm:mb-8">
-        <h2
-          className="font-serif font-medium text-[clamp(28px,3.6vw,50px)] leading-[1.15] tracking-[-0.01em] text-[#1D2024] flex flex-col items-start gap-0.5"
-        >
+        <h2 className="font-serif font-medium text-[clamp(28px,3.6vw,50px)] leading-[1.15] tracking-[-0.01em] text-[#1D2024] flex flex-col items-start gap-0.5">
           {headingLines.map((line, idx) => (
             <div key={idx} className="overflow-hidden py-0.5">
               <motion.span
@@ -423,7 +455,6 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
         </h2>
       </div>
 
-      {/* 3. SUBTLE 1PX HORIZONTAL DIVIDER */}
       <motion.div
         initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
         animate={isInView || shouldReduceMotion ? { scaleX: 1 } : {}}
@@ -448,6 +479,44 @@ const SelectedWork: React.FC = () => {
   const handleCloseStory = () => {
     navigate("/");
   };
+
+  // GSAP SCROLLTRIGGER PINNED SHOWCASE STAGE FOR STACKED VIEW MODE
+  useEffect(() => {
+    if (viewMode !== "stacked") return;
+    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReducedMotion) return;
+
+    const stage = document.querySelector(".projects-stage");
+    if (!stage) return;
+
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray<HTMLElement>(".stacked-card");
+      if (cards.length === 0) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: stage,
+          start: "top top+=100",
+          end: `+=${window.innerHeight * (cards.length - 1)}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+        },
+      });
+
+      cards.forEach((card, i) => {
+        if (i > 0) {
+          tl.fromTo(
+            card,
+            { opacity: 0, y: 60, scale: 0.96 },
+            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out" }
+          );
+        }
+      });
+    }, stage);
+
+    return () => ctx.revert();
+  }, [viewMode]);
 
   return (
     <section
@@ -485,7 +554,7 @@ const SelectedWork: React.FC = () => {
                   : "text-[#1D2024]/70 hover:text-[#1D2024]"
               }`}
             >
-              ✦ FROSTED CARDS
+              ✦ MULTI-DEVICE GRID
             </button>
             <button
               type="button"
@@ -507,7 +576,7 @@ const SelectedWork: React.FC = () => {
                   : "text-[#1D2024]/70 hover:text-[#1D2024]"
               }`}
             >
-              ≡ STACKED
+              ≡ PINNED STAGE
             </button>
           </div>
         </div>
@@ -523,8 +592,8 @@ const SelectedWork: React.FC = () => {
             onOpenStory={handleOpenStory}
           />
         ) : (
-          /* STACKED CASE STUDY INDEX */
-          <div className="space-y-24 sm:space-y-32 lg:space-y-40">
+          /* PINNED SCROLL-DRIVEN STAGE / STACKED CASE STUDY INDEX */
+          <div className="projects-stage space-y-24 sm:space-y-32 lg:space-y-40">
             {projects.map((project, idx) => {
               const PreviewComp = project.PreviewComponent;
               const isEven = idx % 2 === 0;
@@ -540,12 +609,15 @@ const SelectedWork: React.FC = () => {
                     delay: idx * 0.1,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="group relative border-b border-[#1D2024]/10 pb-16 sm:pb-24"
+                  className="stacked-card group relative border-b border-[#1D2024]/10 pb-16 sm:pb-24"
                 >
                   {/* TOP METADATA BAR */}
                   <div className="flex items-center justify-between mb-8 font-mono text-xs tracking-[0.18em] text-[#1D2024]/60 uppercase">
                     <div className="flex items-center gap-4">
-                      <span className="font-mono font-bold text-sm text-[#1D2024]">
+                      <span
+                        style={{ color: project.accentColor }}
+                        className="font-mono font-bold text-sm"
+                      >
                         {project.number}
                       </span>
                       <span>/</span>
@@ -559,13 +631,12 @@ const SelectedWork: React.FC = () => {
                       className="text-xs font-mono font-bold tracking-widest text-[#1D2024] hover:text-black uppercase flex items-center gap-1 cursor-pointer"
                     >
                       <span>OPEN STORY REEL</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#FFD42A]" />
+                      <ArrowUpRight style={{ color: project.accentColor }} className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   {/* MAIN GRID CONTENT */}
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                    {/* LEFT / RIGHT ALTERNATING TITLE & DESCRIPTION */}
                     <div
                       className={`lg:col-span-6 flex flex-col justify-between ${
                         isEven ? "lg:order-1" : "lg:order-2"
@@ -578,7 +649,7 @@ const SelectedWork: React.FC = () => {
                           className="text-[clamp(32px,4vw,56px)] font-medium leading-[1.05] tracking-[-0.04em] text-[#1D2024] mb-4 group-hover:text-black transition-colors cursor-pointer flex items-center gap-2"
                         >
                           <span>{project.titleMain}</span>
-                          <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity text-[#D9A700]" />
+                          <ArrowUpRight style={{ color: project.accentColor }} className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </h3>
 
                         <p
@@ -589,7 +660,7 @@ const SelectedWork: React.FC = () => {
                         </p>
                       </div>
 
-                      {/* EDITORIAL TECH TAGS */}
+                      {/* TECH TAGS */}
                       <div className="mb-8 font-mono text-[11px] sm:text-xs tracking-wider text-[#1D2024]/60 uppercase flex flex-wrap gap-x-3 gap-y-1">
                         {project.tech.map((t, tIdx) => (
                           <React.Fragment key={t}>
@@ -601,7 +672,7 @@ const SelectedWork: React.FC = () => {
                         ))}
                       </div>
 
-                      {/* EDITORIAL UNDERLINE LINKS */}
+                      {/* LINKS */}
                       <div className="flex flex-wrap items-center gap-6 font-mono text-xs tracking-widest font-semibold uppercase">
                         <button
                           type="button"
@@ -609,7 +680,7 @@ const SelectedWork: React.FC = () => {
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1D2024] text-[#F8F2E6] hover:bg-black transition-all cursor-pointer shadow-xs"
                         >
                           <span>VIEW STORY</span>
-                          <ArrowUpRight className="w-4 h-4 text-[#FFD42A]" />
+                          <ArrowUpRight style={{ color: project.accentColor }} className="w-4 h-4" />
                         </button>
 
                         <a
@@ -620,7 +691,10 @@ const SelectedWork: React.FC = () => {
                         >
                           <span>LIVE DEMO</span>
                           <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
-                          <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1D2024] transition-all origin-left scale-x-100 group-hover/link:scale-x-110" />
+                          <span
+                            style={{ backgroundColor: project.accentColor }}
+                            className="absolute bottom-0 left-0 w-full h-[1.5px] transition-all origin-left scale-x-100 group-hover/link:scale-x-110"
+                          />
                         </a>
 
                         <a
@@ -632,12 +706,10 @@ const SelectedWork: React.FC = () => {
                           <Github className="w-4 h-4 text-[#1D2024]" />
                           <span>GITHUB CODE</span>
                           <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-100 transition-all duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                          <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#1D2024]/40 transition-all origin-left scale-x-0 group-hover/link:scale-x-100" />
                         </a>
                       </div>
                     </div>
 
-                    {/* INTERACTIVE ABSTRACT ANIMATED PREVIEW VISUAL */}
                     <motion.div
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
