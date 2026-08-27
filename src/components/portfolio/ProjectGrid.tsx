@@ -18,7 +18,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     bgImage: "/images/projects/courseforge-ai.png",
     videoSrc: "/videos/projects/courseforge-ai.mp4",
     tileSize: "feature",
-    alignment: "left",
+    alignment: "center",
     devices: [
       {
         id: "courseforge-laptop",
@@ -26,7 +26,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[959/510]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[84%] max-w-[880px] -translate-x-1/2 -translate-y-1/2",
+        className: "absolute left-1/2 top-1/2 z-10 w-[88%] max-w-[800px] -translate-x-1/2 -translate-y-1/2",
       },
     ],
   },
@@ -45,7 +45,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     bgImage: "/images/projects/personal-portfolio.png",
     videoSrc: "/videos/projects/personal-portfolio.mp4",
     tileSize: "compact",
-    alignment: "right",
+    alignment: "center",
     devices: [
       {
         id: "portfolio-desktop",
@@ -53,7 +53,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[192/91]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[88%] max-w-[650px] -translate-x-1/2 -translate-y-1/2",
+        className: "absolute left-1/2 top-1/2 z-10 w-[90%] max-w-[720px] -translate-x-1/2 -translate-y-1/2",
       },
     ],
   },
@@ -81,7 +81,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[320/153]",
         fit: "cover",
-        className: "absolute left-[8%] top-1/2 z-10 w-[76%] max-w-[850px] -translate-y-1/2",
+        className: "absolute left-[3%] top-1/2 z-10 w-[71%] max-w-[700px] -translate-y-1/2",
       },
       {
         id: "hirescope-phone",
@@ -90,7 +90,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         screenAspect: "aspect-[65/119]",
         fit: "cover",
         delay: 0.14,
-        className: "absolute bottom-[11%] right-[8%] z-20 w-[18%] min-w-[90px] max-w-[170px] rotate-[2deg]",
+        className: "absolute right-[4%] top-1/2 z-20 w-[24%] min-w-[100px] max-w-[180px] -translate-y-1/2",
       },
     ],
   },
@@ -109,7 +109,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     bgImage: "/images/projects/greetly.png",
     videoSrc: "/videos/projects/greetly-mobile.webm",
     tileSize: "tall",
-    alignment: "left",
+    alignment: "center",
     devices: [
       {
         id: "greetly-phone",
@@ -117,7 +117,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "mobile",
         screenAspect: "aspect-[65/119]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[48%] min-w-[165px] max-w-[260px] -translate-x-1/2 -translate-y-1/2 -rotate-[2deg]",
+        className: "absolute left-1/2 top-1/2 z-10 w-[44%] min-w-[160px] max-w-[240px] -translate-x-1/2 -translate-y-1/2 -rotate-[1deg]",
       },
     ],
   },
@@ -136,7 +136,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     bgImage: "/images/projects/avengers-doomsday.png",
     videoSrc: "/videos/projects/avengers-doomsday.mp4",
     tileSize: "feature",
-    alignment: "right",
+    alignment: "center",
     devices: [
       {
         id: "avengers-cinema",
@@ -144,7 +144,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[137/65]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[90%] max-w-[980px] -translate-x-1/2 -translate-y-1/2",
+        className: "absolute left-1/2 top-1/2 z-10 w-[92%] max-w-[920px] -translate-x-1/2 -translate-y-1/2",
       },
     ],
   },
@@ -154,23 +154,26 @@ export const ProjectGrid: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="w-full space-y-20 sm:space-y-28 lg:space-y-40">
-      {SHOWCASE_PROJECTS.map((project, index) => (
-        <motion.div
-          key={project.id}
-          className="w-full"
-          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30, scale: 0.96 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{
-            duration: 0.8,
-            delay: index * 0.05,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          <ProjectCard project={project} />
-        </motion.div>
-      ))}
+    <div className="grid w-full grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+      {SHOWCASE_PROJECTS.map((project, index) => {
+        const isFullWidth = index === SHOWCASE_PROJECTS.length - 1 && SHOWCASE_PROJECTS.length % 2 !== 0;
+        return (
+          <motion.div
+            key={project.id}
+            className={`w-full ${isFullWidth ? "lg:col-span-2 lg:mx-auto lg:w-[86%]" : ""}`}
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{
+              duration: 0.8,
+              delay: index * 0.05,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            <ProjectCard project={project} />
+          </motion.div>
+        );
+      })}
     </div>
   );
 };

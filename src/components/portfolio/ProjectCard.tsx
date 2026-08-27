@@ -230,31 +230,21 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   });
   const y = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [14, -14]);
 
-  const alignmentClass = {
-    left: "lg:mr-auto",
-    center: "lg:mx-auto",
-    right: "lg:ml-auto",
-  }[project.alignment];
-
-  const sizeClass = {
-    feature: "lg:w-[78%] xl:w-[72%]",
-    wide: "lg:w-[66%] xl:w-[61%]",
-    tall: "lg:w-[52%] xl:w-[48%]",
-    compact: "lg:w-[46%] xl:w-[42%]",
-  }[project.tileSize];
+  const alignmentClass = "w-full";
+  const sizeClass = "w-full";
 
   const aspectClass = {
-    feature: "aspect-[1.08/1] sm:aspect-[1.45/1]",
-    wide: "aspect-[1.02/1] sm:aspect-[1.7/1]",
-    tall: "aspect-[0.92/1] sm:aspect-[1.05/1]",
-    compact: "aspect-[0.98/1] sm:aspect-[1.22/1]",
+    feature: "aspect-[1.1/1] sm:aspect-[1.42/1]",
+    wide: "aspect-[1.08/1] sm:aspect-[1.38/1]",
+    tall: "aspect-[1.05/1] sm:aspect-[1.35/1]",
+    compact: "aspect-[1.08/1] sm:aspect-[1.38/1]",
   }[project.tileSize];
 
   return (
     <motion.article
       ref={articleRef}
       style={{ y }}
-      className={`relative w-full ${sizeClass} ${alignmentClass} select-none font-sans`}
+      className="relative w-full select-none font-sans"
     >
       <a
         href={project.liveUrl}
