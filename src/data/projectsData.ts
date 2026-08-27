@@ -3,15 +3,19 @@ export interface ProjectItemData {
   slug: string;
   number: string;
   title: string;
+  subtitle: string;
   tagline: string;
   description: string;
   category: string;
   accentColor: string;
+  accentGradient: string;
   accentGlow: string;
   tech: string[];
+  features: string[];
   liveUrl: string;
   githubUrl: string;
   bgImage: string;
+  motifType: "course" | "resume" | "greeting" | "doomsday" | "portfolio";
 }
 
 export const PROJECTS_DATA: ProjectItemData[] = [
@@ -20,74 +24,94 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     slug: "courseforge-ai",
     number: "01",
     title: "CourseForge AI",
-    tagline: "AI course generator that builds complete structured courses from any topic using Gemini AI.",
-    description: "Builds a full course (outline, lessons, quizzes, curated YouTube videos) from any topic using Gemini AI.",
+    subtitle: "AI-Powered Course Generator",
+    tagline: "Generate complete courses in minutes: outlines, lessons, videos, and quizzes powered by advanced AI.",
+    description: "Generates complete structured courses with lesson outlines, AI video curation, and interactive quizzes from any topic using Gemini AI.",
     category: "AI COURSE GENERATOR",
-    accentColor: "#8B5CF6", // Indigo / Purple
-    accentGlow: "rgba(139, 92, 246, 0.45)",
-    tech: ["REACT", "TAILWIND", "GEMINI AI", "YOUTUBE API"],
+    accentColor: "#6366F1", // Cool Blue-Indigo
+    accentGradient: "from-[#4F46E5] to-[#3B82F6]",
+    accentGlow: "rgba(99, 102, 241, 0.45)",
+    tech: ["React", "Gemini API", "Vercel", "YouTube API"],
+    features: ["AI Syllabus Structuring", "YouTube Curation", "Interactive Quizzes"],
     liveUrl: "https://lnkd.in/g4j6gNzA",
     githubUrl: "https://lnkd.in/gtG__2Rb",
     bgImage: "/images/projects/courseforge-ai.png",
-  },
-  {
-    id: "personal-portfolio",
-    slug: "personal-portfolio",
-    number: "02",
-    title: "Personal Portfolio",
-    tagline: "High-performance editorial showcase site built with React, Vite, and Framer Motion.",
-    description: "This site itself — an editorial, high-performance showcase built with React, Vite, and Framer Motion.",
-    category: "PORTFOLIO & EDITORIAL",
-    accentColor: "#FFD42A", // Site Ink / Cream Yellow Accent
-    accentGlow: "rgba(255, 212, 42, 0.45)",
-    tech: ["REACT", "VITE", "TAILWIND", "FRAMER MOTION"],
-    liveUrl: "https://lnkd.in/gehvCMib",
-    githubUrl: "https://lnkd.in/giumPvVE",
-    bgImage: "/images/projects/personal-portfolio.png",
+    motifType: "course",
   },
   {
     id: "hirescope-ai",
     slug: "hirescope-ai",
-    number: "03",
+    number: "02",
     title: "HireScope AI",
-    tagline: "Resume & portfolio analyzer giving combined hireability scores with ATS gauges and skill detection.",
-    description: "Resume + portfolio analyzer that gives a combined 'Hireability' score with an ATS gauge, detected skills, and missing keywords.",
+    subtitle: "AI-Powered Resume Analysis",
+    tagline: "Uses NLP & ML to score resumes (formatting, keywords, relevance) and suggest recruiter-focused improvements.",
+    description: "Advanced resume analysis platform leveraging state-of-the-art NLP to compute ATS match scores, extract skills, and identify candidate experience gaps.",
     category: "AI RESUME ANALYZER",
-    accentColor: "#3B82F6", // Blue
-    accentGlow: "rgba(59, 130, 246, 0.45)",
-    tech: ["NEXT.JS", "PUPPETEER", "CLAUDE API", "SERPER API"],
+    accentColor: "#10B981", // Teal / Cool Green
+    accentGradient: "from-[#0D9488] to-[#10B981]",
+    accentGlow: "rgba(16, 185, 129, 0.45)",
+    tech: ["Next.js", "Puppeteer", "Claude API", "Serper API"],
+    features: ["ATS Match Gauge", "Gap Analysis", "Keyword Optimization"],
     liveUrl: "https://lnkd.in/gRQgwgZc",
     githubUrl: "https://lnkd.in/gxutjrii",
     bgImage: "/images/projects/hirescope-ai.png",
+    motifType: "resume",
   },
   {
     id: "greetly",
     slug: "greetly",
-    number: "04",
+    number: "03",
     title: "Greetly",
-    tagline: "AI-generated greeting card message generator with a bold neo-brutalist UI.",
-    description: "AI-generated greeting card message tool with a bold neo-brutalist UI (thick black borders, bright coral/yellow/cyan/purple color blocks).",
+    subtitle: "AI-Powered Message Generator",
+    tagline: "Craft truly personal messages for any occasion by understanding your relationship with the recipient.",
+    description: "AI greeting card message tool with a bold neo-brutalist UI. Features Groq Llama-3.3 acceleration, JWT auth, and custom tone presets.",
     category: "NEO-BRUTALIST AI TOOL",
-    accentColor: "#FF4757", // Coral / Pink
+    accentColor: "#FF4757", // Warm Coral / Orange
+    accentGradient: "from-[#FF6B6B] to-[#FF4757]",
     accentGlow: "rgba(255, 71, 87, 0.45)",
-    tech: ["REACT", "VITE", "FLASK", "GROQ API"],
+    tech: ["React", "Flask", "Groq Llama-3.3", "JWT Auth"],
+    features: ["Empathy Engine", "Tone Presets", "History Dashboard"],
     liveUrl: "https://lnkd.in/dRSa6Z4g",
     githubUrl: "https://lnkd.in/devnZ7jk",
     bgImage: "/images/projects/greetly.png",
+    motifType: "greeting",
   },
   {
     id: "avengers-doomsday",
     slug: "avengers-doomsday",
-    number: "05",
-    title: "Avengers Doomsday",
-    tagline: "Cinematic Marvel-themed concept landing page with glowing green particles & 3D coverflow hero.",
-    description: "A Marvel-themed concept landing page with a cinematic dark UI, glowing green particle effects, and a 3D coverflow hero carousel. (Front-end design demo).",
+    number: "04",
+    title: "AVENGERS: DOOMSDAY",
+    subtitle: "Cinematic Scroll Experience",
+    tagline: "Scroll-scrubbed video trailers, glowing green particle portals, & 3D WebGL coverflow dynamics (Front-End Design Demo).",
+    description: "A Marvel-inspired cinematic scroll experience built with Next.js, Three.js, GSAP ScrollTrigger, and Lenis smooth physics.",
     category: "CINEMATIC DESIGN DEMO",
-    accentColor: "#00FF88", // Glowing Green
-    accentGlow: "rgba(0, 255, 136, 0.45)",
-    tech: ["THREE.JS", "GSAP", "WEBGL", "REACT"],
+    accentColor: "#FF003C", // Deep Crimson Red
+    accentGradient: "from-[#FF003C] to-[#E11D48]",
+    accentGlow: "rgba(255, 0, 60, 0.45)",
+    tech: ["Next.js", "Three.js", "GSAP", "Lenis Physics"],
+    features: ["3D Coverflow Hero", "GLSL Particles", "Scroll Video Scrub"],
     liveUrl: "https://lnkd.in/gz-jS3MG",
     githubUrl: "https://lnkd.in/giEYt9Au",
     bgImage: "/images/projects/avengers-doomsday.png",
+    motifType: "doomsday",
+  },
+  {
+    id: "personal-portfolio",
+    slug: "personal-portfolio",
+    number: "05",
+    title: "Personal Portfolio",
+    subtitle: "Editorial High-Performance Showcase",
+    tagline: "High-performance editorial showcase site built with React, Vite, Tailwind CSS, & Framer Motion.",
+    description: "This portfolio itself — featuring an editorial typography layout, interactive story case studies, and custom micro-animations.",
+    category: "PORTFOLIO & EDITORIAL",
+    accentColor: "#FFD42A", // Site Ink / Cream Yellow
+    accentGradient: "from-[#FFD42A] to-[#F59E0B]",
+    accentGlow: "rgba(255, 212, 42, 0.45)",
+    tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
+    features: ["Story Reel Modal", "Frosted Cards", "Passive rAF Nav"],
+    liveUrl: "https://lnkd.in/gehvCMib",
+    githubUrl: "https://lnkd.in/giumPvVE",
+    bgImage: "/images/projects/personal-portfolio.png",
+    motifType: "portfolio",
   },
 ];
