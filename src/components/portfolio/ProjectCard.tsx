@@ -1,6 +1,21 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, Github } from "lucide-react";
+
+type DeviceType = "laptop" | "desktop" | "phone" | "tablet" | "cinema";
+type DeviceMedia = "desktop" | "mobile";
+type MediaFit = "cover" | "contain";
+
+export interface ProjectDeviceConfig {
+  id: string;
+  type: DeviceType;
+  media: DeviceMedia;
+  className: string;
+  screenAspect: string;
+  fit?: MediaFit;
+  objectPosition?: string;
+  delay?: number;
+}
 
 export interface ProjectCardData {
   id: string;
@@ -19,61 +34,26 @@ export interface ProjectCardData {
   mobileVideoSrc?: string;
   tileSize: "feature" | "wide" | "tall" | "compact";
   alignment: "left" | "center" | "right";
-  imagePosition: string;
-  mobileImagePosition?: string;
-  composition: "laptop-left" | "laptop-right" | "desktop-center" | "portfolio-duo" | "cinematic";
+  devices: ProjectDeviceConfig[];
 }
 
 interface ProjectCardProps {
   project: ProjectCardData;
 }
 
-interface DeviceFrameProps {
-  className: string;
-  children: React.ReactNode;
-  kind?: "laptop" | "desktop" | "phone" | "tablet";
-  delay?: number;
-  style?: React.ComponentProps<typeof motion.div>["style"];
-}
-
-const DeviceFrame: React.FC<DeviceFrameProps> = ({ className, children, kind = "laptop", delay = 0, style }) => {
-  const shouldReduceMotion = useReducedMotion();
-
-  return (
-    <motion.div
-      aria-hidden="true"
-      initial={shouldReduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: kind === "phone" ? 38 : 24, scale: kind === "phone" ? 0.92 : 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: shouldReduceMotion ? 0 : 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-      style={style}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
 interface ProjectVideoProps {
   active: boolean;
   shouldLoad: boolean;
   project: ProjectCardData;
-  className?: string;
-  fit?: "cover" | "contain";
-  sourceSrc?: string;
+  device: ProjectDeviceConfig;
 }
 
-const ProjectVideo: React.FC<ProjectVideoProps> = ({
-  active,
-  shouldLoad,
-  project,
-  className = "",
-  fit = "cover",
-  sourceSrc = project.videoSrc,
-}) => {
+const ProjectVideo: React.FC<ProjectVideoProps> = ({ active, shouldLoad, project, device }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const [hasError, setHasError] = useState(false);
+  const sourceSrc = device.media === "mobile" ? project.mobileVideoSrc || project.videoSrc : project.videoSrc;
+  const fit = device.fit || "cover";
 
   useEffect(() => {
     const video = videoRef.current;
@@ -84,10 +64,7 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({
         video.load();
         video.dataset.loaded = "true";
       }
-      const playPromise = video.play();
-      playPromise?.catch(() => {
-        video.pause();
-      });
+      video.play().catch(() => video.pause());
       return;
     }
 
@@ -101,8 +78,8 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({
         alt=""
         aria-hidden="true"
         draggable={false}
-        className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} ${className}`}
-        style={{ objectPosition: project.imagePosition }}
+        className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
+        style={{ objectPosition: device.objectPosition || "50% 50%" }}
       />
     );
   }
@@ -118,10 +95,63 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({
       preload="metadata"
       poster={project.bgImage}
       onError={() => setHasError(true)}
-      className={`h-full w-full bg-black ${fit === "contain" ? "object-contain" : "object-cover"} ${className}`}
+      className={`h-full w-full bg-black ${fit === "contain" ? "object-contain" : "object-cover"}`}
+      style={{ objectPosition: device.objectPosition || "50% 50%" }}
     >
       {shouldLoad && <source src={sourceSrc} type={sourceSrc.endsWith(".webm") ? "video/webm" : "video/mp4"} />}
     </video>
+  );
+};
+
+interface DeviceShellProps {
+  active: boolean;
+  shouldLoad: boolean;
+  project: ProjectCardData;
+  device: ProjectDeviceConfig;
+  parallaxY: ReturnType<typeof useTransform>;
+}
+
+const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, device, parallaxY }) => {
+  const shouldReduceMotion = useReducedMotion();
+  const isPhone = device.type === "phone";
+
+  const shellChrome = {
+    laptop: "rounded-[18px] border border-black/18 bg-[#101114] p-[7px] shadow-[0_26px_65px_rgba(29,32,36,0.22)] sm:rounded-[24px] sm:p-[9px]",
+    desktop: "rounded-[22px] border border-black/16 bg-[#111316] p-[8px] shadow-[0_28px_78px_rgba(29,32,36,0.22)] sm:rounded-[28px] sm:p-[10px]",
+    phone: "rounded-[24px] border border-white/20 bg-[#101114] p-[5px] shadow-[0_22px_55px_rgba(29,32,36,0.3)] sm:rounded-[30px] sm:p-[6px]",
+    tablet: "rounded-[18px] border border-white/20 bg-[#111316] p-[6px] shadow-[0_24px_60px_rgba(29,32,36,0.25)] sm:rounded-[24px] sm:p-[7px]",
+    cinema: "rounded-[26px] border border-black/18 bg-[#090A0D] p-[8px] shadow-[0_34px_85px_rgba(29,32,36,0.24)] sm:rounded-[34px] sm:p-[10px]",
+  }[device.type];
+
+  const screenChrome = {
+    laptop: "rounded-[12px] sm:rounded-[17px]",
+    desktop: "rounded-[15px] sm:rounded-[21px]",
+    phone: "rounded-[19px] sm:rounded-[24px]",
+    tablet: "rounded-[12px] sm:rounded-[17px]",
+    cinema: "rounded-[18px] sm:rounded-[25px]",
+  }[device.type];
+
+  return (
+    <div aria-hidden="true" className={device.className}>
+      <motion.div
+      aria-hidden="true"
+      initial={shouldReduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: isPhone ? 36 : 24, scale: isPhone ? 0.9 : 0.94 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.82, delay: device.delay || 0, ease: [0.16, 1, 0.3, 1] }}
+      style={{ y: parallaxY }}
+      className={`relative w-full ${shellChrome}`}
+    >
+      {isPhone && <div className="absolute left-1/2 top-[9px] z-10 h-[4px] w-9 -translate-x-1/2 rounded-full bg-white/20" />}
+      <div className={`relative overflow-hidden bg-black ${screenChrome}`}>
+        <div className={device.screenAspect}>
+          <ProjectVideo active={active} shouldLoad={shouldLoad} project={project} device={device} />
+        </div>
+      </div>
+      {device.type === "laptop" && <div className="mx-auto mt-[7px] h-[5px] w-2/5 rounded-full bg-white/14" />}
+      {device.type === "desktop" && <div className="mx-auto mt-[8px] hidden h-[4px] w-1/5 rounded-full bg-white/12 sm:block" />}
+      </motion.div>
+    </div>
   );
 };
 
@@ -135,8 +165,8 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
     target: sceneRef,
     offset: ["start end", "end start"],
   });
-  const primaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [8, -8]);
-  const secondaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [12, -12]);
+  const primaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [7, -7]);
+  const secondaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [11, -11]);
 
   useEffect(() => {
     const element = sceneRef.current;
@@ -144,26 +174,16 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
 
     const loadObserver = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoad(true);
-        }
+        if (entry.isIntersecting) setShouldLoad(true);
       },
-      {
-        root: null,
-        rootMargin: "450px 0px",
-        threshold: 0,
-      },
+      { root: null, rootMargin: "420px 0px", threshold: 0 },
     );
 
     const playbackObserver = new IntersectionObserver(
       ([entry]) => {
         setActive(entry.isIntersecting && entry.intersectionRatio > 0.28);
       },
-      {
-        root: null,
-        rootMargin: "-8% 0px -8% 0px",
-        threshold: [0, 0.28, 0.5, 0.75],
-      },
+      { root: null, rootMargin: "-8% 0px -8% 0px", threshold: [0, 0.28, 0.5, 0.75] },
     );
 
     loadObserver.observe(element);
@@ -175,131 +195,27 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
     };
   }, []);
 
-  const video = (fit: "cover" | "contain" = "cover", className = "", sourceSrc = project.videoSrc) => (
-    <ProjectVideo active={active} shouldLoad={shouldLoad} project={project} fit={fit} className={className} sourceSrc={sourceSrc} />
-  );
-
-  const laptop = (
-    <DeviceFrame
-      kind="laptop"
-      delay={0}
-      className="relative z-10 w-[84%] overflow-hidden rounded-[18px] border border-black/18 bg-[#101114] p-[7px] shadow-[0_28px_70px_rgba(29,32,36,0.24)] sm:rounded-[24px] sm:p-[9px]"
-    >
-      <div className="overflow-hidden rounded-[12px] bg-black sm:rounded-[17px]">
-        <div className="aspect-[16/9] w-full">{video("cover")}</div>
-      </div>
-      <div className="mx-auto mt-[7px] h-[5px] w-2/5 rounded-full bg-white/14" />
-    </DeviceFrame>
-  );
-
-  const desktop = (
-    <DeviceFrame
-      kind="desktop"
-      delay={0}
-      className="relative z-10 w-[88%] overflow-hidden rounded-[22px] border border-black/16 bg-[#111316] p-[8px] shadow-[0_30px_85px_rgba(29,32,36,0.24)] sm:rounded-[28px] sm:p-[10px]"
-    >
-      <div className="overflow-hidden rounded-[15px] bg-black sm:rounded-[21px]">
-        <div className="aspect-[16/9] w-full">{video("cover")}</div>
-      </div>
-    </DeviceFrame>
-  );
-
-  const phone = (className: string, delay = 0.12) => (
-    <DeviceFrame
-      kind="phone"
-      delay={delay}
-      style={{ y: secondaryY }}
-      className={`absolute z-20 w-[22%] min-w-[82px] max-w-[168px] rounded-[22px] border border-white/18 bg-[#101114] p-[5px] shadow-[0_22px_55px_rgba(29,32,36,0.32)] sm:rounded-[30px] sm:p-[6px] ${className}`}
-    >
-      <div className="absolute left-1/2 top-[9px] z-10 h-[4px] w-9 -translate-x-1/2 rounded-full bg-white/20" />
-      <div className="overflow-hidden rounded-[17px] bg-black sm:rounded-[24px]">
-        <div className="aspect-[9/17] w-full">{video("cover", "", project.mobileVideoSrc || project.videoSrc)}</div>
-      </div>
-    </DeviceFrame>
-  );
-
-  const tablet = (className: string, delay = 0.14) => (
-    <DeviceFrame
-      kind="tablet"
-      delay={delay}
-      style={{ y: secondaryY }}
-      className={`absolute z-20 w-[34%] min-w-[126px] max-w-[245px] rounded-[18px] border border-white/18 bg-[#111316] p-[6px] shadow-[0_24px_60px_rgba(29,32,36,0.28)] sm:rounded-[24px] sm:p-[7px] ${className}`}
-    >
-      <div className="overflow-hidden rounded-[12px] bg-black sm:rounded-[17px]">
-        <div className="aspect-[4/5] w-full">{video("contain")}</div>
-      </div>
-    </DeviceFrame>
-  );
-
-  const composition = (() => {
-    switch (project.composition) {
-      case "laptop-left":
-        return (
-          <>
-            <motion.div style={{ y: primaryY }} className="flex w-full justify-center sm:justify-end">
-              {laptop}
-            </motion.div>
-            {phone("bottom-[8%] left-[5%] -rotate-[3deg] sm:bottom-[7%] sm:left-[8%]")}
-          </>
-        );
-      case "laptop-right":
-        return (
-          <>
-            <motion.div style={{ y: primaryY }} className="flex w-full justify-center sm:justify-start">
-              {laptop}
-            </motion.div>
-            {phone("bottom-[7%] right-[4%] rotate-[3deg] sm:right-[8%]")}
-          </>
-        );
-      case "desktop-center":
-        return (
-          <>
-            <motion.div style={{ y: primaryY }} className="flex w-full justify-center">
-              {desktop}
-            </motion.div>
-            {phone("bottom-[4%] left-1/2 -translate-x-1/2 rotate-[2deg]")}
-          </>
-        );
-      case "portfolio-duo":
-        return (
-          <>
-            <motion.div style={{ y: primaryY }} className="flex w-full justify-center">
-              {desktop}
-            </motion.div>
-            {phone("bottom-[6%] left-[5%] -rotate-[4deg] sm:left-[8%]", 0.1)}
-            {phone("bottom-[10%] right-[4%] hidden rotate-[4deg] sm:block sm:right-[8%]", 0.18)}
-          </>
-        );
-      case "cinematic":
-        return (
-          <>
-            <motion.div style={{ y: primaryY }} className="flex w-full justify-center">
-              {desktop}
-            </motion.div>
-            {tablet("bottom-[2%] right-[4%] rotate-[3deg] sm:right-[7%]")}
-          </>
-        );
-      default:
-        return (
-          <motion.div style={{ y: primaryY }} className="flex w-full justify-center">
-            {laptop}
-          </motion.div>
-        );
-    }
-  })();
-
   return (
     <div
       ref={sceneRef}
       className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#EFE5D4] px-4 py-8 transition-all duration-700 ease-out group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:px-8"
     >
       <div
-        style={{
-          background: `radial-gradient(circle at 50% 52%, ${project.accentColor}24, transparent 62%)`,
-        }}
+        style={{ background: `radial-gradient(circle at 50% 52%, ${project.accentColor}22, transparent 62%)` }}
         className="absolute inset-0"
       />
-      <div className="relative flex h-full w-full items-center justify-center">{composition}</div>
+      <div className="relative h-full w-full">
+        {project.devices.map((device, index) => (
+          <DeviceShell
+            key={device.id}
+            active={active}
+            shouldLoad={shouldLoad}
+            project={project}
+            device={device}
+            parallaxY={index === 0 ? primaryY : secondaryY}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -307,10 +223,6 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const shouldReduceMotion = useReducedMotion();
   const articleRef = useRef<HTMLElement>(null);
-  const tileRef = useRef<HTMLAnchorElement>(null);
-  const targetPos = useRef({ x: 0, y: 0 });
-  const currentPos = useRef({ x: 0, y: 0 });
-  const rafId = useRef<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: articleRef,
@@ -338,47 +250,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     compact: "aspect-[0.98/1] sm:aspect-[1.22/1]",
   }[project.tileSize];
 
-  const animateParallax = useCallback(() => {
-    if (shouldReduceMotion) return;
-
-    currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.12;
-    currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.12;
-
-    if (
-      Math.abs(targetPos.current.x - currentPos.current.x) > 0.1 ||
-      Math.abs(targetPos.current.y - currentPos.current.y) > 0.1
-    ) {
-      rafId.current = requestAnimationFrame(animateParallax);
-    } else {
-      rafId.current = null;
-    }
-  }, [shouldReduceMotion]);
-
-  const startAnimation = useCallback(() => {
-    if (!rafId.current) {
-      rafId.current = requestAnimationFrame(animateParallax);
-    }
-  }, [animateParallax]);
-
-  const handlePointerMove = (event: React.PointerEvent<HTMLAnchorElement>) => {
-    if (shouldReduceMotion || !tileRef.current || event.pointerType === "touch") return;
-
-    const rect = tileRef.current.getBoundingClientRect();
-    targetPos.current = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    };
-    startAnimation();
-  };
-
-  useEffect(() => {
-    return () => {
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
-      }
-    };
-  }, []);
-
   return (
     <motion.article
       ref={articleRef}
@@ -386,40 +257,32 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       className={`w-full ${sizeClass} ${alignmentClass} select-none font-sans`}
     >
       <a
-        ref={tileRef}
         href={project.liveUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Open ${project.title}`}
-        onPointerMove={handlePointerMove}
         className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] bg-[#EFE5D4] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-all duration-500 ease-out hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80 sm:rounded-[32px]`}
       >
         <ProjectDeviceScene project={project} />
 
-        {/* 2. SUBTLE WARM TRANSLUCENT OVERLAY LAYER */}
         <div className="pointer-events-none absolute inset-0 bg-[#F4EDE0]/0 backdrop-blur-[0px] transition-all duration-500 ease-out group-hover/project:bg-[#F4EDE0]/55 group-hover/project:backdrop-blur-md group-focus-visible/project:bg-[#F4EDE0]/55 group-focus-visible/project:backdrop-blur-md" />
 
-        {/* 3. UNIFIED CENTERED HOVER COMPOSITION */}
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center p-6 text-center sm:p-10">
-          {/* A. SINGLE TOP PILL BUTTON */}
           <div className="mb-4 inline-flex translate-y-3 items-center gap-1.5 rounded-full bg-white/95 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#1D2024] opacity-0 shadow-md transition-all duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100 sm:mb-5">
             <span>VIEW PROJECT</span>
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/project:translate-x-0.5" />
           </div>
 
-          {/* B. CENTERED SANS-SERIF PROJECT TITLE */}
           <h3 className="translate-y-4 font-sans text-[clamp(26px,3.6vw,46px)] font-bold uppercase leading-[1.05] tracking-tight text-[#1D2024] opacity-0 drop-shadow-xs transition-all delay-75 duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100">
             {project.title}
           </h3>
 
-          {/* C. CONCISE 1-2 LINE DESCRIPTION */}
           <p className="mt-3 max-w-[460px] translate-y-4 font-sans text-sm font-medium leading-relaxed text-[#1D2024]/85 opacity-0 transition-all delay-150 duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100 sm:text-base">
             {project.tagline || project.description}
           </p>
         </div>
       </a>
 
-      {/* 4. BOTTOM COMPACT METADATA (OUTSIDE HOVER AREA) */}
       <div className="mt-4 flex flex-col gap-3 sm:mt-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-[560px]">
           <div className="flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1D2024]/58">
