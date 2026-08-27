@@ -254,7 +254,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     <motion.article
       ref={articleRef}
       style={{ y }}
-      className={`w-full ${sizeClass} ${alignmentClass} select-none font-sans`}
+      className={`relative w-full ${sizeClass} ${alignmentClass} select-none font-sans`}
     >
       <a
         href={project.liveUrl}
