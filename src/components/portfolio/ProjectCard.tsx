@@ -30,7 +30,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const articleRef = useRef<HTMLElement>(null);
   const tileRef = useRef<HTMLAnchorElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
   const targetPos = useRef({ x: 0, y: 0 });
   const currentPos = useRef({ x: 0, y: 0 });
   const rafId = useRef<number | null>(null);
@@ -39,7 +38,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     target: articleRef,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [18, -18]);
+  const y = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [14, -14]);
 
   const alignmentClass = {
     left: "lg:mr-auto",
@@ -61,28 +60,25 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     compact: "aspect-[0.98/1] sm:aspect-[1.22/1]",
   }[project.tileSize];
 
-  const animateCursor = useCallback(() => {
+  const animateParallax = useCallback(() => {
     if (shouldReduceMotion) return;
 
-    currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.18;
-    currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.18;
+    currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.12;
+    currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.12;
 
     const { x, y } = currentPos.current;
-    if (cursorRef.current) {
-      cursorRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-    }
     if (imageRef.current && tileRef.current) {
       const rect = tileRef.current.getBoundingClientRect();
-      const px = (x / rect.width - 0.5) * 10;
-      const py = (y / rect.height - 0.5) * 10;
-      imageRef.current.style.transform = `translate3d(${px}px, ${py}px, 0) scale(1.045)`;
+      const px = (x / rect.width - 0.5) * 8;
+      const py = (y / rect.height - 0.5) * 8;
+      imageRef.current.style.transform = `translate3d(${px}px, ${py}px, 0) scale(1.03)`;
     }
 
     if (
       Math.abs(targetPos.current.x - currentPos.current.x) > 0.1 ||
       Math.abs(targetPos.current.y - currentPos.current.y) > 0.1
     ) {
-      rafId.current = requestAnimationFrame(animateCursor);
+      rafId.current = requestAnimationFrame(animateParallax);
     } else {
       rafId.current = null;
     }
@@ -90,9 +86,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const startAnimation = useCallback(() => {
     if (!rafId.current) {
-      rafId.current = requestAnimationFrame(animateCursor);
+      rafId.current = requestAnimationFrame(animateParallax);
     }
-  }, [animateCursor]);
+  }, [animateParallax]);
 
   const handlePointerMove = (event: React.PointerEvent<HTMLAnchorElement>) => {
     if (shouldReduceMotion || !tileRef.current || event.pointerType === "touch") return;
@@ -133,8 +129,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         aria-label={`Open ${project.title}`}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[18px] sm:rounded-[26px] bg-[#EFE5D4] shadow-[0_24px_70px_rgba(29,32,36,0.12)] outline-none ring-1 ring-[#1D2024]/10 transition-[box-shadow,transform] duration-500 ease-out hover:shadow-[0_34px_90px_rgba(29,32,36,0.18)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80`}
+        className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] sm:rounded-[32px] bg-[#EFE5D4] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80`}
       >
+        {/* 1. REAL PROJECT SCREENSHOT BACKGROUND (BLURS & SCALES ON HOVER) */}
         <img
           ref={imageRef}
           src={project.bgImage}
@@ -144,37 +141,33 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             "--mobile-position": project.mobileImagePosition || project.imagePosition,
             "--project-position": project.imagePosition,
           } as React.CSSProperties}
-          className="h-full w-full object-cover [object-position:var(--mobile-position)] transition-[transform,filter] duration-700 ease-out group-hover/project:scale-[1.045] group-hover/project:brightness-[0.72] group-hover/project:saturate-[0.88] group-hover/project:blur-[0.5px] group-focus-visible/project:brightness-[0.72] sm:[object-position:var(--project-position)]"
+          className="h-full w-full object-cover [object-position:var(--mobile-position)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:[object-position:var(--project-position)]"
         />
 
-        <div className="pointer-events-none absolute inset-0 bg-[#161717]/0 transition-colors duration-500 group-hover/project:bg-[#161717]/28 group-focus-visible/project:bg-[#161717]/28" />
+        {/* 2. SUBTLE WARM TRANSLUCENT OVERLAY LAYER */}
+        <div className="pointer-events-none absolute inset-0 bg-[#F4EDE0]/0 backdrop-blur-[0px] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/project:bg-[#F4EDE0]/55 group-hover/project:backdrop-blur-md group-focus-visible/project:bg-[#F4EDE0]/55 group-focus-visible/project:backdrop-blur-md" />
 
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6 text-center">
-          <div className="max-w-[520px] translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100">
-            <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-white/75">
-              {project.number} / {project.category}
-            </p>
-            <h3 className="font-serif text-[clamp(32px,5vw,76px)] font-medium leading-[0.95] text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
-              {project.title}
-            </h3>
-            <p className="mx-auto mt-4 max-w-[460px] text-sm font-medium leading-relaxed text-white/88 sm:text-base">
-              {project.description}
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.18em] text-white">
-              View Project
-              <ArrowUpRight className="h-4 w-4" />
-            </span>
+        {/* 3. UNIFIED CENTERED HOVER COMPOSITION */}
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center p-6 sm:p-10 text-center">
+          {/* A. SINGLE TOP PILL BUTTON */}
+          <div className="mb-4 sm:mb-5 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#1D2024] shadow-md transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-3 opacity-0 group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100">
+            <span>VIEW PROJECT</span>
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/project:translate-x-0.5" />
           </div>
-        </div>
 
-        <div
-          ref={cursorRef}
-          className="pointer-events-none absolute left-0 top-0 z-20 hidden rounded-full bg-white px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1D2024] opacity-0 shadow-[0_12px_35px_rgba(0,0,0,0.18)] transition-opacity duration-200 group-hover/project:opacity-100 md:block"
-        >
-          View Project
+          {/* B. CENTERED SANS-SERIF PROJECT TITLE */}
+          <h3 className="font-sans font-bold uppercase tracking-tight text-[#1D2024] text-[clamp(26px,3.6vw,46px)] leading-[1.05] drop-shadow-xs transition-all duration-500 delay-[70ms] ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 opacity-0 group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100">
+            {project.title}
+          </h3>
+
+          {/* C. CONCISE 1-2 LINE DESCRIPTION */}
+          <p className="mt-3 max-w-[460px] font-sans font-medium text-sm sm:text-base leading-relaxed text-[#1D2024]/85 transition-all duration-500 delay-[140ms] ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 opacity-0 group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100">
+            {project.tagline || project.description}
+          </p>
         </div>
       </a>
 
+      {/* 4. BOTTOM COMPACT METADATA (OUTSIDE HOVER AREA) */}
       <div className="mt-4 flex flex-col gap-3 sm:mt-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-[560px]">
           <div className="flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1D2024]/58">
