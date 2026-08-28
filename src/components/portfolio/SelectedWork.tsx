@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 
 import ProjectStoryViewer from "./ProjectStoryViewer";
 import ProjectGrid, { SHOWCASE_PROJECTS } from "./ProjectGrid";
@@ -60,51 +60,6 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
   );
 };
 
-const ProjectsBackdrop: React.FC<{ containerRef: React.RefObject<HTMLElement | null> }> = ({ containerRef }) => {
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-  const planeX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, 120]);
-  const planeY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, 520]);
-  const planeRotate = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [-8, -8] : [-12, 16]);
-
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <svg
-        className="absolute left-1/2 top-[14%] hidden h-[76%] w-[1200px] -translate-x-1/2 text-[#1D2024]/25 lg:block"
-        viewBox="0 0 1200 1200"
-        fill="none"
-      >
-        <path
-          d="M120 148 C 356 22 522 208 412 384 C 322 528 438 706 650 594 C 908 458 1092 654 990 838 C 886 1026 628 1032 430 928"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="1"
-          strokeDasharray="5 7"
-        />
-      </svg>
-
-      <motion.svg
-        style={{ x: planeX, y: planeY, rotate: planeRotate }}
-        className="absolute left-[9%] top-[20%] hidden h-8 w-8 text-[#D98264] lg:block"
-        viewBox="0 0 48 48"
-        fill="none"
-      >
-        <path
-          d="M42 7 6 23.5l15.2 4.1L26 42l16-35Z"
-          fill="#F0A081"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="2"
-        />
-        <path d="m21.2 27.6 10.7-10.8" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-      </motion.svg>
-    </div>
-  );
-};
-
 export const SelectedWork: React.FC = () => {
   const { slug } = useParams<{ slug?: string }>();
   const navigate = useNavigate();
@@ -127,8 +82,6 @@ export const SelectedWork: React.FC = () => {
       style={{ backgroundColor: "#F8F2E6" }}
       className="relative w-full py-20 sm:py-28 lg:py-32 text-[#1D2024] overflow-hidden z-10 select-none"
     >
-      <ProjectsBackdrop containerRef={sectionRef} />
-
       {/* STORY VIEWER OVERLAY */}
       <ProjectStoryViewer
         projectSlug={activeSlug}
