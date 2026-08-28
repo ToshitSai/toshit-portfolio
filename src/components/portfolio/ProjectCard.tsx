@@ -1,8 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  MotionValue,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { ArrowUpRight, Github } from "lucide-react";
 
-type DeviceType = "laptop" | "desktop" | "phone" | "tablet" | "cinema";
+type DeviceType = "laptop" | "desktop" | "phone" | "tablet" | "watch" | "cinema";
 type DeviceMedia = "desktop" | "mobile";
 type MediaFit = "cover" | "contain";
 
@@ -34,6 +42,7 @@ export interface ProjectCardData {
   mobileVideoSrc?: string;
   tileSize: "feature" | "wide" | "tall" | "compact";
   alignment: "left" | "center" | "right";
+  gridClassName?: string;
   devices: ProjectDeviceConfig[];
 }
 
@@ -108,18 +117,23 @@ interface DeviceShellProps {
   shouldLoad: boolean;
   project: ProjectCardData;
   device: ProjectDeviceConfig;
-  parallaxY: ReturnType<typeof useTransform>;
+  parallaxY: MotionValue<number>;
+  pointerX: MotionValue<number>;
+  pointerY: MotionValue<number>;
 }
 
-const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, device, parallaxY }) => {
+const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, device, parallaxY, pointerX, pointerY }) => {
   const shouldReduceMotion = useReducedMotion();
   const isPhone = device.type === "phone";
+  const isWatch = device.type === "watch";
+  const composedY = useTransform(() => parallaxY.get() + pointerY.get());
 
   const shellChrome = {
     laptop: "rounded-[18px] border border-black/18 bg-[#101114] p-[7px] shadow-[0_26px_65px_rgba(29,32,36,0.22)] sm:rounded-[24px] sm:p-[9px]",
     desktop: "rounded-[22px] border border-black/16 bg-[#111316] p-[8px] shadow-[0_28px_78px_rgba(29,32,36,0.22)] sm:rounded-[28px] sm:p-[10px]",
     phone: "rounded-[24px] border border-white/20 bg-[#101114] p-[5px] shadow-[0_22px_55px_rgba(29,32,36,0.3)] sm:rounded-[30px] sm:p-[6px]",
     tablet: "rounded-[18px] border border-white/20 bg-[#111316] p-[6px] shadow-[0_24px_60px_rgba(29,32,36,0.25)] sm:rounded-[24px] sm:p-[7px]",
+    watch: "rounded-[32px] border border-white/20 bg-[#101114] p-[5px] shadow-[0_20px_48px_rgba(29,32,36,0.28)] sm:rounded-[38px]",
     cinema: "rounded-[26px] border border-black/18 bg-[#090A0D] p-[8px] shadow-[0_34px_85px_rgba(29,32,36,0.24)] sm:rounded-[34px] sm:p-[10px]",
   }[device.type];
 
@@ -128,6 +142,7 @@ const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, 
     desktop: "rounded-[15px] sm:rounded-[21px]",
     phone: "rounded-[19px] sm:rounded-[24px]",
     tablet: "rounded-[12px] sm:rounded-[17px]",
+    watch: "rounded-[27px] sm:rounded-[32px]",
     cinema: "rounded-[18px] sm:rounded-[25px]",
   }[device.type];
 
@@ -139,10 +154,16 @@ const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, 
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: shouldReduceMotion ? 0 : 0.82, delay: device.delay || 0, ease: [0.16, 1, 0.3, 1] }}
-      style={{ y: parallaxY }}
+      style={{ x: pointerX, y: composedY }}
       className={`relative w-full ${shellChrome}`}
     >
       {isPhone && <div className="absolute left-1/2 top-[9px] z-10 h-[4px] w-9 -translate-x-1/2 rounded-full bg-white/20" />}
+      {isWatch && (
+        <>
+          <div className="absolute left-1/2 top-[-18%] h-[18%] w-1/2 -translate-x-1/2 rounded-t-[18px] bg-[#101114]" />
+          <div className="absolute bottom-[-18%] left-1/2 h-[18%] w-1/2 -translate-x-1/2 rounded-b-[18px] bg-[#101114]" />
+        </>
+      )}
       <div className={`relative overflow-hidden bg-black ${screenChrome}`}>
         <div className={device.screenAspect}>
           <ProjectVideo active={active} shouldLoad={shouldLoad} project={project} device={device} />
@@ -160,6 +181,10 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
   const shouldReduceMotion = useReducedMotion();
   const [shouldLoad, setShouldLoad] = useState(false);
   const [active, setActive] = useState(false);
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const smoothPointerX = useSpring(pointerX, { stiffness: 110, damping: 20, mass: 0.35 });
+  const smoothPointerY = useSpring(pointerY, { stiffness: 110, damping: 20, mass: 0.35 });
 
   const { scrollYProgress } = useScroll({
     target: sceneRef,
@@ -167,6 +192,25 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
   });
   const primaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [7, -7]);
   const secondaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [11, -11]);
+  const primaryPointerX = useTransform(smoothPointerX, (value) => (shouldReduceMotion ? 0 : value));
+  const primaryPointerY = useTransform(smoothPointerY, (value) => (shouldReduceMotion ? 0 : value));
+  const secondaryPointerX = useTransform(smoothPointerX, (value) => (shouldReduceMotion ? 0 : value * 1.25));
+  const secondaryPointerY = useTransform(smoothPointerY, (value) => (shouldReduceMotion ? 0 : value * 1.25));
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (shouldReduceMotion) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
+    pointerX.set(x);
+    pointerY.set(y);
+  };
+
+  const handlePointerLeave = () => {
+    pointerX.set(0);
+    pointerY.set(0);
+  };
 
   useEffect(() => {
     const element = sceneRef.current;
@@ -198,12 +242,12 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
   return (
     <div
       ref={sceneRef}
-      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#EFE5D4] px-4 py-8 transition-all duration-700 ease-out group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:px-8"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#EFEAD8] px-4 py-8 transition-all duration-700 ease-out group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:px-8"
     >
-      <div
-        style={{ background: `radial-gradient(circle at 50% 52%, ${project.accentColor}22, transparent 62%)` }}
-        className="absolute inset-0"
-      />
+      <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
+      <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
       <div className="relative h-full w-full">
         {project.devices.map((device, index) => (
           <DeviceShell
@@ -213,6 +257,8 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
             project={project}
             device={device}
             parallaxY={index === 0 ? primaryY : secondaryY}
+            pointerX={index === 0 ? primaryPointerX : secondaryPointerX}
+            pointerY={index === 0 ? primaryPointerY : secondaryPointerY}
           />
         ))}
       </div>
@@ -230,14 +276,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   });
   const y = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [14, -14]);
 
-  const alignmentClass = "w-full";
-  const sizeClass = "w-full";
-
   const aspectClass = {
-    feature: "aspect-[1.1/1] sm:aspect-[1.42/1]",
-    wide: "aspect-[1.08/1] sm:aspect-[1.38/1]",
-    tall: "aspect-[1.05/1] sm:aspect-[1.35/1]",
-    compact: "aspect-[1.08/1] sm:aspect-[1.38/1]",
+    feature: "aspect-[1.02/1] sm:aspect-[1.45/1]",
+    wide: "aspect-[1.02/1] sm:aspect-[1.3/1]",
+    tall: "aspect-[0.82/1] sm:aspect-[0.78/1]",
+    compact: "aspect-[1.05/1] sm:aspect-[1.18/1]",
   }[project.tileSize];
 
   return (
@@ -251,7 +294,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Open ${project.title}`}
-        className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] bg-[#EFE5D4] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-all duration-500 ease-out hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80 sm:rounded-[32px]`}
+        className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] bg-[#EFEAD8] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-all duration-500 ease-out hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80 sm:rounded-[34px] lg:rounded-[38px]`}
       >
         <ProjectDeviceScene project={project} />
 
