@@ -27,7 +27,7 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block flex-shrink-0"
         />
-        <span className="font-semibold text-[#1D2024]/80">02 // FEATURED WORK (2 OF {SHOWCASE_PROJECTS.length})</span>
+        <span className="font-semibold text-[#1D2024]/80">02 // FEATURED WORK</span>
       </div>
 
       <div className="max-w-[760px] mb-6 sm:mb-8">
@@ -115,7 +115,7 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({
               to="/projects"
               className="group relative inline-flex items-center gap-3.5 rounded-full bg-[#1D2024] px-9 py-4 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#F8F2E6] shadow-xl transition-all duration-300 hover:bg-black hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-[#FFD42A]"
             >
-              <span>SEE ALL PROJECTS ({SHOWCASE_PROJECTS.length})</span>
+              <span>SEE ALL PROJECTS</span>
               <ArrowUpRight className="h-4 w-4 text-[#FFD42A] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" />
             </Link>
           </div>

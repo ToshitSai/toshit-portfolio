@@ -53,7 +53,7 @@ const ProjectsPage: React.FC = () => {
             </Link>
 
             <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#1D2024]/50">
-              ALL PROJECTS ({SHOWCASE_PROJECTS.length})
+              ALL PROJECTS
             </span>
           </div>
 
