@@ -8,8 +8,9 @@ import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 
+import SelectedWork from "@/components/portfolio/SelectedWork";
+
 // Lazy-loaded heavy sections for bundle optimization and code-splitting
-const SelectedWork = React.lazy(() => import("@/components/portfolio/SelectedWork"));
 const TechnicalSkills = React.lazy(() => import("@/components/portfolio/TechnicalSkills"));
 const Testimonials = React.lazy(() => import("@/components/portfolio/Testimonials"));
 
