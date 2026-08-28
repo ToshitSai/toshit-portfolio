@@ -70,16 +70,18 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({ active, shouldLoad, project
     const video = videoRef.current;
     if (!video || shouldReduceMotion || hasError) return;
 
-    if (active && shouldLoad) {
-      if (video.dataset.loaded !== "true") {
-        video.load();
-        video.dataset.loaded = "true";
+    if (shouldLoad && active) {
+      video.muted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
       }
-      video.play().catch(() => video.pause());
-      return;
+    } else {
+      video.pause();
     }
-
-    video.pause();
   }, [active, hasError, shouldLoad, shouldReduceMotion]);
 
   if (shouldReduceMotion || hasError) {
@@ -99,13 +101,17 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({ active, shouldLoad, project
     <video
       ref={videoRef}
       aria-hidden="true"
+      src={shouldLoad ? sourceSrc : undefined}
       muted
       playsInline
       loop
+      autoPlay
       controls={false}
-      preload="metadata"
+      preload="auto"
       poster={project.bgImage}
-      onError={() => setHasError(true)}
+      onError={() => {
+        if (shouldLoad) setHasError(true);
+      }}
       className={`h-full w-full bg-black ${fit === "contain" ? "object-contain" : "object-cover"}`}
       style={{ objectPosition: device.objectPosition || "50% 50%" }}
     >
@@ -222,14 +228,14 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
       ([entry]) => {
         if (entry.isIntersecting) setShouldLoad(true);
       },
-      { root: null, rootMargin: "420px 0px", threshold: 0 },
+      { root: null, rootMargin: "600px 0px", threshold: 0 },
     );
 
     const playbackObserver = new IntersectionObserver(
       ([entry]) => {
-        setActive(entry.isIntersecting && entry.intersectionRatio > 0.28);
+        setActive(entry.isIntersecting);
       },
-      { root: null, rootMargin: "-8% 0px -8% 0px", threshold: [0, 0.28, 0.5, 0.75] },
+      { root: null, rootMargin: "100px 0px", threshold: 0 },
     );
 
     loadObserver.observe(element);
