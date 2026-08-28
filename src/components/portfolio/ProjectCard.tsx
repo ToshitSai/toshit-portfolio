@@ -66,19 +66,25 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({ active, shouldLoad, project
   const sourceSrc = device.media === "mobile" ? project.mobileVideoSrc || project.videoSrc : project.videoSrc;
   const fit = device.fit || "cover";
 
+  const attemptPlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video || shouldReduceMotion || hasError) return;
 
     if (shouldLoad && active) {
-      video.muted = true;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          video.muted = true;
-          video.play().catch(() => {});
-        });
-      }
+      attemptPlay();
     } else {
       video.pause();
     }
@@ -109,14 +115,21 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({ active, shouldLoad, project
       controls={false}
       preload="auto"
       poster={project.bgImage}
+      onCanPlay={() => {
+        if (shouldLoad && active) attemptPlay();
+      }}
+      onEnded={() => {
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          attemptPlay();
+        }
+      }}
       onError={() => {
         if (shouldLoad) setHasError(true);
       }}
       className={`h-full w-full bg-black ${fit === "contain" ? "object-contain" : "object-cover"}`}
       style={{ objectPosition: device.objectPosition || "50% 50%" }}
-    >
-      {shouldLoad && <source src={sourceSrc} type={sourceSrc.endsWith(".webm") ? "video/webm" : "video/mp4"} />}
-    </video>
+    />
   );
 };
 
