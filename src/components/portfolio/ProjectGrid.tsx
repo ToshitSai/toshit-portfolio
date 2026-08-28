@@ -89,7 +89,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "mobile",
         screenAspect: "aspect-[65/119]",
         fit: "cover",
-        className: "absolute left-[56%] top-1/2 z-10 w-[55%] min-w-[190px] max-w-[310px] -translate-x-1/2 -translate-y-1/2 rotate-[3deg]",
+        className: "absolute left-[52%] top-1/2 z-10 w-[42%] max-w-[230px] -translate-x-1/2 -translate-y-1/2 rotate-[2deg]",
       },
     ],
   },

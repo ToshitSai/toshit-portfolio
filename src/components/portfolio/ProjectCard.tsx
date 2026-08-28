@@ -246,7 +246,7 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
       ref={sceneRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className={`absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 transition-all duration-700 ease-out group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:px-8 ${project.sceneClassName || "bg-[#EFEAD8]"}`}
+      className={`absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 transition-transform duration-350 ease-out group-hover/project:scale-[1.03] sm:px-8 ${project.sceneClassName || "bg-[#EFEAD8]"}`}
     >
       <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
       <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
@@ -302,19 +302,18 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       >
         <ProjectDeviceScene project={project} />
 
-        <div className="pointer-events-none absolute inset-0 bg-[#F4EDE0]/0 backdrop-blur-[0px] transition-all duration-500 ease-out group-hover/project:bg-[#F4EDE0]/55 group-hover/project:backdrop-blur-md group-focus-visible/project:bg-[#F4EDE0]/55 group-focus-visible/project:backdrop-blur-md" />
-
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center p-6 text-center sm:p-10">
-          <div className="mb-4 inline-flex translate-y-3 items-center gap-1.5 rounded-full bg-white/95 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#1D2024] opacity-0 shadow-md transition-all duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100 sm:mb-5">
+        {/* UNIFIED FULL-CARD BLUR & TEXT OVERLAY */}
+        <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center sm:p-10 bg-[#121417]/65 backdrop-blur-md opacity-0 transition-opacity duration-350 ease-out group-hover/project:opacity-100 group-focus-visible/project:opacity-100">
+          <div className="mb-4 inline-flex translate-y-3 items-center gap-1.5 rounded-full bg-white px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#121417] shadow-md transition-transform duration-350 ease-out group-hover/project:translate-y-0 group-focus-visible/project:translate-y-0 sm:mb-5">
             <span>VIEW PROJECT</span>
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/project:translate-x-0.5" />
           </div>
 
-          <h3 className="translate-y-4 font-sans text-[clamp(26px,3.6vw,46px)] font-bold uppercase leading-[1.05] tracking-tight text-[#1D2024] opacity-0 drop-shadow-xs transition-all delay-75 duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100">
+          <h3 className="translate-y-3 font-sans text-[clamp(26px,3.6vw,46px)] font-bold uppercase leading-[1.05] tracking-tight text-white drop-shadow-sm transition-transform duration-350 ease-out group-hover/project:translate-y-0 group-focus-visible/project:translate-y-0">
             {project.title}
           </h3>
 
-          <p className="mt-3 max-w-[460px] translate-y-4 font-sans text-sm font-medium leading-relaxed text-[#1D2024]/85 opacity-0 transition-all delay-150 duration-500 ease-out group-hover/project:translate-y-0 group-hover/project:opacity-100 group-focus-visible/project:translate-y-0 group-focus-visible/project:opacity-100 sm:text-base">
+          <p className="mt-3 max-w-[460px] translate-y-3 font-sans text-sm font-medium leading-relaxed text-white/90 transition-transform duration-350 ease-out group-hover/project:translate-y-0 group-focus-visible/project:translate-y-0 sm:text-base">
             {project.tagline || project.description}
           </p>
         </div>
