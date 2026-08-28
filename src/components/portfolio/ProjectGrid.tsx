@@ -17,9 +17,11 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     githubUrl: "https://github.com/ToshitSai/courseforge-ai",
     bgImage: "/images/projects/courseforge-ai.png",
     videoSrc: "/videos/projects/courseforge-ai.webm",
-    tileSize: "wide",
+    tileSize: "feature",
     alignment: "left",
-    gridClassName: "lg:col-span-6",
+    gridClassName: "lg:col-span-7 lg:col-start-1",
+    sceneClassName: "bg-[#DCE6D6]",
+    sceneDecorClassName: "right-[-7%] top-[-4%] h-[340px] w-[340px] bg-[#A7B99B]/45",
     devices: [
       {
         id: "courseforge-laptop",
@@ -27,14 +29,44 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[959/510]",
         fit: "cover",
-        className: "absolute left-1/2 top-[53%] z-10 w-[90%] max-w-[640px] -translate-x-1/2 -translate-y-1/2",
+        className: "absolute left-[46%] top-[54%] z-10 w-[88%] max-w-[790px] -translate-x-1/2 -translate-y-1/2 -rotate-[1deg]",
+      },
+    ],
+  },
+  {
+    id: "personal-portfolio",
+    slug: "personal-portfolio",
+    number: "02",
+    title: "Personal Portfolio",
+    category: "PORTFOLIO & EDITORIAL",
+    tagline: "My web portfolio - AI/ML & web development projects showcased with creative animations.",
+    description: "High-performance editorial showcase site built with React, Vite, Tailwind CSS, and Framer Motion.",
+    accentColor: "#D9A62C",
+    tech: ["React", "Vite", "Tailwind CSS"],
+    liveUrl: "https://toshit-portfolio.vercel.app",
+    githubUrl: "https://github.com/ToshitSai/toshit-portfolio",
+    bgImage: "/images/projects/personal-portfolio.png",
+    videoSrc: "/videos/projects/personal-portfolio-mobile.webm",
+    tileSize: "tall",
+    alignment: "right",
+    gridClassName: "lg:col-span-4 lg:col-start-9 lg:mt-24",
+    sceneClassName: "bg-[#DCEAF4]",
+    sceneDecorClassName: "left-[-16%] top-[22%] h-[300px] w-[300px] bg-[#91B9D7]/45",
+    devices: [
+      {
+        id: "portfolio-phone",
+        type: "phone",
+        media: "desktop",
+        screenAspect: "aspect-[65/119]",
+        fit: "cover",
+        className: "absolute right-[18%] top-1/2 z-10 w-[48%] min-w-[170px] max-w-[260px] -translate-y-1/2 rotate-[3deg]",
       },
     ],
   },
   {
     id: "hirescope-ai",
     slug: "hirescope-ai",
-    number: "02",
+    number: "03",
     title: "HireScope AI",
     category: "AI RESUME ANALYZER",
     tagline: "Resume + portfolio analyzer with a combined Hireability score.",
@@ -47,7 +79,9 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     videoSrc: "/videos/projects/hirescope-ai.mp4",
     tileSize: "wide",
     alignment: "left",
-    gridClassName: "lg:col-span-6",
+    gridClassName: "lg:col-span-6 lg:col-start-2 lg:mt-6",
+    sceneClassName: "bg-[#E7E8E3]",
+    sceneDecorClassName: "right-[4%] top-[8%] h-[280px] w-[280px] bg-[#BFC6C1]/45",
     devices: [
       {
         id: "hirescope-laptop",
@@ -55,14 +89,14 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[320/153]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[88%] max-w-[640px] -translate-x-1/2 -translate-y-1/2 -rotate-[1deg]",
+        className: "absolute left-[52%] top-[47%] z-10 w-[86%] max-w-[720px] -translate-x-1/2 -translate-y-1/2 rotate-[1deg]",
       },
     ],
   },
   {
     id: "greetly",
     slug: "greetly",
-    number: "03",
+    number: "04",
     title: "Greetly",
     category: "NEO-BRUTALIST AI TOOL",
     tagline: "AI-generated greeting card messages for any occasion.",
@@ -73,9 +107,11 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     githubUrl: "https://github.com/ToshitSai",
     bgImage: "/images/projects/greetly.png",
     videoSrc: "/videos/projects/greetly-mobile.webm",
-    tileSize: "wide",
+    tileSize: "tall",
     alignment: "right",
-    gridClassName: "lg:col-span-6",
+    gridClassName: "lg:col-span-5 lg:col-start-8 lg:-mt-14",
+    sceneClassName: "bg-[#E6B56F]",
+    sceneDecorClassName: "left-[-9%] bottom-[-12%] h-[330px] w-[330px] bg-[#B56A2D]/35",
     devices: [
       {
         id: "greetly-phone",
@@ -83,14 +119,14 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "mobile",
         screenAspect: "aspect-[65/119]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[45%] min-w-[160px] max-w-[240px] -translate-x-1/2 -translate-y-1/2 rotate-[2deg]",
+        className: "absolute left-[56%] top-1/2 z-10 w-[55%] min-w-[190px] max-w-[310px] -translate-x-1/2 -translate-y-1/2 rotate-[3deg]",
       },
     ],
   },
   {
     id: "avengers-doomsday",
     slug: "avengers-doomsday",
-    number: "04",
+    number: "05",
     title: "Avengers Doomsday",
     category: "CINEMATIC DESIGN DEMO",
     tagline: "Cinematic concept landing page — animation & motion design showcase.",
@@ -101,9 +137,11 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
     githubUrl: "https://github.com/ToshitSai/Avengers-DoomsDay-",
     bgImage: "/images/projects/avengers-doomsday.png",
     videoSrc: "/videos/projects/avengers-doomsday.mp4",
-    tileSize: "wide",
+    tileSize: "feature",
     alignment: "right",
-    gridClassName: "lg:col-span-6",
+    gridClassName: "lg:col-span-8 lg:col-start-5 lg:mt-2",
+    sceneClassName: "bg-[#302522]",
+    sceneDecorClassName: "left-[5%] top-[10%] h-[360px] w-[360px] bg-[#7E1E1A]/35",
     devices: [
       {
         id: "avengers-cinema",
@@ -111,7 +149,7 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
         media: "desktop",
         screenAspect: "aspect-[137/65]",
         fit: "cover",
-        className: "absolute left-1/2 top-1/2 z-10 w-[88%] max-w-[640px] -translate-x-1/2 -translate-y-1/2",
+        className: "absolute left-1/2 top-[58%] z-10 w-[88%] max-w-[980px] -translate-x-1/2 -translate-y-1/2 -rotate-[1deg]",
       },
     ],
   },
@@ -121,7 +159,7 @@ export const ProjectGrid: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="relative grid w-full grid-cols-1 gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-16 xl:gap-x-10 xl:gap-y-20">
+    <div className="relative grid w-full grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-20 xl:gap-x-12 xl:gap-y-24">
       {SHOWCASE_PROJECTS.map((project, index) => (
         <motion.div
           key={project.id}

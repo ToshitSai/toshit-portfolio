@@ -43,6 +43,8 @@ export interface ProjectCardData {
   tileSize: "feature" | "wide" | "tall" | "compact";
   alignment: "left" | "center" | "right";
   gridClassName?: string;
+  sceneClassName?: string;
+  sceneDecorClassName?: string;
   devices: ProjectDeviceConfig[];
 }
 
@@ -244,10 +246,12 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
       ref={sceneRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#EFEAD8] px-4 py-8 transition-all duration-700 ease-out group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:px-8"
+      className={`absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 transition-all duration-700 ease-out group-hover/project:scale-[1.03] group-hover/project:blur-[12px] group-hover/project:brightness-[0.85] group-hover/project:saturate-[0.85] group-focus-visible/project:blur-[12px] group-focus-visible/project:brightness-[0.85] sm:px-8 ${project.sceneClassName || "bg-[#EFEAD8]"}`}
     >
       <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
       <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
+      <div className={`absolute rounded-full blur-3xl ${project.sceneDecorClassName || "left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 bg-white/20"}`} />
+      <div className="absolute bottom-[17%] left-1/2 h-10 w-[58%] -translate-x-1/2 rounded-full bg-[#1D2024]/10 blur-2xl" />
       <div className="relative h-full w-full">
         {project.devices.map((device, index) => (
           <DeviceShell
