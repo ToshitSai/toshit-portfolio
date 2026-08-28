@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
 import ProjectStoryViewer from "./ProjectStoryViewer";
 import ProjectGrid, { SHOWCASE_PROJECTS } from "./ProjectGrid";
@@ -26,7 +27,7 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block flex-shrink-0"
         />
-        <span className="font-semibold text-[#1D2024]/80">02 // SELECTED WORK ({projectCount} PROJECTS)</span>
+        <span className="font-semibold text-[#1D2024]/80">02 // FEATURED WORK (2 OF {SHOWCASE_PROJECTS.length})</span>
       </div>
 
       <div className="max-w-[760px] mb-6 sm:mb-8">
@@ -60,7 +61,15 @@ const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) =>
   );
 };
 
-export const SelectedWork: React.FC = () => {
+export interface SelectedWorkProps {
+  limit?: number;
+  showSeeAllButton?: boolean;
+}
+
+export const SelectedWork: React.FC<SelectedWorkProps> = ({
+  limit = 2,
+  showSeeAllButton = true,
+}) => {
   const { slug } = useParams<{ slug?: string }>();
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
@@ -94,10 +103,23 @@ export const SelectedWork: React.FC = () => {
 
       <div className="mx-auto max-w-[1560px] px-6 sm:px-10 lg:px-16 relative z-10">
         {/* EDITORIAL SECTION HEADER */}
-        <ProjectsHeader projectCount={SHOWCASE_PROJECTS.length} />
+        <ProjectsHeader projectCount={limit} />
 
-        {/* EDITORIAL PROJECT SHOWCASE GRID */}
-        <ProjectGrid />
+        {/* EDITORIAL PROJECT SHOWCASE GRID (FEATURED 2) */}
+        <ProjectGrid limit={limit} />
+
+        {/* SEE ALL PROJECTS BUTTON */}
+        {showSeeAllButton && (
+          <div className="mt-16 sm:mt-20 flex flex-col items-center justify-center">
+            <Link
+              to="/projects"
+              className="group relative inline-flex items-center gap-3.5 rounded-full bg-[#1D2024] px-9 py-4 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#F8F2E6] shadow-xl transition-all duration-300 hover:bg-black hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-[#FFD42A]"
+            >
+              <span>SEE ALL PROJECTS ({SHOWCASE_PROJECTS.length})</span>
+              <ArrowUpRight className="h-4 w-4 text-[#FFD42A] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

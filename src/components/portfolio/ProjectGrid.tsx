@@ -125,12 +125,17 @@ export const SHOWCASE_PROJECTS: ProjectCardData[] = [
   },
 ];
 
-export const ProjectGrid: React.FC = () => {
+interface ProjectGridProps {
+  limit?: number;
+}
+
+export const ProjectGrid: React.FC<ProjectGridProps> = ({ limit }) => {
   const shouldReduceMotion = useReducedMotion();
+  const projects = limit ? SHOWCASE_PROJECTS.slice(0, limit) : SHOWCASE_PROJECTS;
 
   return (
     <div className="relative grid w-full grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-20 xl:gap-x-12 xl:gap-y-24">
-      {SHOWCASE_PROJECTS.map((project, index) => (
+      {projects.map((project, index) => (
         <motion.div
           key={project.id}
           className={`w-full ${project.gridClassName || "lg:col-span-6"}`}
