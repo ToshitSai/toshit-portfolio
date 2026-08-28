@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const About: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -42,7 +44,7 @@ const About: React.FC = () => {
           }
           className="w-full max-w-[880px] mx-auto text-lg sm:text-xl md:text-2xl lg:text-[1.75rem] text-ink font-sans leading-[1.55] tracking-[-0.015em] font-normal text-center"
         >
-          I'm Toshit Sai, a Computer Science Engineering student specializing in AI & Machine Learning. I build with Generative AI, explore intelligent systems, and turn ideas into useful digital experiences.
+          I'm Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I build with Generative AI, explore intelligent systems, and turn ideas into useful digital experiences.
         </motion.p>
 
         {/* Second Bold Statement — Personal Highlight */}
@@ -55,11 +57,19 @@ const About: React.FC = () => {
                   y: statementY,
                 }
           }
-          className="w-full max-w-[750px] mx-auto mt-5 sm:mt-7 md:mt-8 text-center"
+          className="w-full max-w-[750px] mx-auto mt-5 sm:mt-7 md:mt-8 text-center flex flex-col items-center gap-6"
         >
           <h3 className="text-base sm:text-lg md:text-xl lg:text-[1.5rem] text-ink font-sans leading-[1.4] tracking-[-0.02em] font-bold">
             I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
           </h3>
+
+          <Link
+            to="/about"
+            className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#121417] text-white font-mono text-xs font-bold uppercase tracking-[0.18em] shadow-sm hover:bg-black hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+          >
+            <span>Read Full Editorial Story</span>
+            <ArrowRight className="w-4 h-4 text-[#FFD42A] group-hover:translate-x-1 transition-transform" />
+          </Link>
         </motion.div>
       </div>
     </section>

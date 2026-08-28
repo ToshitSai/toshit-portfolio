@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface NavItem {
   id: string;
@@ -9,9 +10,9 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "work", label: "Work", href: "#work" },
-  { id: "about", label: "About", href: "#about" },
-  { id: "playground", label: "Playground", href: "#playground" },
+  { id: "work", label: "Work", href: "/#work" },
+  { id: "about", label: "About", href: "/about" },
+  { id: "playground", label: "Playground", href: "/#skills" },
 ];
 
 // Unified 250ms cubic-bezier transition (fast, direct & smooth)
@@ -27,6 +28,8 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
   const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
@@ -79,10 +82,34 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    const targetId = href.replace("#", "");
 
-    if (targetId === "hero" || href === "#") {
+    if (href === "/about") {
+      if (location.pathname !== "/about") {
+        navigate("/about");
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (href === "#hero" || href === "/#hero" || href === "/") {
+      if (location.pathname !== "/") {
+        navigate("/");
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
+    }
+
+    const targetId = href.replace("/#", "").replace("#", "");
+
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        let targetEl = document.getElementById(targetId);
+        if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
+        if (!targetEl && targetId === "playground") targetEl = document.getElementById("skills");
+        if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
+      }, 100);
       return;
     }
 
@@ -107,6 +134,8 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   };
 
   const isCompact = navbarMode === "compact";
+  const isAboutRoute = location.pathname === "/about";
+  const isHomeRoute = location.pathname === "/";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 pt-[18px]">
@@ -143,9 +172,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         >
           {/* AVATAR / T MONOGRAM BADGE */}
           <a
-            href="#hero"
+            href="/"
             onClick={(e) => {
-              handleNavClick(e, "#hero");
+              handleNavClick(e, "/");
               if (onTriggerLogin && e.detail === 2) onTriggerLogin();
             }}
             aria-label="Toshit Sai - Return to top"
@@ -157,18 +186,21 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           </a>
 
           {/* STATIC DESKTOP NAV LINKS */}
-          <div className="hidden md:flex items-center gap-[24px] whitespace-nowrap ml-2.5">
+          <div className="hidden md:flex items-center gap-[12px] whitespace-nowrap ml-2.5">
             {NAV_ITEMS.map((item) => {
-              const isWork = item.id === "work";
+              const isActive =
+                (item.id === "about" && isAboutRoute) ||
+                (item.id === "work" && isHomeRoute);
+
               return (
                 <a
                   key={item.id}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`relative text-[15px] font-medium leading-none transition-colors duration-200 ${
-                    isWork
-                      ? "w-[80px] h-[40px] rounded-full bg-white/85 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
-                      : "text-[#20252B] hover:text-[#20252B]/80 py-1 px-1"
+                  className={`relative text-[15px] font-medium leading-none transition-all duration-200 ${
+                    isActive
+                      ? "px-4 h-[40px] rounded-full bg-white/90 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
+                      : "text-[#20252B] hover:text-[#20252B]/80 py-2 px-3 rounded-full hover:bg-white/40"
                   }`}
                 >
                   <span>{item.label}</span>
