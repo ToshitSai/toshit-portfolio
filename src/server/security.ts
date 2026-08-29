@@ -34,7 +34,7 @@ const MAX_REQUESTS_PER_WINDOW = 5;
 
 /**
  * Checks whether an IP address is rate-limited (5 requests per 15 mins).
- * Uses Upstash Redis if configured. Fails safe (BLOCKS access) if Redis is unreachable or missing in production.
+ * Uses Upstash Redis when configured, otherwise falls back to an in-memory limiter.
  */
 export async function isRateLimited(ip: string): Promise<boolean> {
   const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
@@ -53,12 +53,9 @@ export async function isRateLimited(ip: string): Promise<boolean> {
         return true;
       }
     }
-  } else if (isProd) {
-    console.error("[RateLimit Warning]: Upstash Redis credentials not set in production. Failing safe (blocking request).");
-    return true; // Fail safe in production if Upstash is not configured
   }
 
-  // Fallback in-memory rate limiter for local development only
+  // Fallback in-memory limiter keeps unconfigured deployments usable.
   const now = Date.now();
   const timestamps = (rateLimitMap.get(ip) || []).filter((ts) => now - ts < WINDOW_MS);
 
