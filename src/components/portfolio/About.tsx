@@ -8,13 +8,13 @@ const About: React.FC = () => {
       <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
 
         {/* Large Editorial Serif Display Heading — Clickable to /about */}
-        <Link to="/about" className="group block max-w-3xl">
+        <Link to="/about" className="group block max-w-2xl">
           <motion.h2
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-[clamp(1.8rem,4vw,3.2rem)] font-serif font-normal leading-[1.2] text-[#20252B] text-center mb-8 group-hover:opacity-90 transition-opacity cursor-pointer"
+            className="text-[clamp(1.3rem,2.5vw,2.1rem)] font-serif font-normal leading-[1.3] text-[#20252B] text-center mb-6 group-hover:opacity-90 transition-opacity cursor-pointer"
           >
             I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
             <span className="italic underline decoration-[#FFD42A] decoration-wavy decoration-2">
