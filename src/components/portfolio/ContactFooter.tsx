@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
@@ -7,6 +7,19 @@ import { toast } from "sonner";
 interface ContactFooterProps {
   isDrawerOpen?: boolean;
   setIsDrawerOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
+  website: string;
+}
+
+interface ContactFormErrors {
+  name?: string;
+  email?: string;
+  message?: string;
 }
 
 const SignalReceivedIllustration: React.FC = () => {
@@ -115,7 +128,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
   const [internalDrawerOpen, setInternalDrawerOpen] = useState(false);
 
   const isDrawerOpen = controlledDrawerOpen !== undefined ? controlledDrawerOpen : internalDrawerOpen;
-  const setIsDrawerOpen = (open: boolean | ((prev: boolean) => boolean)) => {
+  const setIsDrawerOpen = useCallback((open: boolean | ((prev: boolean) => boolean)) => {
     if (controlledSetIsDrawerOpen) {
       if (typeof open === "function") {
         controlledSetIsDrawerOpen(open(isDrawerOpen));
@@ -125,14 +138,14 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     } else {
       setInternalDrawerOpen(open);
     }
-  };
+  }, [controlledSetIsDrawerOpen, isDrawerOpen]);
 
   // GLOBAL CUSTOM EVENT LISTENER TO OPEN DRAWER FROM ANYWHERE IN WEBSITE
   useEffect(() => {
     const handleOpenEvent = () => setIsDrawerOpen(true);
     window.addEventListener("open-contact-drawer", handleOpenEvent);
     return () => window.removeEventListener("open-contact-drawer", handleOpenEvent);
-  }, []);
+  }, [setIsDrawerOpen]);
 
   // System Node hover & cursor tracking state
   const [isHoveringStage, setIsHoveringStage] = useState(false);
@@ -149,7 +162,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
   };
 
   const [formMountedAt, setFormMountedAt] = useState<number>(Date.now());
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     message: "",
@@ -162,11 +175,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     }
   }, [isDrawerOpen]);
 
-  const [formErrors, setFormErrors] = useState<{
-    name?: string;
-    email?: string;
-    message?: string;
-  }>({});
+  const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
 
   const [lastSubmittedData, setLastSubmittedData] = useState<{
     name: string;
@@ -177,7 +186,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
   const [copied, setCopied] = useState(false);
 
   const validateForm = () => {
-    const errors: { name?: string; email?: string; message?: string } = {};
+    const errors: ContactFormErrors = {};
     if (!formData.name.trim()) {
       errors.name = "Your name is required.";
     } else if (formData.name.trim().length > 100) {
@@ -729,6 +738,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                               name="name"
                               placeholder="Jane Appleseed"
                               value={formData.name}
+                              aria-invalid={Boolean(formErrors.name)}
+                              aria-describedby={formErrors.name ? "contact-name-error" : undefined}
                               onChange={(e) => {
                                 setFormData({ ...formData, name: e.target.value });
                                 if (formErrors.name) setFormErrors({ ...formErrors, name: undefined });
@@ -737,7 +748,9 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                                 } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
                             />
                             {formErrors.name && (
-                              <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.name}</p>
+                              <p id="contact-name-error" className="font-mono text-[11px] text-red-600 mt-1">
+                                {formErrors.name}
+                              </p>
                             )}
                           </motion.div>
 
@@ -760,6 +773,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                               name="email"
                               placeholder="you@company.com"
                               value={formData.email}
+                              aria-invalid={Boolean(formErrors.email)}
+                              aria-describedby={formErrors.email ? "contact-email-error" : undefined}
                               onChange={(e) => {
                                 setFormData({ ...formData, email: e.target.value });
                                 if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
@@ -768,7 +783,9 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                                 } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none transition-colors duration-300`}
                             />
                             {formErrors.email && (
-                              <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.email}</p>
+                              <p id="contact-email-error" className="font-mono text-[11px] text-red-600 mt-1">
+                                {formErrors.email}
+                              </p>
                             )}
                           </motion.div>
 
@@ -791,6 +808,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                               rows={3}
                               placeholder="A few lines about your project, timeline, or budget"
                               value={formData.message}
+                              aria-invalid={Boolean(formErrors.message)}
+                              aria-describedby={formErrors.message ? "contact-message-error" : undefined}
                               onChange={(e) => {
                                 setFormData({ ...formData, message: e.target.value });
                                 if (formErrors.message) setFormErrors({ ...formErrors, message: undefined });
@@ -799,7 +818,9 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                                 } rounded-none px-0 py-2 sm:py-2.5 text-base sm:text-lg text-[#1B1B18] placeholder:text-[#1B1B18]/30 outline-none resize-none transition-colors duration-300`}
                             />
                             {formErrors.message && (
-                              <p className="font-mono text-[11px] text-red-600 mt-1">{formErrors.message}</p>
+                              <p id="contact-message-error" className="font-mono text-[11px] text-red-600 mt-1">
+                                {formErrors.message}
+                              </p>
                             )}
                           </motion.div>
 

@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { Mail } from "lucide-react";
+import { ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
 
 const HERO_WORDS = [
-  "AI-POWERED",
-  "FULL STACK",
-  "CREATIVE",
-  "PROMPT",
-  "AI BUILDER",
+  "AI / ML",
+  "REACT",
+  "TYPESCRIPT",
+  "FULL-STACK",
 ];
 
 const RotatingHeroWord: React.FC = React.memo(() => {
@@ -46,7 +45,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
 
       {/* Line 2: Permanent Static DEVELOPER Line */}
       <span className="text-[#20252B] block drop-shadow-sm font-normal">
-        DEVELOPER
+        STUDENT DEVELOPER
       </span>
     </div>
   );
@@ -69,19 +68,19 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
   {
     id: "hirescope",
     title: "HireScope",
-    subtitle: "AI-powered portfolio & resume analysis",
+    subtitle: "Resume and portfolio analysis",
     url: "https://job-gem-grader.vercel.app/",
   },
   {
     id: "greetly",
     title: "Greetly",
-    subtitle: "Personalized AI video & message generator",
+    subtitle: "Personalized message generator",
     url: "https://toshit-greetly.vercel.app",
   },
   {
     id: "nova",
-    title: "NOVA",
-    subtitle: "AI desktop & voice automation assistant",
+    title: "Portfolio",
+    subtitle: "React and motion design system",
     url: "https://github.com/ToshitSai",
   },
 ];
@@ -277,6 +276,9 @@ const Hero: React.FC = () => {
             </span>
           </div>
           {/* ANIMATION H — Display Headline with Staggered Entrance Reveal */}
+          <p className="mb-4 rounded-full bg-white/35 px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#20252B] shadow-sm backdrop-blur-md">
+            Toshit Sai Galam · B.Tech CSE AI/ML
+          </p>
           <motion.h1
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
@@ -285,6 +287,48 @@ const Hero: React.FC = () => {
           >
             <RotatingHeroWord />
           </motion.h1>
+
+          <p className="-mt-2 mb-5 max-w-[660px] text-sm font-medium leading-relaxed text-[#20252B]/78 sm:text-base md:text-lg">
+            I build practical AI-powered web apps with React, TypeScript, Python, and modern APIs. Currently seeking software development and AI/ML internship opportunities.
+          </p>
+
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+            <a
+              href="#work"
+              className="inline-flex items-center gap-2 rounded-full bg-[#20252B] px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[#FFF8E8] shadow-lg transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#FFD42A]"
+            >
+              View Projects
+              <ArrowUpRight className="h-3.5 w-3.5 text-[#FFD42A]" />
+            </a>
+            <a
+              href="/resume/Toshit_Sai_Galam_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[#20252B] shadow-md transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#20252B]/70"
+            >
+              Resume
+              <Download className="h-3.5 w-3.5" />
+            </a>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("open-contact-drawer"))}
+              className="inline-flex items-center gap-2 rounded-full bg-white/45 px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[#20252B] shadow-sm backdrop-blur-md transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#20252B]/70"
+            >
+              Contact
+              <Mail className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          <div className="mb-7 flex items-center justify-center gap-4 font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-[#20252B]/75">
+            <a href="https://github.com/ToshitSai" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-[#20252B]">
+              <Github className="h-3.5 w-3.5" />
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/toshit-sai-galam-177788276/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-[#20252B]">
+              <Linkedin className="h-3.5 w-3.5" />
+              LinkedIn
+            </a>
+          </div>
 
           {/* ANIMATION E — Centered Interactive Now Building Card */}
           <motion.div

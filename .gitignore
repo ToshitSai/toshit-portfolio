@@ -11,6 +11,12 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+coverage
+playwright-report
+test-results
+*.tsbuildinfo
+vite.config.ts.timestamp-*.mjs
+eslint_output.txt
 *.local
 
 # Editor directories and files

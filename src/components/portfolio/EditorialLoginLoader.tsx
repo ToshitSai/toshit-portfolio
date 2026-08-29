@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface EditorialLoginLoaderProps {
@@ -34,7 +34,7 @@ const CONTEXTUAL_MESSAGES = [
 
 let previousMessageIndex = -1;
 
-export const getRandomContextualMessage = (): string => {
+const getRandomContextualMessage = (): string => {
   let randomIndex = Math.floor(Math.random() * CONTEXTUAL_MESSAGES.length);
   if (randomIndex === previousMessageIndex) {
     randomIndex = (randomIndex + 1) % CONTEXTUAL_MESSAGES.length;
@@ -53,7 +53,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
 
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     try {
       sessionStorage.setItem("has_seen_loader", "true");
     } catch {
@@ -62,7 +62,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     if (onLoadingComplete) {
       onLoadingComplete();
     }
-  };
+  }, [onLoadingComplete]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -72,7 +72,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoading]);
+  }, [handleSkip, isLoading]);
 
   // Pick a fresh random message whenever isLoading becomes true
   useEffect(() => {

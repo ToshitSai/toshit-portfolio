@@ -14,7 +14,7 @@ export interface ProjectItemData {
   tech: string[];
   features: string[];
   liveUrl: string;
-  githubUrl: string;
+  githubUrl?: string;
   bgImage: string;
   motifType: "course" | "resume" | "greeting" | "doomsday" | "portfolio";
 }
@@ -23,11 +23,11 @@ export const PROJECTS_DATA: ProjectItemData[] = [
   {
     id: "courseforge-ai",
     slug: "courseforge-ai",
-    number: "01",
+    number: "02",
     title: "CourseForge",
     subtitle: "AI-Powered Course Generator",
-    tagline: "AI-powered course generator – create complete lesson plans, quizzes, and syllabi in seconds.",
-    description: "Generates complete structured courses with lesson outlines, AI video curation, and interactive quizzes from any topic using Gemini AI.",
+    tagline: "AI course generator that turns a topic into structured lessons, quizzes, and curated videos.",
+    description: "Built a prompt-driven course generation workflow with syllabus structuring, lesson breakdowns, quiz generation, and YouTube resource curation.",
     category: "AI COURSE GENERATOR",
     domain: "courseforge-ai.vercel.app",
     accentColor: "#3B82F6", // Indigo / Blue
@@ -43,11 +43,11 @@ export const PROJECTS_DATA: ProjectItemData[] = [
   {
     id: "hirescope-ai",
     slug: "hirescope-ai",
-    number: "02",
+    number: "01",
     title: "HireScope",
     subtitle: "Resume Analysis Tool",
-    tagline: "Smart resume & portfolio analyzer – instant AI-driven feedback on your career documents.",
-    description: "Advanced resume analysis platform leveraging state-of-the-art NLP to compute ATS match scores, extract skills, and identify candidate experience gaps.",
+    tagline: "Resume and portfolio analyzer that helps candidates understand gaps, keywords, and role fit.",
+    description: "Built an AI-assisted resume review workflow with upload handling, role targeting, keyword feedback, and a combined hireability score for faster resume iteration.",
     category: "AI RESUME ANALYZER",
     domain: "job-gem-grader.vercel.app",
     accentColor: "#38B2AC", // Teal / Green
@@ -56,7 +56,7 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     tech: ["Next.js", "Puppeteer", "Claude API", "Serper API"],
     features: ["ATS Match Gauge", "Gap Analysis", "Keyword Optimization"],
     liveUrl: "https://job-gem-grader.vercel.app",
-    githubUrl: "https://github.com/ToshitSai",
+    githubUrl: "https://github.com/ToshitSai/job-gem-grader",
     bgImage: "/images/projects/hirescope-ai.png",
     motifType: "resume",
   },
@@ -65,10 +65,10 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     slug: "greetly",
     number: "03",
     title: "Greetly",
-    subtitle: "Personalized Messaging App",
-    tagline: "AI-powered greeting generator – craft personalized messages and save your favorites.",
-    description: "AI greeting card message tool with a bold neo-brutalist UI. Features Groq Llama-3.3 acceleration, JWT auth, and custom tone presets.",
-    category: "NEO-BRUTALIST AI TOOL",
+    subtitle: "Personalized Message Tool",
+    tagline: "Greeting and message generator with tone controls, authentication, and saved message flows.",
+    description: "Built a full-stack greeting generator with a React interface, Flask API, Groq-powered text generation, JWT auth, and reusable tone presets.",
+    category: "AI MESSAGE TOOL",
     domain: "toshit-greetly.vercel.app",
     accentColor: "#F06C64", // Coral / Orange
     accentGradient: "from-[#F06C64] to-[#FF4757]",
@@ -76,7 +76,7 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     tech: ["React", "Flask", "Groq Llama-3.3", "JWT Auth"],
     features: ["Empathy Engine", "Tone Presets", "History Dashboard"],
     liveUrl: "https://toshit-greetly.vercel.app",
-    githubUrl: "https://github.com/ToshitSai",
+    githubUrl: "https://github.com/ToshitSai/greetly",
     bgImage: "/images/projects/greetly.png",
     motifType: "greeting",
   },
@@ -86,8 +86,8 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     number: "04",
     title: "Avengers Doomsday",
     subtitle: "Interactive Fan Concept",
-    tagline: "Avengers Doomsday – a cinematic Marvel web experience exploring 3D dynamics and GLSL particles.",
-    description: "A Marvel-inspired cinematic scroll experience built with Next.js, Three.js, GSAP ScrollTrigger, and Lenis smooth physics.",
+    tagline: "Cinematic fan-concept landing page focused on motion, 3D presentation, and scroll interaction.",
+    description: "Built a front-end motion showcase with Next.js, Three.js, GSAP ScrollTrigger, Lenis smooth scrolling, and responsive cinematic project presentation.",
     category: "CINEMATIC DESIGN DEMO",
     domain: "avengers-doomsday.vercel.app",
     accentColor: "#C0392B", // Crimson Red

@@ -1,76 +1,120 @@
-# Toshit Sai Galam Portfolio
+# Toshit Sai Galam — Portfolio
 
-> [!CAUTION]
-> **SECURITY REMINDER**: NEVER zip, archive, or share this project directory without excluding `node_modules`, `.git`, `.env`, `.env.local`, `.env.example`, or any `.env*` files containing secret tokens! If any API credentials or tokens are ever exposed, revoke and rotate them immediately in their respective developer dashboards (Vercel, Resend, Upstash, etc.).
+## Overview
 
-## Project info
+This is the personal portfolio of Toshit Sai Galam, a B.Tech Computer Science student specializing in Artificial Intelligence and Machine Learning. The site presents practical AI/web projects, technical skills, education context, resume access, and contact options for internship recruiters and collaborators.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Live Website
 
-## How can I edit this code?
+https://toshit-portfolio.vercel.app/
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Framer Motion
+- React Router
+- shadcn/Radix UI primitives
+- Vercel serverless API route
+- FormSubmit contact delivery fallback
+- Upstash Redis rate limiting support
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- Editorial portfolio homepage with animated hero and project showcase
+- Recruiter-focused project cards with verified live demo and repository links
+- Case-study style project story viewer
+- About, projects, and contact routes
+- Resume PDF access from the site
+- Contact form with validation, honeypot spam guard, rate limiting, success/error states, and mail fallback
+- SEO metadata, Open Graph tags, structured data, and custom favicon/OG assets
+- Reduced-motion handling for major animated components
 
-**Use your preferred IDE**
+## Featured Projects
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### HireScope
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Resume and portfolio analyzer that helps candidates review role fit, keywords, strengths, and improvement areas.
 
-Follow these steps:
+- Technologies: Next.js, Puppeteer, Claude API, Serper API
+- GitHub: https://github.com/ToshitSai/job-gem-grader
+- Live demo: https://job-gem-grader.vercel.app
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### CourseForge
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+AI course generator that turns a topic into structured lessons, quizzes, and curated video resources.
 
-# Step 3: Install the necessary dependencies.
-npm i
+- Technologies: React, Gemini API, YouTube API, Vercel
+- GitHub: https://github.com/ToshitSai/courseforge-ai
+- Live demo: https://courseforge-ai-pied.vercel.app/
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Greetly
+
+Personalized greeting and message generator with tone controls, authentication, and saved message flows.
+
+- Technologies: React, Flask, Groq API, JWT auth
+- GitHub: https://github.com/ToshitSai/greetly
+- Live demo: https://toshit-greetly.vercel.app
+
+### Avengers Doomsday
+
+Cinematic fan-concept landing page demonstrating creative frontend motion, 3D presentation, and scroll interaction.
+
+- Technologies: Next.js, Three.js, GSAP, Lenis
+- GitHub: https://github.com/ToshitSai/Avengers-DoomsDay-
+- Live demo: https://avengers-doomsday-rose.vercel.app/
+
+## Getting Started
+
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The local development server runs on:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```text
+http://localhost:8080
+```
 
-**Use GitHub Codespaces**
+## Production Build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run build
+```
 
-## What technologies are used for this project?
+## Lint
 
-This project is built with:
+```bash
+npm run lint
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Environment Variables
 
-## How can I deploy this project?
+Create `.env.local` for local development when using the contact API:
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```bash
+CONTACT_EMAIL=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
 
-## Can I connect a custom domain to my Lovable project?
+`CONTACT_EMAIL` is required for server-side contact delivery. Upstash variables are optional; the app falls back to in-memory rate limiting locally.
 
-Yes, you can!
+## Project Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```text
+api/                         Vercel serverless API routes
+public/                      Static assets, resume PDF, project images/videos
+src/components/portfolio/    Portfolio UI sections and interactive components
+src/components/ui/           Reusable shadcn/Radix UI primitives
+src/data/                    Project and case-study content
+src/pages/                   Route-level pages
+src/server/                  Contact handler, validation, and rate limiting helpers
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Quality Notes
+
+The project is designed to preserve a creative editorial identity while keeping recruiter-critical information easy to find: identity, education focus, projects, skills, resume, GitHub, LinkedIn, and contact.

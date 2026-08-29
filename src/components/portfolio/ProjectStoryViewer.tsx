@@ -39,6 +39,15 @@ interface ProjectStoryViewerProps {
 
 const SLIDE_DURATION_MS = 5000;
 
+interface ProjectStoryStyle {
+  bg: string;
+  cardBg: string;
+  text: string;
+  mutedText: string;
+  accent: string;
+  accentBg: string;
+}
+
 export const ProjectStoryViewer: React.FC<ProjectStoryViewerProps> = ({
   projectSlug,
   isOpen,
@@ -226,7 +235,7 @@ export const ProjectStoryViewer: React.FC<ProjectStoryViewerProps> = ({
   };
 
   // Background Theme Styles mapping
-  const getSlideThemeStyles = (theme: string) => {
+  const getSlideThemeStyles = (theme: string): ProjectStoryStyle => {
     if (viewerTheme === "high-contrast") {
       return {
         bg: "bg-[#0A0A0C]",
@@ -529,7 +538,7 @@ export const ProjectStoryViewer: React.FC<ProjectStoryViewerProps> = ({
 const HeroSlideView: React.FC<{
   slide: HeroSlide;
   project: ProjectStoryData;
-  styles: any;
+  styles: ProjectStoryStyle;
 }> = ({ slide, project, styles }) => {
 
   return (
@@ -597,16 +606,18 @@ const HeroSlideView: React.FC<{
             <span>LIVE DEMO</span>
             <ArrowUpRight className="w-4 h-4" />
           </a>
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/15"
-          >
-            <Github className="w-4 h-4" />
-            <span>GITHUB</span>
-          </a>
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/15"
+            >
+              <Github className="w-4 h-4" />
+              <span>GITHUB</span>
+            </a>
+          )}
         </div>
       </div>
     </div>
@@ -617,7 +628,7 @@ const HeroSlideView: React.FC<{
 const FeatureSlideView: React.FC<{
   slide: FeatureSlide;
   project: ProjectStoryData;
-  styles: any;
+  styles: ProjectStoryStyle;
 }> = ({ slide, project, styles }) => {
   return (
     <div className={`p-8 sm:p-12 lg:p-14 rounded-3xl border backdrop-blur-xl ${styles.cardBg} ${styles.text} shadow-2xl flex flex-col justify-between min-h-[460px] sm:min-h-[500px]`}>
@@ -664,7 +675,7 @@ const FeatureSlideView: React.FC<{
 // 3. Pull Quote Slide Component
 const QuoteSlideView: React.FC<{
   slide: QuoteSlide;
-  styles: any;
+  styles: ProjectStoryStyle;
 }> = ({ slide, styles }) => {
   // Highlight specified phrase inside quoteText
   const renderHighlightedQuote = () => {
@@ -709,7 +720,7 @@ const QuoteSlideView: React.FC<{
 // 4. Breakdown Grid Slide Component
 const GridSlideView: React.FC<{
   slide: GridSlide;
-  styles: any;
+  styles: ProjectStoryStyle;
 }> = ({ slide, styles }) => {
   return (
     <div className={`p-8 sm:p-12 lg:p-14 rounded-3xl border backdrop-blur-xl ${styles.cardBg} ${styles.text} shadow-2xl flex flex-col justify-between min-h-[460px] sm:min-h-[500px]`}>
@@ -775,7 +786,7 @@ const GridSlideView: React.FC<{
 const ReadNextSlideView: React.FC<{
   slide: ReadNextSlide;
   onSelectProject: (slug: string) => void;
-  styles: any;
+  styles: ProjectStoryStyle;
 }> = ({ slide, onSelectProject, styles }) => {
   return (
     <div className={`p-8 sm:p-12 lg:p-14 rounded-3xl border backdrop-blur-xl ${styles.cardBg} ${styles.text} shadow-2xl flex flex-col justify-between min-h-[460px] sm:min-h-[500px]`}>

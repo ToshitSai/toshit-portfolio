@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import Navbar from "@/components/portfolio/Navbar";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
-import ProjectGrid, { SHOWCASE_PROJECTS } from "@/components/portfolio/ProjectGrid";
+import ProjectGrid from "@/components/portfolio/ProjectGrid";
 import ProjectStoryViewer from "@/components/portfolio/ProjectStoryViewer";
 
 const ProjectsPage: React.FC = () => {

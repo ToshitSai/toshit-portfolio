@@ -497,7 +497,8 @@ const AboutPage: React.FC = () => {
                         id={`accordion-content-${row.id}`}
                         role="region"
                         aria-labelledby={`accordion-button-${row.id}`}
-                        className={`grid transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+                        className={`grid transition-all duration-350 ${
                           isOpen ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
                         }`}
                       >

@@ -2,11 +2,10 @@ import { defineConfig, Plugin, ViteDevServer } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import dotenv from "dotenv";
-import { componentTagger } from "lovable-tagger";
 import type { IncomingMessage, ServerResponse } from "http";
 import { processContactSubmission } from "./src/server/contactHandler";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 function securityHeadersPlugin(): Plugin {
   return {
@@ -82,16 +81,12 @@ function securityHeadersPlugin(): Plugin {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   server: {
     host: "::",
     port: 8080,
   },
-  plugins: [
-    react(),
-    securityHeadersPlugin(),
-    mode === "development" && componentTagger(),
-  ].filter(Boolean) as Plugin[],
+  plugins: [react(), securityHeadersPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -99,5 +94,18 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("framer-motion")) {
+            return "motion";
+          }
+          if (id.includes("@radix-ui") || id.includes("cmdk") || id.includes("vaul")) {
+            return "ui-vendor";
+          }
+        },
+      },
+    },
   },
 }));

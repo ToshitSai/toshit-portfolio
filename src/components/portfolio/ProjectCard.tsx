@@ -36,7 +36,7 @@ export interface ProjectCardData {
   accentColor: string;
   tech: string[];
   liveUrl: string;
-  githubUrl: string;
+  githubUrl?: string;
   bgImage: string;
   videoSrc: string;
   mobileVideoSrc?: string;
@@ -359,15 +359,17 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             Live
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-[#1D2024]"
-          >
-            <Github className="h-3.5 w-3.5" />
-            Code
-          </a>
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-[#1D2024]"
+            >
+              <Github className="h-3.5 w-3.5" />
+              Code
+            </a>
+          )}
         </div>
       </div>
     </motion.article>

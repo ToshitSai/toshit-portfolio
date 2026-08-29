@@ -3,8 +3,9 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
+import { SHOWCASE_PROJECTS } from "@/data/showcaseProjects";
 import ProjectStoryViewer from "./ProjectStoryViewer";
-import ProjectGrid, { SHOWCASE_PROJECTS } from "./ProjectGrid";
+import ProjectGrid from "./ProjectGrid";
 
 // EDITORIAL PROJECTS INTRO HEADER
 const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) => {
