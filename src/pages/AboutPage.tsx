@@ -92,10 +92,10 @@ const AbstractEditorialCanvas: React.FC = () => {
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Soft Ambient Radial Warm Glow */}
       <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[90vw] max-w-[1200px] h-[600px] rounded-full bg-gradient-to-b from-[#FFD42A]/18 via-[#FFF8E8]/40 to-transparent blur-3xl" />
-      
+
       {/* Organic Sun / Geometric Circle Accent */}
       <div className="absolute top-[12%] right-[8%] w-48 h-48 sm:w-72 sm:h-72 rounded-full border border-[#20252B]/10 bg-[#FFD42A]/15 blur-xs animate-pulse duration-10000" />
-      
+
       {/* Hand-Drawn Editorial Linework & Abstract Shapes */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.14]" xmlns="http://www.w3.org/2000/svg">
         {/* Soft Organic Ground Curve */}
@@ -112,7 +112,7 @@ const AbstractEditorialCanvas: React.FC = () => {
           stroke="#20252B"
           strokeWidth="1"
         />
-        
+
         {/* Corner Cross Accents */}
         <circle cx="12%" cy="22%" r="4" fill="#20252B" />
         <circle cx="88%" cy="38%" r="6" fill="#FFD42A" stroke="#20252B" strokeWidth="1" />
@@ -153,27 +153,24 @@ const AIEngineTerminal: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab("build")}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
-              activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-            }`}
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+              }`}
           >
             Build
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("stack")}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
-              activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-            }`}
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+              }`}
           >
             Stack
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("status")}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
-              activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-            }`}
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+              }`}
           >
             Status
           </button>
@@ -325,7 +322,7 @@ const AboutPage: React.FC = () => {
 
       {/* MAIN ABOUT PAGE CONTENT */}
       <main className="relative z-10 pt-28 sm:pt-36 pb-24 sm:pb-32 select-none">
-        
+
         {/* TOP BACK TO HOME BREADCRUMB + ABOUT ME BADGE */}
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
@@ -400,9 +397,9 @@ const AboutPage: React.FC = () => {
         {/* SECTION 2: EDITORIAL EXPERIENCE & ACCORDION ARCHIVE */}
         <section id="experience" className="relative z-10 pt-16 sm:pt-24 border-t border-[#20252B]/12">
           <div className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16">
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-              
+
               {/* LEFT COLUMN: VERTICAL / HORIZONTAL SECTION TITLE */}
               <div className="lg:col-span-3 flex flex-col justify-start">
                 <div className="lg:sticky lg:top-36">
@@ -435,16 +432,15 @@ const AboutPage: React.FC = () => {
 
               {/* RIGHT COLUMN: EXPANDABLE ACCORDION ROWS */}
               <div className="lg:col-span-9 flex flex-col gap-6">
-                
+
                 {FACTUAL_EXPERIENCE_DATA.map((row, index) => {
                   const isOpen = expandedIndex === index;
 
                   return (
                     <div
                       key={row.id}
-                      className={`group border-b border-[#20252B]/16 pb-6 transition-all duration-300 ${
-                        isOpen ? "bg-white/40 p-6 sm:p-8 rounded-[24px] border border-[#20252B]/12 shadow-xs" : "hover:bg-white/20 px-2 py-3 rounded-2xl"
-                      }`}
+                      className={`group border-b border-[#20252B]/16 pb-6 transition-all duration-300 ${isOpen ? "bg-white/40 p-6 sm:p-8 rounded-[24px] border border-[#20252B]/12 shadow-xs" : "hover:bg-white/20 px-2 py-3 rounded-2xl"
+                        }`}
                     >
                       {/* ACCORDION ROW HEADER BUTTON */}
                       <button
@@ -476,9 +472,8 @@ const AboutPage: React.FC = () => {
 
                           {/* ACCORDION TOGGLE ICON (+ to ×) */}
                           <div
-                            className={`w-9 h-9 rounded-full border border-[#20252B]/20 flex items-center justify-center bg-white/80 text-[#20252B] transition-transform duration-350 ease-out ${
-                              isOpen ? "rotate-45 bg-[#121417] text-white border-transparent" : "group-hover:scale-105"
-                            }`}
+                            className={`w-9 h-9 rounded-full border border-[#20252B]/20 flex items-center justify-center bg-white/80 text-[#20252B] transition-transform duration-350 ease-out ${isOpen ? "rotate-45 bg-[#121417] text-white border-transparent" : "group-hover:scale-105"
+                              }`}
                           >
                             <Plus className="w-5 h-5" />
                           </div>
@@ -491,13 +486,12 @@ const AboutPage: React.FC = () => {
                         role="region"
                         aria-labelledby={`accordion-button-${row.id}`}
                         style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-                        className={`grid transition-all duration-350 ${
-                          isOpen ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
-                        }`}
+                        className={`grid transition-all duration-350 ${isOpen ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
+                          }`}
                       >
                         <div className="overflow-hidden">
                           <div className="pt-2 border-t border-[#20252B]/10 space-y-5">
-                            
+
                             <p className="font-sans text-base sm:text-lg text-[#20252B]/85 leading-relaxed font-normal">
                               {row.description}
                             </p>
