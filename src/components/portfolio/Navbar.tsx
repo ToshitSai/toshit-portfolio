@@ -166,9 +166,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           width: isCompact ? "310px" : "min(545px, calc(100vw - 24px))",
           maxWidth: isCompact ? "310px" : "545px",
           height: "60px",
-          opacity: isPastHero ? 0 : 1,
-          y: isPastHero ? -10 : 0,
-          pointerEvents: isPastHero ? "none" : "auto",
+          opacity: 1,
+          y: 0,
+          pointerEvents: "auto",
         }}
         transition={NAV_TRANSITION}
         style={{
