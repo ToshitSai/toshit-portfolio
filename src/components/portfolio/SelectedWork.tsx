@@ -3,12 +3,11 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-import { SHOWCASE_PROJECTS } from "@/data/showcaseProjects";
 import ProjectStoryViewer from "./ProjectStoryViewer";
 import ProjectGrid from "./ProjectGrid";
 
 // EDITORIAL PROJECTS INTRO HEADER
-const ProjectsHeader: React.FC<{ projectCount: number }> = ({ projectCount }) => {
+const ProjectsHeader: React.FC<{ projectCount?: number }> = ({ projectCount: _projectCount }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const isInView = useInView(containerRef, { once: true, margin: "-60px" });

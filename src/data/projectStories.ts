@@ -1,5 +1,3 @@
-import React from "react";
-
 export type SlideType = "hero" | "feature" | "quote" | "grid" | "readNext";
 
 export interface BaseSlide {

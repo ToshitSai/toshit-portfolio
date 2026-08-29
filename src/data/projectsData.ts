@@ -21,26 +21,6 @@ export interface ProjectItemData {
 
 export const PROJECTS_DATA: ProjectItemData[] = [
   {
-    id: "courseforge-ai",
-    slug: "courseforge-ai",
-    number: "02",
-    title: "CourseForge",
-    subtitle: "AI-Powered Course Generator",
-    tagline: "AI course generator that turns a topic into structured lessons, quizzes, and curated videos.",
-    description: "Built a prompt-driven course generation workflow with syllabus structuring, lesson breakdowns, quiz generation, and YouTube resource curation.",
-    category: "AI COURSE GENERATOR",
-    domain: "courseforge-ai.vercel.app",
-    accentColor: "#3B82F6", // Indigo / Blue
-    accentGradient: "from-[#3B82F6] to-[#60A5FA]",
-    accentGlow: "rgba(59, 130, 246, 0.45)",
-    tech: ["React", "Gemini API", "Vercel", "YouTube API"],
-    features: ["AI Syllabus Structuring", "YouTube Curation", "Interactive Quizzes"],
-    liveUrl: "https://courseforge-ai-pied.vercel.app/",
-    githubUrl: "https://github.com/ToshitSai/courseforge-ai",
-    bgImage: "/images/projects/courseforge-ai.png",
-    motifType: "course",
-  },
-  {
     id: "hirescope-ai",
     slug: "hirescope-ai",
     number: "01",
@@ -48,7 +28,7 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     subtitle: "Resume Analysis Tool",
     tagline: "Resume and portfolio analyzer that helps candidates understand gaps, keywords, and role fit.",
     description: "Built an AI-assisted resume review workflow with upload handling, role targeting, keyword feedback, and a combined hireability score for faster resume iteration.",
-    category: "AI RESUME ANALYZER",
+    category: "RESUME ANALYZER",
     domain: "job-gem-grader.vercel.app",
     accentColor: "#38B2AC", // Teal / Green
     accentGradient: "from-[#0D9488] to-[#38B2AC]",
@@ -61,6 +41,26 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     motifType: "resume",
   },
   {
+    id: "courseforge-ai",
+    slug: "courseforge-ai",
+    number: "02",
+    title: "CourseForge",
+    subtitle: "Course Generation Platform",
+    tagline: "Course generator that turns a topic into structured lessons, quizzes, and curated videos.",
+    description: "Built a prompt-driven course generation workflow with syllabus structuring, lesson breakdowns, quiz generation, and YouTube resource curation.",
+    category: "COURSE GENERATOR",
+    domain: "courseforge-ai.vercel.app",
+    accentColor: "#3B82F6", // Indigo / Blue
+    accentGradient: "from-[#3B82F6] to-[#60A5FA]",
+    accentGlow: "rgba(59, 130, 246, 0.45)",
+    tech: ["React", "Gemini API", "Vercel", "YouTube API"],
+    features: ["Syllabus Structuring", "YouTube Curation", "Interactive Quizzes"],
+    liveUrl: "https://courseforge-ai-pied.vercel.app/",
+    githubUrl: "https://github.com/ToshitSai/courseforge-ai",
+    bgImage: "/images/projects/courseforge-ai.png",
+    motifType: "course",
+  },
+  {
     id: "greetly",
     slug: "greetly",
     number: "03",
@@ -68,7 +68,7 @@ export const PROJECTS_DATA: ProjectItemData[] = [
     subtitle: "Personalized Message Tool",
     tagline: "Greeting and message generator with tone controls, authentication, and saved message flows.",
     description: "Built a full-stack greeting generator with a React interface, Flask API, Groq-powered text generation, JWT auth, and reusable tone presets.",
-    category: "AI MESSAGE TOOL",
+    category: "MESSAGE TOOL",
     domain: "toshit-greetly.vercel.app",
     accentColor: "#F06C64", // Coral / Orange
     accentGradient: "from-[#F06C64] to-[#FF4757]",

@@ -1,7 +1,7 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { Send, CheckCircle2, Loader2, X, ExternalLink, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
+import { Loader2, X, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
 import { toast } from "sonner";
 
 interface ContactFooterProps {
@@ -183,7 +183,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     message: string;
   } | null>(null);
 
-  const [copied, setCopied] = useState(false);
+  const [_copied, setCopied] = useState(false);
 
   const validateForm = () => {
     const errors: ContactFormErrors = {};
@@ -312,7 +312,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const getMailtoUrl = () => {
+  const _getMailtoUrl = () => {
     const data = lastSubmittedData || formData;
     const subj = encodeURIComponent(`Portfolio Message from ${data.name || "Visitor"}`);
     const body = encodeURIComponent(
@@ -321,7 +321,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     return `mailto:iamtoshitsai@gmail.com?subject=${subj}&body=${body}`;
   };
 
-  const handleCopyMessage = () => {
+  const _handleCopyMessage = () => {
     const data = lastSubmittedData || formData;
     const textToCopy = `To: iamtoshitsai@gmail.com\nSubject: Portfolio Inquiry\n\nHi Toshit,\n${data.message}\n\nSender: ${data.name} (${data.email})`;
     navigator.clipboard.writeText(textToCopy);

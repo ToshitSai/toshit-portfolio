@@ -33,7 +33,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
   const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
-  const [isPastHero, setIsPastHero] = useState(false);
   const navbarModeRef = useRef<"full" | "compact">("full");
   const lastScrollYRef = useRef<number>(0);
 
@@ -41,17 +40,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
     let ticking = false;
-
-    const getHeroThreshold = () => {
-      const heroEl = document.querySelector("main section, section, #hero");
-      if (heroEl) {
-        const rect = heroEl.getBoundingClientRect();
-        const absoluteTop = rect.top + window.scrollY;
-        // Hero threshold is when scrollY passes hero bottom (with breathing room)
-        return Math.max(300, absoluteTop + rect.height - 100);
-      }
-      return 400; // fallback hero threshold
-    };
 
     const handleScroll = () => {
       if (ticking) return;
@@ -61,7 +49,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         const currentScrollY = window.scrollY;
         const delta = currentScrollY - lastScrollYRef.current;
         const DIRECTION_THRESHOLD = 5;
-        const heroThreshold = getHeroThreshold();
 
         let targetMode = navbarModeRef.current;
 
@@ -80,9 +67,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           navbarModeRef.current = targetMode;
           setNavbarMode(targetMode);
         }
-
-        const pastHero = currentScrollY > heroThreshold;
-        setIsPastHero((prev) => (prev !== pastHero ? pastHero : prev));
 
         lastScrollYRef.current = currentScrollY;
         ticking = false;
@@ -106,16 +90,16 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
 
-    // Prevent double-clicks / rapid navigation spam during transition (800ms cooldown)
+    // Prevent rapid double-clicks during transition (200ms cooldown)
     const now = Date.now();
-    if (now - navLockRef.current < 800) return;
+    if (now - navLockRef.current < 200) return;
     navLockRef.current = now;
 
     if (href === "/about") {
       if (location.pathname !== "/about") {
         navigate("/about");
       }
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "instant" });
       return;
     }
 

@@ -3,25 +3,19 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
-  ArrowRight,
   X,
   Play,
   Pause,
-  ExternalLink,
   Github,
   Sparkles,
   CheckCircle2,
-  Cpu,
-  Activity,
   Sun,
   Moon,
   ArrowUpRight,
   ChevronRight,
-  Layers
 } from "lucide-react";
 import {
   ProjectStoryData,
-  ProjectSlide,
   HeroSlide,
   FeatureSlide,
   QuoteSlide,

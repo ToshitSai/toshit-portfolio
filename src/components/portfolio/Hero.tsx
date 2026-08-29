@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { Mail } from "lucide-react";
 
 const HERO_WORDS = [
-  "AI-POWERED",
+  "SOFTWARE",
   "FULL STACK",
-  "CREATIVE",
-  "PROMPT",
-  "AI BUILDER",
+  "AI & ML",
+  "REACT & PYTHON",
+  "WEB SYSTEMS",
 ];
 
 const RotatingHeroWord: React.FC = React.memo(() => {
@@ -98,9 +97,6 @@ const Hero: React.FC = () => {
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Motion physics for mouse parallax using Framer Motion springs
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
   const springConfig = { stiffness: 100, damping: 20 };
 
   // Parallax layer outputs
@@ -285,7 +281,7 @@ const Hero: React.FC = () => {
           >
             <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A] animate-pulse" />
             <span className="text-xs sm:text-sm font-mono tracking-[0.18em] uppercase text-white font-bold drop-shadow-sm">
-              HELLO, I'M TOSHIT SAI GALAM. A —
+              HELLO, I'M TOSHIT SAI GALAM — B.TECH CSE (AI/ML) STUDENT
             </span>
           </motion.div>
 

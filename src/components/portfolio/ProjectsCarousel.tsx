@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Play, Pause, ExternalLink, Github, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play, Pause, Github, ArrowUpRight } from "lucide-react";
 
 export interface CarouselProjectItem {
   id: string;
