@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu, Globe } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "lucide-react";
 import Navbar from "@/components/portfolio/Navbar";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
@@ -86,6 +86,40 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     techStack: ["Editorial UX", "Performance Optimization", "Human-Centered Design", "Responsive Layouts"],
   },
 ];
+
+// FULL-SCREEN EDITORIAL ENTRANCE TRANSITION CURTAIN
+const PageTransitionCurtain: React.FC = () => {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) return null;
+
+  return (
+    <motion.div
+      initial={{ y: "0%" }}
+      animate={{ y: "-100%" }}
+      transition={{ duration: 0.85, delay: 0.35, ease: [0.76, 0, 0.24, 1] }}
+      className="fixed inset-0 z-[99999] bg-[#121417] text-[#FFF8E8] flex flex-col items-center justify-center pointer-events-none select-none px-6"
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.94 }}
+        animate={{ opacity: [0, 1, 1, 0], scale: [0.94, 1, 1, 0.98] }}
+        transition={{ duration: 0.7, times: [0, 0.3, 0.7, 1], ease: "easeInOut" }}
+        className="flex flex-col items-center gap-3 text-center"
+      >
+        <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#FFD42A]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] animate-pulse" />
+          <span>ENTERING EDITORIAL STORY</span>
+        </div>
+        <h2 className="font-serif text-3xl sm:text-4xl text-white font-medium tracking-tight">
+          Toshit Sai Galam
+        </h2>
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">
+          AI &amp; Computer Science Engineering
+        </span>
+      </motion.div>
+    </motion.div>
+  );
+};
 
 // HANDCRAFTED ABSTRACT EDITORIAL SVG BACKGROUND CANVAS
 const AbstractEditorialCanvas: React.FC = () => {
@@ -290,22 +324,26 @@ const AboutPage: React.FC = () => {
   };
 
   return (
-    <motion.div
-      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -15 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    <div
       ref={containerRef}
       className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden"
     >
+      {/* FULL-SCREEN ENTRANCE CURTAIN ANIMATION */}
+      <PageTransitionCurtain />
+
       <CustomCursor />
       <Navbar onTriggerLogin={() => {}} onOpenContact={() => setIsContactDrawerOpen(true)} />
 
       {/* MAIN ABOUT PAGE CONTENT */}
       <main className="relative z-10 pt-28 sm:pt-36 pb-24 sm:pb-32 select-none">
         
-        {/* TOP BACK TO HOME BREADCRUMB + ABOUT ME LABEL */}
-        <div className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16 mb-8">
+        {/* TOP BACK TO HOME BREADCRUMB + ABOUT ME BADGE */}
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16 mb-8"
+        >
           <div className="flex items-center justify-between border-b border-[#20252B]/12 pb-5">
             <Link
               to="/"
@@ -321,7 +359,7 @@ const AboutPage: React.FC = () => {
               <span>ABOUT ME</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* SECTION 1: FULL-SCREEN ABOUT HERO */}
         <section className="relative min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 pt-4 pb-16">
@@ -343,9 +381,9 @@ const AboutPage: React.FC = () => {
           >
             {/* STAGGER 1: PRIMARY EDITORIAL HEADLINE STATEMENT IN INSTRUMENT SERIF */}
             <motion.h1
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="font-serif font-medium text-[clamp(2.6rem,5.8vw,5.4rem)] leading-[1.04] tracking-tight text-[#20252B] max-w-[960px] mx-auto mb-6 sm:mb-8"
             >
               I build with <span className="italic font-normal underline decoration-[#FFD42A] decoration-wavy decoration-2">Generative AI</span> &amp; turn complex ideas into useful digital experiences.
@@ -353,9 +391,9 @@ const AboutPage: React.FC = () => {
 
             {/* STAGGER 2: HERO DESCRIPTION PARAGRAPH */}
             <motion.p
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="font-sans text-base sm:text-lg md:text-xl text-[#20252B]/75 max-w-[720px] mx-auto leading-relaxed mb-10 sm:mb-12 font-normal"
             >
               I'm Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I build with AI, experiment with intelligent systems, and turn ideas into useful digital products.
@@ -363,9 +401,9 @@ const AboutPage: React.FC = () => {
 
             {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}
             <motion.div
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="w-full mt-2 mb-8"
             >
               <AIEngineTerminal />
@@ -613,7 +651,7 @@ const AboutPage: React.FC = () => {
       </main>
 
       <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
-    </motion.div>
+    </div>
   );
 };
 
