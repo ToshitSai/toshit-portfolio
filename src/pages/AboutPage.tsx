@@ -375,21 +375,14 @@ const AboutPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -35 }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="font-serif font-medium text-[clamp(2.6rem,5.8vw,5.4rem)] leading-[1.04] tracking-tight text-[#20252B] max-w-[960px] mx-auto mb-6 sm:mb-8"
+              className="font-serif font-medium text-[clamp(2.4rem,5.2vw,4.8rem)] leading-[1.1] tracking-tight text-[#20252B] max-w-[980px] mx-auto mb-6 sm:mb-8 text-center"
             >
-              I build with <span className="italic font-normal underline decoration-[#FFD42A] decoration-wavy decoration-2">Generative AI</span> &amp; turn complex ideas into useful digital experiences.
+              I'm Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I build complete AI applications using{" "}
+              <span className="italic font-normal underline decoration-[#FFD42A] decoration-wavy decoration-2">
+                Generative AI
+              </span>{" "}
+              and turn ideas into useful digital experiences.
             </motion.h1>
-
-            {/* STAGGER 2: HERO DESCRIPTION PARAGRAPH */}
-            <motion.p
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -18 }}
-              transition={{ duration: 0.55, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
-              className="font-sans text-base sm:text-lg md:text-xl text-[#20252B]/75 max-w-[720px] mx-auto leading-relaxed mb-10 sm:mb-12 font-normal"
-            >
-              I'm Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I build with AI, experiment with intelligent systems, and turn ideas into useful digital products.
-            </motion.p>
 
             {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}
             <motion.div
