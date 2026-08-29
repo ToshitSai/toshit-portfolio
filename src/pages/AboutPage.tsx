@@ -423,10 +423,6 @@ const AboutPage: React.FC = () => {
                       Experience
                     </h2>
                   </div>
-
-                  <p className="mt-4 font-sans text-sm text-[#20252B]/65 leading-relaxed max-w-[280px]">
-                    Factual background, AI software projects, technical capabilities, and building philosophy.
-                  </p>
                 </div>
               </div>
 
