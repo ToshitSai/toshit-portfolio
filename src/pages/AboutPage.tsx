@@ -366,7 +366,7 @@ const AboutPage: React.FC = () => {
             style={{ y: heroY, opacity: heroOpacity }}
             className="w-full max-w-[1040px] mx-auto text-center relative z-10 flex flex-col items-center"
           >
-            {/* STAGGER 1: PRIMARY EDITORIAL HEADLINE STATEMENT IN INSTRUMENT SERIF */}
+            {/* STAGGER 1: PRIMARY EDITORIAL HEADLINE STATEMENT IN INSTRUMENT SERIF — REFRESHED */}
             <motion.h1
               initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
               animate={{ opacity: 1, y: 0 }}
