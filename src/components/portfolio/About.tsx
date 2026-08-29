@@ -16,11 +16,11 @@ const About: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="text-[clamp(1.8rem,4vw,3.2rem)] font-serif font-normal leading-[1.2] text-[#20252B] text-center mb-8 group-hover:opacity-90 transition-opacity cursor-pointer"
           >
-            Some people collect ideas. I prefer to build them. I’m Toshit Sai —{" "}
+            I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
             <span className="italic underline decoration-[#FFD42A] decoration-wavy decoration-2">
-              exploring AI
-            </span>
-            , turning curiosity into working applications, and learning something new every time I put an idea on a screen.
+              Generative AI
+            </span>{" "}
+            systems to experiences designed for real people.
           </motion.h2>
         </Link>
 
