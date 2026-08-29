@@ -28,11 +28,11 @@ const About: React.FC = () => {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="text-[clamp(1.8rem,4vw,3.2rem)] font-serif font-normal leading-[1.2] text-[#20252B] max-w-3xl text-center mb-8"
         >
-          I'm Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I build with{" "}
+          I'm Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I build complete AI applications using{" "}
           <span className="italic underline decoration-[#FFD42A] decoration-wavy decoration-2">
             Generative AI
-          </span>
-          , explore intelligent systems, and turn ideas into useful digital experiences.
+          </span>{" "}
+          and turn ideas into useful digital experiences.
         </motion.h2>
 
         {/* Subtext Paragraph */}
