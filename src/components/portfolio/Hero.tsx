@@ -316,10 +316,10 @@ const Hero: React.FC = () => {
                 onMouseLeave={() => setLeftDiscHovered(false)}
                 aria-label="Previous Project"
                 className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${leftDiscHovered
-                    ? "-rotate-12 scale-110 shadow-lg"
-                    : isCardHovered
-                      ? "animate-[spin_6s_linear_infinite]"
-                      : "animate-[spin_12s_linear_infinite]"
+                  ? "-rotate-12 scale-110 shadow-lg"
+                  : isCardHovered
+                    ? "animate-[spin_6s_linear_infinite]"
+                    : "animate-[spin_12s_linear_infinite]"
                   }`}
               >
                 <div
@@ -402,10 +402,10 @@ const Hero: React.FC = () => {
                 onMouseLeave={() => setRightDiscHovered(false)}
                 aria-label="Next Project"
                 className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${rightDiscHovered
-                    ? "rotate-12 scale-110 shadow-lg"
-                    : isCardHovered
-                      ? "animate-[spin_6s_linear_infinite]"
-                      : "animate-[spin_12s_linear_infinite]"
+                  ? "rotate-12 scale-110 shadow-lg"
+                  : isCardHovered
+                    ? "animate-[spin_6s_linear_infinite]"
+                    : "animate-[spin_12s_linear_infinite]"
                   }`}
               >
                 <div

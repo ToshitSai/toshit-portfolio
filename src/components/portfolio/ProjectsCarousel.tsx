@@ -304,11 +304,10 @@ export const ProjectsCarousel: React.FC<ProjectsCarouselProps> = ({
                 type="button"
                 onClick={() => goToSlide(idx)}
                 aria-label={`Go to slide ${idx + 1}: ${proj.titleMain}`}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  isActive
+                className={`h-2.5 rounded-full transition-all duration-300 ${isActive
                     ? "w-8 bg-[#1D2024]"
                     : "w-2.5 bg-[#1D2024]/25 hover:bg-[#1D2024]/50"
-                }`}
+                  }`}
               />
             );
           })}

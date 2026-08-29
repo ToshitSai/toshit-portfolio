@@ -212,11 +212,10 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
                   key={item.id}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`relative text-[15px] font-medium leading-none transition-all duration-200 ${
-                    isActive
+                  className={`relative text-[15px] font-medium leading-none transition-all duration-200 ${isActive
                       ? "px-4 h-[40px] rounded-full bg-white/90 text-[#20252B] font-semibold flex items-center justify-center shadow-xs backdrop-blur-md"
                       : "text-[#20252B] hover:text-[#20252B]/80 py-2 px-3 rounded-full hover:bg-white/40"
-                  }`}
+                    }`}
                 >
                   <span>{item.label}</span>
                 </a>
