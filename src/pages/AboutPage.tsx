@@ -374,11 +374,11 @@ const AboutPage: React.FC = () => {
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="font-serif font-medium text-[clamp(2.4rem,5.2vw,4.8rem)] leading-[1.1] tracking-tight text-[#20252B] max-w-[980px] mx-auto mb-6 sm:mb-8 text-center"
             >
-              I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
+              Some people collect ideas. I prefer to build them. I’m Toshit Sai —{" "}
               <span className="italic font-normal underline decoration-[#FFD42A] decoration-wavy decoration-2">
-                Generative AI
-              </span>{" "}
-              systems to experiences designed for real people.
+                exploring AI
+              </span>
+              , turning curiosity into working applications, and learning something new every time I put an idea on a screen.
             </motion.h1>
 
             {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}
