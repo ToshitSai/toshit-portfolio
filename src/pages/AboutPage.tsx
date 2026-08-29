@@ -335,17 +335,6 @@ const AboutPage: React.FC = () => {
             style={{ y: heroY, opacity: heroOpacity }}
             className="w-full max-w-[1040px] mx-auto text-center relative z-10 flex flex-col items-center"
           >
-            {/* STAGGER 1: SMALL EDITORIAL LABEL */}
-            <motion.div
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.24em] text-[#20252B]/75 bg-white/70 px-4 py-1.5 rounded-full border border-[#20252B]/10 shadow-xs mb-8 sm:mb-10 backdrop-blur-md"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A] animate-pulse" />
-              <span>HELLO, I'M TOSHIT SAI GALAM.</span>
-            </motion.div>
-
             {/* STAGGER 2: PRIMARY EDITORIAL HEADLINE STATEMENT */}
             <motion.h1
               initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}

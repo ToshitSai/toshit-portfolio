@@ -15,9 +15,9 @@ const NAV_ITEMS: NavItem[] = [
   { id: "playground", label: "Playground", href: "/#skills" },
 ];
 
-// Unified 250ms cubic-bezier transition (fast, direct & smooth)
+// Unified 200ms cubic-bezier transition (fast, direct & smooth)
 const NAV_TRANSITION = {
-  duration: 0.25,
+  duration: 0.2,
   ease: [0.22, 1, 0.36, 1] as const,
 };
 
@@ -33,13 +33,25 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
   const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
+  const [isPastHero, setIsPastHero] = useState(false);
   const navbarModeRef = useRef<"full" | "compact">("full");
   const lastScrollYRef = useRef<number>(0);
 
-  // SINGLE PASSIVE rAF SCROLL DIRECTIONAL STATE MACHINE
+  // SINGLE PASSIVE rAF SCROLL DIRECTIONAL STATE MACHINE + HERO BOUNDARY DETECTION
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
     let ticking = false;
+
+    const getHeroThreshold = () => {
+      const heroEl = document.querySelector("main section, section, #hero");
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        const absoluteTop = rect.top + window.scrollY;
+        // Hero threshold is when scrollY passes hero bottom (with breathing room)
+        return Math.max(300, absoluteTop + rect.height - 100);
+      }
+      return 400; // fallback hero threshold
+    };
 
     const handleScroll = () => {
       if (ticking) return;
@@ -49,6 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         const currentScrollY = window.scrollY;
         const delta = currentScrollY - lastScrollYRef.current;
         const DIRECTION_THRESHOLD = 5;
+        const heroThreshold = getHeroThreshold();
 
         let targetMode = navbarModeRef.current;
 
@@ -68,14 +81,22 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           setNavbarMode(targetMode);
         }
 
+        const pastHero = currentScrollY > heroThreshold;
+        setIsPastHero((prev) => (prev !== pastHero ? pastHero : prev));
+
         lastScrollYRef.current = currentScrollY;
         ticking = false;
       });
     };
 
+    // Run initial scroll check
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -145,6 +166,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           width: isCompact ? "310px" : "min(545px, calc(100vw - 24px))",
           maxWidth: isCompact ? "310px" : "545px",
           height: "60px",
+          opacity: isPastHero ? 0 : 1,
+          y: isPastHero ? -10 : 0,
+          pointerEvents: isPastHero ? "none" : "auto",
         }}
         transition={NAV_TRANSITION}
         style={{

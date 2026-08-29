@@ -276,19 +276,6 @@ const Hero: React.FC = () => {
               DESIGN / DETAILS / CODE
             </span>
           </div>
-          {/* ANIMATION F — Eyebrow Badge with Pulsing Yellow Dot */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2.5 mb-4 sm:mb-6"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A] animate-pulse" />
-            <span className="text-xs sm:text-sm font-mono tracking-[0.18em] uppercase text-white font-bold drop-shadow-sm">
-              HELLO, I'M TOSHIT SAI GALAM. A —
-            </span>
-          </motion.div>
-
           {/* ANIMATION H — Display Headline with Staggered Entrance Reveal */}
           <motion.h1
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}

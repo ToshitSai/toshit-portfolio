@@ -63,13 +63,6 @@ const About: React.FC = () => {
             I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
           </h3>
 
-          <Link
-            to="/about"
-            className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#121417] text-white font-mono text-xs font-bold uppercase tracking-[0.18em] shadow-sm hover:bg-black hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
-          >
-            <span>Read Full Editorial Story</span>
-            <ArrowRight className="w-4 h-4 text-[#FFD42A] group-hover:translate-x-1 transition-transform" />
-          </Link>
         </motion.div>
       </div>
     </section>
