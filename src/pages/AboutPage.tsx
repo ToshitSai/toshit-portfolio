@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu, Layers, Globe } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu, Globe } from "lucide-react";
 import Navbar from "@/components/portfolio/Navbar";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 
-// FACTUAL EXPERIENCE & CAPABILITIES DATA (NO FAKE COMPANIES OR TITLES)
+// FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
   id: string;
   number: string;
@@ -51,7 +51,7 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     highlights: [
       "Generative AI & Agentic Workflows: Prompt engineering, Gemini API integration, structured outputs, RAG concepts.",
       "Full-Stack Web Engineering: React, TypeScript, Vite, Tailwind CSS, REST APIs, Node.js environment.",
-      "Creative Motion & UI: Framer Motion, GSAP ScrollTrigger, micro-interactions, responsive glassmorphism.",
+      "Creative Motion & UI: Framer Motion, GSAP ScrollTrigger, micro-interactions, responsive minimalism.",
     ],
     techStack: ["Python", "TypeScript", "React", "Node.js", "Gemini API", "Tailwind CSS", "Git / GitHub"],
   },
@@ -94,8 +94,8 @@ const AbstractEditorialCanvas: React.FC = () => {
       {/* Soft Ambient Radial Warm Glow */}
       <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[90vw] max-w-[1200px] h-[600px] rounded-full bg-gradient-to-b from-[#FFD42A]/18 via-[#FFF8E8]/40 to-transparent blur-3xl" />
       
-      {/* Organic Sun / Geometric Circle */}
-      <div className="absolute top-[12%] right-[8%] w-48 h-48 sm:w-72 sm:h-72 rounded-full border border-[#20252B]/10 bg-[#FFD42A]/15 blur-sm animate-pulse duration-10000" />
+      {/* Organic Sun / Geometric Circle Accent */}
+      <div className="absolute top-[12%] right-[8%] w-48 h-48 sm:w-72 sm:h-72 rounded-full border border-[#20252B]/10 bg-[#FFD42A]/15 blur-xs animate-pulse duration-10000" />
       
       {/* Hand-Drawn Editorial Linework & Abstract Shapes */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.14]" xmlns="http://www.w3.org/2000/svg">
@@ -114,7 +114,7 @@ const AbstractEditorialCanvas: React.FC = () => {
           strokeWidth="1"
         />
         
-        {/* Delicate Corner Accents */}
+        {/* Corner Cross Accents */}
         <circle cx="12%" cy="22%" r="4" fill="#20252B" />
         <circle cx="88%" cy="38%" r="6" fill="#FFD42A" stroke="#20252B" strokeWidth="1" />
         <line x1="8%" y1="18%" x2="16%" y2="18%" stroke="#20252B" strokeWidth="1.5" />
@@ -134,7 +134,7 @@ const AIEngineTerminal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"build" | "stack" | "status">("build");
 
   return (
-    <div className="relative w-full max-w-[640px] mx-auto rounded-[28px] bg-[#121417] text-white p-5 sm:p-7 shadow-[0_25px_70px_rgba(32,37,43,0.22)] border border-white/12 overflow-hidden group">
+    <div className="relative w-full max-w-[680px] mx-auto rounded-[28px] bg-[#121417] text-white p-5 sm:p-7 shadow-[0_25px_70px_rgba(32,37,43,0.22)] border border-white/12 overflow-hidden group">
       {/* Glow highlight */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#FFD42A]/20 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
 
@@ -252,7 +252,7 @@ const AIEngineTerminal: React.FC = () => {
           </div>
         )}
 
-        {/* Footer info line */}
+        {/* Terminal Footer info line */}
         <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-white/45">
           <span>IDENTITY: TOSHIT SAI GALAM</span>
           <span className="flex items-center gap-1.5">
@@ -290,7 +290,11 @@ const AboutPage: React.FC = () => {
   };
 
   return (
-    <div
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       ref={containerRef}
       className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden"
     >
@@ -300,8 +304,8 @@ const AboutPage: React.FC = () => {
       {/* MAIN ABOUT PAGE CONTENT */}
       <main className="relative z-10 pt-28 sm:pt-36 pb-24 sm:pb-32 select-none">
         
-        {/* TOP BACK TO HOME BREADCRUMB */}
-        <div className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16 mb-6">
+        {/* TOP BACK TO HOME BREADCRUMB + ABOUT ME LABEL */}
+        <div className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16 mb-8">
           <div className="flex items-center justify-between border-b border-[#20252B]/12 pb-5">
             <Link
               to="/"
@@ -311,13 +315,15 @@ const AboutPage: React.FC = () => {
               <span>Back to Home</span>
             </Link>
 
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#20252B]/50">
-              EDITORIAL PROFILE
-            </span>
+            {/* TOP-LEFT ABOUT BADGE */}
+            <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/80">
+              <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block" />
+              <span>ABOUT ME</span>
+            </div>
           </div>
         </div>
 
-        {/* SECTION 1: FULL-SCREEN ABOUT HERO (min-h-[90vh] or min-h-screen) */}
+        {/* SECTION 1: FULL-SCREEN ABOUT HERO */}
         <section className="relative min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 pt-4 pb-16">
           <AbstractEditorialCanvas />
 
@@ -335,21 +341,31 @@ const AboutPage: React.FC = () => {
             style={{ y: heroY, opacity: heroOpacity }}
             className="w-full max-w-[1040px] mx-auto text-center relative z-10 flex flex-col items-center"
           >
-            {/* STAGGER 2: PRIMARY EDITORIAL HEADLINE STATEMENT */}
+            {/* STAGGER 1: PRIMARY EDITORIAL HEADLINE STATEMENT IN INSTRUMENT SERIF */}
             <motion.h1
               initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="font-serif font-medium text-[clamp(2.4rem,5.5vw,4.8rem)] leading-[1.02] tracking-tight text-[#20252B] max-w-[920px] mx-auto mb-10 sm:mb-12"
+              className="font-serif font-medium text-[clamp(2.6rem,5.8vw,5.4rem)] leading-[1.04] tracking-tight text-[#20252B] max-w-[960px] mx-auto mb-6 sm:mb-8"
             >
-              I build with <span className="italic font-normal opacity-95 underline decoration-[#FFD42A] decoration-wavy decoration-2">Generative AI</span> &amp; turn complex ideas into useful digital experiences.
+              I build with <span className="italic font-normal underline decoration-[#FFD42A] decoration-wavy decoration-2">Generative AI</span> &amp; turn complex ideas into useful digital experiences.
             </motion.h1>
+
+            {/* STAGGER 2: HERO DESCRIPTION PARAGRAPH */}
+            <motion.p
+              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="font-sans text-base sm:text-lg md:text-xl text-[#20252B]/75 max-w-[720px] mx-auto leading-relaxed mb-10 sm:mb-12 font-normal"
+            >
+              I'm Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I build with AI, experiment with intelligent systems, and turn ideas into useful digital products.
+            </motion.p>
 
             {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}
             <motion.div
               initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.85, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className="w-full mt-2 mb-8"
             >
               <AIEngineTerminal />
@@ -568,13 +584,36 @@ const AboutPage: React.FC = () => {
               </div>
             </div>
 
+            {/* SECTION 4: EDITORIAL FOOTER STATEMENT */}
+            <div className="mt-20 pt-12 border-t border-[#20252B]/16 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div>
+                <span className="font-serif italic text-2xl text-[#20252B]/70 font-normal">
+                  Still building. More to come.
+                </span>
+              </div>
+              <Link
+                to="/#work"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/");
+                  setTimeout(() => {
+                    document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
+                className="group inline-flex items-center gap-2.5 font-mono text-xs font-bold uppercase tracking-[0.2em] px-6 py-3 rounded-full bg-[#121417] text-white hover:bg-black transition-all cursor-pointer shadow-sm"
+              >
+                <span>BACK TO WORK</span>
+                <ArrowUpRight className="w-4 h-4 text-[#FFD42A] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
+              </Link>
+            </div>
+
           </div>
         </section>
 
       </main>
 
       <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
-    </div>
+    </motion.div>
   );
 };
 
