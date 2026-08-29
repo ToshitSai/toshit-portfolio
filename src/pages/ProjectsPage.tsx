@@ -29,7 +29,6 @@ const ProjectsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F8F2E6] text-[#1D2024] selection:bg-[#FFD42A] selection:text-[#1D2024] font-sans relative">
       <CustomCursor />
-      <Navbar onTriggerLogin={() => {}} onOpenContact={() => setIsContactDrawerOpen(true)} />
 
       {/* STORY VIEWER OVERLAY FOR PROJECTS PAGE */}
       <ProjectStoryViewer

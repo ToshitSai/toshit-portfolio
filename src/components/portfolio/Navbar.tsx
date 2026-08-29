@@ -100,9 +100,16 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
     };
   }, []);
 
+  const navLockRef = useRef<number>(0);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
+
+    // Prevent double-clicks / rapid navigation spam during transition (800ms cooldown)
+    const now = Date.now();
+    if (now - navLockRef.current < 800) return;
+    navLockRef.current = now;
 
     if (href === "/about") {
       if (location.pathname !== "/about") {
@@ -130,7 +137,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
         if (!targetEl && targetId === "playground") targetEl = document.getElementById("skills");
         if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      }, 150);
       return;
     }
 

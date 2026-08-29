@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from "react";
-import Navbar from "@/components/portfolio/Navbar";
+import { motion, useReducedMotion } from "framer-motion";
 import Hero from "@/components/portfolio/Hero";
 import TechMarquee from "@/components/portfolio/TechMarquee";
 import About from "@/components/portfolio/About";
@@ -7,7 +7,6 @@ import AcademicJourney from "@/components/portfolio/AcademicJourney";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
-
 import SelectedWork from "@/components/portfolio/SelectedWork";
 
 // Lazy-loaded heavy sections for bundle optimization and code-splitting
@@ -19,7 +18,33 @@ const SelectedWorkFallback = () => <div className="min-h-[600px] w-full bg-cream
 const TechnicalSkillsFallback = () => <div className="min-h-[500px] w-full bg-[#111317]" />;
 const TestimonialsFallback = () => <div className="min-h-[400px] w-full bg-cream" />;
 
+// PHYSICAL HOME CANVAS TRANSITION VARIANTS
+const homeCanvasVariants = {
+  initial: {
+    opacity: 0.92,
+    y: -12,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+  exit: {
+    opacity: 0.92,
+    y: -12,
+    transition: {
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+};
+
 const Index = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   // Only trigger loader on first visit per session using sessionStorage
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -51,10 +76,6 @@ const Index = () => {
     }
   }, [isLoggingIn]);
 
-  const handleTriggerLogin = () => {
-    setIsLoggingIn(true);
-  };
-
   const handleLoadingComplete = () => {
     setIsLoggingIn(false);
     if (typeof window !== "undefined") {
@@ -63,12 +84,14 @@ const Index = () => {
     }
   };
 
-  const handleOpenContactDrawer = () => {
-    setIsContactDrawerOpen(true);
-  };
-
   return (
-    <div className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans relative">
+    <motion.div
+      variants={shouldReduceMotion ? {} : homeCanvasVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans relative"
+    >
       {/* CONTEXTUAL EDITORIAL LOGIN LOADER (FIRST VISIT PER SESSION ONLY) */}
       <EditorialLoginLoader
         isLoading={isLoggingIn}
@@ -76,7 +99,7 @@ const Index = () => {
       />
 
       <CustomCursor />
-      <Navbar onTriggerLogin={handleTriggerLogin} onOpenContact={handleOpenContactDrawer} />
+      
       <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <Hero />
         <TechMarquee />
@@ -97,7 +120,7 @@ const Index = () => {
         </Suspense>
       </main>
       <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
-    </div>
+    </motion.div>
   );
 };
 
