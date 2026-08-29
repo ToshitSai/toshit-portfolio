@@ -34,11 +34,11 @@ const About: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="text-[clamp(1.8rem,4vw,3.2rem)] font-serif font-normal leading-[1.2] text-[#20252B] text-center mb-8 group-hover:opacity-90 transition-opacity cursor-pointer"
           >
-            I'm Toshit Sai, a Computer Science Engineering student specializing in AI &amp; Machine Learning. I build complete AI applications using{" "}
+            I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
             <span className="italic underline decoration-[#FFD42A] decoration-wavy decoration-2">
               Generative AI
             </span>{" "}
-            and turn ideas into useful digital experiences.
+            systems to experiences designed for real people.
           </motion.h2>
         </Link>
 
@@ -53,21 +53,6 @@ const About: React.FC = () => {
           I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
         </motion.p>
 
-        {/* Direct Navigation Button to Dedicated About Page */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <Link
-            to="/about"
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#20252B] text-[#FFF8E8] font-mono text-xs font-bold uppercase tracking-[0.16em] shadow-md hover:bg-[#20252B]/90 hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
-          >
-            <span>Explore Full Story &amp; Experience</span>
-            <ArrowUpRight className="w-4 h-4 text-[#FFD42A]" />
-          </Link>
-        </motion.div>
       </div>
     </section>
   );
