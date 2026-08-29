@@ -606,20 +606,6 @@ const AboutPage: React.FC = () => {
                   Still building. More to come.
                 </span>
               </div>
-              <Link
-                to="/#work"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/");
-                  setTimeout(() => {
-                    document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
-                  }, 150);
-                }}
-                className="group inline-flex items-center gap-2.5 font-mono text-xs font-bold uppercase tracking-[0.2em] px-6 py-3 rounded-full bg-[#121417] text-white hover:bg-black transition-all cursor-pointer shadow-sm"
-              >
-                <span>BACK TO WORK</span>
-                <ArrowUpRight className="w-4 h-4 text-[#FFD42A] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
-              </Link>
             </div>
 
           </div>
