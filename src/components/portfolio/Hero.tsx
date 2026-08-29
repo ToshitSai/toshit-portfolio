@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 
 const HERO_WORDS = [
-  "SOFTWARE",
+  "AI-POWERED",
   "FULL STACK",
-  "AI & ML",
-  "REACT & PYTHON",
-  "WEB SYSTEMS",
+  "CREATIVE",
+  "PROMPT",
+  "AI BUILDER",
 ];
 
 const RotatingHeroWord: React.FC = React.memo(() => {
