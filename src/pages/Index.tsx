@@ -64,7 +64,6 @@ const Index = () => {
         const targetId = hash.replace("#", "");
         let targetEl = document.getElementById(targetId);
         if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
-        if (!targetEl && targetId === "playground") targetEl = document.getElementById("skills");
 
         if (targetEl) {
           const timer = setTimeout(() => {

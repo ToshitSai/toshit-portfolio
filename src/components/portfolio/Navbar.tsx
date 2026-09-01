@@ -127,7 +127,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
       setTimeout(() => {
         let targetEl = document.getElementById(targetId);
         if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
-        if (!targetEl && targetId === "playground") targetEl = document.getElementById("skills");
         if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
       }, 150);
       return;
@@ -135,7 +134,6 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
 
     let targetEl = document.getElementById(targetId);
     if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
-    if (!targetEl && targetId === "playground") targetEl = document.getElementById("skills");
 
     if (targetEl) {
       targetEl.scrollIntoView({ behavior: "smooth" });

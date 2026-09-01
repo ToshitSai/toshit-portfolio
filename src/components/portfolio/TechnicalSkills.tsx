@@ -116,7 +116,7 @@ const TechnicalSkills: React.FC = () => {
 
   return (
     <section
-      id="playground"
+      id="skills-section"
       ref={sectionRef}
       className="relative w-full min-h-[85vh] py-16 sm:py-28 bg-cream-paper text-ink overflow-hidden z-10 border-t border-ink/10 select-none flex flex-col justify-between"
     >
