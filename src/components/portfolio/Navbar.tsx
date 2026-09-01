@@ -12,7 +12,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { id: "work", label: "Work", href: "/#work" },
   { id: "about", label: "About", href: "/about" },
-  { id: "playground", label: "Playground", href: "/#skills" },
+  { id: "playground", label: "Playground", href: "/playground" },
 ];
 
 // Unified 200ms cubic-bezier transition (fast, direct & smooth)
@@ -103,6 +103,14 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
       return;
     }
 
+    if (href === "/playground") {
+      if (location.pathname !== "/playground") {
+        navigate("/playground");
+      }
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
+
     if (href === "#hero" || href === "/#hero" || href === "/") {
       if (location.pathname !== "/") {
         navigate("/");
@@ -147,6 +155,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
 
   const isCompact = navbarMode === "compact";
   const isAboutRoute = location.pathname === "/about";
+  const isPlaygroundRoute = location.pathname === "/playground";
   const isHomeRoute = location.pathname === "/";
 
   return (
@@ -205,6 +214,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
             {NAV_ITEMS.map((item) => {
               const isActive =
                 (item.id === "about" && isAboutRoute) ||
+                (item.id === "playground" && isPlaygroundRoute) ||
                 (item.id === "work" && isHomeRoute);
 
               return (

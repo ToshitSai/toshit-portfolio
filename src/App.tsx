@@ -9,6 +9,7 @@ import Navbar from "@/components/portfolio/Navbar";
 import Index from "./pages/Index";
 import ProjectsPage from "./pages/ProjectsPage";
 import AboutPage from "./pages/AboutPage";
+import PlaygroundPage from "./pages/PlaygroundPage";
 import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,7 @@ const AnimatedAppRoutes: React.FC = () => {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/work/:slug" element={<ProjectsPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/playground" element={<PlaygroundPage />} />
         <Route path="/contact" element={<ContactPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
