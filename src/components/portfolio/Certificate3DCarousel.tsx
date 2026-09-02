@@ -107,6 +107,34 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev, selectedModalCert]);
 
+  // Mouse Wheel / Trackpad Scroll Navigation Handler
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (selectedModalCert) return;
+
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(delta) < 8) return;
+
+      e.preventDefault();
+
+      if (isAnimatingRef.current) return;
+
+      if (delta > 0) {
+        handleNext();
+      } else if (delta < 0) {
+        handlePrev();
+      }
+    };
+
+    stage.addEventListener("wheel", handleWheel, { passive: false });
+    return () => stage.removeEventListener("wheel", handleWheel);
+  }, [handleNext, handlePrev, selectedModalCert]);
+
   // Focus trap for Modal Dialog
   useEffect(() => {
     if (selectedModalCert) {
@@ -330,6 +358,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
     <div className="relative w-full flex flex-col items-center select-none py-4 sm:py-8">
       {/* 3D CAROUSEL STAGE CONTAINER */}
       <div
+        ref={stageRef}
         className="relative w-full max-w-[1280px] h-[340px] sm:h-[440px] md:h-[500px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing"
         style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
         onPointerDown={handlePointerDown}
