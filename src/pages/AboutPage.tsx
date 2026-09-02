@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "lucide-react";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
+import Testimonials from "@/components/portfolio/Testimonials";
 
 const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <span className="relative inline-block font-semibold text-[#20252B]">
@@ -633,6 +634,8 @@ const AboutPage: React.FC = () => {
         </section>
 
       </main>
+
+      <Testimonials />
 
       <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
     </motion.div>
