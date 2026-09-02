@@ -9,16 +9,16 @@ const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) 
   <span className="relative inline-block font-semibold text-[#20252B]">
     {children}
     <svg
-      className="absolute -bottom-1 left-0 w-full h-[10px] text-[#FFD42A] overflow-visible pointer-events-none"
-      viewBox="0 0 160 14"
+      className="absolute -bottom-1 left-0 w-full h-[6px] text-[#FFD42A] overflow-visible pointer-events-none"
+      viewBox="0 0 160 8"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="none"
     >
       <path
-        d="M2 10C42 4 105 13 158 6"
+        d="M1 5.5C40 2.5 105 7.5 159 3.5"
         stroke="currentColor"
-        strokeWidth="3.2"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -385,15 +385,15 @@ const AboutPage: React.FC = () => {
 
           <motion.div
             style={{ y: heroY, opacity: heroOpacity }}
-            className="w-full max-w-[1080px] mx-auto text-center relative z-10 flex flex-col items-center"
+            className="w-full max-w-[980px] mx-auto text-center relative z-10 flex flex-col items-center"
           >
-            {/* STAGGER 1: PRIMARY ABOUT HERO STATEMENT IN MODERN SANS-SERIF */}
+            {/* STAGGER 1: PRIMARY ABOUT HERO STATEMENT IN REFINED GROTESK */}
             <motion.h1
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
+              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -35 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="font-sans font-medium text-[26px] sm:text-[34px] md:text-[42px] lg:text-[50px] xl:text-[56px] leading-[1.14] tracking-[-0.018em] text-[#20252B] max-w-[1080px] mx-auto mb-8 sm:mb-10 text-center"
+              className="font-sans font-medium text-[24px] sm:text-[30px] md:text-[38px] lg:text-[44px] xl:text-[50px] leading-[1.16] tracking-[-0.01em] text-[#20252B] max-w-[980px] mx-auto mb-8 sm:mb-10 text-center"
             >
               I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
               <YellowUnderline>
