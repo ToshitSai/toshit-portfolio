@@ -372,28 +372,28 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                   navigateTo(index);
                 }
               }}
-              className="group cursor-pointer flex items-center justify-center px-4"
+              className="group cursor-pointer flex items-center justify-center"
             >
-              {/* CARD FRAME CONTAINER WITH MINIMAL PADDING & 1PX SUBTLE BORDER */}
+              {/* TIGHT DOCUMENT WRAPPER WITH MINIMAL 4-6PX MARGIN & SUBTLE BORDER */}
               <div
-                className={`relative w-[300px] sm:w-[560px] md:w-[680px] lg:w-[760px] rounded-[20px] sm:rounded-[26px] bg-white p-1.5 sm:p-2.5 md:p-3 border transition-all duration-300 ${
+                className={`relative rounded-xl sm:rounded-2xl p-1 sm:p-1.5 border transition-all duration-300 ${
                   isActive
-                    ? "border-[#20252B]/12 shadow-[0_16px_45px_rgba(32,37,43,0.16)] hover:shadow-[0_22px_55px_rgba(32,37,43,0.22)]"
-                    : "border-[#20252B]/10 shadow-md grayscale-[15%] hover:grayscale-0 opacity-95"
+                    ? "border-[#20252B]/12 bg-[#20252B]/4 shadow-[0_20px_50px_rgba(32,37,43,0.18)] hover:shadow-[0_26px_60px_rgba(32,37,43,0.25)]"
+                    : "border-[#20252B]/8 bg-[#20252B]/2 shadow-md grayscale-[15%] hover:grayscale-0 opacity-90"
                 }`}
               >
-                {/* CERTIFICATE IMAGE CONTAINER WITH PRESERVED ASPECT RATIO */}
-                <div className="relative w-full rounded-[12px] sm:rounded-[18px] overflow-hidden bg-[#F5F2EA]/40 flex items-center justify-center">
+                {/* CERTIFICATE IMAGE DIRECTLY FILLING CONTAINER */}
+                <div className="relative rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center">
                   <img
                     src={cert.image}
                     alt={cert.title}
                     loading="eager"
-                    className="w-full h-auto max-h-[220px] sm:max-h-[350px] md:max-h-[410px] object-contain rounded-[10px] sm:rounded-[14px] block transition-transform duration-500 group-hover:scale-[1.008]"
+                    className="w-auto h-auto max-w-[280px] sm:max-w-[540px] md:max-w-[660px] lg:max-w-[740px] max-h-[220px] sm:max-h-[350px] md:max-h-[410px] object-contain rounded-lg sm:rounded-xl block transition-transform duration-500 group-hover:scale-[1.008]"
                   />
 
                   {/* HOVER OVERLAY FOR ACTIVE CARD */}
                   {isActive && (
-                    <div className="absolute inset-0 rounded-[12px] sm:rounded-[18px] bg-[#20252B]/0 group-hover:bg-[#20252B]/10 transition-colors duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-lg sm:rounded-xl bg-[#20252B]/0 group-hover:bg-[#20252B]/15 transition-colors duration-300 flex items-center justify-center">
                       <button
                         ref={isActive ? triggerButtonRef : null}
                         type="button"
