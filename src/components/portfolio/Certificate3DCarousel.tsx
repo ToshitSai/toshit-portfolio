@@ -447,28 +447,6 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
 
       {/* ACTIVE CERTIFICATE METADATA & CONTROL PANEL BELOW STAGE */}
       <div className="w-full max-w-[680px] px-6 mt-6 sm:mt-8 flex flex-col items-center text-center">
-        {/* COUNTER VERTICAL ANIMATION */}
-        <div className="flex items-center gap-1.5 mb-3 font-mono text-xs sm:text-sm font-semibold tracking-wider">
-          <div className="relative overflow-hidden h-5 w-6 flex justify-center items-center">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={activeIndex}
-                initial={{ y: 16, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -16, opacity: 0 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute text-[#20252B]"
-              >
-                {String(activeIndex + 1).padStart(2, "0")}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-          <span className="text-[#20252B]/40">/</span>
-          <span className="text-[#20252B]/50">
-            {String(totalCertificates).padStart(2, "0")}
-          </span>
-        </div>
-
         {/* TITLE & DETAILS ANIMATION */}
         <div className="min-h-[110px] sm:min-h-[120px] flex flex-col items-center justify-center">
           <AnimatePresence mode="wait">
