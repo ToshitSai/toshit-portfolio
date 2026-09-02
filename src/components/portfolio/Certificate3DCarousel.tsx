@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink, X, CheckCircle2, Eye } from "lucide-react";
+import { ExternalLink, X, CheckCircle2 } from "lucide-react";
 import { Certificate, CERTIFICATES_DATA } from "@/data/certificatesData";
 
 interface Certificate3DCarouselProps {
@@ -419,25 +419,6 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                     loading="eager"
                     className="w-auto h-auto max-w-[280px] sm:max-w-[540px] md:max-w-[660px] lg:max-w-[740px] max-h-[220px] sm:max-h-[350px] md:max-h-[410px] object-contain block transition-transform duration-500 group-hover:scale-[1.008]"
                   />
-
-                  {/* HOVER OVERLAY FOR ACTIVE CARD */}
-                  {isActive && (
-                    <div className="absolute inset-0 bg-[#20252B]/0 group-hover:bg-[#20252B]/15 transition-colors duration-300 flex items-center justify-center">
-                      <button
-                        ref={isActive ? triggerButtonRef : null}
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedModalCert(cert);
-                        }}
-                        aria-label={`Inspect ${cert.title} certificate in fullscreen modal`}
-                        className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 px-4 py-2 rounded-full bg-[#121417] text-white font-mono text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-[#FFD42A]" />
-                        <span>Inspect Document</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
               </div>
             </motion.div>
