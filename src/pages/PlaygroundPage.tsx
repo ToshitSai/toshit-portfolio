@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Github, Linkedin, Instagram } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Certificate3DCarousel } from "@/components/portfolio/Certificate3DCarousel";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 
@@ -110,41 +110,6 @@ const PlaygroundPage: React.FC = () => {
           <Certificate3DCarousel />
         </motion.div>
       </main>
-
-      {/* MINIMAL FOOTER BAR FOR PLAYGROUND */}
-      <footer className="w-full py-6 sm:py-8 border-t border-[#20252B]/10 font-mono text-xs text-[#20252B]/60 flex flex-col sm:flex-row items-center justify-between gap-4 px-6 sm:px-12 max-w-[1360px] mx-auto relative z-10">
-        <p>© 2026 Toshit Sai Galam • All rights reserved</p>
-
-        <div className="flex items-center gap-5 sm:gap-6 font-medium">
-          <a
-            href="https://github.com/ToshitSai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#20252B] transition-colors flex items-center gap-1"
-          >
-            <Github className="w-3.5 h-3.5" />
-            <span>GitHub</span>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/toshit-sai-galam-177788276/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#20252B] transition-colors flex items-center gap-1"
-          >
-            <Linkedin className="w-3.5 h-3.5" />
-            <span>LinkedIn</span>
-          </a>
-          <a
-            href="https://www.instagram.com/toshit.codespace/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#20252B] transition-colors flex items-center gap-1"
-          >
-            <Instagram className="w-3.5 h-3.5" />
-            <span>Instagram</span>
-          </a>
-        </div>
-      </footer>
     </motion.div>
   );
 };
