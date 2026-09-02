@@ -445,7 +445,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
         })}
       </div>
 
-      {/* ACTIVE CERTIFICATE METADATA & CONTROL PANEL BELOW STAGE */}
+      {/* ACTIVE CERTIFICATE METADATA PANEL BELOW STAGE */}
       <div className="w-full max-w-[680px] px-6 mt-6 sm:mt-8 flex flex-col items-center text-center">
         {/* TITLE & DETAILS ANIMATION */}
         <div className="min-h-[110px] sm:min-h-[120px] flex flex-col items-center justify-center">
@@ -471,44 +471,6 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
               </p>
             </motion.div>
           </AnimatePresence>
-        </div>
-
-        {/* MINIMAL NAVIGATION ARROWS & DOT INDICATORS */}
-        <div className="flex items-center gap-6 mt-6">
-          <button
-            type="button"
-            onClick={handlePrev}
-            aria-label="Previous certificate"
-            className="w-10 h-10 rounded-full border border-[#20252B]/18 bg-white/80 text-[#20252B] hover:bg-[#20252B] hover:text-white transition-all flex items-center justify-center shadow-xs cursor-pointer active:scale-95"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-
-          {/* DOT PILLS WITH YELLOW ACCENT */}
-          <div className="flex items-center gap-2">
-            {certificates.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => navigateTo(idx)}
-                aria-label={`Go to certificate ${idx + 1}`}
-                className={`transition-all duration-300 rounded-full cursor-pointer ${
-                  idx === activeIndex
-                    ? "w-7 h-2.5 bg-[#FFD42A] border border-[#20252B]/20"
-                    : "w-2.5 h-2.5 bg-[#20252B]/20 hover:bg-[#20252B]/40"
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={handleNext}
-            aria-label="Next certificate"
-            className="w-10 h-10 rounded-full border border-[#20252B]/18 bg-white/80 text-[#20252B] hover:bg-[#20252B] hover:text-white transition-all flex items-center justify-center shadow-xs cursor-pointer active:scale-95"
-          >
-            <ArrowRight className="w-4 h-4" />
-          </button>
         </div>
       </div>
 
