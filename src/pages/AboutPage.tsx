@@ -5,6 +5,27 @@ import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "l
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 
+const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="relative inline-block font-semibold text-[#20252B]">
+    {children}
+    <svg
+      className="absolute -bottom-1 left-0 w-full h-[10px] text-[#FFD42A] overflow-visible pointer-events-none"
+      viewBox="0 0 160 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M2 10C42 4 105 13 158 6"
+        stroke="currentColor"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </span>
+);
+
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
   id: string;
@@ -364,21 +385,21 @@ const AboutPage: React.FC = () => {
 
           <motion.div
             style={{ y: heroY, opacity: heroOpacity }}
-            className="w-full max-w-[1040px] mx-auto text-center relative z-10 flex flex-col items-center"
+            className="w-full max-w-[1080px] mx-auto text-center relative z-10 flex flex-col items-center"
           >
-            {/* STAGGER 1: PRIMARY EDITORIAL HEADLINE STATEMENT IN INSTRUMENT SERIF — REFRESHED */}
+            {/* STAGGER 1: PRIMARY ABOUT HERO STATEMENT IN MODERN SANS-SERIF */}
             <motion.h1
               initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -35 }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="font-serif font-medium text-[clamp(2.4rem,5.2vw,4.8rem)] leading-[1.1] tracking-tight text-[#20252B] max-w-[980px] mx-auto mb-6 sm:mb-8 text-center"
+              className="font-sans font-medium text-[26px] sm:text-[34px] md:text-[42px] lg:text-[50px] xl:text-[56px] leading-[1.14] tracking-[-0.018em] text-[#20252B] max-w-[1080px] mx-auto mb-8 sm:mb-10 text-center"
             >
-              Some people collect ideas. I prefer to build them. I’m Toshit Sai —{" "}
-              <span className="italic font-normal underline decoration-[#FFD42A] decoration-wavy decoration-2">
-                exploring AI
-              </span>
-              , turning curiosity into working applications, and learning something new every time I put an idea on a screen.
+              I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
+              <YellowUnderline>
+                Generative AI
+              </YellowUnderline>{" "}
+              systems to experiences designed for real people.
             </motion.h1>
 
             {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}
