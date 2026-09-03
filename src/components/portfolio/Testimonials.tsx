@@ -271,38 +271,22 @@ const Testimonials: React.FC = () => {
           </div>
         </div>
 
-        {/* FOOTER NAVIGATION & DOTS */}
-        <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 pt-6 mt-4">
-
-          {/* PAGINATION DOT INDICATORS */}
-          <div className="flex items-center gap-2">
-            {feedbackLogs.map((_, idx) => {
-              const isActive = idx === activeIndex;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setActiveIndex(idx)}
-                  aria-label={`Go to feedback slide ${idx + 1}`}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${isActive ? "w-7 bg-[#D9A62C]" : "w-2.5 bg-[#1B1B18]/25 hover:bg-[#1B1B18]/50"
-                    }`}
-                />
-              );
-            })}
-          </div>
+        {/* FOOTER NAVIGATION */}
+        <div className="flex items-center justify-center pt-6 mt-4">
 
           {/* ARROW CONTROLS */}
           <div className="flex items-center gap-2.5">
             <button
               onClick={handlePrev}
               aria-label="Previous feedback entry"
-              className="w-10 h-10 rounded-full border border-[#1B1B18]/20 bg-white/40 flex items-center justify-center text-[#1B1B18] text-sm hover:bg-[#1B1B18] hover:text-[#FFF8E8] transition-all shadow-xs"
+              className="w-10 h-10 rounded-full border border-[#1B1B18]/20 bg-white/40 flex items-center justify-center text-[#1B1B18] text-sm hover:bg-[#1B1B18] hover:text-[#FFF8E8] transition-all shadow-xs cursor-pointer"
             >
               ←
             </button>
             <button
               onClick={handleNext}
               aria-label="Next feedback entry"
-              className="w-10 h-10 rounded-full border border-[#1B1B18]/20 bg-white/40 flex items-center justify-center text-[#1B1B18] text-sm hover:bg-[#1B1B18] hover:text-[#FFF8E8] transition-all shadow-xs"
+              className="w-10 h-10 rounded-full border border-[#1B1B18]/20 bg-white/40 flex items-center justify-center text-[#1B1B18] text-sm hover:bg-[#1B1B18] hover:text-[#FFF8E8] transition-all shadow-xs cursor-pointer"
             >
               →
             </button>
