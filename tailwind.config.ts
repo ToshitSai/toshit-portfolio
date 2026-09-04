@@ -15,10 +15,11 @@ export default {
     },
     extend: {
       fontFamily: {
+        host: ['"Host Grotesk"', 'sans-serif'],
         serif: ['Instrument Serif', 'Georgia', 'serif'],
         instrument: ['Instrument Sans', 'sans-serif'],
-        sans: ['Inter', 'Neue Haas Grotesk', 'Helvetica Neue', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-        grotesk: ['Inter', 'Plus Jakarta Sans', 'Space Grotesk', 'system-ui', 'sans-serif'],
+        sans: ['"Host Grotesk"', 'Inter', 'Neue Haas Grotesk', 'Helvetica Neue', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        grotesk: ['"Host Grotesk"', 'Inter', 'Plus Jakarta Sans', 'Space Grotesk', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {

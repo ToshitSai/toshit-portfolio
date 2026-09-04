@@ -7,7 +7,7 @@ import CustomCursor from "@/components/portfolio/CustomCursor";
 import Testimonials from "@/components/portfolio/Testimonials";
 
 const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="relative inline-block font-semibold text-[#20252B]">
+  <span className="relative inline-block font-semibold text-[#333333]">
     {children}
     <svg
       className="absolute -bottom-1 left-0 w-full h-[6px] text-[#FFD42A] overflow-visible pointer-events-none"
@@ -394,7 +394,14 @@ const AboutPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="font-sans font-medium text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] xl:text-[34px] leading-[1.28] tracking-[-0.01em] text-[#20252B] max-w-[820px] mx-auto mb-8 sm:mb-10 text-center"
+              style={{
+                fontFamily: '"Host Grotesk", sans-serif',
+                fontSize: '28px',
+                fontWeight: 400,
+                lineHeight: 1.4,
+                color: '#333333'
+              }}
+              className="max-w-[820px] mx-auto mb-8 sm:mb-10 text-center"
             >
               I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
               <YellowUnderline>

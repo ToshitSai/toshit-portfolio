@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="relative inline-block font-semibold text-[#20252B]">
+  <span className="relative inline-block font-semibold text-[#333333]">
     {children}
     <svg
       className="absolute -bottom-1 left-0 w-full h-[6px] text-[#FFD42A] overflow-visible pointer-events-none"
@@ -25,7 +25,7 @@ const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-ink overflow-hidden z-10 select-none">
+    <section id="about" className="relative w-full py-24 sm:py-32 bg-[#e5e2db] text-[#333333] overflow-hidden z-10 select-none">
       <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
 
         {/* Display Heading Statement — Clickable to /about */}
@@ -35,7 +35,14 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-sans font-medium text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] xl:text-[34px] leading-[1.28] tracking-[-0.01em] text-[#20252B] text-center mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
+            style={{
+              fontFamily: '"Host Grotesk", sans-serif',
+              fontSize: '28px',
+              fontWeight: 400,
+              lineHeight: 1.4,
+              color: '#333333'
+            }}
+            className="text-center mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
           >
             I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
             <YellowUnderline>
