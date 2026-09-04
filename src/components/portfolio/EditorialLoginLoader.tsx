@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface EditorialLoginLoaderProps {
   isLoading: boolean;
   onLoadingComplete?: () => void;
+  onExitComplete?: () => void;
 }
 
 const CONTEXTUAL_MESSAGES = [
@@ -49,6 +50,7 @@ const EASE_CUBIC = [0.65, 0, 0.35, 1] as const;
 const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
   isLoading,
   onLoadingComplete,
+  onExitComplete,
 }) => {
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
@@ -120,7 +122,7 @@ const EditorialLoginLoader: React.FC<EditorialLoginLoaderProps> = ({
   const BITE_DURATION = 0.58;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onExitComplete}>
       {isLoading && (
         <motion.div
           key="login-loader-overlay"

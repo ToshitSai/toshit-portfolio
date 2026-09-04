@@ -7,6 +7,7 @@ import AcademicJourney from "@/components/portfolio/AcademicJourney";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
+import HelloAnimation from "@/components/portfolio/HelloAnimation";
 import SelectedWork from "@/components/portfolio/SelectedWork";
 
 // Lazy-loaded heavy sections for bundle optimization and code-splitting
@@ -45,13 +46,23 @@ const homeCanvasVariants = {
 const Index = () => {
   const shouldReduceMotion = useReducedMotion();
 
-  // Only trigger loader on first visit per session using sessionStorage
+  // Only trigger loader on first visit per session using sessionStorage (or forced via ?intro=true)
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("intro") === "true" || urlParams.get("reset") === "true") {
+        sessionStorage.removeItem("has_seen_loader");
+        sessionStorage.removeItem("hasVisited");
+        sessionStorage.removeItem("has_seen_hello");
+        return true;
+      }
       return !sessionStorage.getItem("has_seen_loader") && !sessionStorage.getItem("hasVisited");
     }
     return false;
   });
+
+  const [isHelloActive, setIsHelloActive] = useState<boolean>(false);
+  const helloStartedRef = React.useRef<boolean>(false);
 
   // Global State for Contact Drawer Overlay (Opens smoothly from right on any "Work with me" click)
   const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
@@ -75,13 +86,50 @@ const Index = () => {
     }
   }, [isLoggingIn]);
 
-  const handleLoadingComplete = () => {
+  const startHello = React.useCallback(() => {
+    if (!helloStartedRef.current) {
+      helloStartedRef.current = true;
+      setIsHelloActive(true);
+    }
+  }, []);
+
+  const handleLoadingComplete = React.useCallback(() => {
     setIsLoggingIn(false);
     if (typeof window !== "undefined") {
       sessionStorage.setItem("hasVisited", "true");
       sessionStorage.setItem("has_seen_loader", "true");
     }
-  };
+    // Wait 500ms for EditorialLoginLoader's exit transition (0.5s duration) to finish 100%
+    setTimeout(() => {
+      startHello();
+    }, 500);
+  }, [startHello]);
+
+  const handleLoaderExitComplete = React.useCallback(() => {
+    startHello();
+  }, [startHello]);
+
+  // Fallback: If loader is not active and hello has not been shown yet in this session
+  useEffect(() => {
+    if (!isLoggingIn && typeof window !== "undefined") {
+      const hasSeenHello = sessionStorage.getItem("has_seen_hello");
+      if (!hasSeenHello && !helloStartedRef.current) {
+        const timer = setTimeout(() => {
+          startHello();
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isLoggingIn, startHello]);
+
+  const handleHelloComplete = React.useCallback(() => {
+    setIsHelloActive(false);
+    try {
+      sessionStorage.setItem("has_seen_hello", "true");
+    } catch {
+      // Ignore storage errors
+    }
+  }, []);
 
   return (
     <motion.div
@@ -95,6 +143,13 @@ const Index = () => {
       <EditorialLoginLoader
         isLoading={isLoggingIn}
         onLoadingComplete={handleLoadingComplete}
+        onExitComplete={handleLoaderExitComplete}
+      />
+
+      {/* POST-ENTRANCE HANDWRITTEN HELLO INTRO ANIMATION */}
+      <HelloAnimation
+        isActive={isHelloActive}
+        onComplete={handleHelloComplete}
       />
 
       <CustomCursor />
