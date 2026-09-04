@@ -1,31 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "lucide-react";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 import Testimonials from "@/components/portfolio/Testimonials";
-
-const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="relative inline-block font-semibold text-[#333333]">
-    {children}
-    <svg
-      className="absolute -bottom-1 left-0 w-full h-[6px] text-[#FFD42A] overflow-visible pointer-events-none"
-      viewBox="0 0 160 8"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="none"
-    >
-      <path
-        d="M1 5.5C40 2.5 105 7.5 159 3.5"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </span>
-);
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
@@ -308,7 +287,6 @@ const pageCanvasVariants = {
 };
 
 const AboutPage: React.FC = () => {
-  const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
   const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // First row open by default
