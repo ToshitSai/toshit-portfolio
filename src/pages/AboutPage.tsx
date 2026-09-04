@@ -403,11 +403,7 @@ const AboutPage: React.FC = () => {
               }}
               className="max-w-[820px] mx-auto mb-8 sm:mb-10 text-center"
             >
-              I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
-              <YellowUnderline>
-                Generative AI
-              </YellowUnderline>{" "}
-              systems to experiences designed for real people.
+              I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
             </motion.h1>
 
             {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}

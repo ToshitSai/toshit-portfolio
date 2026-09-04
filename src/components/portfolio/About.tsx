@@ -44,11 +44,7 @@ const About: React.FC = () => {
             }}
             className="text-center mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
           >
-            I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
-            <YellowUnderline>
-              Generative AI
-            </YellowUnderline>{" "}
-            systems to experiences designed for real people.
+            I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
           </motion.h2>
         </Link>
 
