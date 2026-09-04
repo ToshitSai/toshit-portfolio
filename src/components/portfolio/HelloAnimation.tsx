@@ -7,38 +7,20 @@ interface HelloAnimationProps {
 }
 
 /**
- * Exact continuous single-stroke bezier vector matching the cursive "hello"
- * ViewBox 0 0 700 250 | Pre-calculated path length ~2300px
+ * Clean, highly legible continuous cursive "hello" SVG path in viewBox 0 0 240 100.
+ * Letter by letter breakdown:
+ * - h: tall ascender loop (x:25->48->35) + rounded shoulder (x:35->64->76)
+ * - e: clear lowercase loop (x:76->98->100->94)
+ * - l1: first tall ascender loop (x:94->120->110)
+ * - l2: second tall ascender loop (x:110->138->128)
+ * - o: clear oval loop with right exit stroke (x:128->160->175->160->200)
  */
-const HELLO_BEZIER_PATH = `
-  M 90,165 
-  C 105,130 115,75 125,45 
-  C 130,28 140,25 142,38 
-  C 145,55 130,120 120,175 
-  C 130,135 155,108 178,110 
-  C 192,112 196,128 190,145 
-  C 182,165 168,175 152,175 
-  C 142,175 132,165 142,145 
-  C 152,122 188,118 208,122 
-  C 228,126 238,155 228,172 
-  C 220,182 205,178 215,160 
-  C 230,135 255,80 262,48 
-  C 267,28 277,25 280,38 
-  C 285,60 265,145 258,175 
-  C 268,160 288,105 310,50 
-  C 316,32 326,28 329,40 
-  C 334,62 318,135 310,175 
-  C 325,160 348,125 372,120 
-  C 395,115 412,130 412,148 
-  C 412,168 395,178 375,178 
-  C 352,178 342,158 348,142 
-  C 358,120 395,115 418,128 
-  C 432,138 438,138 450,132
-`;
+export const READABLE_HELLO_PATH =
+  "M 25 85 C 32 60 42 25 48 15 C 52 10 40 40 35 85 C 35 55 52 48 64 48 C 74 48 76 70 76 85 C 82 66 94 52 102 52 C 108 52 108 62 98 72 C 88 82 82 78 94 68 C 104 52 116 28 122 15 C 126 10 114 45 110 85 C 118 52 132 28 138 15 C 142 10 130 45 128 85 C 136 68 152 48 165 48 C 178 48 184 62 174 76 C 162 90 148 78 162 60 C 170 48 185 48 200 48";
 
 const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete }) => {
   const shouldReduceMotion = useReducedMotion();
-  const [stage, setStage] = useState<"idle" | "playing" | "exiting" | "done">("idle");
+  const [stage, setStage] = useState<"idle" | "drawing" | "hold" | "retracting" | "done">("idle");
 
   useEffect(() => {
     if (!isActive) {
@@ -47,7 +29,7 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
     }
 
     if (shouldReduceMotion) {
-      setStage("playing");
+      setStage("hold");
       const timer = setTimeout(() => {
         setStage("done");
         if (onComplete) onComplete();
@@ -55,25 +37,29 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
       return () => clearTimeout(timer);
     }
 
-    setStage("playing");
+    // Step 1: Draw in (2.5s)
+    setStage("drawing");
 
-    // Exact cycle timing matching reference breakdown:
-    // 0.0s - 0.4s: Initial dot (0% - 12%)
-    // 0.4s - 2.5s: Continuous draw (12% - 45%)
-    // 2.5s - 4.2s: Hold stationary (45% - 70%)
-    // 4.2s - 5.8s: Trailing erase (70% - 90%)
-    // 5.8s - 6.2s: Fade exit & complete (90% - 100%)
-    const exitTimer = setTimeout(() => {
-      setStage("exiting");
-      const doneTimer = setTimeout(() => {
-        setStage("done");
-        if (onComplete) onComplete();
-      }, 400);
+    const holdTimer = setTimeout(() => {
+      // Step 2: Hold full word (1.5s)
+      setStage("hold");
 
-      return () => clearTimeout(doneTimer);
-    }, 5800);
+      const retractTimer = setTimeout(() => {
+        // Step 3: Retract / Erase in reverse (1.2s)
+        setStage("retracting");
 
-    return () => clearTimeout(exitTimer);
+        const doneTimer = setTimeout(() => {
+          setStage("done");
+          if (onComplete) onComplete();
+        }, 1200);
+
+        return () => clearTimeout(doneTimer);
+      }, 1500);
+
+      return () => clearTimeout(retractTimer);
+    }, 2500);
+
+    return () => clearTimeout(holdTimer);
   }, [isActive, shouldReduceMotion, onComplete]);
 
   if (!isActive || stage === "done") {
@@ -85,47 +71,40 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
       <motion.div
         key="hello-intro-overlay"
         initial={{ opacity: 0 }}
-        animate={{ opacity: stage === "exiting" ? 0 : 1 }}
+        animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.3 }}
         className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none select-none bg-[#FBF7ED] studio-noise-bg overflow-hidden"
         aria-hidden="true"
       >
-        {/* SUBTLE EDITORIAL PAPER BACKGROUND TEXTURE */}
-        <div className="absolute inset-0 bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.025] pointer-events-none" />
+        {/* QUIET EDITORIAL PAPER BG TEXTURE */}
+        <div className="absolute inset-0 bg-[radial-gradient(#1E1E1B_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.025] pointer-events-none" />
 
-        {/* CANVAS CONTAINER WITH EXACT SVG PATH & STROKE ANIMATION */}
-        <div className="w-[500px] max-w-[90vw] h-[220px] sm:h-[280px] flex items-center justify-center relative z-10">
+        {/* CENTERED SVG CONTAINER (Desktop: ~240-280px wide) */}
+        <div className="relative w-56 sm:w-64 md:w-72 h-auto aspect-[240/100] flex items-center justify-center z-10">
           <svg
-            viewBox="0 0 700 250"
-            className="w-full h-full overflow-visible drop-shadow-[0_4px_16px_rgba(32,37,43,0.06)]"
+            viewBox="0 0 240 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-full overflow-visible drop-shadow-[0_2px_10px_rgba(30,30,27,0.05)]"
           >
-            {/* CONTINUOUS SINGLE-STROKE BEZIER VECTOR */}
+            {/* Ink Charcoal Path (#1E1E1B) */}
             <motion.path
-              d={HELLO_BEZIER_PATH}
+              d={READABLE_HELLO_PATH}
               fill="none"
-              stroke="#20252B"
-              strokeWidth="7"
+              stroke="#1E1E1B"
+              strokeWidth="4.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeDasharray={2300}
-              initial={{ strokeDashoffset: 2300 }}
-              animate={
-                shouldReduceMotion
-                  ? { strokeDashoffset: 0 }
-                  : {
-                      strokeDashoffset: [2300, 2280, 0, 0, -2300, -2300],
-                    }
-              }
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0.2 }
-                  : {
-                      duration: 5.8,
-                      times: [0, 0.07, 0.43, 0.72, 0.96, 1],
-                      ease: "easeInOut",
-                    }
-              }
+              initial={{ pathLength: 0 }}
+              animate={{
+                pathLength:
+                  stage === "drawing" || stage === "hold" ? 1 : 0,
+              }}
+              transition={{
+                duration: stage === "drawing" ? 2.5 : stage === "retracting" ? 1.2 : 0,
+                ease: [0.4, 0, 0.2, 1],
+              }}
             />
           </svg>
         </div>
