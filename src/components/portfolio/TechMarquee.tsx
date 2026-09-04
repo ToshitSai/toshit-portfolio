@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const TECH_ITEMS: string[] = [
+  "Vercel",
   "Python",
   "Generative AI",
   "LangChain",
@@ -10,7 +11,6 @@ const TECH_ITEMS: string[] = [
   "React",
   "FastAPI",
   "Supabase",
-  "Vercel",
 ];
 
 const TechMarquee: React.FC = () => {
