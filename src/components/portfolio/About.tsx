@@ -35,7 +35,7 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-sans font-medium text-[24px] sm:text-[30px] md:text-[38px] lg:text-[44px] xl:text-[50px] leading-[1.16] tracking-[-0.01em] text-[#20252B] text-center mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[980px] mx-auto"
+            className="font-sans font-medium text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] xl:text-[34px] leading-[1.28] tracking-[-0.01em] text-[#20252B] text-center mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
           >
             I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and{" "}
             <YellowUnderline>
