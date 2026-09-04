@@ -2,6 +2,27 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
+const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="relative inline-block font-semibold text-[#333333]">
+    {children}
+    <svg
+      className="absolute -bottom-1 left-0 w-full h-[6px] text-[#FFD42A] overflow-visible pointer-events-none"
+      viewBox="0 0 160 8"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M1 5.5C40 2.5 105 7.5 159 3.5"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </span>
+);
+
 const About: React.FC = () => {
   return (
     <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-[#333333] overflow-hidden z-10 select-none">
