@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const CustomScrollbar: React.FC = () => {
   const location = useLocation();
   const trackRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentY = useRef(0);
   const targetY = useRef(0);
@@ -17,9 +20,12 @@ const CustomScrollbar: React.FC = () => {
       const docEl = document.documentElement;
       const body = document.body;
 
-      // Check if body scroll is locked by modal
+      // Check if body scroll is locked by loader or modal
       const isScrollLocked = window.getComputedStyle(body).overflow === "hidden";
-      if (isScrollLocked) return;
+      if (isScrollLocked) {
+        setIsVisible(false);
+        return;
+      }
 
       const scrollTop = window.scrollY || docEl.scrollTop || body.scrollTop || 0;
       const scrollHeight = Math.max(
@@ -51,6 +57,21 @@ const CustomScrollbar: React.FC = () => {
       }
     };
 
+    const handleScrollActivity = () => {
+      updateScrollProgress();
+
+      // Show scrollbar on scroll activity
+      setIsVisible(true);
+
+      // Auto-hide scrollbar after 1.2s of inactivity
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsVisible(false);
+      }, 1200);
+    };
+
     const renderLoop = () => {
       if (!prefersReducedMotion) {
         const diff = targetY.current - currentY.current;
@@ -68,7 +89,7 @@ const CustomScrollbar: React.FC = () => {
     };
 
     const onScroll = () => {
-      updateScrollProgress();
+      handleScrollActivity();
     };
 
     const onResize = () => {
@@ -89,6 +110,9 @@ const CustomScrollbar: React.FC = () => {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
@@ -98,7 +122,9 @@ const CustomScrollbar: React.FC = () => {
   return (
     <div
       aria-hidden="true"
-      className="fixed right-2 sm:right-4 top-5 bottom-5 z-[999] pointer-events-none select-none flex justify-center w-3"
+      className={`fixed right-2 sm:right-4 top-5 bottom-5 z-[999] pointer-events-none select-none flex justify-center w-3 transition-opacity duration-500 ease-out ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
     >
       {/* 1px Vertical Track Container */}
       <div
