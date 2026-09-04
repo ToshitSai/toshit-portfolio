@@ -7,15 +7,38 @@ interface HelloAnimationProps {
 }
 
 /**
- * Hand-drawn lowercase cursive "hello" vector stroke in viewBox 0 0 180 75.
- * Designed with connected brush-like handwriting character, rounded caps, and 4.5px stroke.
+ * Exact continuous single-stroke bezier vector matching the cursive "hello"
+ * ViewBox 0 0 700 250 | Pre-calculated path length ~2300px
  */
-const HELLO_SVG_PATH =
-  "M 20 68 C 28 48 36 14 40 12 C 43 10 30 32 26 68 C 26 48 38 40 48 40 C 55 40 56 56 56 68 C 56 70 64 54 72 44 C 80 34 70 34 62 44 C 54 52 60 68 70 67 C 80 66 88 48 96 26 C 102 12 92 30 86 68 C 86 70 96 54 104 38 C 112 24 120 12 122 12 C 125 12 112 30 106 68 C 106 70 116 52 126 44 C 134 36 148 41 148 52 C 148 64 133 68 126 58 C 122 51 128 41 138 41 C 148 41 160 45 172 43";
+const HELLO_BEZIER_PATH = `
+  M 90,165 
+  C 105,130 115,75 125,45 
+  C 130,28 140,25 142,38 
+  C 145,55 130,120 120,175 
+  C 130,135 155,108 178,110 
+  C 192,112 196,128 190,145 
+  C 182,165 168,175 152,175 
+  C 142,175 132,165 142,145 
+  C 152,122 188,118 208,122 
+  C 228,126 238,155 228,172 
+  C 220,182 205,178 215,160 
+  C 230,135 255,80 262,48 
+  C 267,28 277,25 280,38 
+  C 285,60 265,145 258,175 
+  C 268,160 288,105 310,50 
+  C 316,32 326,28 329,40 
+  C 334,62 318,135 310,175 
+  C 325,160 348,125 372,120 
+  C 395,115 412,130 412,148 
+  C 412,168 395,178 375,178 
+  C 352,178 342,158 348,142 
+  C 358,120 395,115 418,128 
+  C 432,138 438,138 450,132
+`;
 
 const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete }) => {
   const shouldReduceMotion = useReducedMotion();
-  const [stage, setStage] = useState<"idle" | "drawing" | "hold" | "retracting" | "endpoint" | "done">("idle");
+  const [stage, setStage] = useState<"idle" | "playing" | "exiting" | "done">("idle");
 
   useEffect(() => {
     if (!isActive) {
@@ -24,7 +47,7 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
     }
 
     if (shouldReduceMotion) {
-      setStage("hold");
+      setStage("playing");
       const timer = setTimeout(() => {
         setStage("done");
         if (onComplete) onComplete();
@@ -32,50 +55,29 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
       return () => clearTimeout(timer);
     }
 
-    // Specification Timeline:
-    // 0.00s: Start continuous handwritten pen stroke drawing
-    setStage("drawing");
+    setStage("playing");
 
-    // 2.80s: "hello" drawing complete -> Enter hold phase (1.6s hold)
-    const holdTimer = setTimeout(() => {
-      setStage("hold");
+    // Exact cycle timing matching reference breakdown:
+    // 0.0s - 0.4s: Initial dot (0% - 12%)
+    // 0.4s - 2.5s: Continuous draw (12% - 45%)
+    // 2.5s - 4.2s: Hold stationary (45% - 70%)
+    // 4.2s - 5.8s: Trailing erase (70% - 90%)
+    // 5.8s - 6.2s: Fade exit & complete (90% - 100%)
+    const exitTimer = setTimeout(() => {
+      setStage("exiting");
+      const doneTimer = setTimeout(() => {
+        setStage("done");
+        if (onComplete) onComplete();
+      }, 400);
 
-      // 1.6s hold -> Enter reverse stroke retraction / erase phase (1.2s duration)
-      const retractTimer = setTimeout(() => {
-        setStage("retracting");
+      return () => clearTimeout(doneTimer);
+    }, 5800);
 
-        // 1.2s retraction -> Enter tiny endpoint dot phase (200ms duration)
-        const endpointTimer = setTimeout(() => {
-          setStage("endpoint");
-
-          // 200ms endpoint dot -> Done & callback
-          const doneTimer = setTimeout(() => {
-            setStage("done");
-            if (onComplete) onComplete();
-          }, 200);
-
-          return () => clearTimeout(doneTimer);
-        }, 1200);
-
-        return () => clearTimeout(retractTimer);
-      }, 1600);
-
-      return () => clearTimeout(retractTimer);
-    }, 2800);
-
-    return () => clearTimeout(holdTimer);
+    return () => clearTimeout(exitTimer);
   }, [isActive, shouldReduceMotion, onComplete]);
 
   if (!isActive || stage === "done") {
     return null;
-  }
-
-  // Calculate pathLength target based on exact animation stage
-  let pathLengthTarget = 0;
-  if (stage === "drawing" || stage === "hold") {
-    pathLengthTarget = 1;
-  } else if (stage === "retracting" || stage === "endpoint") {
-    pathLengthTarget = 0;
   }
 
   return (
@@ -83,60 +85,48 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
       <motion.div
         key="hello-intro-overlay"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: stage === "exiting" ? 0 : 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none select-none bg-[#FBF7ED] studio-noise-bg overflow-hidden"
         aria-hidden="true"
       >
-        {/* QUIET EDITORIAL PAPER BG */}
-        <div className="absolute inset-0 bg-[radial-gradient(#1E1E1B_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.025] pointer-events-none" />
+        {/* SUBTLE EDITORIAL PAPER BACKGROUND TEXTURE */}
+        <div className="absolute inset-0 bg-[radial-gradient(#20252B_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.025] pointer-events-none" />
 
-        {/* CENTERED HANDWRITTEN SVG CONTAINER (Desktop: 200–240px wide, Mobile: 140–160px wide) */}
-        <div className="relative w-44 sm:w-56 md:w-64 h-auto aspect-[180/75] flex items-center justify-center z-10">
+        {/* CANVAS CONTAINER WITH EXACT SVG PATH & STROKE ANIMATION */}
+        <div className="w-[500px] max-w-[90vw] h-[220px] sm:h-[280px] flex items-center justify-center relative z-10">
           <svg
-            viewBox="0 0 180 75"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full overflow-visible drop-shadow-[0_2px_12px_rgba(30,30,27,0.06)]"
+            viewBox="0 0 700 250"
+            className="w-full h-full overflow-visible drop-shadow-[0_4px_16px_rgba(32,37,43,0.06)]"
           >
-            {/* Soft Charcoal Ink Path (#1E1E1B) */}
+            {/* CONTINUOUS SINGLE-STROKE BEZIER VECTOR */}
             <motion.path
-              d={HELLO_SVG_PATH}
+              d={HELLO_BEZIER_PATH}
               fill="none"
-              stroke="#1E1E1B"
-              strokeWidth="4.2"
+              stroke="#20252B"
+              strokeWidth="7"
               strokeLinecap="round"
               strokeLinejoin="round"
-              initial={{ pathLength: 0 }}
+              strokeDasharray={2300}
+              initial={{ strokeDashoffset: 2300 }}
               animate={
                 shouldReduceMotion
-                  ? { pathLength: 1 }
-                  : { pathLength: pathLengthTarget }
+                  ? { strokeDashoffset: 0 }
+                  : {
+                      strokeDashoffset: [2300, 2280, 0, 0, -2300, -2300],
+                    }
               }
               transition={
                 shouldReduceMotion
                   ? { duration: 0.2 }
                   : {
-                      duration: stage === "drawing" ? 2.8 : stage === "retracting" ? 1.2 : 0,
-                      ease: [0.4, 0, 0.2, 1], // Natural fluid pen motion
+                      duration: 5.8,
+                      times: [0, 0.07, 0.43, 0.72, 0.96, 1],
+                      ease: "easeInOut",
                     }
               }
             />
-
-            {/* Tiny Final Endpoint Dot (briefly remains at origin when retracting ends) */}
-            {(stage === "endpoint" || (stage === "retracting" && pathLengthTarget === 0)) && (
-              <motion.circle
-                cx="20"
-                cy="68"
-                r="2.2"
-                fill="#1E1E1B"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: stage === "endpoint" ? 1 : 0.6, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ duration: 0.15 }}
-              />
-            )}
           </svg>
         </div>
       </motion.div>
