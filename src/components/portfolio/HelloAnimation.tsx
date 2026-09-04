@@ -8,10 +8,10 @@ interface HelloAnimationProps {
 
 /**
  * Hand-drawn lowercase cursive "hello" SVG path data.
- * Single fluid continuous stroke in viewBox 0 0 160 65.
+ * Single fluid continuous pen stroke in viewBox 0 0 180 75.
  */
 const HELLO_SVG_PATH =
-  "M 14 52 C 22 34 32 12 36 10 C 39 8 26 28 20 52 C 20 36 32 28 42 28 C 49 28 50 44 50 52 C 50 54 56 42 62 34 C 68 26 60 26 52 34 C 46 40 50 52 60 51 C 68 50 76 36 84 18 C 90 7 82 22 76 52 C 76 54 84 42 92 28 C 98 16 106 7 108 7 C 111 7 100 22 94 52 C 94 54 102 40 112 32 C 120 25 132 30 132 40 C 132 50 119 54 112 45 C 108 39 114 30 124 30 C 132 30 142 34 152 32";
+  "M 20 68 C 28 48 36 14 40 12 C 43 10 30 32 26 68 C 26 48 38 40 48 40 C 55 40 56 56 56 68 C 56 70 64 54 72 44 C 80 34 70 34 62 44 C 54 52 60 68 70 67 C 80 66 88 48 96 26 C 102 12 92 30 86 68 C 86 70 96 54 104 38 C 112 24 120 12 122 12 C 125 12 112 30 106 68 C 106 70 116 52 126 44 C 134 36 148 41 148 52 C 148 64 133 68 126 58 C 122 51 128 41 138 41 C 148 41 160 45 172 43";
 
 const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete }) => {
   const shouldReduceMotion = useReducedMotion();
@@ -30,34 +30,34 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
         setTimeout(() => {
           setStage("done");
           if (onComplete) onComplete();
-        }, 300);
-      }, 500);
+        }, 400);
+      }, 600);
       return () => clearTimeout(timer);
     }
 
-    // Timeline:
-    // 0ms: Start stroke drawing
+    // Exact Specification Timeline:
+    // 0.00s: Start continuous pen stroke drawing
     setStage("drawing");
 
-    // 1100ms: Drawing complete -> Hold phase
+    // 2.30s: "hello" complete -> Enter hold phase (650ms hold)
     const holdTimer = setTimeout(() => {
       setStage("hold");
 
-      // 250ms hold -> Exit phase
+      // 650ms hold -> Enter smooth exit phase (400ms fade)
       const exitTimer = setTimeout(() => {
         setStage("exiting");
 
-        // 350ms exit fade -> Done
+        // 400ms exit fade -> Done & callback
         const doneTimer = setTimeout(() => {
           setStage("done");
           if (onComplete) onComplete();
-        }, 350);
+        }, 400);
 
         return () => clearTimeout(doneTimer);
-      }, 250);
+      }, 650);
 
       return () => clearTimeout(exitTimer);
-    }, 1100);
+    }, 2300);
 
     return () => clearTimeout(holdTimer);
   }, [isActive, shouldReduceMotion, onComplete]);
@@ -70,44 +70,89 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
     <AnimatePresence>
       <motion.div
         key="hello-intro-overlay"
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={{ opacity: 0 }}
         animate={{
           opacity: stage === "exiting" ? 0 : 1,
-          scale: stage === "exiting" ? 1.02 : 1,
+          scale: stage === "exiting" ? 1.015 : 1,
         }}
-        exit={{ opacity: 0, scale: 1.02 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none select-none"
+        exit={{ opacity: 0, scale: 1.015 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none select-none bg-[#171714] overflow-hidden"
         aria-hidden="true"
       >
-        {/* Soft Radial Ambient Highlight Centered Behind "hello" */}
-        <div className="absolute w-56 h-56 sm:w-72 sm:h-72 rounded-full bg-[#FFD42A]/20 blur-3xl pointer-events-none" />
+        {/* SUBTLE ATMOSPHERIC DARK BACKGROUND MOTION */}
+        {/* 1. Large Blurred Warm Gold Organic Glow Shape */}
+        <motion.div
+          animate={{
+            x: [-20, 20, -20],
+            y: [-15, 15, -15],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] rounded-full bg-[#FFD42A]/10 blur-[90px] pointer-events-none"
+        />
 
-        {/* Hand-drawn SVG Container (Desktop: ~135px wide, Mobile: ~95px wide) */}
-        <div className="relative w-24 sm:w-32 md:w-36 h-auto aspect-[160/65] flex items-center justify-center">
+        {/* 2. Secondary Warm Muted Gold Shape (#3A3728) */}
+        <motion.div
+          animate={{
+            x: [15, -15, 15],
+            y: [12, -12, 12],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute w-[260px] h-[260px] sm:w-[360px] sm:h-[360px] rounded-full bg-[#3A3728]/35 blur-[70px] pointer-events-none"
+        />
+
+        {/* 3. Thin Organic Ambient Line */}
+        <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
+          <motion.path
+            d="M -100 200 Q 400 100 900 300 T 1800 200"
+            fill="none"
+            stroke="#FFD42A"
+            strokeWidth="1"
+            animate={{
+              d: [
+                "M -100 200 Q 400 100 900 300 T 1800 200",
+                "M -100 220 Q 450 80 950 320 T 1800 180",
+                "M -100 200 Q 400 100 900 300 T 1800 200",
+              ],
+            }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </svg>
+
+        {/* CENTERED HANDWRITTEN SVG CONTAINER (Desktop: 220–250px wide, Mobile: 150px wide) */}
+        <div className="relative w-40 sm:w-56 md:w-64 h-auto aspect-[180/75] flex items-center justify-center z-10">
           <svg
-            viewBox="0 0 160 65"
+            viewBox="0 0 180 75"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full overflow-visible drop-shadow-[0_4px_16px_rgba(255,212,42,0.5)]"
+            className="w-full h-full overflow-visible drop-shadow-[0_2px_18px_rgba(247,241,230,0.18)]"
           >
-            {/* Soft guide stroke underlay */}
+            {/* Guide Stroke Underlay (Soft Cream Off-White #F7F1E6 at 12% opacity) */}
             <motion.path
               d={HELLO_SVG_PATH}
               fill="none"
-              stroke="#FFD42A"
-              strokeWidth="4.5"
+              stroke="#F7F1E6"
+              strokeWidth="3.4"
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity={0.2}
+              opacity={0.12}
             />
 
-            {/* Primary Hand-Drawn Cursive Stroke */}
+            {/* Primary Continuous Pen Stroke (#F7F1E6 Warm Cream) */}
             <motion.path
               d={HELLO_SVG_PATH}
               fill="none"
-              stroke="#FFD42A"
-              strokeWidth="3.6"
+              stroke="#F7F1E6"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
@@ -124,12 +169,26 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
                   ? { duration: 0.2 }
                   : {
                       pathLength: {
-                        duration: 1.1,
-                        ease: [0.45, 0, 0.55, 1], // Fluid organic stroke drawing
+                        duration: 2.3, // Exact 2.3s continuous stroke drawing speed
+                        ease: [0.4, 0, 0.2, 1], // Smooth organic pen movement
                       },
                       opacity: { duration: 0.1 },
                     }
               }
+            />
+
+            {/* Subtle Yellow Accent Endpoint Dot at the End of the "o" Loop */}
+            <motion.circle
+              cx="172"
+              cy="43"
+              r="2"
+              fill="#FFD42A"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{
+                scale: stage === "hold" || stage === "exiting" ? 1 : 0,
+                opacity: stage === "hold" || stage === "exiting" ? 0.9 : 0,
+              }}
+              transition={{ duration: 0.2 }}
             />
           </svg>
         </div>
