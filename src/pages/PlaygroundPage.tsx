@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Certificate3DCarousel } from "@/components/portfolio/Certificate3DCarousel";
 import CustomCursor from "@/components/portfolio/CustomCursor";
 
-// SOFT PLAYGROUND CANVAS TRANSITION (700-1100ms, cubic-bezier(0.16, 1, 0.3, 1))
+// EDITORIAL PLAYGROUND CANVAS TRANSITION (2026-09-04 DEPLOYMENT)
 const playgroundPageVariants = {
   initial: {
     opacity: 0,
