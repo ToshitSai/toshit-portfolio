@@ -25,7 +25,7 @@ const YellowUnderline: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="relative w-full py-24 sm:py-32 bg-[#e5e2db] text-[#333333] overflow-hidden z-10 select-none">
+    <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-[#333333] overflow-hidden z-10 select-none">
       <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
 
         {/* Display Heading Statement — Clickable to /about */}
