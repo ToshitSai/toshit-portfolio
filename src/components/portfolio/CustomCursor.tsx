@@ -116,12 +116,12 @@ const CustomCursor: React.FC = () => {
           }
         }
 
-        // 4. One-time Entry Pulse Animation (scale 1 -> 1.08 -> 1 over ~260ms)
+        // 4. One-time Entry Pulse Animation (scale 1 -> 1.06 -> 1 over ~240ms)
         if (isPulsing.current) {
           const t = Date.now() - (pulseScale.current || Date.now());
-          if (t < 260) {
-            const p = Math.sin((t / 260) * Math.PI);
-            pulseScale.current = 1 + p * 0.08;
+          if (t < 240) {
+            const p = Math.sin((t / 240) * Math.PI);
+            pulseScale.current = 1 + p * 0.06;
           } else {
             isPulsing.current = false;
             pulseScale.current = 1;
@@ -169,7 +169,7 @@ const CustomCursor: React.FC = () => {
       return;
     }
 
-    // 2. Project Card Hover
+    // 2. Project Card Hover -> Editorial Pill State
     const projectEl = target.closest('[data-cursor="project"], .group\\/project') as HTMLElement | null;
     if (projectEl) {
       const pId = projectEl.getAttribute("data-project-id") || projectEl.getAttribute("href") || "project";
@@ -343,19 +343,16 @@ const CustomCursor: React.FC = () => {
   const { mode, text, accentColor } = cursorState;
 
   // Mode Specs & Dimensions
+  const isProject = mode === "PROJECT";
+  const isInput = mode === "INPUT";
+
   let width = 38;
   let height = 38;
   let isLens = false;
   let showDot = true;
-  let isInput = false;
 
-  if (mode === "INPUT") {
-    isInput = true;
-  } else if (mode === "PROJECT") {
-    width = 66;
-    height = 66;
+  if (isProject) {
     showDot = false;
-    isLens = true;
   } else if (mode === "CERTIFICATE") {
     width = 54;
     height = 54;
@@ -392,64 +389,78 @@ const CustomCursor: React.FC = () => {
         willChange: "transform",
       }}
     >
-      {/* 1. MAIN CURSOR CONTAINER / CONTEXTUAL LENS RING */}
-      <div
-        className="relative flex items-center justify-center rounded-full transition-all duration-260 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{
-          width: `${width}px`,
-          height: `${height}px`,
-          border: `1px solid ${accentColor}`,
-          backgroundColor: mode === "PROJECT" ? "#1D2024" : "transparent",
-        }}
-      >
-        {/* DWELL PROGRESS CIRCULAR SVG ARC */}
-        {dwellProgress > 0 && (
-          <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox={`0 0 ${width} ${height}`}>
-            <circle
-              cx={width / 2}
-              cy={height / 2}
-              r={radius}
-              fill="none"
-              stroke="#FFD42A"
-              strokeWidth="2"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              className="transition-[stroke-dashoffset] duration-75 ease-linear"
-            />
-          </svg>
-        )}
-
-        {/* CONTEXTUAL LENS TOP & BOTTOM ARCS */}
-        {isLens && mode !== "PROJECT" && (
-          <>
-            <div
-              className="absolute -top-1 w-3 h-[2px] rounded-full transition-colors duration-200"
-              style={{ backgroundColor: accentColor }}
-            />
-            <div
-              className="absolute -bottom-1 w-3 h-[2px] rounded-full transition-colors duration-200"
-              style={{ backgroundColor: accentColor }}
-            />
-          </>
-        )}
-
-        {/* CONTEXTUAL TEXT LABEL */}
-        {text && (
-          <span
-            className="font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] whitespace-nowrap z-10 animate-in fade-in zoom-in-95 duration-180"
-            style={{ color: mode === "PROJECT" ? accentColor : "#191916" }}
-          >
-            {text}
-          </span>
-        )}
-      </div>
-
-      {/* 2. CENTER PRECISION POINTER DOT */}
-      {showDot && (
+      {/* 1. PROJECT HOVER STATE — DARK CHARCOAL EDITORIAL PILL */}
+      {isProject ? (
         <div
-          className="absolute w-[6px] h-[6px] rounded-full bg-[#191916] pointer-events-none transition-transform duration-180"
-        />
+          className="flex items-center justify-center rounded-full px-3.5 py-1.5 bg-[#1D1C18] border border-[#F6F0E4]/20 shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition-all duration-240 ease-[cubic-bezier(0.16,1,0.3,1)] animate-in fade-in zoom-in-90 duration-200"
+          style={{ height: "34px" }}
+        >
+          {/* TINY 4px PROJECT ACCENT DOT */}
+          <span
+            className="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0 shadow-xs"
+            style={{ backgroundColor: accentColor || "#FFD42A" }}
+          />
+
+          {/* EDITORIAL WARM CREAM TEXT LABEL */}
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#F6F0E4] whitespace-nowrap">
+            {text || "VIEW ↗"}
+          </span>
+        </div>
+      ) : (
+        /* 2. DEFAULT & OTHER MODES — CLEAN CIRCULAR LENS RING & DOT */
+        <div
+          className="relative flex items-center justify-center rounded-full transition-all duration-260 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+            border: `1px solid ${accentColor}`,
+            backgroundColor: "transparent",
+          }}
+        >
+          {/* DWELL PROGRESS CIRCULAR SVG ARC */}
+          {dwellProgress > 0 && (
+            <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox={`0 0 ${width} ${height}`}>
+              <circle
+                cx={width / 2}
+                cy={height / 2}
+                r={radius}
+                fill="none"
+                stroke="#FFD42A"
+                strokeWidth="2"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+                className="transition-[stroke-dashoffset] duration-75 ease-linear"
+              />
+            </svg>
+          )}
+
+          {/* CONTEXTUAL LENS TOP & BOTTOM ARCS */}
+          {isLens && (
+            <>
+              <div
+                className="absolute -top-1 w-3 h-[2px] rounded-full transition-colors duration-200"
+                style={{ backgroundColor: accentColor }}
+              />
+              <div
+                className="absolute -bottom-1 w-3 h-[2px] rounded-full transition-colors duration-200"
+                style={{ backgroundColor: accentColor }}
+              />
+            </>
+          )}
+
+          {/* CONTEXTUAL TEXT LABEL */}
+          {text && (
+            <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#191916] whitespace-nowrap z-10">
+              {text}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* 3. CENTER PRECISION POINTER DOT FOR DEFAULT MODES */}
+      {showDot && !isProject && (
+        <div className="absolute w-[6px] h-[6px] rounded-full bg-[#191916] pointer-events-none" />
       )}
     </div>
   );
