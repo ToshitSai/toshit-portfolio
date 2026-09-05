@@ -7,16 +7,30 @@ interface HelloAnimationProps {
 }
 
 /**
- * Clean, highly legible continuous cursive "hello" SVG path in viewBox 0 0 240 100.
- * Letter by letter breakdown:
- * - h: tall ascender loop (x:25->48->35) + rounded shoulder (x:35->64->76)
- * - e: clear lowercase loop (x:76->98->100->94)
- * - l1: first tall ascender loop (x:94->120->110)
- * - l2: second tall ascender loop (x:110->138->128)
- * - o: clear oval loop with right exit stroke (x:128->160->175->160->200)
+ * Pixel-perfect continuous single-stroke cursive "hello" matching user reference image.
+ * ViewBox 0 0 280 100.
  */
-export const READABLE_HELLO_PATH =
-  "M 25 85 C 32 60 42 25 48 15 C 52 10 40 40 35 85 C 35 55 52 48 64 48 C 74 48 76 70 76 85 C 82 66 94 52 102 52 C 108 52 108 62 98 72 C 88 82 82 78 94 68 C 104 52 116 28 122 15 C 126 10 114 45 110 85 C 118 52 132 28 138 15 C 142 10 130 45 128 85 C 136 68 152 48 165 48 C 178 48 184 62 174 76 C 162 90 148 78 162 60 C 170 48 185 48 200 48";
+export const EXACT_REFERENCE_HELLO_PATH = `
+  M 20 75 
+  C 28 62, 38 28, 48 18 
+  C 56 12, 60 22, 50 42 
+  C 44 54, 42 68, 42 80 
+  C 42 62, 58 50, 72 50 
+  C 82 50, 84 68, 84 80 
+  C 84 80, 94 62, 106 50 
+  C 114 42, 118 56, 108 68 
+  C 98 78, 90 78, 102 72 
+  C 102 72, 120 35, 132 18 
+  C 140 12, 144 22, 134 42 
+  C 128 54, 126 68, 126 80 
+  C 126 80, 144 35, 156 18 
+  C 164 12, 168 22, 158 42 
+  C 152 54, 150 68, 150 80 
+  C 150 80, 164 58, 178 50 
+  C 190 42, 200 58, 190 72 
+  C 180 84, 166 76, 178 58 
+  C 184 48, 204 52, 226 50
+`;
 
 const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete }) => {
   const shouldReduceMotion = useReducedMotion();
@@ -37,15 +51,15 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
       return () => clearTimeout(timer);
     }
 
-    // Step 1: Draw in (2.5s)
+    // Step 1: Draw in over 2.2s
     setStage("drawing");
 
     const holdTimer = setTimeout(() => {
-      // Step 2: Hold full word (1.5s)
+      // Step 2: Hold fully drawn for 1.2s
       setStage("hold");
 
       const retractTimer = setTimeout(() => {
-        // Step 3: Retract / Erase in reverse (1.2s)
+        // Step 3: Trailing left-to-right erase over 1.2s
         setStage("retracting");
 
         const doneTimer = setTimeout(() => {
@@ -54,10 +68,10 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
         }, 1200);
 
         return () => clearTimeout(doneTimer);
-      }, 1500);
+      }, 1200);
 
       return () => clearTimeout(retractTimer);
-    }, 2500);
+    }, 2200);
 
     return () => clearTimeout(holdTimer);
   }, [isActive, shouldReduceMotion, onComplete]);
@@ -80,20 +94,20 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
         {/* QUIET EDITORIAL PAPER BG TEXTURE */}
         <div className="absolute inset-0 bg-[radial-gradient(#1E1E1B_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.025] pointer-events-none" />
 
-        {/* CENTERED SVG CONTAINER (Desktop: ~240-280px wide) */}
-        <div className="relative w-56 sm:w-64 md:w-72 h-auto aspect-[240/100] flex items-center justify-center z-10">
+        {/* CENTERED SVG CONTAINER (Desktop: ~280-320px wide) */}
+        <div className="relative w-64 sm:w-72 md:w-80 h-auto aspect-[280/100] flex items-center justify-center z-10">
           <svg
-            viewBox="0 0 240 100"
+            viewBox="0 0 280 100"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full overflow-visible drop-shadow-[0_2px_10px_rgba(30,30,27,0.05)]"
           >
-            {/* Ink Charcoal Path (#1E1E1B) */}
+            {/* Ink Charcoal Path (#1E1E1B) matching exact reference font */}
             <motion.path
-              d={READABLE_HELLO_PATH}
+              d={EXACT_REFERENCE_HELLO_PATH}
               fill="none"
               stroke="#1E1E1B"
-              strokeWidth="4.5"
+              strokeWidth="6"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0 }}
@@ -102,7 +116,7 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
                   stage === "drawing" || stage === "hold" ? 1 : 0,
               }}
               transition={{
-                duration: stage === "drawing" ? 2.5 : stage === "retracting" ? 1.2 : 0,
+                duration: stage === "drawing" ? 2.2 : stage === "retracting" ? 1.2 : 0,
                 ease: [0.4, 0, 0.2, 1],
               }}
             />
