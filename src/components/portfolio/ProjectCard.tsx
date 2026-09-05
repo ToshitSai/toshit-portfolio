@@ -317,6 +317,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Open ${project.title}`}
+        data-cursor="project"
+        data-accent={project.accentColor}
         className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] bg-[#EFEAD8] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-all duration-500 ease-out hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80 sm:rounded-[34px] lg:rounded-[38px]`}
       >
         <ProjectDeviceScene project={project} />

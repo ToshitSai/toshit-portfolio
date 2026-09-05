@@ -401,6 +401,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                   navigateTo(index);
                 }
               }}
+              data-cursor="certificate"
               className="group cursor-pointer flex items-center justify-center"
             >
               {/* TIGHT ZERO-PADDING DOCUMENT WRAPPER */}
