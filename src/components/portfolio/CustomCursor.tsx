@@ -20,15 +20,16 @@ const CustomCursor: React.FC = () => {
 
   const shouldReduceMotion = useReducedMotion();
 
-  // Single Source of Truth Coordinates
-  const targetPos = useRef({ x: -100, y: -100 });
-  const currentPos = useRef({ x: -100, y: -100 });
+  // Pointer Position & Lerp Ref Coordinates
+  const mousePos = useRef({ x: -100, y: -100 });
+  const ringPos = useRef({ x: -100, y: -100 });
 
-  // Single DOM Ref for Coordinated Transform (Ring + Dot locked together)
-  const cursorRef = useRef<HTMLDivElement>(null);
+  // DOM Refs for GPU-accelerated translate3d transforms
+  const outerRingRef = useRef<HTMLDivElement>(null);
+  const innerDotRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
 
-  // Detect Touch / Coarse Pointer Support
+  // Touch & Fine Pointer Media Query Check
   useEffect(() => {
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
     const checkPointer = () => setIsTouchDevice(!mediaQuery.matches);
@@ -49,18 +50,23 @@ const CustomCursor: React.FC = () => {
     };
   }, []);
 
-  // Single Coordinated rAF Loop (15-20ms crisp follow, zero React re-renders)
+  // Coordinated Single requestAnimationFrame Loop for BOTH Inner Dot & Outer Ring
   useEffect(() => {
     if (isTouchDevice) return;
 
     const animate = () => {
-      const lerpFactor = shouldReduceMotion ? 1 : 0.40;
+      // 1. Inner Dot follows mouse EXACTLY via GPU-accelerated translate3d
+      if (innerDotRef.current) {
+        innerDotRef.current.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0) translate(-50%, -50%)`;
+      }
 
-      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * lerpFactor;
-      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * lerpFactor;
+      // 2. Outer Ring lerps toward mouse position (speed scales with distance)
+      const lerpFactor = shouldReduceMotion ? 1 : 0.22;
+      ringPos.current.x += (mousePos.current.x - ringPos.current.x) * lerpFactor;
+      ringPos.current.y += (mousePos.current.y - ringPos.current.y) * lerpFactor;
 
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0) translate(-50%, -50%)`;
+      if (outerRingRef.current) {
+        outerRingRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) translate(-50%, -50%)`;
       }
 
       rafId.current = requestAnimationFrame(animate);
@@ -69,16 +75,21 @@ const CustomCursor: React.FC = () => {
     rafId.current = requestAnimationFrame(animate);
 
     return () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
+      // Cancel animation frame loop on unmount to prevent memory leaks
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+      }
     };
   }, [isTouchDevice, shouldReduceMotion]);
 
-  // Unified Pointer Event Listener
+  // Pointer Move & Hover Mode State Machine
   useEffect(() => {
     if (isTouchDevice) return;
 
     const handlePointerMove = (e: PointerEvent) => {
-      targetPos.current = { x: e.clientX, y: e.clientY };
+      mousePos.current.x = e.clientX;
+      mousePos.current.y = e.clientY;
       if (!isVisible) setIsVisible(true);
 
       const target = e.target as HTMLElement | null;
@@ -125,7 +136,7 @@ const CustomCursor: React.FC = () => {
         return;
       }
 
-      // 4. DEFAULT
+      // 4. DEFAULT STATE
       setCursorState((prev) =>
         prev.mode === "DEFAULT"
           ? prev
@@ -151,7 +162,7 @@ const CustomCursor: React.FC = () => {
 
   const { mode, text, accentColor } = cursorState;
 
-  // Exact Dimensional Specs per Mode
+  // Dimensional Specs per Mode
   let outerSize = 40;
   let innerDotOpacity = 1;
   let innerDotSize = 6;
@@ -177,39 +188,47 @@ const CustomCursor: React.FC = () => {
 
   return (
     <div
-      ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none select-none z-[9999] flex items-center justify-center rounded-full"
-      style={{
-        width: `${outerSize}px`,
-        height: `${outerSize}px`,
-        border: `1px solid ${borderColor}`,
-        backgroundColor: bgColor,
-        opacity: isVisible ? 1 : 0,
-        transition: shouldReduceMotion
-          ? "opacity 0.15s ease"
-          : "width 240ms cubic-bezier(0.16, 1, 0.3, 1), height 240ms cubic-bezier(0.16, 1, 0.3, 1), border-color 240ms ease, background-color 240ms ease, opacity 150ms ease",
-        willChange: "transform, width, height",
-      }}
+      className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden"
+      style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.15s ease" }}
     >
-      {/* Inner Precision Center Dot (Nested directly inside unified wrapper) */}
+      {/* Outer Trailing Ring — Positioned via single rAF lerp translate3d */}
       <div
-        className="rounded-full bg-[#191916] pointer-events-none transition-all duration-200"
+        ref={outerRingRef}
+        className="fixed top-0 left-0 flex items-center justify-center rounded-full pointer-events-none select-none"
+        style={{
+          width: `${outerSize}px`,
+          height: `${outerSize}px`,
+          border: `1px solid ${borderColor}`,
+          backgroundColor: bgColor,
+          transition: shouldReduceMotion
+            ? "none"
+            : "width 220ms cubic-bezier(0.16, 1, 0.3, 1), height 220ms cubic-bezier(0.16, 1, 0.3, 1), border-color 220ms ease, background-color 220ms ease",
+          willChange: "transform",
+        }}
+      >
+        {/* VIEW / OPEN Typography Label */}
+        {text && (
+          <span
+            className="font-mono text-[9px] font-bold uppercase tracking-wider whitespace-nowrap"
+            style={{ color: accentColor || "#191916" }}
+          >
+            {text}
+          </span>
+        )}
+      </div>
+
+      {/* Inner Precision Center Dot — Positioned via single rAF exact mouse translate3d */}
+      <div
+        ref={innerDotRef}
+        className="fixed top-0 left-0 rounded-full bg-[#191916] pointer-events-none"
         style={{
           width: `${innerDotSize}px`,
           height: `${innerDotSize}px`,
           opacity: innerDotOpacity,
+          transition: "opacity 180ms ease, width 180ms ease, height 180ms ease",
+          willChange: "transform",
         }}
       />
-
-      {/* VIEW / OPEN Typography Label (Centered inside wrapper) */}
-      {text && (
-        <span
-          className="absolute inset-0 flex items-center justify-center font-mono text-[9px] font-bold uppercase tracking-wider whitespace-nowrap pointer-events-none"
-          style={{ color: accentColor || "#191916" }}
-        >
-          {text}
-        </span>
-      )}
     </div>
   );
 };
