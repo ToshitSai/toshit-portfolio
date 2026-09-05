@@ -297,6 +297,7 @@ const Hero: React.FC = () => {
 
           {/* ANIMATION E — Centered Interactive Now Building Card */}
           <motion.div
+            data-cursor="now-building"
             tabIndex={0}
             role="region"
             aria-label="Interactive Now Building Portfolio Easter Egg"
