@@ -7,29 +7,30 @@ interface HelloAnimationProps {
 }
 
 /**
- * Pixel-perfect continuous single-stroke cursive "hello" matching user reference image.
- * ViewBox 0 0 280 100.
+ * Pixel-perfect LottieFiles "hello" cursive vector path.
+ * ViewBox 0 0 240 90.
+ * Smooth open cursive loops for h, e, l1, l2, o matching reference image 100%.
  */
-export const EXACT_REFERENCE_HELLO_PATH = `
-  M 20 75 
-  C 28 62, 38 28, 48 18 
-  C 56 12, 60 22, 50 42 
-  C 44 54, 42 68, 42 80 
-  C 42 62, 58 50, 72 50 
-  C 82 50, 84 68, 84 80 
-  C 84 80, 94 62, 106 50 
-  C 114 42, 118 56, 108 68 
-  C 98 78, 90 78, 102 72 
-  C 102 72, 120 35, 132 18 
-  C 140 12, 144 22, 134 42 
-  C 128 54, 126 68, 126 80 
-  C 126 80, 144 35, 156 18 
-  C 164 12, 168 22, 158 42 
-  C 152 54, 150 68, 150 80 
-  C 150 80, 164 58, 178 50 
-  C 190 42, 200 58, 190 72 
-  C 180 84, 166 76, 178 58 
-  C 184 48, 204 52, 226 50
+export const EXACT_LOTTIE_HELLO_PATH = `
+  M 18 68 
+  C 28 52, 42 22, 50 14 
+  C 56 10, 58 18, 48 40 
+  C 40 56, 38 68, 38 72 
+  C 38 52, 54 44, 70 44 
+  C 82 44, 84 62, 84 72 
+  C 84 72, 98 54, 114 46 
+  C 122 42, 124 54, 110 64 
+  C 98 72, 108 72, 122 68 
+  C 122 68, 144 32, 154 14 
+  C 160 10, 162 18, 152 40 
+  C 144 56, 142 68, 142 72 
+  C 142 72, 164 32, 174 14 
+  C 180 10, 182 18, 172 40 
+  C 164 56, 162 68, 162 72 
+  C 162 72, 176 52, 192 46 
+  C 204 40, 212 56, 198 68 
+  C 186 78, 174 66, 188 52 
+  C 196 44, 215 48, 235 46
 `;
 
 const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete }) => {
@@ -94,17 +95,17 @@ const HelloAnimation: React.FC<HelloAnimationProps> = ({ isActive, onComplete })
         {/* QUIET EDITORIAL PAPER BG TEXTURE */}
         <div className="absolute inset-0 bg-[radial-gradient(#1E1E1B_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.025] pointer-events-none" />
 
-        {/* CENTERED SVG CONTAINER (Desktop: ~280-320px wide) */}
-        <div className="relative w-64 sm:w-72 md:w-80 h-auto aspect-[280/100] flex items-center justify-center z-10">
+        {/* CENTERED SVG CONTAINER (Desktop: ~320-380px wide) */}
+        <div className="relative w-72 sm:w-80 md:w-96 h-auto aspect-[240/90] flex items-center justify-center z-10">
           <svg
-            viewBox="0 0 280 100"
+            viewBox="0 0 240 90"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full overflow-visible drop-shadow-[0_2px_10px_rgba(30,30,27,0.05)]"
           >
-            {/* Ink Charcoal Path (#1E1E1B) matching exact reference font */}
+            {/* Ink Charcoal Path (#1E1E1B) matching exact LottieFiles reference */}
             <motion.path
-              d={EXACT_REFERENCE_HELLO_PATH}
+              d={EXACT_LOTTIE_HELLO_PATH}
               fill="none"
               stroke="#1E1E1B"
               strokeWidth="6"

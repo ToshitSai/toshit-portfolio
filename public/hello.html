@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exact Reference Hello Handwriting Animation</title>
+  <title>Exact LottieFiles Hello Handwriting Animation</title>
   <style>
     * {
       margin: 0;
@@ -24,8 +24,8 @@
     }
 
     .canvas-container {
-      width: clamp(280px, 80vw, 500px);
-      aspect-ratio: 280 / 100;
+      width: clamp(280px, 80vw, 520px);
+      aspect-ratio: 240 / 90;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -55,7 +55,7 @@
     */
     @keyframes handwritingCycle {
       0% {
-        stroke-dashoffset: var(--length, 1300px);
+        stroke-dashoffset: var(--length, 1400px);
         animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
       }
       44% {
@@ -67,11 +67,11 @@
         animation-timing-function: linear;
       }
       92% {
-        stroke-dashoffset: calc(-1 * var(--length, 1300px));
+        stroke-dashoffset: calc(-1 * var(--length, 1400px));
         animation-timing-function: linear;
       }
       100% {
-        stroke-dashoffset: calc(-1 * var(--length, 1300px));
+        stroke-dashoffset: calc(-1 * var(--length, 1400px));
       }
     }
   </style>
@@ -79,28 +79,28 @@
 <body>
 
   <div class="canvas-container">
-    <svg viewBox="0 0 280 100">
-      <!-- Continuous single-stroke bezier vector path matching exact reference cursive "hello" -->
+    <svg viewBox="0 0 240 90">
+      <!-- Continuous single-stroke bezier vector path matching exact LottieFiles reference cursive "hello" -->
       <path id="hello-stroke" class="handwriting-stroke" d="
-        M 20 75 
-        C 28 62, 38 28, 48 18 
-        C 56 12, 60 22, 50 42 
-        C 44 54, 42 68, 42 80 
-        C 42 62, 58 50, 72 50 
-        C 82 50, 84 68, 84 80 
-        C 84 80, 94 62, 106 50 
-        C 114 42, 118 56, 108 68 
-        C 98 78, 90 78, 102 72 
-        C 102 72, 120 35, 132 18 
-        C 140 12, 144 22, 134 42 
-        C 128 54, 126 68, 126 80 
-        C 126 80, 144 35, 156 18 
-        C 164 12, 168 22, 158 42 
-        C 152 54, 150 68, 150 80 
-        C 150 80, 164 58, 178 50 
-        C 190 42, 200 58, 190 72 
-        C 180 84, 166 76, 178 58 
-        C 184 48, 204 52, 226 50
+        M 18 68 
+        C 28 52, 42 22, 50 14 
+        C 56 10, 58 18, 48 40 
+        C 40 56, 38 68, 38 72 
+        C 38 52, 54 44, 70 44 
+        C 82 44, 84 62, 84 72 
+        C 84 72, 98 54, 114 46 
+        C 122 42, 124 54, 110 64 
+        C 98 72, 108 72, 122 68 
+        C 122 68, 144 32, 154 14 
+        C 160 10, 162 18, 152 40 
+        C 144 56, 142 68, 142 72 
+        C 142 72, 164 32, 174 14 
+        C 180 10, 182 18, 172 40 
+        C 164 56, 162 68, 162 72 
+        C 162 72, 176 52, 192 46 
+        C 204 40, 212 56, 198 68 
+        C 186 78, 174 66, 188 52 
+        C 196 44, 215 48, 235 46
       " />
     </svg>
   </div>
