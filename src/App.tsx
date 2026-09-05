@@ -40,6 +40,11 @@ const AnimatedAppRoutes: React.FC = () => {
 const AppLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden">
+      {/* MANDATORY TEMPORARY VISIBLE TEST MARKER */}
+      <div id="test-cursor-marker" className="fixed top-0 left-0 right-0 z-[99999] bg-red-600 text-white text-center font-bold py-2 text-xl shadow-2xl uppercase tracking-widest pointer-events-none">
+        CURSOR TEST MARKER ACTIVE
+      </div>
+
       {/* REFINED MINIMAL CUSTOM VERTICAL SCROLLBAR */}
       <CustomScrollbar />
 
