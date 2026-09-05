@@ -106,18 +106,29 @@
     scroll-behavior: smooth;
     background-color: #FFF8E8;
     color: #20252B;
-    cursor: auto !important;
   }
 
   body {
     @apply bg-background text-foreground antialiased selection:bg-yellow-accent selection:text-ink;
     font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
-    cursor: auto !important;
   }
 
-  a, button, [role="button"] {
-    cursor: pointer;
+  /* Global Cursor Suppression for Desktop & Fine Pointer Devices */
+  @media (hover: hover) and (pointer: fine) {
+    html,
+    body,
+    *,
+    *::before,
+    *::after,
+    a,
+    button,
+    input,
+    textarea,
+    select,
+    [role="button"] {
+      cursor: none !important;
+    }
   }
 
   p {

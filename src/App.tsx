@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "@/components/portfolio/Navbar";
 import CustomScrollbar from "@/components/portfolio/CustomScrollbar";
+import CustomCursor from "@/components/portfolio/CustomCursor";
 import Index from "./pages/Index";
 import ProjectsPage from "./pages/ProjectsPage";
 import AboutPage from "./pages/AboutPage";
@@ -40,6 +41,9 @@ const AnimatedAppRoutes: React.FC = () => {
 const AppLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden">
+      {/* HIGH PERFORMANCE GLOBAL CUSTOM CURSOR */}
+      <CustomCursor />
+
       {/* REFINED MINIMAL CUSTOM VERTICAL SCROLLBAR */}
       <CustomScrollbar />
 
