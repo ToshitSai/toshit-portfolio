@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useReducedMotion } from "framer-motion";
 
 export type CursorMode = "DEFAULT" | "PROJECT" | "CERTIFICATE" | "BUTTON" | "LINK";
@@ -158,7 +159,7 @@ const CustomCursor: React.FC = () => {
     };
   }, [isTouchDevice, isVisible]);
 
-  if (isTouchDevice) return null;
+  if (isTouchDevice || typeof document === "undefined") return null;
 
   const { mode, text, accentColor } = cursorState;
 
@@ -186,9 +187,9 @@ const CustomCursor: React.FC = () => {
     bgColor = "rgba(32, 37, 43, 0.06)";
   }
 
-  return (
+  const cursorNode = (
     <div
-      className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[2147483647] overflow-hidden"
       style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.15s ease" }}
     >
       {/* Outer Trailing Ring — Positioned via single rAF lerp translate3d */}
@@ -231,6 +232,8 @@ const CustomCursor: React.FC = () => {
       />
     </div>
   );
+
+  return createPortal(cursorNode, document.body);
 };
 
 export default CustomCursor;
