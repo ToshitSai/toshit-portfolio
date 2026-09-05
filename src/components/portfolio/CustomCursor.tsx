@@ -20,17 +20,15 @@ const CustomCursor: React.FC = () => {
 
   const shouldReduceMotion = useReducedMotion();
 
-  // Direct Coordinates and Interpolation Refs
-  const mousePos = useRef({ x: -100, y: -100 });
-  const cursorPos = useRef({ x: -100, y: -100 });
-  const magneticPos = useRef({ x: 0, y: 0 });
+  // Single Source of Truth Coordinates
+  const targetPos = useRef({ x: -100, y: -100 });
+  const currentPos = useRef({ x: -100, y: -100 });
 
-  // DOM Refs for high-performance rAF CSS transforms (zero React re-renders during movement)
-  const outerRingRef = useRef<HTMLDivElement>(null);
-  const innerDotRef = useRef<HTMLDivElement>(null);
+  // Single DOM Ref for Coordinated Transform (Ring + Dot locked together)
+  const cursorRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
 
-  // Touch & Fine Pointer Media Query Detection
+  // Detect Touch / Coarse Pointer Support
   useEffect(() => {
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
     const checkPointer = () => setIsTouchDevice(!mediaQuery.matches);
@@ -51,26 +49,18 @@ const CustomCursor: React.FC = () => {
     };
   }, []);
 
-  // High Performance rAF Interpolation Loop (~40ms lerp smoothing)
+  // Single Coordinated rAF Loop (15-20ms crisp follow, zero React re-renders)
   useEffect(() => {
     if (isTouchDevice) return;
 
-    const lerp = (start: number, end: number, factor: number) => start + (end - start) * factor;
-
     const animate = () => {
-      const lerpFactor = shouldReduceMotion ? 1 : 0.22;
+      const lerpFactor = shouldReduceMotion ? 1 : 0.40;
 
-      const targetX = mousePos.current.x + magneticPos.current.x;
-      const targetY = mousePos.current.y + magneticPos.current.y;
+      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * lerpFactor;
+      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * lerpFactor;
 
-      cursorPos.current.x = lerp(cursorPos.current.x, targetX, lerpFactor);
-      cursorPos.current.y = lerp(cursorPos.current.y, targetY, lerpFactor);
-
-      if (outerRingRef.current) {
-        outerRingRef.current.style.transform = `translate3d(${cursorPos.current.x}px, ${cursorPos.current.y}px, 0) translate(-50%, -50%)`;
-      }
-      if (innerDotRef.current) {
-        innerDotRef.current.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0) translate(-50%, -50%)`;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0) translate(-50%, -50%)`;
       }
 
       rafId.current = requestAnimationFrame(animate);
@@ -83,18 +73,18 @@ const CustomCursor: React.FC = () => {
     };
   }, [isTouchDevice, shouldReduceMotion]);
 
-  // Mouse Movement & Mode State Machine
+  // Unified Pointer Event Listener
   useEffect(() => {
     if (isTouchDevice) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
+    const handlePointerMove = (e: PointerEvent) => {
+      targetPos.current = { x: e.clientX, y: e.clientY };
       if (!isVisible) setIsVisible(true);
 
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
-      // 1. PROJECT HOVER DETECT
+      // 1. PROJECT HOVER
       const projectEl = target.closest(
         '[data-cursor="project"], .group\\/project, [data-project-card]'
       ) as HTMLElement | null;
@@ -105,11 +95,10 @@ const CustomCursor: React.FC = () => {
             ? prev
             : { mode: "PROJECT", text: "VIEW ↗", accentColor: accent }
         );
-        magneticPos.current = { x: 0, y: 0 };
         return;
       }
 
-      // 2. CERTIFICATE HOVER DETECT
+      // 2. CERTIFICATE HOVER
       const certEl = target.closest(
         '[data-cursor="certificate"], [aria-label*="Certificate"], .certificate-card'
       ) as HTMLElement | null;
@@ -119,29 +108,14 @@ const CustomCursor: React.FC = () => {
             ? prev
             : { mode: "CERTIFICATE", text: "OPEN ↗", accentColor: null }
         );
-        magneticPos.current = { x: 0, y: 0 };
         return;
       }
 
-      // 3. BUTTON & LINK HOVER DETECT (With Subtle 4-6px Magnetic Pull on Interactive Controls)
+      // 3. BUTTON & LINK HOVER
       const buttonEl = target.closest(
         'button, a, [role="button"], input, select, textarea, .cursor-pointer'
       ) as HTMLElement | null;
       if (buttonEl) {
-        const rect = buttonEl.getBoundingClientRect();
-        if (rect.width > 0 && rect.width < 280 && rect.height < 90 && !shouldReduceMotion) {
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const deltaX = (centerX - e.clientX) * 0.16;
-          const deltaY = (centerY - e.clientY) * 0.16;
-          magneticPos.current = {
-            x: Math.max(-6, Math.min(6, deltaX)),
-            y: Math.max(-6, Math.min(6, deltaY)),
-          };
-        } else {
-          magneticPos.current = { x: 0, y: 0 };
-        }
-
         const isBtn = buttonEl.tagName === "BUTTON" || buttonEl.getAttribute("role") === "button";
         setCursorState((prev) =>
           prev.mode === (isBtn ? "BUTTON" : "LINK")
@@ -151,8 +125,7 @@ const CustomCursor: React.FC = () => {
         return;
       }
 
-      // 4. DEFAULT STATE
-      magneticPos.current = { x: 0, y: 0 };
+      // 4. DEFAULT
       setCursorState((prev) =>
         prev.mode === "DEFAULT"
           ? prev
@@ -163,22 +136,22 @@ const CustomCursor: React.FC = () => {
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [isTouchDevice, isVisible, shouldReduceMotion]);
+  }, [isTouchDevice, isVisible]);
 
   if (isTouchDevice) return null;
 
   const { mode, text, accentColor } = cursorState;
 
-  // Dimensional Specs per Mode
+  // Exact Dimensional Specs per Mode
   let outerSize = 40;
   let innerDotOpacity = 1;
   let innerDotSize = 6;
@@ -204,46 +177,39 @@ const CustomCursor: React.FC = () => {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden"
-      style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.2s ease" }}
+      ref={cursorRef}
+      className="fixed top-0 left-0 pointer-events-none select-none z-[9999] flex items-center justify-center rounded-full"
+      style={{
+        width: `${outerSize}px`,
+        height: `${outerSize}px`,
+        border: `1px solid ${borderColor}`,
+        backgroundColor: bgColor,
+        opacity: isVisible ? 1 : 0,
+        transition: shouldReduceMotion
+          ? "opacity 0.15s ease"
+          : "width 240ms cubic-bezier(0.16, 1, 0.3, 1), height 240ms cubic-bezier(0.16, 1, 0.3, 1), border-color 240ms ease, background-color 240ms ease, opacity 150ms ease",
+        willChange: "transform, width, height",
+      }}
     >
-      {/* Outer Interpolated Ring */}
+      {/* Inner Precision Center Dot (Nested directly inside unified wrapper) */}
       <div
-        ref={outerRingRef}
-        className="fixed top-0 left-0 flex items-center justify-center rounded-full pointer-events-none select-none transition-all"
-        style={{
-          width: `${outerSize}px`,
-          height: `${outerSize}px`,
-          border: `1px solid ${borderColor}`,
-          backgroundColor: bgColor,
-          transitionDuration: shouldReduceMotion ? "0ms" : "280ms",
-          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-          willChange: "transform, width, height, border-color, background-color",
-        }}
-      >
-        {/* VIEW / OPEN Typography Label */}
-        {text && (
-          <span
-            className="font-mono text-[9px] font-bold uppercase tracking-wider whitespace-nowrap"
-            style={{ color: accentColor || "#191916" }}
-          >
-            {text}
-          </span>
-        )}
-      </div>
-
-      {/* Inner Precision Center Dot */}
-      <div
-        ref={innerDotRef}
-        className="fixed top-0 left-0 rounded-full bg-[#191916] pointer-events-none transition-all"
+        className="rounded-full bg-[#191916] pointer-events-none transition-all duration-200"
         style={{
           width: `${innerDotSize}px`,
           height: `${innerDotSize}px`,
           opacity: innerDotOpacity,
-          transitionDuration: "200ms",
-          willChange: "transform, opacity, width, height",
         }}
       />
+
+      {/* VIEW / OPEN Typography Label (Centered inside wrapper) */}
+      {text && (
+        <span
+          className="absolute inset-0 flex items-center justify-center font-mono text-[9px] font-bold uppercase tracking-wider whitespace-nowrap pointer-events-none"
+          style={{ color: accentColor || "#191916" }}
+        >
+          {text}
+        </span>
+      )}
     </div>
   );
 };
