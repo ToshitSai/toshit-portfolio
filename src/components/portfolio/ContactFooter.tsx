@@ -147,19 +147,9 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
     return () => window.removeEventListener("open-contact-drawer", handleOpenEvent);
   }, [setIsDrawerOpen]);
 
-  // System Node hover & cursor tracking state
+  // System Node hover state
   const [isHoveringStage, setIsHoveringStage] = useState(false);
   const [isTitleHovered, setIsTitleHovered] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!stageRef.current) return;
-    const rect = stageRef.current.getBoundingClientRect();
-    setCursorPos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
 
   const [formMountedAt, setFormMountedAt] = useState<number>(Date.now());
   const [formData, setFormData] = useState<ContactFormData>({
@@ -408,7 +398,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           ref={stageRef}
           onMouseEnter={() => setIsHoveringStage(true)}
           onMouseLeave={() => setIsHoveringStage(false)}
-          onMouseMove={handleMouseMove}
           onClick={() => setIsDrawerOpen(true)}
           className="relative w-full max-w-3xl h-[300px] sm:h-[360px] flex flex-col justify-between items-center cursor-pointer group select-none py-4 px-6 mb-10"
         >
@@ -454,23 +443,6 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
             <span>FIG 02. LIVE SYSTEM NODE</span>
             <span className="hidden sm:inline text-[#1B1B18]/40">CLICK TO CONNECT</span>
           </div>
-
-          {/* Hover Floating Cursor Tag */}
-          {isHoveringStage && (
-            <div
-              className="absolute pointer-events-none z-30 flex flex-col items-center transition-opacity duration-150"
-              style={{
-                left: cursorPos.x,
-                top: cursorPos.y - 20,
-                transform: "translate(-50%, -100%)",
-              }}
-            >
-              <span className="text-xl mb-1">⚡</span>
-              <span className="font-mono text-[10px] tracking-wider font-bold bg-[#D9A62C] text-[#1B1B18] px-2.5 py-1 rounded-md shadow-md whitespace-nowrap">
-                CLICK TO CONNECT
-              </span>
-            </div>
-          )}
         </motion.div>
 
 

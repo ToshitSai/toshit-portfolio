@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import ContactFooter from "@/components/portfolio/ContactFooter";
-import CustomCursor from "@/components/portfolio/CustomCursor";
 import ProjectGrid from "@/components/portfolio/ProjectGrid";
 import ProjectStoryViewer from "@/components/portfolio/ProjectStoryViewer";
 
@@ -27,8 +26,6 @@ const ProjectsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F2E6] text-[#1D2024] selection:bg-[#FFD42A] selection:text-[#1D2024] font-sans relative">
-      <CustomCursor />
-
       {/* STORY VIEWER OVERLAY FOR PROJECTS PAGE */}
       <ProjectStoryViewer
         projectSlug={activeSlug}

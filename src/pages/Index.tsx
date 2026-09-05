@@ -5,7 +5,6 @@ import TechMarquee from "@/components/portfolio/TechMarquee";
 import About from "@/components/portfolio/About";
 import AcademicJourney from "@/components/portfolio/AcademicJourney";
 import ContactFooter from "@/components/portfolio/ContactFooter";
-import CustomCursor from "@/components/portfolio/CustomCursor";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 import HelloAnimation from "@/components/portfolio/HelloAnimation";
 import SelectedWork from "@/components/portfolio/SelectedWork";
@@ -151,8 +150,6 @@ const Index = () => {
         isActive={isHelloActive}
         onComplete={handleHelloComplete}
       />
-
-      <CustomCursor />
       
       <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <Hero />

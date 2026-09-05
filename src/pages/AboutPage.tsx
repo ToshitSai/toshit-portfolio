@@ -3,7 +3,6 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "lucide-react";
 import ContactFooter from "@/components/portfolio/ContactFooter";
-import CustomCursor from "@/components/portfolio/CustomCursor";
 import Testimonials from "@/components/portfolio/Testimonials";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
@@ -318,8 +317,6 @@ const AboutPage: React.FC = () => {
       ref={containerRef}
       className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden"
     >
-      <CustomCursor />
-
       {/* MAIN ABOUT PAGE CONTENT */}
       <main className="relative z-10 pt-28 sm:pt-36 pb-24 sm:pb-32 select-none">
 

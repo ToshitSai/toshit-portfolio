@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Certificate3DCarousel } from "@/components/portfolio/Certificate3DCarousel";
-import CustomCursor from "@/components/portfolio/CustomCursor";
 
 // EDITORIAL PLAYGROUND CANVAS TRANSITION (2026-09-04 DEPLOYMENT)
 const playgroundPageVariants = {
@@ -44,8 +43,6 @@ const PlaygroundPage: React.FC = () => {
       exit="exit"
       className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden flex flex-col justify-between"
     >
-      <CustomCursor />
-
       {/* AMBIENT QUIET GALLERY CANVAS BACKGROUND DEPTH */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Soft Radial Ambient Lighting */}
