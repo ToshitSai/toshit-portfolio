@@ -1,92 +1,75 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
-interface FeedbackEntry {
+interface TestimonialItem {
   id: string;
   badge: string;
   name: string;
-  roleLine1: string;
-  roleLine2: string;
+  role: string;
+  company: string;
   quote: string;
-  metaTag: string;
 }
 
-const feedbackLogs: FeedbackEntry[] = [
+const testimonialsData: TestimonialItem[] = [
   {
-    id: "log-1",
+    id: "rec-1",
     badge: "RS",
     name: "Riya Sharma",
-    roleLine1: "AI Research Intern",
-    roleLine2: "Pixel Mind",
+    role: "AI Research Intern",
+    company: "Pixel Mind",
     quote: "What impressed me most was how quickly Toshit moved from an idea to a working AI application with a thoughtful interface.",
-    metaTag: "RE: HireScope",
   },
   {
-    id: "log-2",
+    id: "rec-2",
     badge: "AK",
     name: "Arjun Kapoor",
-    roleLine1: "Senior Engineer",
-    roleLine2: "NIAT Faculty",
+    role: "Senior Engineer",
+    company: "NIAT Faculty",
     quote: "Solid grasp of system design for someone early in their degree — the API architecture on CourseForge held up well under review.",
-    metaTag: "RE: CourseForge",
   },
   {
-    id: "log-3",
+    id: "rec-3",
     badge: "AM",
     name: "Arjun Mehta",
-    roleLine1: "Product Engineer",
-    roleLine2: "Nova Labs",
+    role: "Product Engineer",
+    company: "Nova Labs",
     quote: "Toshit has a strong instinct for turning AI ideas into polished, usable products. The combination of experimentation and web engineering really stands out.",
-    metaTag: "RE: Greetly",
   },
   {
-    id: "log-4",
+    id: "rec-4",
     badge: "KM",
     name: "Karan Malhotra",
-    roleLine1: "Software Engineer",
-    roleLine2: "BuildCraft",
+    role: "Software Engineer",
+    company: "BuildCraft",
     quote: "Toshit brings together modern AI tools, frontend development, and practical problem solving in a way that feels genuinely product-focused.",
-    metaTag: "RE: AI Systems",
   },
   {
-    id: "log-5",
+    id: "rec-5",
     badge: "NK",
     name: "Ananya Kapoor",
-    roleLine1: "Product Designer",
-    roleLine2: "Orbit Studio",
+    role: "Product Designer",
+    company: "Orbit Studio",
     quote: "The work feels both technical and creative. Toshit pays attention to interaction, presentation, and the actual usefulness of what he builds.",
-    metaTag: "RE: Avengers Doomsday",
   },
 ];
 
 const Testimonials: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const totalCount = feedbackLogs.length;
+  const total = testimonialsData.length;
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % totalCount);
-  }, [totalCount]);
+    setActiveIndex((prev) => (prev + 1) % total);
+  }, [total]);
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + totalCount) % totalCount);
-  }, [totalCount]);
+    setActiveIndex((prev) => (prev - 1 + total) % total);
+  }, [total]);
 
-  // Viewport resize listener
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Keyboard navigation
+  // Keyboard Navigation (Left / Right arrows)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") handlePrev();
@@ -96,277 +79,154 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Gentle auto rotation timer (5s per recommendation)
+  // Gentle Auto-Rotate (6s duration per recommendation, pauses on hover)
   useEffect(() => {
     if (isPaused || shouldReduceMotion) return;
 
     timerRef.current = setInterval(() => {
       handleNext();
-    }, 5000);
+    }, 6000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isPaused, shouldReduceMotion, handleNext]);
 
-  const getOffset = (index: number) => {
-    let diff = (index - activeIndex) % totalCount;
-    if (diff < -Math.floor(totalCount / 2)) diff += totalCount;
-    if (diff > Math.floor(totalCount / 2)) diff -= totalCount;
-    return diff;
-  };
+  const current = testimonialsData[activeIndex];
 
   return (
     <section
       id="feedback"
-      className="relative w-full py-24 sm:py-32 font-sans select-none overflow-hidden z-10 bg-[#FBF7ED] text-[#1E1E1B] border-t border-[#1E1E1B]/10"
-      aria-label="What people say - Recommendations"
+      className="relative w-full py-20 sm:py-28 lg:py-32 font-sans select-none overflow-hidden bg-[#FFF8E8] text-[#1D2024] border-t border-[#1D2024]/10"
+      aria-label="Recommendations and feedback"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      {/* ATMOSPHERIC ORGANIC BACKGROUND ELEMENTS */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Soft Warm Yellow Ambient Blob 1 */}
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  x: [0, 25, -15, 0],
-                  y: [0, -20, 15, 0],
-                  scale: [1, 1.08, 0.95, 1],
-                }
-          }
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-[#E5C158]/12 blur-3xl"
-        />
-
-        {/* Soft Warm Olive Ambient Blob 2 */}
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  x: [0, -30, 20, 0],
-                  y: [0, 25, -15, 0],
-                  scale: [1, 0.92, 1.06, 1],
-                }
-          }
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-24 right-1/4 w-[28rem] h-[28rem] rounded-full bg-[#A8B08D]/15 blur-3xl"
-        />
-
-        {/* Quiet Paper Noise / Dot Pattern Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(#1E1E1B_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.025]" />
+      {/* ATMOSPHERIC DECORATIVE CANVAS */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-[#FFD42A]/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(#1D2024_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.02]" />
       </div>
 
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
+      <div className="max-w-[1120px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
 
-        {/* SECTION LABEL & EDITORIAL HEADING */}
-        <div className="mb-14 sm:mb-20 max-w-2xl">
-          <div className="flex items-center gap-2.5 mb-4">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#E5C158] inline-block shadow-xs" />
-            <span className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-[#1E1E1B]/70 font-medium">
-              ● WHAT PEOPLE SAY
+        {/* 1. SECTION LABEL & EDITORIAL HEADING */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-12 sm:mb-16 max-w-2xl"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#FFD42A] inline-block shadow-xs" />
+            <span className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-[#1D2024]/60 font-semibold">
+              ● WORDS FROM OTHERS
             </span>
           </div>
 
-          <h2
-            style={{ fontFamily: "'Instrument Serif', serif" }}
-            className="font-normal text-3xl sm:text-4xl lg:text-5xl text-[#1E1E1B] tracking-tight leading-[1.15]"
-          >
-            Good work tends to leave a trace.
+          <h2 className="font-sans text-3xl sm:text-4xl lg:text-[46px] font-medium tracking-tight text-[#1D2024] leading-[1.12]">
+            A few words from people I&apos;ve built with.
           </h2>
-        </div>
+          <div className="mt-2 w-24 h-[3px] bg-[#FFD42A] rounded-full" />
+        </motion.div>
 
-        {/* FLOATING COLLAGE CAROUSEL STAGE */}
-        <div
-          className="relative w-full min-h-[380px] sm:min-h-[440px] flex items-center justify-center my-4"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div className="relative w-full max-w-[800px] h-[340px] sm:h-[370px] flex items-center justify-center">
-            {feedbackLogs.map((item, index) => {
-              const diff = getOffset(index);
-              const isCenter = diff === 0;
-              const isLeft1 = diff === -1;
-              const isRight1 = diff === 1;
-              const isLeft2 = diff === -2;
-              const isRight2 = diff === 2;
-
-              // Deterministic Collage Positioning Configuration
-              let xPos = "0%";
-              let yPos = 0;
-              let scale = 1;
-              let opacity = 1;
-              let rotate = 0;
-              let zIndex = 30;
-
-              if (isCenter) {
-                xPos = "0%";
-                yPos = 0;
-                scale = 1;
-                opacity = 1;
-                rotate = 0;
-                zIndex = 30;
-              } else if (isLeft1) {
-                xPos = isMobile ? "-86%" : "-56%";
-                yPos = isMobile ? -6 : -14;
-                scale = 0.94;
-                opacity = 0.65;
-                rotate = -2.2;
-                zIndex = 20;
-              } else if (isRight1) {
-                xPos = isMobile ? "86%" : "56%";
-                yPos = isMobile ? 6 : 12;
-                scale = 0.94;
-                opacity = 0.65;
-                rotate = 1.8;
-                zIndex = 20;
-              } else if (isLeft2) {
-                xPos = isMobile ? "-140%" : "-102%";
-                yPos = 16;
-                scale = 0.86;
-                opacity = isMobile ? 0 : 0.35;
-                rotate = -3.5;
-                zIndex = 10;
-              } else if (isRight2) {
-                xPos = isMobile ? "140%" : "102%";
-                yPos = -12;
-                scale = 0.86;
-                opacity = isMobile ? 0 : 0.35;
-                rotate = 2.5;
-                zIndex = 10;
-              } else {
-                xPos = diff > 0 ? "160%" : "-160%";
-                yPos = 0;
-                scale = 0.75;
-                opacity = 0;
-                rotate = 0;
-                zIndex = 0;
+        {/* 2. MAIN SINGLE QUOTE CONTAINER (NO STACKED CARDS) */}
+        <div className="min-h-[260px] sm:min-h-[280px] flex flex-col justify-between max-w-[860px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.id}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0.2 }
+                  : { duration: 0.45, ease: [0.16, 1, 0.3, 1] }
               }
+              className="flex flex-col justify-between"
+            >
+              {/* HERO QUOTE TEXT */}
+              <div className="relative pl-1 sm:pl-2">
+                <span className="absolute -left-5 sm:-left-7 top-0 font-serif text-3xl sm:text-4xl text-[#FFD42A] select-none leading-none">
+                  “
+                </span>
+                <blockquote className="font-sans text-xl sm:text-2xl lg:text-3xl font-normal leading-[1.38] text-[#1D2024] tracking-tight">
+                  {current.quote}
+                </blockquote>
+              </div>
 
-              return (
-                <motion.div
-                  key={item.id}
-                  onClick={() => {
-                    if (diff < 0) handlePrev();
-                    if (diff > 0) handleNext();
-                  }}
-                  drag={isCenter ? "x" : false}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  onDragEnd={(_, info) => {
-                    if (info.offset.x < -40) handleNext();
-                    if (info.offset.x > 40) handlePrev();
-                  }}
-                  animate={{
-                    x: xPos,
-                    y: shouldReduceMotion ? 0 : yPos,
-                    scale: scale,
-                    opacity: opacity,
-                    rotate: shouldReduceMotion ? 0 : rotate,
-                    zIndex: zIndex,
-                  }}
-                  whileHover={
-                    isCenter
-                      ? {
-                          y: -5,
-                          boxShadow: "0 22px 45px rgba(30, 30, 25, 0.08)",
-                          transition: { duration: 0.25, ease: "easeOut" },
-                        }
-                      : { opacity: 0.85, cursor: "pointer" }
-                  }
-                  transition={
-                    shouldReduceMotion
-                      ? { duration: 0.2 }
-                      : {
-                          duration: 0.75,
-                          ease: [0.16, 1, 0.3, 1],
-                        }
-                  }
-                  style={{
-                    willChange: "transform, opacity",
-                  }}
-                  className={`absolute top-0 w-[90vw] sm:w-full max-w-[620px] h-full p-6 sm:p-9 rounded-2xl sm:rounded-3xl border border-[#1E1E1B]/10 bg-[#FFFDF9]/85 backdrop-blur-md text-[#1E1E1B] shadow-[0_12px_36px_rgba(30,30,25,0.04)] flex flex-col justify-between select-none ${
-                    isCenter ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
-                  }`}
-                >
-                  {/* CARD HEADER: SMALL CIRCULAR MONOGRAM & IDENTITY */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3.5">
-                      {/* Monogram Circle Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-[#1E1E1B] text-[#FBF7ED] font-mono text-xs font-semibold flex items-center justify-center shrink-0 shadow-xs">
-                        {item.badge}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-base sm:text-lg text-[#1E1E1B] leading-snug">
-                          {item.name}
-                        </h3>
-                        <p className="font-mono text-xs text-[#1E1E1B]/60 tracking-wide mt-0.5">
-                          {item.roleLine1} {item.roleLine2 ? `· ${item.roleLine2}` : ""}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Subtle Context Tag */}
-                    {item.metaTag && (
-                      <span className="font-mono text-[10px] tracking-wider text-[#1E1E1B]/60 bg-[#1E1E1B]/5 border border-[#1E1E1B]/10 px-2.5 py-1 rounded-full shrink-0">
-                        {item.metaTag}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* QUOTE TEXT BODY */}
-                  <div className="my-auto py-3">
-                    <p className="text-base sm:text-lg md:text-xl text-[#1E1E1B] font-normal leading-relaxed tracking-tight">
-                      <span className="text-[#E5C158] font-serif text-2xl inline-block mr-1">“</span>
-                      {item.quote}
-                    </p>
-                  </div>
-
-                  {/* SUBTLE FOOTER ACCENT LINE */}
-                  <div className="pt-2">
-                    <div className="w-7 h-[2px] rounded-full bg-[#E5C158]" />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+              {/* PERSON IDENTITY (NAME, ROLE, BADGE MONOGRAM) */}
+              <div className="mt-8 sm:mt-10 flex items-center gap-4">
+                <div className="w-11 h-11 rounded-full bg-[#1D2024] text-[#FFF8E8] font-mono text-xs font-semibold flex items-center justify-center shrink-0 ring-2 ring-[#FFD42A]/60 shadow-xs">
+                  {current.badge}
+                </div>
+                <div>
+                  <h3 className="font-sans text-base sm:text-lg font-semibold text-[#1D2024] leading-tight">
+                    {current.name}
+                  </h3>
+                  <p className="font-mono text-xs sm:text-sm text-[#1D2024]/60 tracking-wide mt-0.5">
+                    {current.role} <span className="mx-1 text-[#FFD42A]">·</span> {current.company}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* EDITORIAL FOOTER: ANIMATED COUNTER & ARROW NAVIGATION */}
-        <div className="flex items-center justify-between max-w-[620px] mx-auto pt-6 px-2">
-          {/* VERTICALLY ANIMATED MONOSPACE COUNTER */}
-          <div className="font-mono text-xs tracking-widest text-[#1E1E1B]/70 font-medium flex items-center gap-1 overflow-hidden h-6">
-            <div className="relative w-6 h-full flex items-center justify-center overflow-hidden">
-              <AnimatePresence mode="popLayout">
-                <motion.span
-                  key={activeIndex}
-                  initial={{ y: 12, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -12, opacity: 0 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 flex items-center justify-center"
-                >
-                  {String(activeIndex + 1).padStart(2, "0")}
-                </motion.span>
-              </AnimatePresence>
+        {/* 3. EDITORIAL FOOTER: ANIMATED MONO COUNTER & ARROW NAVIGATION */}
+        <div className="mt-12 sm:mt-16 pt-6 border-t border-[#1D2024]/10 flex items-center justify-between max-w-[860px]">
+          {/* MONOSPACE COUNTER & PROGRESS INDICATOR */}
+          <div className="flex items-center gap-4">
+            <div className="font-mono text-xs sm:text-sm tracking-widest text-[#1D2024]/70 font-semibold flex items-center gap-1">
+              <div className="relative w-6 h-5 overflow-hidden">
+                <AnimatePresence mode="popLayout">
+                  <motion.span
+                    key={activeIndex}
+                    initial={{ y: 12, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -12, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-0 flex items-center justify-center font-bold text-[#1D2024]"
+                  >
+                    {String(activeIndex + 1).padStart(2, "0")}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+              <span className="text-[#1D2024]/40">/</span>
+              <span className="text-[#1D2024]/50">{String(total).padStart(2, "0")}</span>
             </div>
-            <span>/</span>
-            <span>{String(totalCount).padStart(2, "0")}</span>
+
+            {/* Subtle Progress Bar */}
+            <div className="hidden sm:flex items-center gap-1.5 ml-2">
+              {testimonialsData.map((item, idx) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveIndex(idx)}
+                  aria-label={`Go to recommendation ${idx + 1}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    idx === activeIndex
+                      ? "w-7 bg-[#FFD42A]"
+                      : "w-1.5 bg-[#1D2024]/18 hover:bg-[#1D2024]/40"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* MINIMAL EDITORIAL ARROW CONTROLS */}
+          {/* MINIMAL ARROW CONTROLS */}
           <div className="flex items-center gap-3">
             <button
               onClick={handlePrev}
               aria-label="Previous recommendation"
-              className="w-10 h-10 rounded-full border border-[#1E1E1B]/15 bg-white/60 text-[#1E1E1B] hover:bg-[#1E1E1B] hover:text-[#FBF7ED] hover:border-[#1E1E1B] transition-all flex items-center justify-center text-sm cursor-pointer shadow-xs active:scale-95"
+              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
             >
               ←
             </button>
             <button
               onClick={handleNext}
               aria-label="Next recommendation"
-              className="w-10 h-10 rounded-full border border-[#1E1E1B]/15 bg-white/60 text-[#1E1E1B] hover:bg-[#1E1E1B] hover:text-[#FBF7ED] hover:border-[#1E1E1B] transition-all flex items-center justify-center text-sm cursor-pointer shadow-xs active:scale-95"
+              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
             >
               →
             </button>
