@@ -57,17 +57,36 @@ const Testimonials: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  
+  // Timer & Touch Swipe Refs
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
 
   const total = testimonialsData.length;
 
+  // Single Source of Truth Navigation Helpers
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
   const handleNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % total);
-  }, [total]);
+    resetTimer();
+  }, [total, resetTimer]);
 
   const handlePrev = useCallback(() => {
     setActiveIndex((prev) => (prev - 1 + total) % total);
-  }, [total]);
+    resetTimer();
+  }, [total, resetTimer]);
+
+  const goToIndex = useCallback((idx: number) => {
+    setActiveIndex(idx);
+    resetTimer();
+  }, [resetTimer]);
 
   // Keyboard Navigation (Left / Right arrows)
   useEffect(() => {
@@ -79,18 +98,61 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Gentle Auto-Rotate (6s duration per recommendation, pauses on hover)
+  // Page Visibility Listener (Pause rotation when tab is hidden)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsPaused(true);
+      } else {
+        setIsPaused(false);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  // Automatic Rotation System (4.8s Display Hold Interval)
   useEffect(() => {
     if (isPaused || shouldReduceMotion) return;
 
     timerRef.current = setInterval(() => {
-      handleNext();
-    }, 6000);
+      setActiveIndex((prev) => (prev + 1) % total);
+    }, 4800);
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     };
-  }, [isPaused, shouldReduceMotion, handleNext]);
+  }, [isPaused, shouldReduceMotion, total]);
+
+  // Touch Swipe Handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    setIsPaused(true);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setIsPaused(false);
+    if (touchStartX.current === null || touchStartY.current === null) return;
+
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Trigger horizontal swipe only when X movement dominates vertical scroll
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+      if (deltaX < 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   const current = testimonialsData[activeIndex];
 
@@ -101,6 +163,10 @@ const Testimonials: React.FC = () => {
       aria-label="Recommendations and feedback"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* ATMOSPHERIC DECORATIVE CANVAS */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
@@ -131,18 +197,30 @@ const Testimonials: React.FC = () => {
           <div className="mt-2 w-24 h-[3px] bg-[#FFD42A] rounded-full" />
         </motion.div>
 
-        {/* 2. MAIN SINGLE QUOTE CONTAINER (NO STACKED CARDS) */}
+        {/* 2. MAIN SINGLE QUOTE CONTAINER (STABLE HEIGHT - NO LAYOUT SHIFT) */}
         <div className="min-h-[260px] sm:min-h-[280px] flex flex-col justify-between max-w-[860px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={current.id}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
+              initial={
+                shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: 18, filter: "blur(2px)" }
+              }
+              animate={
+                shouldReduceMotion
+                  ? { opacity: 1 }
+                  : { opacity: 1, y: 0, filter: "blur(0px)" }
+              }
+              exit={
+                shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: -16, filter: "blur(2px)" }
+              }
               transition={
                 shouldReduceMotion
                   ? { duration: 0.2 }
-                  : { duration: 0.45, ease: [0.16, 1, 0.3, 1] }
+                  : { duration: 0.72, ease: [0.16, 1, 0.3, 1] }
               }
               className="flex flex-col justify-between"
             >
@@ -157,7 +235,16 @@ const Testimonials: React.FC = () => {
               </div>
 
               {/* PERSON IDENTITY (NAME, ROLE, BADGE MONOGRAM) */}
-              <div className="mt-8 sm:mt-10 flex items-center gap-4">
+              <motion.div
+                initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
+                animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
+                transition={
+                  shouldReduceMotion
+                    ? {}
+                    : { duration: 0.55, delay: 0.06, ease: [0.16, 1, 0.3, 1] }
+                }
+                className="mt-8 sm:mt-10 flex items-center gap-4"
+              >
                 <div className="w-11 h-11 rounded-full bg-[#1D2024] text-[#FFF8E8] font-mono text-xs font-semibold flex items-center justify-center shrink-0 ring-2 ring-[#FFD42A]/60 shadow-xs">
                   {current.badge}
                 </div>
@@ -169,7 +256,7 @@ const Testimonials: React.FC = () => {
                     {current.role} <span className="mx-1 text-[#FFD42A]">·</span> {current.company}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -186,7 +273,7 @@ const Testimonials: React.FC = () => {
                     initial={{ y: 12, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -12, opacity: 0 }}
-                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute inset-0 flex items-center justify-center font-bold text-[#1D2024]"
                   >
                     {String(activeIndex + 1).padStart(2, "0")}
@@ -202,7 +289,7 @@ const Testimonials: React.FC = () => {
               {testimonialsData.map((item, idx) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveIndex(idx)}
+                  onClick={() => goToIndex(idx)}
                   aria-label={`Go to recommendation ${idx + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                     idx === activeIndex
