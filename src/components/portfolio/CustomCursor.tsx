@@ -1,76 +1,58 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useReducedMotion } from "framer-motion";
 
 export type CursorMode =
   | "DEFAULT"
   | "PROJECT"
-  | "NOW_BUILDING"
+  | "CERTIFICATE"
   | "SAY_HI"
   | "OPEN"
   | "BUTTON"
-  | "LINK";
+  | "LINK"
+  | "INPUT";
 
 interface CursorState {
   mode: CursorMode;
   text: string;
-  accentColor: string | null;
+  accentColor: string;
+  projectId: string | null;
 }
 
-interface Ripple {
-  id: number;
-  x: number;
-  y: number;
-}
-
-interface TrailPoint {
-  x: number;
-  y: number;
-}
+const DEFAULT_STATE: CursorState = {
+  mode: "DEFAULT",
+  text: "",
+  accentColor: "rgba(25, 25, 22, 0.22)",
+  projectId: null,
+};
 
 const CustomCursor: React.FC = () => {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [ripples, setRipples] = useState<Ripple[]>([]);
-  const [trail, setTrail] = useState<TrailPoint[]>([]);
+  const [cursorState, setCursorState] = useState<CursorState>(DEFAULT_STATE);
 
-  const [cursorState, setCursorState] = useState<CursorState>({
-    mode: "DEFAULT",
-    text: "",
-    accentColor: null,
-  });
+  // Single Source of Position Coordinates
+  const pointerPos = useRef({ x: -100, y: -100 });
+  const cursorPos = useRef({ x: -100, y: -100 });
+  const isPointerInitialized = useRef(false);
 
-  const shouldReduceMotion = useReducedMotion();
+  // State Refs for RAF loop access without re-renders
+  const stateRef = useRef<CursorState>(DEFAULT_STATE);
+  stateRef.current = cursorState;
 
-  // Pointer & Motion Coordinates
-  const mousePos = useRef({ x: -100, y: -100 });
-  const ringPos = useRef({ x: -100, y: -100 });
-  const prevRingPos = useRef({ x: -100, y: -100 });
+  // Dwell Indicator Refs
+  const dwellTimer = useRef<number>(0);
+  const isDwelling = useRef(false);
+  const [dwellProgress, setDwellProgress] = useState(0); // 0 to 1
 
-  // Spring Physics for Inertial Squash & Stretch
-  const springRef = useRef({
-    stretch: 1,
-    squash: 1,
-    angle: 0,
-  });
+  // Entry Pulse Ref
+  const lastProjectId = useRef<string | null>(null);
+  const isPulsing = useRef(false);
+  const pulseScale = useRef(1);
 
-  // Weather-Aware Idle State Refs
-  const idleTimer = useRef(0);
-  const isIdleRef = useRef(false);
-  const idleFloatTime = useRef(0);
-
-  // Magnetic Snap Target Ref
-  const magneticTargetRef = useRef<{ x: number; y: number; el: HTMLElement } | null>(null);
-
-  // Trail Points Buffer
-  const trailRef = useRef<TrailPoint[]>([]);
-
-  // DOM Refs for GPU-accelerated translate3d transforms
-  const outerRingRef = useRef<HTMLDivElement>(null);
-  const innerDotRef = useRef<HTMLDivElement>(null);
+  // DOM Refs for Single Root & Sub-parts
+  const rootRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
 
-  // Touch & Fine Pointer Media Query Check
+  // Check Touch Device Capability
   useEffect(() => {
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
     const checkPointer = () => setIsTouchDevice(!mediaQuery.matches);
@@ -91,105 +73,75 @@ const CustomCursor: React.FC = () => {
     };
   }, []);
 
-  // Coordinated Unified Single requestAnimationFrame Loop
+  // Single Unified rAF Animation & Position Update Loop
   useEffect(() => {
     if (isTouchDevice) return;
 
     let frameCount = 0;
+    let prevMouseX = -100;
+    let prevMouseY = -100;
 
     const animate = () => {
       frameCount++;
 
-      const mouseX = mousePos.current.x;
-      const mouseY = mousePos.current.y;
+      const pX = pointerPos.current.x;
+      const pY = pointerPos.current.y;
 
-      // 1. Weather-Aware Idle Detection & Cloud Drift
-      const distMoved = Math.hypot(mouseX - prevRingPos.current.x, mouseY - prevRingPos.current.y);
-      if (distMoved < 0.3) {
-        idleTimer.current += 1;
-      } else {
-        idleTimer.current = 0;
-        isIdleRef.current = false;
-      }
+      if (isPointerInitialized.current && pX >= 0 && pY >= 0) {
+        // 1. Check Pointer Movement for Dwell Reset
+        const mouseDelta = Math.hypot(pX - prevMouseX, pY - prevMouseY);
+        prevMouseX = pX;
+        prevMouseY = pY;
 
-      if (idleTimer.current > 220) {
-        isIdleRef.current = true;
-      }
+        // 2. High-speed Responsive Lerp (15-25ms perceived lag: lerp factor = 0.38)
+        const lerpFactor = 0.38;
+        cursorPos.current.x += (pX - cursorPos.current.x) * lerpFactor;
+        cursorPos.current.y += (pY - cursorPos.current.y) * lerpFactor;
 
-      // Calculate Target Position for Outer Ring (Magnetic Snap vs Mouse)
-      let targetX = mouseX;
-      let targetY = mouseY;
-
-      if (magneticTargetRef.current) {
-        const { x: magX, y: magY } = magneticTargetRef.current;
-        const magDist = Math.hypot(mouseX - magX, mouseY - magY);
-        const MAG_RADIUS = 44;
-        if (magDist < MAG_RADIUS) {
-          const pull = Math.pow(1 - magDist / MAG_RADIUS, 1.4) * 0.55;
-          targetX = mouseX + (magX - mouseX) * pull;
-          targetY = mouseY + (magY - mouseY) * pull;
-        }
-      }
-
-      // Add Weather Cloud Float Offset if Idle
-      if (isIdleRef.current && !shouldReduceMotion) {
-        idleFloatTime.current += 0.025;
-        const cloudX = Math.sin(idleFloatTime.current * 0.8) * 14;
-        const cloudY = Math.cos(idleFloatTime.current * 1.2) * 5;
-        targetX += cloudX;
-        targetY += cloudY;
-      }
-
-      // 2. Inner Dot follows mouse EXACTLY in same frame (No desync/separation!)
-      if (innerDotRef.current) {
-        innerDotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-      }
-
-      // 3. Outer Ring Lerp
-      const lerpFactor = shouldReduceMotion ? 1 : 0.22;
-      ringPos.current.x += (targetX - ringPos.current.x) * lerpFactor;
-      ringPos.current.y += (targetY - ringPos.current.y) * lerpFactor;
-
-      // 4. Inertial Velocity-Based Squash & Stretch Physics
-      const vx = ringPos.current.x - prevRingPos.current.x;
-      const vy = ringPos.current.y - prevRingPos.current.y;
-      const speed = Math.hypot(vx, vy);
-
-      if (speed > 0.1) {
-        springRef.current.angle = Math.atan2(vy, vx);
-      }
-
-      const targetStretch = shouldReduceMotion ? 1 : 1 + Math.min(speed * 0.012, 0.35);
-      const targetSquash = shouldReduceMotion ? 1 : 1 / Math.sqrt(targetStretch);
-
-      springRef.current.stretch += (targetStretch - springRef.current.stretch) * 0.18;
-      springRef.current.squash += (targetSquash - springRef.current.squash) * 0.18;
-
-      prevRingPos.current.x = ringPos.current.x;
-      prevRingPos.current.y = ringPos.current.y;
-
-      // 5. Update Outer Ring Transform with Inertial Matrix
-      if (outerRingRef.current) {
-        const { stretch, squash, angle } = springRef.current;
-        outerRingRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) translate(-50%, -50%) rotate(${angle}rad) scale(${stretch}, ${squash}) rotate(${-angle}rad)`;
-      }
-
-      // 6. Groove Trail Buffer Update
-      if (frameCount % 2 === 0) {
-        trailRef.current = [
-          { x: ringPos.current.x, y: ringPos.current.y },
-          ...trailRef.current.slice(0, 6),
-        ];
-        setTrail([...trailRef.current]);
-      }
-
-      // 7. Dynamic ElementFromPoint Check to Prevent Stuck Hover States (Fixes Bug 3)
-      if (frameCount % 3 === 0 && mouseX > 0 && mouseY > 0) {
-        const targetEl = document.elementFromPoint(mouseX, mouseY) as HTMLElement | null;
-        if (targetEl) {
-          updateCursorStateFromElement(targetEl);
+        // 3. Dwell Progress Logic for Projects & Certificates
+        const currentMode = stateRef.current.mode;
+        if ((currentMode === "PROJECT" || currentMode === "CERTIFICATE") && mouseDelta < 1.2) {
+          dwellTimer.current += 1;
+          if (dwellTimer.current > 40) {
+            // ~700ms threshold (40 frames at 60fps)
+            isDwelling.current = true;
+            const progress = Math.min((dwellTimer.current - 40) / 30, 1);
+            setDwellProgress(progress);
+          }
         } else {
-          setCursorState({ mode: "DEFAULT", text: "", accentColor: null });
+          dwellTimer.current = 0;
+          if (isDwelling.current) {
+            isDwelling.current = false;
+            setDwellProgress(0);
+          }
+        }
+
+        // 4. One-time Entry Pulse Animation (scale 1 -> 1.08 -> 1 over ~260ms)
+        if (isPulsing.current) {
+          const t = Date.now() - (pulseScale.current || Date.now());
+          if (t < 260) {
+            const p = Math.sin((t / 260) * Math.PI);
+            pulseScale.current = 1 + p * 0.08;
+          } else {
+            isPulsing.current = false;
+            pulseScale.current = 1;
+          }
+        }
+
+        // 5. Update Single Root Transform via GPU translate3d
+        if (rootRef.current) {
+          const scale = pulseScale.current || 1;
+          rootRef.current.style.transform = `translate3d(${cursorPos.current.x}px, ${cursorPos.current.y}px, 0) translate(-50%, -50%) scale(${scale})`;
+        }
+
+        // 6. Robust Dynamic Element Inspection (Fixes Sticking Hover States)
+        if (frameCount % 3 === 0) {
+          const target = document.elementFromPoint(pX, pY) as HTMLElement | null;
+          if (target) {
+            inspectElementAndSetState(target);
+          } else {
+            resetToDefault();
+          }
         }
       }
 
@@ -204,307 +156,301 @@ const CustomCursor: React.FC = () => {
         rafId.current = null;
       }
     };
-  }, [isTouchDevice, shouldReduceMotion]);
+  }, [isTouchDevice]);
 
-  // Helper: Element Inspection to Set Cursor Mode
-  const updateCursorStateFromElement = (target: HTMLElement) => {
-    // 1. NOW BUILDING BADGE (Tonearm Needle-Drop Mode)
-    const nowBuildingEl = target.closest(
-      '[data-cursor="now-building"], [aria-label*="Now Building"], .group\\/card'
-    ) as HTMLElement | null;
-
-    if (nowBuildingEl) {
-      setCursorState((prev) =>
-        prev.mode === "NOW_BUILDING"
-          ? prev
-          : { mode: "NOW_BUILDING", text: "", accentColor: "#FFD42A" }
-      );
+  // Inspect Hover Target & Map to Finite Cursor State
+  const inspectElementAndSetState = (target: HTMLElement) => {
+    // 1. Text Inputs & Textareas (Disable custom cursor to allow native text cursor)
+    const inputEl = target.closest('input, textarea, [contenteditable="true"]') as HTMLElement | null;
+    if (inputEl) {
+      if (stateRef.current.mode !== "INPUT") {
+        setCursorState({ mode: "INPUT", text: "", accentColor: "", projectId: null });
+      }
       return;
     }
 
-    // 2. PROJECT HOVER (Solid Black Vinyl Badge with Clean Yellow "VIEW ↗")
-    const projectEl = target.closest(
-      '[data-cursor="project"], .group\\/project, [data-project-card]'
-    ) as HTMLElement | null;
-
+    // 2. Project Card Hover
+    const projectEl = target.closest('[data-cursor="project"], .group\\/project') as HTMLElement | null;
     if (projectEl) {
+      const pId = projectEl.getAttribute("data-project-id") || projectEl.getAttribute("href") || "project";
       const accent = projectEl.getAttribute("data-accent") || "#FFD42A";
-      setCursorState((prev) =>
-        prev.mode === "PROJECT" && prev.accentColor === accent
-          ? prev
-          : { mode: "PROJECT", text: "VIEW ↗", accentColor: accent }
-      );
+
+      // Trigger One-Time Entry Pulse if new project
+      if (lastProjectId.current !== pId) {
+        lastProjectId.current = pId;
+        isPulsing.current = true;
+        pulseScale.current = Date.now(); // Store start timestamp
+      }
+
+      const labelText = isDwelling.current && dwellProgress >= 1 ? "OPEN ↗" : "VIEW ↗";
+
+      if (stateRef.current.mode !== "PROJECT" || stateRef.current.text !== labelText || stateRef.current.accentColor !== accent) {
+        setCursorState({
+          mode: "PROJECT",
+          text: labelText,
+          accentColor: accent,
+          projectId: pId,
+        });
+      }
       return;
     }
 
-    // 3. "WORK WITH ME" / CONTACT HOVER ("SAY HI ↗" Mode)
-    const contactTrigger = target.closest(
-      'button, a, [role="button"]'
-    ) as HTMLElement | null;
-    const textContent = contactTrigger?.textContent || "";
+    // Reset project id tracking when off projects
+    lastProjectId.current = null;
+
+    // 3. Certificate Hover
+    const certEl = target.closest('[data-cursor="certificate"], .certificate-card') as HTMLElement | null;
+    if (certEl) {
+      const labelText = isDwelling.current && dwellProgress >= 1 ? "GO ↗" : "OPEN ↗";
+      if (stateRef.current.mode !== "CERTIFICATE" || stateRef.current.text !== labelText) {
+        setCursorState({
+          mode: "CERTIFICATE",
+          text: labelText,
+          accentColor: "#FFD42A",
+          projectId: null,
+        });
+      }
+      return;
+    }
+
+    // 4. "Work with me" / Contact Triggers
+    const contactBtn = target.closest('button, a, [role="button"]') as HTMLElement | null;
+    const btnText = contactBtn?.textContent || "";
     if (
-      contactTrigger &&
-      (textContent.includes("Work with me") ||
-        textContent.includes("Available for work") ||
-        contactTrigger.getAttribute("data-cursor") === "contact" ||
-        contactTrigger.getAttribute("href") === "#contact")
+      contactBtn &&
+      (btnText.includes("Work with me") ||
+        btnText.includes("Available for work") ||
+        contactBtn.getAttribute("data-cursor") === "contact" ||
+        contactBtn.getAttribute("href") === "#contact")
     ) {
-      setCursorState((prev) =>
-        prev.mode === "SAY_HI"
-          ? prev
-          : { mode: "SAY_HI", text: "SAY HI ↗", accentColor: "#FFD42A" }
-      );
+      if (stateRef.current.mode !== "SAY_HI") {
+        setCursorState({
+          mode: "SAY_HI",
+          text: "SAY HI ↗",
+          accentColor: "#FFD42A",
+          projectId: null,
+        });
+      }
       return;
     }
 
-    // 4. EXTERNAL LINKS / CERTIFICATES ("OPEN ↗" Mode)
-    const certEl = target.closest(
-      '[data-cursor="certificate"], [aria-label*="Certificate"], .certificate-card'
-    ) as HTMLElement | null;
+    // 5. External Links
     const linkEl = target.closest('a[target="_blank"], a[href^="http"], a[href$=".pdf"]') as HTMLElement | null;
-
-    if (certEl || linkEl) {
-      setCursorState((prev) =>
-        prev.mode === "OPEN"
-          ? prev
-          : { mode: "OPEN", text: "OPEN ↗", accentColor: "#FFD42A" }
-      );
+    if (linkEl) {
+      if (stateRef.current.mode !== "OPEN") {
+        setCursorState({
+          mode: "OPEN",
+          text: "OPEN ↗",
+          accentColor: "#FFD42A",
+          projectId: null,
+        });
+      }
       return;
     }
 
-    // 5. BUTTON & LINK HOVER (Sun-Glow & Magnetic Target Detection)
-    const buttonEl = target.closest(
-      'button, a, [role="button"], input, select, textarea, .cursor-pointer'
-    ) as HTMLElement | null;
-
-    if (buttonEl) {
-      const rect = buttonEl.getBoundingClientRect();
-      magneticTargetRef.current = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-        el: buttonEl,
-      };
-
-      const isBtn = buttonEl.tagName === "BUTTON" || buttonEl.getAttribute("role") === "button";
-      setCursorState((prev) =>
-        prev.mode === (isBtn ? "BUTTON" : "LINK")
-          ? prev
-          : { mode: isBtn ? "BUTTON" : "LINK", text: "", accentColor: "#FFD42A" }
-      );
+    // 6. Buttons & Interactive Links
+    const btnEl = target.closest('button, a, [role="button"], select, .cursor-pointer') as HTMLElement | null;
+    if (btnEl) {
+      const isBtn = btnEl.tagName === "BUTTON" || btnEl.getAttribute("role") === "button";
+      const targetMode = isBtn ? "BUTTON" : "LINK";
+      if (stateRef.current.mode !== targetMode) {
+        setCursorState({
+          mode: targetMode,
+          text: "",
+          accentColor: "rgba(25, 25, 22, 0.35)",
+          projectId: null,
+        });
+      }
       return;
     }
 
-    // Clear Magnetic Target if no button hovered
-    magneticTargetRef.current = null;
-
-    // 6. DEFAULT STATE
-    setCursorState((prev) =>
-      prev.mode === "DEFAULT"
-        ? prev
-        : { mode: "DEFAULT", text: "", accentColor: null }
-    );
+    // 7. Default Neutral State
+    resetToDefault();
   };
 
-  // Pointer Move, Click Ripple & Event Listeners
+  const resetToDefault = () => {
+    if (stateRef.current.mode !== "DEFAULT") {
+      setCursorState(DEFAULT_STATE);
+    }
+  };
+
+  // Pointer Event Listeners
   useEffect(() => {
     if (isTouchDevice) return;
 
     const handlePointerMove = (e: PointerEvent) => {
-      mousePos.current.x = e.clientX;
-      mousePos.current.y = e.clientY;
-      if (!isVisible) setIsVisible(true);
-    };
+      // Small magnetic snap effect on small CTA buttons only (3-4px max)
+      const target = e.target as HTMLElement | null;
+      const smallBtn = target?.closest("button.btn-magnetic, .nav-item-magnetic") as HTMLElement | null;
 
-    const handleScroll = () => {
-      // Recalculate element from point on scroll to avoid stale states
-      if (mousePos.current.x > 0 && mousePos.current.y > 0) {
-        const el = document.elementFromPoint(mousePos.current.x, mousePos.current.y) as HTMLElement | null;
-        if (el) updateCursorStateFromElement(el);
+      let pX = e.clientX;
+      let pY = e.clientY;
+
+      if (smallBtn) {
+        const rect = smallBtn.getBoundingClientRect();
+        const cX = rect.left + rect.width / 2;
+        const cY = rect.top + rect.height / 2;
+        const dist = Math.hypot(pX - cX, pY - cY);
+        if (dist < 32) {
+          pX = pX + (cX - pX) * 0.15;
+          pY = pY + (cY - pY) * 0.15;
+        }
+      }
+
+      pointerPos.current.x = pX;
+      pointerPos.current.y = pY;
+
+      if (!isPointerInitialized.current) {
+        isPointerInitialized.current = true;
+        cursorPos.current.x = pX;
+        cursorPos.current.y = pY;
       }
     };
 
-    const handlePointerDown = (e: PointerEvent) => {
-      const ripple: Ripple = {
-        id: Date.now() + Math.random(),
-        x: e.clientX,
-        y: e.clientY,
-      };
-      setRipples((prev) => [...prev, ripple]);
-      setTimeout(() => {
-        setRipples((prev) => prev.filter((r) => r.id !== ripple.id));
-      }, 420);
+    const handleMouseLeave = () => {
+      isPointerInitialized.current = false;
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseEnter = (e: MouseEvent) => {
+      pointerPos.current.x = e.clientX;
+      pointerPos.current.y = e.clientY;
+      cursorPos.current.x = e.clientX;
+      cursorPos.current.y = e.clientY;
+      isPointerInitialized.current = true;
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isPointerInitialized.current = false;
+      }
+    };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("pointerdown", handlePointerDown, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [isTouchDevice, isVisible]);
+  }, [isTouchDevice]);
 
   if (isTouchDevice || typeof document === "undefined") return null;
 
-  const { mode, text } = cursorState;
+  const { mode, text, accentColor } = cursorState;
 
-  // Dimensional Specs & Branded Sun-Glow Styles per Mode
-  let outerSize = 40;
-  let innerDotOpacity = 1;
-  let innerDotSize = 6;
-  let innerDotColor = "#191916";
-  let borderColor = "rgba(25, 25, 22, 0.22)";
-  let bgColor = "rgba(25, 25, 22, 0.03)";
-  let boxShadow = "none";
-  let tonearmTilt = false;
+  // Mode Specs & Dimensions
+  let width = 38;
+  let height = 38;
+  let isLens = false;
+  let showDot = true;
+  let isInput = false;
 
-  if (mode === "PROJECT") {
-    // Redesigned Solid Black Vinyl Badge: Solid #1D2024 circle, yellow accent #FFD42A, legible text, no dashed SVG clutter
-    outerSize = 56;
-    innerDotOpacity = 1;
-    innerDotSize = 7;
-    innerDotColor = "#FFD42A";
-    borderColor = "#FFD42A";
-    bgColor = "#1D2024";
-    boxShadow = "0 0 20px rgba(255, 212, 42, 0.4)";
-  } else if (mode === "NOW_BUILDING") {
-    // Tonearm Needle-Drop Mode on NOW BUILDING badge
-    outerSize = 50;
-    tonearmTilt = true;
-    innerDotOpacity = 1;
-    innerDotSize = 8;
-    innerDotColor = "#FFD42A";
-    borderColor = "#FFD42A";
-    bgColor = "rgba(29, 32, 36, 0.9)";
-    boxShadow = "0 0 22px rgba(255, 212, 42, 0.6)";
+  if (mode === "INPUT") {
+    isInput = true;
+  } else if (mode === "PROJECT") {
+    width = 66;
+    height = 66;
+    showDot = false;
+    isLens = true;
+  } else if (mode === "CERTIFICATE") {
+    width = 54;
+    height = 54;
+    showDot = false;
+    isLens = true;
   } else if (mode === "SAY_HI") {
-    outerSize = 56;
-    innerDotOpacity = 0;
-    borderColor = "#FFD42A";
-    bgColor = "rgba(255, 212, 42, 0.18)";
-    boxShadow = "0 0 24px rgba(255, 212, 42, 0.65), inset 0 0 10px rgba(255, 212, 42, 0.3)";
+    width = 58;
+    height = 58;
+    showDot = false;
+    isLens = true;
   } else if (mode === "OPEN") {
-    outerSize = 48;
-    innerDotOpacity = 0;
-    borderColor = "#FFD42A";
-    bgColor = "rgba(255, 212, 42, 0.14)";
-    boxShadow = "0 0 18px rgba(255, 212, 42, 0.5)";
+    width = 48;
+    height = 48;
+    showDot = false;
+    isLens = true;
   } else if (mode === "BUTTON" || mode === "LINK") {
-    outerSize = 36;
-    innerDotSize = 5;
-    borderColor = "rgba(255, 212, 42, 0.8)";
-    bgColor = "rgba(255, 212, 42, 0.12)";
-    boxShadow = "0 0 14px rgba(255, 212, 42, 0.45)";
+    width = 34;
+    height = 34;
+    isLens = true;
   }
+
+  const radius = width / 2 - 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - dwellProgress * circumference;
 
   const cursorNode = (
     <div
-      className="pointer-events-none fixed inset-0 z-[2147483647] overflow-hidden select-none"
-      style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.15s ease" }}
+      ref={rootRef}
+      aria-hidden="true"
+      className="pointer-events-none fixed top-0 left-0 z-[2147483647] flex items-center justify-center select-none"
+      style={{
+        opacity: isInput || !isPointerInitialized.current ? 0 : 1,
+        transition: "opacity 0.18s ease",
+        willChange: "transform",
+      }}
     >
-      {/* 1. VINYL GROOVE TRAIL (Curved dotted spiral path behind cursor) */}
-      {trail.map((point, i) => {
-        const opacity = (1 - i / trail.length) * 0.45;
-        const curveOffset = Math.sin(i * 0.7) * 4;
-        const dotScale = (1 - i / trail.length) * 4 + 1.5;
-
-        return (
-          <div
-            key={i}
-            className="fixed top-0 left-0 rounded-full bg-[#FFD42A] pointer-events-none"
-            style={{
-              width: `${dotScale}px`,
-              height: `${dotScale}px`,
-              opacity: opacity,
-              transform: `translate3d(${point.x + curveOffset}px, ${point.y}px, 0) translate(-50%, -50%)`,
-              transition: "opacity 0.2s ease",
-            }}
-          />
-        );
-      })}
-
-      {/* 2. CLICK ACCENT YELLOW RIPPLE ANIMATIONS */}
-      {ripples.map((ripple) => (
-        <div
-          key={ripple.id}
-          className="fixed top-0 left-0 rounded-full border-2 border-[#FFD42A] pointer-events-none"
-          style={{
-            width: "40px",
-            height: "40px",
-            transform: `translate3d(${ripple.x}px, ${ripple.y}px, 0) translate(-50%, -50%)`,
-            animation: "cursorRipple 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-          }}
-        />
-      ))}
-
-      {/* 3. OUTER TRAILING RING (Positioned via single rAF lerp translate3d with inertial squash & stretch) */}
+      {/* 1. MAIN CURSOR CONTAINER / CONTEXTUAL LENS RING */}
       <div
-        ref={outerRingRef}
-        className={`fixed top-0 left-0 flex items-center justify-center rounded-full pointer-events-none select-none ${
-          tonearmTilt ? "-rotate-[16deg]" : ""
-        }`}
+        className="relative flex items-center justify-center rounded-full transition-all duration-260 ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
-          width: `${outerSize}px`,
-          height: `${outerSize}px`,
-          border: `1px solid ${borderColor}`,
-          backgroundColor: bgColor,
-          boxShadow: boxShadow,
-          transition: shouldReduceMotion
-            ? "none"
-            : "width 220ms cubic-bezier(0.16, 1, 0.3, 1), height 220ms cubic-bezier(0.16, 1, 0.3, 1), border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease",
-          willChange: "transform",
+          width: `${width}px`,
+          height: `${height}px`,
+          border: `1px solid ${accentColor}`,
+          backgroundColor: mode === "PROJECT" ? "#1D2024" : "transparent",
         }}
       >
-        {/* TONEARM ARM EXTENSION GRAPHIC (NOW BUILDING HOVER) */}
-        {tonearmTilt && (
-          <div className="absolute -top-3.5 -right-2 w-5 h-1 bg-[#FFD42A] rounded-full shadow-sm rotate-[35deg] origin-left animate-pulse" />
+        {/* DWELL PROGRESS CIRCULAR SVG ARC */}
+        {dwellProgress > 0 && (
+          <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox={`0 0 ${width} ${height}`}>
+            <circle
+              cx={width / 2}
+              cy={height / 2}
+              r={radius}
+              fill="none"
+              stroke="#FFD42A"
+              strokeWidth="2"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              className="transition-[stroke-dashoffset] duration-75 ease-linear"
+            />
+          </svg>
         )}
 
-        {/* CONTEXTUAL LABEL ("VIEW ↗", "SAY HI ↗", "OPEN ↗") — Redesigned solid black vinyl badge */}
+        {/* CONTEXTUAL LENS TOP & BOTTOM ARCS */}
+        {isLens && mode !== "PROJECT" && (
+          <>
+            <div
+              className="absolute -top-1 w-3 h-[2px] rounded-full transition-colors duration-200"
+              style={{ backgroundColor: accentColor }}
+            />
+            <div
+              className="absolute -bottom-1 w-3 h-[2px] rounded-full transition-colors duration-200"
+              style={{ backgroundColor: accentColor }}
+            />
+          </>
+        )}
+
+        {/* CONTEXTUAL TEXT LABEL */}
         {text && (
           <span
-            className="font-mono text-[9px] font-bold uppercase tracking-wider whitespace-nowrap z-10 text-[#FFD42A] drop-shadow-xs"
+            className="font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] whitespace-nowrap z-10 animate-in fade-in zoom-in-95 duration-180"
+            style={{ color: mode === "PROJECT" ? accentColor : "#191916" }}
           >
             {text}
           </span>
         )}
       </div>
 
-      {/* 4. INNER PRECISION CENTER DOT (Positioned via single rAF exact mouse translate3d) */}
-      <div
-        ref={innerDotRef}
-        className="fixed top-0 left-0 rounded-full pointer-events-none transition-all duration-180"
-        style={{
-          width: `${innerDotSize}px`,
-          height: `${innerDotSize}px`,
-          backgroundColor: innerDotColor,
-          opacity: innerDotOpacity,
-          willChange: "transform",
-        }}
-      />
-
-      {/* RIPPLE KEYFRAME INLINE STYLE */}
-      <style>{`
-        @keyframes cursorRipple {
-          0% {
-            opacity: 0.9;
-            scale: 0.3;
-          }
-          100% {
-            opacity: 0;
-            scale: 2.2;
-          }
-        }
-      `}</style>
+      {/* 2. CENTER PRECISION POINTER DOT */}
+      {showDot && (
+        <div
+          className="absolute w-[6px] h-[6px] rounded-full bg-[#191916] pointer-events-none transition-transform duration-180"
+        />
+      )}
     </div>
   );
 

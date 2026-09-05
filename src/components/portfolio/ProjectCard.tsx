@@ -325,11 +325,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
         {/* UNIFIED FULL-CARD BLUR & TEXT OVERLAY */}
         <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center sm:p-10 bg-[#121417]/65 backdrop-blur-md opacity-0 transition-opacity duration-350 ease-out group-hover/project:opacity-100 group-focus-visible/project:opacity-100">
-          <div className="mb-4 inline-flex translate-y-3 items-center gap-1.5 rounded-full bg-white px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#121417] shadow-md transition-transform duration-350 ease-out group-hover/project:translate-y-0 group-focus-visible/project:translate-y-0 sm:mb-5">
-            <span>VIEW PROJECT</span>
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/project:translate-x-0.5" />
-          </div>
-
           <h3 className="translate-y-3 font-sans text-[clamp(26px,3.6vw,46px)] font-bold uppercase leading-[1.05] tracking-tight text-white drop-shadow-sm transition-transform duration-350 ease-out group-hover/project:translate-y-0 group-focus-visible/project:translate-y-0">
             {project.title}
           </h3>
