@@ -281,7 +281,7 @@ const Hero: React.FC = () => {
           >
             <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A] animate-pulse flex-shrink-0" />
             <span className="text-[10px] sm:text-xs md:text-sm font-mono tracking-[0.08em] sm:tracking-[0.18em] uppercase text-[#20252B] font-bold whitespace-nowrap">
-              HELLO, I'M TOSHIT SAI GALAM. A —
+              HELLO, I'M TOSHIT SAI GALAM
             </span>
           </motion.div>
 
