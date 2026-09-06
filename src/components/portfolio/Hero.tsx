@@ -277,7 +277,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2.5 mb-3 sm:mb-6 bg-white/25 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/40 shadow-xs"
+            className="inline-flex items-center gap-2.5 mb-3 sm:mb-6 select-none"
           >
             <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
             <span className="text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap drop-shadow-xs">
