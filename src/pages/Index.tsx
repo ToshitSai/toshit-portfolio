@@ -68,6 +68,7 @@ const Index = () => {
 
   // Coordinate hash navigation AFTER loader finishes
   useEffect(() => {
+    console.log("EDITORIAL_MOTION_SYSTEM_V2_ACTIVE", new Date().toISOString());
     if (!isLoggingIn && typeof window !== "undefined") {
       const hash = window.location.hash;
       if (hash) {

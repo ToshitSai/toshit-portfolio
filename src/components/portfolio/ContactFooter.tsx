@@ -356,6 +356,10 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="w-full flex items-center justify-between font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
       >
+        <div className="flex items-center gap-2.5 tracking-[0.18em] uppercase">
+          <span className="w-2 h-2 rounded-full bg-[#FFD42A] inline-block shadow-xs" />
+          <span>06 // CONTACT</span>
+        </div>
         <div className="flex items-center gap-2">
           <span>📍 Based in Hyderabad, India</span>
         </div>

@@ -185,7 +185,7 @@ const Testimonials: React.FC = () => {
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-[#FFD42A] inline-block shadow-xs" />
             <span className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-[#1D2024]/60 font-semibold">
-              ● WORDS FROM OTHERS
+              05 // WORDS FROM OTHERS
             </span>
           </div>
 
