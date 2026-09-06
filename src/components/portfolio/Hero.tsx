@@ -277,11 +277,11 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 mb-3 sm:mb-6 bg-white/45 backdrop-blur-md px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-white/60 shadow-xs"
+            className="inline-flex items-center gap-2.5 mb-3 sm:mb-6 bg-white/25 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/40 shadow-xs"
           >
-            <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_8px_#FFD42A] animate-pulse flex-shrink-0" />
-            <span className="text-[10px] sm:text-xs md:text-sm font-mono tracking-[0.08em] sm:tracking-[0.18em] uppercase text-[#20252B] font-bold whitespace-nowrap">
-              HELLO, I'M TOSHIT SAI GALAM
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
+            <span className="text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap drop-shadow-xs">
+              HELLO, I'M TOSHIT SAI GALAM. A —
             </span>
           </motion.div>
 
