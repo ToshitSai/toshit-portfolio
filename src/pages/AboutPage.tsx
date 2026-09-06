@@ -94,7 +94,7 @@ const AbstractEditorialCanvas: React.FC = () => {
       <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[90vw] max-w-[1200px] h-[600px] rounded-full bg-gradient-to-b from-[#FFD42A]/18 via-[#FFF8E8]/40 to-transparent blur-3xl" />
 
       {/* Organic Sun / Geometric Circle Accent */}
-      <div className="absolute top-[12%] right-[8%] w-48 h-48 sm:w-72 sm:h-72 rounded-full border border-[#20252B]/10 bg-[#FFD42A]/15 blur-xs animate-pulse duration-10000" />
+      <div className="absolute top-[6%] right-[-6%] sm:top-[12%] sm:right-[8%] w-36 h-36 sm:w-72 sm:h-72 rounded-full border border-[#20252B]/10 bg-[#FFD42A]/15 blur-xs animate-pulse duration-10000" />
 
       {/* Hand-Drawn Editorial Linework & Abstract Shapes */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.14]" xmlns="http://www.w3.org/2000/svg">
@@ -133,27 +133,27 @@ const AIEngineTerminal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"build" | "stack" | "status">("build");
 
   return (
-    <div className="relative w-full max-w-[680px] mx-auto rounded-[28px] bg-[#121417] text-white p-5 sm:p-7 shadow-[0_25px_70px_rgba(32,37,43,0.22)] border border-white/12 overflow-hidden group">
+    <div className="relative w-full max-w-[680px] mx-auto rounded-[22px] sm:rounded-[28px] bg-[#121417] text-white p-4 sm:p-7 shadow-[0_25px_70px_rgba(32,37,43,0.22)] border border-white/12 overflow-hidden group">
       {/* Glow highlight */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#FFD42A]/20 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
 
       {/* Terminal Header */}
-      <div className="flex items-center justify-between border-b border-white/12 pb-4 mb-5">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
-          <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-          <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/50 ml-2">
+      <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2.5 sm:gap-0 border-b border-white/12 pb-3.5 mb-4 sm:mb-5">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FF5F56]" />
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FFBD2E]" />
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#27C93F]" />
+          <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-white/50 ml-1 sm:ml-2 truncate">
             toshit_engine.v2.sh
           </span>
         </div>
 
         {/* Tab Controls */}
-        <div className="flex items-center gap-1.5 bg-white/6 p-1 rounded-full border border-white/10 font-mono text-[10px] tracking-wider uppercase">
+        <div className="flex items-center gap-1 bg-white/6 p-0.5 sm:p-1 rounded-full border border-white/10 font-mono text-[9px] sm:text-[10px] tracking-wider uppercase self-end xs:self-auto">
           <button
             type="button"
             onClick={() => setActiveTab("build")}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
               }`}
           >
             Build
@@ -161,7 +161,7 @@ const AIEngineTerminal: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab("stack")}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
               }`}
           >
             Stack
@@ -169,7 +169,7 @@ const AIEngineTerminal: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab("status")}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
               }`}
           >
             Status
@@ -178,21 +178,21 @@ const AIEngineTerminal: React.FC = () => {
       </div>
 
       {/* Terminal Body */}
-      <div className="min-h-[160px] font-mono text-xs sm:text-sm text-white/85 leading-relaxed flex flex-col justify-between">
+      <div className="min-h-[150px] sm:min-h-[160px] font-mono text-xs sm:text-sm text-white/85 leading-relaxed flex flex-col justify-between">
         {activeTab === "build" && (
-          <div className="space-y-2.5">
-            <div className="flex items-center gap-2 text-[#FFD42A]">
-              <Terminal className="w-4 h-4" />
-              <span>toshit-sai@portfolio:~$ build-experience --mode=creative</span>
+          <div className="space-y-2 sm:space-y-2.5">
+            <div className="flex items-center gap-2 text-[#FFD42A] text-[11px] sm:text-xs md:text-sm">
+              <Terminal className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="break-all sm:break-normal">toshit-sai@portfolio:~$ build-experience --mode=creative</span>
             </div>
-            <p className="text-white/70 pl-6 border-l border-white/15">
+            <p className="text-white/70 pl-4 sm:pl-6 border-l border-white/15 text-[11px] sm:text-xs md:text-sm">
               &gt; Initializing Generative AI models &amp; web architecture...
             </p>
-            <p className="text-white/70 pl-6 border-l border-white/15">
+            <p className="text-white/70 pl-4 sm:pl-6 border-l border-white/15 text-[11px] sm:text-xs md:text-sm">
               &gt; Connecting Gemini API + React 18 + Framer Motion.
             </p>
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold pl-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="flex items-center gap-2 text-emerald-400 font-semibold pl-4 sm:pl-6 text-[11px] sm:text-xs md:text-sm">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0" />
               <span>[OK] Experience Engine Compiled Successfully.</span>
             </div>
           </div>
@@ -200,26 +200,26 @@ const AIEngineTerminal: React.FC = () => {
 
         {activeTab === "stack" && (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-[#FFD42A]">
+            <div className="flex items-center gap-2 text-[#FFD42A] text-[11px] sm:text-xs">
               <Code2 className="w-4 h-4" />
               <span>SELECTED TOOLKIT &amp; STACK</span>
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-              <div className="bg-white/5 p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[10px] uppercase">AI / ML</span>
-                <span className="font-semibold text-white">Gemini API, Python, LLMs</span>
+              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
+                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">AI / ML</span>
+                <span className="font-semibold text-white text-[11px] sm:text-xs">Gemini API, Python, LLMs</span>
               </div>
-              <div className="bg-white/5 p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[10px] uppercase">Frontend</span>
-                <span className="font-semibold text-white">React, TypeScript, Tailwind</span>
+              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
+                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">Frontend</span>
+                <span className="font-semibold text-white text-[11px] sm:text-xs">React, TypeScript, Tailwind</span>
               </div>
-              <div className="bg-white/5 p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[10px] uppercase">Motion</span>
-                <span className="font-semibold text-white">Framer Motion, GSAP</span>
+              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
+                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">Motion</span>
+                <span className="font-semibold text-white text-[11px] sm:text-xs">Framer Motion, GSAP</span>
               </div>
-              <div className="bg-white/5 p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[10px] uppercase">Architecture</span>
-                <span className="font-semibold text-white">Vite, REST APIs, Git</span>
+              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
+                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">Architecture</span>
+                <span className="font-semibold text-white text-[11px] sm:text-xs">Vite, REST APIs, Git</span>
               </div>
             </div>
           </div>
@@ -227,29 +227,29 @@ const AIEngineTerminal: React.FC = () => {
 
         {activeTab === "status" && (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-[#FFD42A]">
+            <div className="flex items-center gap-2 text-[#FFD42A] text-[11px] sm:text-xs">
               <Cpu className="w-4 h-4" />
               <span>CURRENT DISPATCH &amp; FOCUS</span>
             </div>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between items-center bg-white/5 p-2 px-3 rounded-lg">
-                <span className="text-white/70">Location</span>
-                <span className="text-white font-medium">Hyderabad, India</span>
+                <span className="text-white/70 text-[11px] sm:text-xs">Location</span>
+                <span className="text-white font-medium text-[11px] sm:text-xs">Hyderabad, India</span>
               </div>
               <div className="flex justify-between items-center bg-white/5 p-2 px-3 rounded-lg">
-                <span className="text-white/70">Specialization</span>
-                <span className="text-white font-medium">AI Engineering &amp; Web</span>
+                <span className="text-white/70 text-[11px] sm:text-xs">Specialization</span>
+                <span className="text-white font-medium text-[11px] sm:text-xs">AI Engineering &amp; Web</span>
               </div>
               <div className="flex justify-between items-center bg-white/5 p-2 px-3 rounded-lg">
-                <span className="text-white/70">Status</span>
-                <span className="text-emerald-400 font-bold">● Available for Work</span>
+                <span className="text-white/70 text-[11px] sm:text-xs">Status</span>
+                <span className="text-emerald-400 font-bold text-[11px] sm:text-xs">● Available for Work</span>
               </div>
             </div>
           </div>
         )}
 
         {/* Terminal Footer info line */}
-        <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-white/45">
+        <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-1 xs:gap-0 text-[10px] sm:text-[11px] text-white/45">
           <span>IDENTITY: TOSHIT SAI GALAM</span>
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-3 h-3 text-[#FFD42A]" />
@@ -318,7 +318,7 @@ const AboutPage: React.FC = () => {
       className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden"
     >
       {/* MAIN ABOUT PAGE CONTENT */}
-      <main className="relative z-10 pt-28 sm:pt-36 pb-24 sm:pb-32 select-none">
+      <main className="relative z-10 pt-24 sm:pt-32 pb-24 sm:pb-32 select-none">
 
         {/* TOP BACK TO HOME BREADCRUMB + ABOUT ME BADGE */}
         <motion.div
@@ -326,9 +326,9 @@ const AboutPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16 mb-8"
+          className="mx-auto max-w-[1360px] px-4 sm:px-10 lg:px-16 mb-6 sm:mb-8"
         >
-          <div className="flex items-center justify-between border-b border-[#20252B]/12 pb-5">
+          <div className="flex items-center justify-between border-b border-[#20252B]/12 pb-4 sm:pb-5">
             <Link
               to="/"
               className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#20252B]/75 transition-colors hover:text-[#20252B]"
@@ -338,7 +338,7 @@ const AboutPage: React.FC = () => {
             </Link>
 
             {/* TOP-LEFT ABOUT BADGE */}
-            <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/80">
+            <div className="flex items-center gap-2 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/80">
               <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block" />
               <span>ABOUT ME</span>
             </div>
@@ -346,7 +346,7 @@ const AboutPage: React.FC = () => {
         </motion.div>
 
         {/* SECTION 1: FULL-SCREEN ABOUT HERO */}
-        <section className="relative min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 pt-4 pb-16">
+        <section className="relative min-h-[75vh] sm:min-h-[90vh] flex flex-col justify-center items-center px-4 sm:px-10 lg:px-16 pt-2 pb-12 sm:pb-16">
           <AbstractEditorialCanvas />
 
           {/* VERTICAL SIDE EDITORIAL LABEL (DESKTOP ONLY) */}
@@ -371,12 +371,10 @@ const AboutPage: React.FC = () => {
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 fontFamily: '"Host Grotesk", sans-serif',
-                fontSize: '28px',
                 fontWeight: 400,
-                lineHeight: 1.4,
                 color: '#333333'
               }}
-              className="max-w-[820px] mx-auto mb-8 sm:mb-10 text-center"
+              className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] max-w-[820px] mx-auto mb-6 sm:mb-10 text-center"
             >
               I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
             </motion.h1>

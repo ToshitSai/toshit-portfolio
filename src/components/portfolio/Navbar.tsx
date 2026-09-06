@@ -157,13 +157,13 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   const isHomeRoute = location.pathname === "/";
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-4 sm:px-6 pt-[18px]">
+    <header className="fixed top-0 left-0 right-0 z-[1000] flex justify-center items-center pointer-events-none px-3 sm:px-6 pt-3 sm:pt-[18px]">
       {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING CAPSULE NAVBAR */}
       <motion.nav
         animate={{
-          width: isCompact ? "310px" : "min(545px, calc(100vw - 24px))",
+          width: isCompact ? "min(310px, calc(100vw - 20px))" : "min(545px, calc(100vw - 20px))",
           maxWidth: isCompact ? "310px" : "545px",
-          height: "60px",
+          height: "56px",
           opacity: 1,
           y: 0,
           pointerEvents: "auto",
@@ -171,8 +171,8 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         transition={NAV_TRANSITION}
         style={{
           borderRadius: "9999px",
-          backgroundColor: "rgba(248, 242, 230, 0.78)",
-          borderColor: "rgba(255, 255, 255, 0.5)",
+          backgroundColor: "rgba(248, 242, 230, 0.85)",
+          borderColor: "rgba(255, 255, 255, 0.6)",
           boxShadow: "0px 8px 30px rgba(25, 28, 33, 0.08)",
           backdropFilter: "blur(20px) saturate(130%)",
           WebkitBackdropFilter: "blur(20px) saturate(130%)",
@@ -180,7 +180,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           willChange: "transform, opacity, width",
           boxSizing: "border-box",
         }}
-        className="nav-container pointer-events-auto relative flex items-center border px-2 py-1.5 transition-colors overflow-hidden"
+        className="nav-container pointer-events-auto relative flex items-center border px-1.5 sm:px-2 py-1 transition-colors overflow-hidden"
       >
         {/* LAYER 1: FULL EXPANDED NAVBAR CONTENT */}
         <motion.div
@@ -200,9 +200,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
               if (onTriggerLogin && e.detail === 2) onTriggerLogin();
             }}
             aria-label="Toshit Sai - Return to top"
-            className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
+            className="group relative flex items-center justify-center w-9 h-9 sm:w-[44px] sm:h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
-            <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+            <span className="font-sans text-sm sm:text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
               T
             </span>
           </a>
@@ -235,10 +235,10 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           <button
             type="button"
             onClick={handleWorkWithMeClick}
-            className="group flex items-center justify-center gap-2 w-[170px] h-[40px] px-3.5 rounded-full bg-white/90 text-[#20252B] text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
+            className="group flex items-center justify-center gap-1.5 sm:gap-2 w-auto px-3 sm:px-3.5 sm:w-[170px] h-[36px] sm:h-[40px] rounded-full bg-white/90 text-[#20252B] text-xs sm:text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
           >
             <svg
-              className="w-[18px] h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
+              className="w-4 h-3 sm:w-[18px] sm:h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
               viewBox="0 0 20 14"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -264,9 +264,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
             pointerEvents: isCompact ? "auto" : "none",
           }}
           transition={NAV_TRANSITION}
-          className="absolute inset-0 flex items-center justify-between px-2 py-1.5 whitespace-nowrap"
+          className="absolute inset-0 flex items-center justify-between px-1.5 sm:px-2 py-1 whitespace-nowrap"
         >
-          {/* REUSED 44px YELLOW T AVATAR MONOGRAM */}
+          {/* REUSED YELLOW T AVATAR MONOGRAM */}
           <a
             href="#hero"
             onClick={(e) => {
@@ -274,9 +274,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
               if (onTriggerLogin && e.detail === 2) onTriggerLogin();
             }}
             aria-label="Toshit Sai - Return to top"
-            className="group relative flex items-center justify-center w-[44px] h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
+            className="group relative flex items-center justify-center w-9 h-9 sm:w-[44px] sm:h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
-            <span className="font-sans text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
+            <span className="font-sans text-sm sm:text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
               T
             </span>
           </a>
@@ -285,9 +285,9 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           <button
             type="button"
             onClick={handleWorkWithMeClick}
-            className="flex-1 flex items-center justify-center px-2 group cursor-pointer"
+            className="flex-1 flex items-center justify-center px-1 group cursor-pointer overflow-hidden"
           >
-            <span className="font-sans text-[17px] font-normal tracking-tight text-[#20252B] group-hover:opacity-80 transition-opacity whitespace-nowrap">
+            <span className="font-sans text-xs sm:text-[17px] font-normal tracking-tight text-[#20252B] group-hover:opacity-80 transition-opacity whitespace-nowrap truncate">
               Available for work
             </span>
           </button>
@@ -297,24 +297,24 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
             type="button"
             onClick={handleWorkWithMeClick}
             aria-label="Available for work status"
-            className="w-[30px] h-[30px] rounded-full border border-white/40 bg-white/20 backdrop-blur-xs flex items-center justify-center flex-shrink-0 mr-1 group cursor-pointer"
+            className="w-7 h-7 sm:w-[30px] sm:h-[30px] rounded-full border border-white/40 bg-white/20 backdrop-blur-xs flex items-center justify-center flex-shrink-0 mr-0.5 group cursor-pointer"
           >
-            <span className="relative flex h-[9px] w-[9px] items-center justify-center">
+            <span className="relative flex h-2 w-2 sm:h-[9px] sm:w-[9px] items-center justify-center">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD42A] opacity-75" />
-              <span className="relative inline-flex rounded-full h-[9px] w-[9px] bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
+              <span className="relative inline-flex rounded-full h-2 w-2 sm:h-[9px] sm:w-[9px] bg-[#FFD42A] shadow-[0_0_8px_#FFD42A]" />
             </span>
           </button>
         </motion.div>
 
         {/* MOBILE CONTROLS */}
-        <div className="flex md:hidden items-center gap-2 ml-auto pr-1">
+        <div className="flex md:hidden items-center gap-1.5 ml-1 pr-0.5">
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 text-[#20252B] hover:text-black rounded-full bg-white/40 border border-white/60 focus:outline-none"
+            className="p-1.5 text-[#20252B] hover:text-black rounded-full bg-white/50 border border-white/70 focus:outline-none flex-shrink-0"
             aria-label="Toggle Mobile Menu"
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </motion.nav>

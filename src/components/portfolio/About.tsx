@@ -16,12 +16,10 @@ const About: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             style={{
               fontFamily: '"Host Grotesk", sans-serif',
-              fontSize: '28px',
               fontWeight: 400,
-              lineHeight: 1.4,
               color: '#333333'
             }}
-            className="text-center mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
+            className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] text-center mb-6 sm:mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
           >
             I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
           </motion.h2>

@@ -261,64 +261,7 @@ const Testimonials: React.FC = () => {
           </AnimatePresence>
         </div>
 
-        {/* 3. EDITORIAL FOOTER: ANIMATED MONO COUNTER & ARROW NAVIGATION */}
-        <div className="mt-12 sm:mt-16 pt-6 border-t border-[#1D2024]/10 flex items-center justify-between max-w-[860px]">
-          {/* MONOSPACE COUNTER & PROGRESS INDICATOR */}
-          <div className="flex items-center gap-4">
-            <div className="font-mono text-xs sm:text-sm tracking-widest text-[#1D2024]/70 font-semibold flex items-center gap-1">
-              <div className="relative w-6 h-5 overflow-hidden">
-                <AnimatePresence mode="popLayout">
-                  <motion.span
-                    key={activeIndex}
-                    initial={{ y: 12, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -12, opacity: 0 }}
-                    transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute inset-0 flex items-center justify-center font-bold text-[#1D2024]"
-                  >
-                    {String(activeIndex + 1).padStart(2, "0")}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-              <span className="text-[#1D2024]/40">/</span>
-              <span className="text-[#1D2024]/50">{String(total).padStart(2, "0")}</span>
-            </div>
 
-            {/* Subtle Progress Bar */}
-            <div className="hidden sm:flex items-center gap-1.5 ml-2">
-              {testimonialsData.map((item, idx) => (
-                <button
-                  key={item.id}
-                  onClick={() => goToIndex(idx)}
-                  aria-label={`Go to recommendation ${idx + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                    idx === activeIndex
-                      ? "w-7 bg-[#FFD42A]"
-                      : "w-1.5 bg-[#1D2024]/18 hover:bg-[#1D2024]/40"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* MINIMAL ARROW CONTROLS */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous recommendation"
-              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
-            >
-              ←
-            </button>
-            <button
-              onClick={handleNext}
-              aria-label="Next recommendation"
-              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
-            >
-              →
-            </button>
-          </div>
-        </div>
 
       </div>
     </section>
