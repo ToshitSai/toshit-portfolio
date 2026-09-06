@@ -65,28 +65,13 @@ const Testimonials: React.FC = () => {
 
   const total = testimonialsData.length;
 
-  // Single Source of Truth Navigation Helpers
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
   const handleNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % total);
-    resetTimer();
-  }, [total, resetTimer]);
+  }, [total]);
 
   const handlePrev = useCallback(() => {
     setActiveIndex((prev) => (prev - 1 + total) % total);
-    resetTimer();
-  }, [total, resetTimer]);
-
-  const goToIndex = useCallback((idx: number) => {
-    setActiveIndex(idx);
-    resetTimer();
-  }, [resetTimer]);
+  }, [total]);
 
   // Keyboard Navigation (Left / Right arrows)
   useEffect(() => {
@@ -111,13 +96,13 @@ const Testimonials: React.FC = () => {
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
-  // Automatic Rotation System (4.8s Display Hold Interval)
+  // Automatic Rotation System (3.5s Display Hold Interval, single timer instance)
   useEffect(() => {
     if (isPaused || shouldReduceMotion) return;
 
     timerRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total);
-    }, 4800);
+    }, 3500);
 
     return () => {
       if (timerRef.current) {
@@ -125,7 +110,7 @@ const Testimonials: React.FC = () => {
         timerRef.current = null;
       }
     };
-  }, [isPaused, shouldReduceMotion, total]);
+  }, [isPaused, shouldReduceMotion, activeIndex, total]);
 
   // Touch Swipe Handlers
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -205,22 +190,22 @@ const Testimonials: React.FC = () => {
               initial={
                 shouldReduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, y: 18, filter: "blur(2px)" }
+                  : { opacity: 0, y: 12 }
               }
               animate={
                 shouldReduceMotion
                   ? { opacity: 1 }
-                  : { opacity: 1, y: 0, filter: "blur(0px)" }
+                  : { opacity: 1, y: 0 }
               }
               exit={
                 shouldReduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, y: -16, filter: "blur(2px)" }
+                  : { opacity: 0, y: -12 }
               }
               transition={
                 shouldReduceMotion
                   ? { duration: 0.2 }
-                  : { duration: 0.72, ease: [0.16, 1, 0.3, 1] }
+                  : { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
               }
               className="flex flex-col justify-between"
             >
@@ -236,12 +221,12 @@ const Testimonials: React.FC = () => {
 
               {/* PERSON IDENTITY (NAME, ROLE, BADGE MONOGRAM) */}
               <motion.div
-                initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
+                initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
                 animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
                 transition={
                   shouldReduceMotion
                     ? {}
-                    : { duration: 0.55, delay: 0.06, ease: [0.16, 1, 0.3, 1] }
+                    : { duration: 0.5, delay: 0.04, ease: [0.16, 1, 0.3, 1] }
                 }
                 className="mt-8 sm:mt-10 flex items-center gap-4"
               >
@@ -261,7 +246,34 @@ const Testimonials: React.FC = () => {
           </AnimatePresence>
         </div>
 
+        {/* 3. EDITORIAL FOOTER: COUNTER & ARROW NAVIGATION CONTROLS */}
+        <div className="mt-12 sm:mt-16 pt-6 border-t border-[#1D2024]/10 flex items-center justify-between max-w-[860px]">
+          {/* COUNTER & ACCENT PILL */}
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs sm:text-sm tracking-wider font-semibold text-[#1D2024] transition-opacity duration-300">
+              {String(activeIndex + 1).padStart(2, "0")} <span className="text-[#1D2024]/40">/</span> {String(total).padStart(2, "0")}
+            </span>
+            <span className="w-6 h-1 rounded-full bg-[#FFD42A] inline-block" />
+          </div>
 
+          {/* MINIMAL ARROW CONTROLS */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous recommendation"
+              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
+            >
+              ←
+            </button>
+            <button
+              onClick={handleNext}
+              aria-label="Next recommendation"
+              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
+            >
+              →
+            </button>
+          </div>
+        </div>
 
       </div>
     </section>
