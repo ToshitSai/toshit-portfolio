@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform, useReducedMotion } from "framer-motion";
 
 const HERO_WORDS = [
   "AI-POWERED",
@@ -96,6 +96,15 @@ const Hero: React.FC = () => {
   const [isAutoRotatePaused, setIsAutoRotatePaused] = useState(false);
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const shouldReduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollY } = useScroll();
+
+  // Scroll Motion Physics (Subtle editorial parallax on hero scroll exit)
+  const heroScale = useTransform(scrollY, [0, 500], shouldReduceMotion ? [1, 1] : [1, 0.98]);
+  const heroTitleY = useTransform(scrollY, [0, 500], shouldReduceMotion ? [0, 0] : [0, -22]);
+  const heroCloudsY = useTransform(scrollY, [0, 500], shouldReduceMotion ? [0, 0] : [0, -10]);
+
   // Motion physics for mouse parallax using Framer Motion springs
   const springConfig = { stiffness: 100, damping: 20 };
 
@@ -175,13 +184,20 @@ const Hero: React.FC = () => {
     sunY.set(normY * -14);
   };
 
+  const composedTitleY = useTransform(() => titleY.get() + heroTitleY.get());
+  const composedCloudsY = useTransform(() => cloudsY.get() + heroCloudsY.get());
+
   const currentProject = NOW_BUILDING_PROJECTS[projectIndex];
 
   return (
-    <section
+    <motion.section
+      ref={heroRef}
       onMouseMove={handleMouseMove}
-      style={{ background: "linear-gradient(180deg, #7EB8E8 0%, #A9D3F0 45%, #5B9BD5 100%)" }}
-      className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
+      style={{
+        background: "linear-gradient(180deg, #7EB8E8 0%, #A9D3F0 45%, #5B9BD5 100%)",
+        scale: heroScale,
+      }}
+      className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10 origin-top"
     >
       {/* SVG Noise Overlay */}
       <svg className="pointer-events-none absolute inset-0 opacity-[0.035] w-full h-full z-0">
@@ -210,7 +226,7 @@ const Hero: React.FC = () => {
 
         {/* ANIMATION D — Organic Cutout Cloud Left */}
         <motion.div
-          style={{ x: cloudsX, y: cloudsY }}
+          style={{ x: cloudsX, y: composedCloudsY }}
           className="absolute top-[18%] sm:top-[28%] left-[1%] sm:left-[5%] w-20 sm:w-32 md:w-36 opacity-90"
         >
           <motion.div
@@ -235,7 +251,7 @@ const Hero: React.FC = () => {
 
         {/* ANIMATION D — Organic Cutout Cloud Right */}
         <motion.div
-          style={{ x: cloudsX, y: cloudsY }}
+          style={{ x: cloudsX, y: composedCloudsY }}
           className="absolute top-[12%] sm:top-[22%] right-[1%] sm:right-[10%] w-28 sm:w-[220px] md:w-[250px] opacity-95"
         >
           <motion.div
@@ -263,7 +279,7 @@ const Hero: React.FC = () => {
       <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-2 sm:pt-4 pb-4 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
         {/* ANIMATION B — Headline Title Motion Physics Layer */}
         <motion.div
-          style={{ x: titleX, y: titleY }}
+          style={{ x: titleX, y: composedTitleY }}
           className="w-full max-w-[780px] flex flex-col items-center relative"
         >
           {/* Vertical Side Tagline directly beside the main display headline */}
@@ -465,7 +481,7 @@ const Hero: React.FC = () => {
           </svg>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 interface TestimonialItem {
   id: string;
@@ -54,9 +54,18 @@ const testimonialsData: TestimonialItem[] = [
 ];
 
 const Testimonials: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionY = useTransform(scrollYProgress, [0, 0.4, 0.9], shouldReduceMotion ? [0, 0, 0] : [18, 0, -10]);
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.7]);
   
   // Timer & Touch Swipe Refs
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -143,6 +152,7 @@ const Testimonials: React.FC = () => {
 
   return (
     <section
+      ref={containerRef}
       id="feedback"
       className="relative w-full py-20 sm:py-28 lg:py-32 font-sans select-none overflow-hidden bg-[#FFF8E8] text-[#1D2024] border-t border-[#1D2024]/10"
       aria-label="Recommendations and feedback"
@@ -159,7 +169,10 @@ const Testimonials: React.FC = () => {
         <div className="absolute inset-0 bg-[radial-gradient(#1D2024_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.02]" />
       </div>
 
-      <div className="max-w-[1120px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
+      <motion.div
+        style={{ y: sectionY, opacity: sectionOpacity }}
+        className="max-w-[1120px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10"
+      >
 
         {/* 1. SECTION LABEL & EDITORIAL HEADING */}
         <motion.div
@@ -275,7 +288,7 @@ const Testimonials: React.FC = () => {
           </div>
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Loader2, X, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
 import { toast } from "sonner";
 
@@ -121,6 +121,14 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const footerCenterY = useTransform(scrollYProgress, [0, 0.5], shouldReduceMotion ? [0, 0] : [20, 0]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -354,7 +362,10 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
       </motion.div>
 
       {/* 2. MAIN CENTER HERO SECTION */}
-      <div className="w-full max-w-5xl mx-auto my-auto py-8 sm:py-12 flex flex-col items-center text-center z-10">
+      <motion.div
+        style={{ y: footerCenterY }}
+        className="w-full max-w-5xl mx-auto my-auto py-8 sm:py-12 flex flex-col items-center text-center z-10"
+      >
 
         {/* Lede Subtitle */}
         <motion.p
@@ -449,7 +460,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
 
 
-      </div>
+      </motion.div>
 
       {/* 5. BOTTOM FOOTER BAR WITH BACK TO TOP */}
       <motion.div

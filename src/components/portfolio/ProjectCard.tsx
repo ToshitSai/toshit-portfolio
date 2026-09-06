@@ -297,7 +297,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     target: articleRef,
     offset: ["start end", "end start"],
   });
+
   const y = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [14, -14]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.6, 1, 1, 0.75]);
+  const scale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], shouldReduceMotion ? [1, 1, 1, 1] : [0.98, 1, 1, 0.98]);
 
   const aspectClass = {
     feature: "aspect-[1.02/1] sm:aspect-[1.45/1]",
@@ -309,7 +312,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <motion.article
       ref={articleRef}
-      style={{ y }}
+      style={{ y, opacity, scale }}
       className="relative w-full select-none font-sans"
     >
       <a

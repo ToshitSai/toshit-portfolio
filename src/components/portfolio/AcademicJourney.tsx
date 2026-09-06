@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 interface TimelineEntry {
@@ -46,8 +46,20 @@ const timelineEntries: TimelineEntry[] = [
 ];
 
 const AcademicJourney: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const headerY = useTransform(scrollYProgress, [0, 0.4, 0.85], shouldReduceMotion ? [0, 0, 0] : [20, 0, -10]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.6]);
+
   return (
     <section
+      ref={containerRef}
       id="education"
       style={{ backgroundColor: "#F7F2E7", color: "#1B1B18" }}
       className="relative w-full py-24 sm:py-32 font-sans select-none overflow-hidden z-10"
@@ -55,7 +67,10 @@ const AcademicJourney: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
         {/* HEADER ROW */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#1B1B18]/12 pb-10 mb-16 sm:mb-24 gap-6">
+        <motion.div
+          style={{ y: headerY, opacity: headerOpacity }}
+          className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#1B1B18]/12 pb-10 mb-16 sm:mb-24 gap-6"
+        >
           <div>
             <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-wider text-[#4A4A45] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]" />
@@ -73,7 +88,7 @@ const AcademicJourney: React.FC = () => {
           <p className="max-w-xs text-sm sm:text-base leading-relaxed text-[#55554F] md:text-right font-normal">
             A concise record of the academic foundations, core technical disciplines, and engineering history shaping my work.
           </p>
-        </div>
+        </motion.div>
 
         {/* TIMELINE SECTION */}
         <div className="relative pl-8 sm:pl-12">

@@ -1,23 +1,39 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const About: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const headingY = useTransform(scrollYProgress, [0, 0.45, 0.9], shouldReduceMotion ? [0, 0, 0] : [24, 0, -12]);
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.25, 0.8, 1], [0.3, 1, 1, 0.6]);
+
+  const subtextY = useTransform(scrollYProgress, [0.05, 0.5, 0.95], shouldReduceMotion ? [0, 0, 0] : [20, 0, -10]);
+  const subtextOpacity = useTransform(scrollYProgress, [0.05, 0.3, 0.82, 1], [0.3, 1, 1, 0.6]);
+
   return (
-    <section id="about" className="relative w-full py-24 sm:py-32 bg-cream text-[#333333] overflow-hidden z-10 select-none">
+    <section
+      ref={containerRef}
+      id="about"
+      className="relative w-full py-24 sm:py-32 bg-cream text-[#333333] overflow-hidden z-10 select-none"
+    >
       <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
 
         {/* Display Heading Statement — Clickable to /about */}
         <Link to="/about" className="group block w-full">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             style={{
               fontFamily: '"Host Grotesk", sans-serif',
               fontWeight: 400,
-              color: '#333333'
+              color: '#333333',
+              y: headingY,
+              opacity: headingOpacity,
             }}
             className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] text-center mb-6 sm:mb-8 group-hover:opacity-95 transition-opacity cursor-pointer max-w-[820px] mx-auto"
           >
@@ -27,10 +43,10 @@ const About: React.FC = () => {
 
         {/* Subtext Paragraph */}
         <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            y: subtextY,
+            opacity: subtextOpacity,
+          }}
           className="text-base sm:text-lg md:text-xl text-[#20252B]/70 font-sans leading-[1.6] max-w-2xl text-center font-normal mb-8"
         >
           I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
