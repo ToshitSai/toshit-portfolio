@@ -98,12 +98,20 @@ const Hero: React.FC = () => {
 
   const shouldReduceMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
-  const { scrollY } = useScroll();
+  
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
 
-  // Scroll Motion Physics (Subtle editorial parallax on hero scroll exit)
-  const heroScale = useTransform(scrollY, [0, 500], shouldReduceMotion ? [1, 1] : [1, 0.98]);
-  const heroTitleY = useTransform(scrollY, [0, 500], shouldReduceMotion ? [0, 0] : [0, -22]);
-  const heroCloudsY = useTransform(scrollY, [0, 500], shouldReduceMotion ? [0, 0] : [0, -10]);
+  // Hero Living Sky Scroll Motion Physics
+  const heroScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.97]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.9]);
+  const heroTitleY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -20]);
+  const heroCloudsY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -8]);
+  const heroCloudsX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, 8]);
+  const heroSunY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
+  const heroWaveY = useTransform(scrollYProgress, [0.4, 1], shouldReduceMotion ? [0, 0] : [0, -15]);
 
   // Motion physics for mouse parallax using Framer Motion springs
   const springConfig = { stiffness: 100, damping: 20 };
@@ -185,7 +193,9 @@ const Hero: React.FC = () => {
   };
 
   const composedTitleY = useTransform(() => titleY.get() + heroTitleY.get());
+  const composedCloudsX = useTransform(() => cloudsX.get() + heroCloudsX.get());
   const composedCloudsY = useTransform(() => cloudsY.get() + heroCloudsY.get());
+  const composedSunY = useTransform(() => sunY.get() + heroSunY.get());
 
   const currentProject = NOW_BUILDING_PROJECTS[projectIndex];
 
@@ -196,6 +206,7 @@ const Hero: React.FC = () => {
       style={{
         background: "linear-gradient(180deg, #7EB8E8 0%, #A9D3F0 45%, #5B9BD5 100%)",
         scale: heroScale,
+        opacity: heroOpacity,
       }}
       className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10 origin-top"
     >
@@ -214,7 +225,7 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
         {/* ANIMATION C — Patterned Yellow Sun Graphic with Continuous Slow Rotation & Parallax */}
         <motion.div
-          style={{ x: sunX, y: sunY }}
+          style={{ x: sunX, y: composedSunY }}
           className="absolute top-20 right-3 sm:top-20 sm:right-12 md:right-16 w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28"
         >
           <div className="w-full h-full rounded-full bg-[#FFD42A] p-1.5 sm:p-2 shadow-xl opacity-95 animate-spin-slow">
@@ -226,7 +237,7 @@ const Hero: React.FC = () => {
 
         {/* ANIMATION D — Organic Cutout Cloud Left */}
         <motion.div
-          style={{ x: cloudsX, y: composedCloudsY }}
+          style={{ x: composedCloudsX, y: composedCloudsY }}
           className="absolute top-[18%] sm:top-[28%] left-[1%] sm:left-[5%] w-20 sm:w-32 md:w-36 opacity-90"
         >
           <motion.div
@@ -251,7 +262,7 @@ const Hero: React.FC = () => {
 
         {/* ANIMATION D — Organic Cutout Cloud Right */}
         <motion.div
-          style={{ x: cloudsX, y: composedCloudsY }}
+          style={{ x: composedCloudsX, y: composedCloudsY }}
           className="absolute top-[12%] sm:top-[22%] right-[1%] sm:right-[10%] w-28 sm:w-[220px] md:w-[250px] opacity-95"
         >
           <motion.div
@@ -467,7 +478,10 @@ const Hero: React.FC = () => {
         </a>
 
         {/* Organic Rolling Waves Transition to Cream Background */}
-        <div className="w-full h-14 sm:h-16 relative overflow-hidden pointer-events-none">
+        <motion.div
+          style={{ y: heroWaveY }}
+          className="w-full h-14 sm:h-16 relative overflow-hidden pointer-events-none"
+        >
           <svg
             viewBox="0 0 1440 120"
             fill="none"
@@ -479,7 +493,7 @@ const Hero: React.FC = () => {
               fill="#FFF8E8"
             />
           </svg>
-        </div>
+        </motion.div>
       </div>
     </motion.section>
   );

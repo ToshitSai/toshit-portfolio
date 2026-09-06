@@ -211,8 +211,12 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
     target: sceneRef,
     offset: ["start end", "end start"],
   });
-  const primaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [7, -7]);
-  const secondaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [11, -11]);
+
+  // Art Exhibition Depth Layering: Background (-10px), Primary Device (-18px), Secondary Device (-25px)
+  const bgY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [10, -10]);
+  const primaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [18, -18]);
+  const secondaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [25, -25]);
+
   const primaryPointerX = useTransform(smoothPointerX, (value) => (shouldReduceMotion ? 0 : value));
   const primaryPointerY = useTransform(smoothPointerY, (value) => (shouldReduceMotion ? 0 : value));
   const secondaryPointerX = useTransform(smoothPointerX, (value) => (shouldReduceMotion ? 0 : value * 1.25));
@@ -267,10 +271,12 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
       onPointerLeave={handlePointerLeave}
       className={`absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 transition-transform duration-350 ease-out group-hover/project:scale-[1.03] sm:px-8 ${project.sceneClassName || "bg-[#EFEAD8]"}`}
     >
-      <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
-      <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
-      <div className={`absolute rounded-full blur-3xl ${project.sceneDecorClassName || "left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 bg-white/20"}`} />
-      <div className="absolute bottom-[17%] left-1/2 h-10 w-[58%] -translate-x-1/2 rounded-full bg-[#1D2024]/10 blur-2xl" />
+      <motion.div style={{ y: bgY }} className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
+        <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
+        <div className={`absolute rounded-full blur-3xl ${project.sceneDecorClassName || "left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 bg-white/20"}`} />
+        <div className="absolute bottom-[17%] left-1/2 h-10 w-[58%] -translate-x-1/2 rounded-full bg-[#1D2024]/10 blur-2xl" />
+      </motion.div>
       <div className="relative h-full w-full">
         {project.devices.map((device, index) => (
           <DeviceShell

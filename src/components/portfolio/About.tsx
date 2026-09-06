@@ -11,11 +11,16 @@ const About: React.FC = () => {
     offset: ["start end", "end start"],
   });
 
-  const headingY = useTransform(scrollYProgress, [0, 0.45, 0.9], shouldReduceMotion ? [0, 0, 0] : [24, 0, -12]);
-  const headingOpacity = useTransform(scrollYProgress, [0, 0.25, 0.8, 1], [0.3, 1, 1, 0.6]);
+  // Editorial Chapter Motion Physics: 35px -> 0 -> -20px
+  const headingY = useTransform(scrollYProgress, [0, 0.45, 0.9], shouldReduceMotion ? [0, 0, 0] : [35, 0, -20]);
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.25, 0.8, 1], [0, 1, 1, 0.65]);
 
-  const subtextY = useTransform(scrollYProgress, [0.05, 0.5, 0.95], shouldReduceMotion ? [0, 0, 0] : [20, 0, -10]);
-  const subtextOpacity = useTransform(scrollYProgress, [0.05, 0.3, 0.82, 1], [0.3, 1, 1, 0.6]);
+  const subtextY = useTransform(scrollYProgress, [0.06, 0.5, 0.95], shouldReduceMotion ? [0, 0, 0] : [45, 0, -16]);
+  const subtextOpacity = useTransform(scrollYProgress, [0.06, 0.3, 0.82, 1], [0, 1, 1, 0.65]);
+
+  // Hand-drawn Decorative Element Parallax Offsets
+  const decorDotY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [30, -14]);
+  const decorLineY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [20, -28]);
 
   return (
     <section
@@ -23,8 +28,19 @@ const About: React.FC = () => {
       id="about"
       className="relative w-full py-24 sm:py-32 bg-cream text-[#333333] overflow-hidden z-10 select-none"
     >
-      <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
+      {/* Hand-Drawn Editorial Decorative Objects */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <motion.div
+          style={{ y: decorDotY }}
+          className="absolute top-12 left-[10%] sm:left-[15%] w-3 h-3 rounded-full bg-[#FFD42A] opacity-80 shadow-xs"
+        />
+        <motion.div
+          style={{ y: decorLineY }}
+          className="absolute bottom-16 right-[12%] sm:right-[18%] w-16 h-[2px] bg-[#1D2024]/12 rounded-full"
+        />
+      </div>
 
+      <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
         {/* Display Heading Statement — Clickable to /about */}
         <Link to="/about" className="group block w-full">
           <motion.h2
@@ -51,7 +67,6 @@ const About: React.FC = () => {
         >
           I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
         </motion.p>
-
       </div>
     </section>
   );

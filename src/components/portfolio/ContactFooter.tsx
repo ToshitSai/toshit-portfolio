@@ -463,12 +463,19 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
       </motion.div>
 
       {/* 5. BOTTOM FOOTER BAR WITH BACK TO TOP */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs sm:text-sm text-[#1B1B18]/70 pt-6 border-t border-[#1B1B18]/10 z-10"
-      >
+      <div className="w-full relative z-10 pt-6">
+        <motion.div
+          initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
+          animate={isInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full h-[1px] bg-[#1B1B18]/10 origin-left mb-6"
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs sm:text-sm text-[#1B1B18]/70"
+        >
         <p>© 2026 Toshit Sai Galam • All rights reserved</p>
 
         <div className="flex items-center gap-5 sm:gap-6 font-medium">
@@ -517,6 +524,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           </button>
         </div>
       </motion.div>
+    </div>
 
       {/* 6. SLIDE-OVER CONTACT OVERLAY (EXACT WARM CREAM BACKGROUND) */}
       {typeof document !== "undefined" &&
