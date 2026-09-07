@@ -11,16 +11,20 @@ const About: React.FC = () => {
     offset: ["start end", "end start"],
   });
 
-  // Editorial Chapter Motion Physics: 35px -> 0 -> -20px
-  const headingY = useTransform(scrollYProgress, [0, 0.45, 0.9], shouldReduceMotion ? [0, 0, 0] : [35, 0, -20]);
-  const headingOpacity = useTransform(scrollYProgress, [0, 0.25, 0.8, 1], [0, 1, 1, 0.65]);
+  // Master Scroll-Motion "Editorial Reveal" Physics
+  const labelY = useTransform(scrollYProgress, [0, 0.35], shouldReduceMotion ? [0, 0] : [14, 0]);
+  const labelOpacity = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
 
-  const subtextY = useTransform(scrollYProgress, [0.06, 0.5, 0.95], shouldReduceMotion ? [0, 0, 0] : [45, 0, -16]);
-  const subtextOpacity = useTransform(scrollYProgress, [0.06, 0.3, 0.82, 1], [0, 1, 1, 0.65]);
+  const headingY = useTransform(scrollYProgress, [0, 0.45, 0.9], shouldReduceMotion ? [0, 0, 0] : [28, 0, -18]);
+  const headingOpacity = useTransform(scrollYProgress, [0.04, 0.3, 0.85, 1], [0, 1, 1, 0.7]);
 
-  // Hand-drawn Decorative Element Parallax Offsets
-  const decorDotY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [30, -14]);
-  const decorLineY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [20, -28]);
+  const subtextY = useTransform(scrollYProgress, [0.08, 0.5, 0.95], shouldReduceMotion ? [0, 0, 0] : [18, 0, -14]);
+  const subtextOpacity = useTransform(scrollYProgress, [0.08, 0.35, 0.85, 1], [0, 1, 1, 0.7]);
+
+  // Hand-drawn Decorative Element Parallax & Scale
+  const decorScale = useTransform(scrollYProgress, [0, 0.4], shouldReduceMotion ? [1, 1] : [0.96, 1]);
+  const decorDotY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [20, -12]);
+  const decorLineY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [15, -20]);
 
   return (
     <section
@@ -31,16 +35,25 @@ const About: React.FC = () => {
       {/* Hand-Drawn Editorial Decorative Objects */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <motion.div
-          style={{ y: decorDotY }}
+          style={{ y: decorDotY, scale: decorScale }}
           className="absolute top-12 left-[10%] sm:left-[15%] w-3 h-3 rounded-full bg-[#FFD42A] opacity-80 shadow-xs"
         />
         <motion.div
-          style={{ y: decorLineY }}
+          style={{ y: decorLineY, scale: decorScale }}
           className="absolute bottom-16 right-[12%] sm:right-[18%] w-16 h-[2px] bg-[#1D2024]/12 rounded-full"
         />
       </div>
 
       <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
+        {/* Chapter Tag Label */}
+        <motion.div
+          style={{ y: labelY, opacity: labelOpacity }}
+          className="flex items-center gap-2 font-mono text-xs sm:text-[13px] tracking-[0.18em] uppercase text-[#20252B]/60 font-semibold mb-6 sm:mb-8"
+        >
+          <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs" />
+          <span>01 // ABOUT</span>
+        </motion.div>
+
         {/* Display Heading Statement — Clickable to /about */}
         <Link to="/about" className="group block w-full">
           <motion.h2

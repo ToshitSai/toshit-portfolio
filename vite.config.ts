@@ -26,51 +26,67 @@ function securityHeadersPlugin(): Plugin {
         );
         res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
 
-        // Handle POST /api/contact
-        if (req.url === "/api/contact" && req.method === "POST") {
-          const clientIp =
-            (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
-            (req.headers["x-real-ip"] as string) ||
-            req.socket?.remoteAddress ||
-            "127.0.0.1";
-
-          let bodyStr = "";
-          req.on("data", (chunk: Buffer) => {
-            bodyStr += chunk.toString();
-            // Payload size protection: kill request if > 10KB
-            if (bodyStr.length > 10 * 1024) {
-              res.statusCode = 413;
+        // Handle API Endpoints
+        if (req.url?.startsWith("/api/")) {
+          if (req.url === "/api/contact" || req.url?.startsWith("/api/contact?")) {
+            if (req.method !== "POST") {
+              res.statusCode = 405;
+              res.setHeader("Allow", ["POST"]);
               res.setHeader("Content-Type", "application/json");
-              res.end(JSON.stringify({ success: false, error: "Payload too large." }));
-              req.destroy();
+              res.end(JSON.stringify({ success: false, error: "Method Not Allowed" }));
+              return;
             }
-          });
 
-          req.on("end", async () => {
-            try {
-              const body = bodyStr ? (JSON.parse(bodyStr) as Record<string, unknown>) : {};
-              if (!body || typeof body !== "object" || Array.isArray(body)) {
-                res.statusCode = 400;
+            const clientIp =
+              (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
+              (req.headers["x-real-ip"] as string) ||
+              req.socket?.remoteAddress ||
+              "127.0.0.1";
+
+            let bodyStr = "";
+            req.on("data", (chunk: Buffer) => {
+              bodyStr += chunk.toString();
+              // Payload size protection: kill request if > 10KB
+              if (bodyStr.length > 10 * 1024) {
+                res.statusCode = 413;
                 res.setHeader("Content-Type", "application/json");
-                res.end(JSON.stringify({ success: false, error: "Request body must be a JSON object." }));
-                return;
+                res.end(JSON.stringify({ success: false, error: "Payload too large." }));
+                req.destroy();
               }
-              const result = await processContactSubmission(body, clientIp);
-              res.statusCode = result.status;
-              res.setHeader("Content-Type", "application/json");
-              res.end(JSON.stringify(result.data));
-            } catch (err: unknown) {
-              if (err instanceof SyntaxError) {
-                res.statusCode = 400;
+            });
+
+            req.on("end", async () => {
+              try {
+                const body = bodyStr ? (JSON.parse(bodyStr) as Record<string, unknown>) : {};
+                if (!body || typeof body !== "object" || Array.isArray(body)) {
+                  res.statusCode = 400;
+                  res.setHeader("Content-Type", "application/json");
+                  res.end(JSON.stringify({ success: false, error: "Request body must be a JSON object." }));
+                  return;
+                }
+                const result = await processContactSubmission(body, clientIp);
+                res.statusCode = result.status;
                 res.setHeader("Content-Type", "application/json");
-                res.end(JSON.stringify({ success: false, error: "Request body must be valid JSON." }));
-                return;
+                res.end(JSON.stringify(result.data));
+              } catch (err: unknown) {
+                if (err instanceof SyntaxError) {
+                  res.statusCode = 400;
+                  res.setHeader("Content-Type", "application/json");
+                  res.end(JSON.stringify({ success: false, error: "Request body must be valid JSON." }));
+                  return;
+                }
+                res.statusCode = 500;
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ success: false, error: "An unexpected error occurred." }));
               }
-              res.statusCode = 500;
-              res.setHeader("Content-Type", "application/json");
-              res.end(JSON.stringify({ success: false, error: "An unexpected error occurred." }));
-            }
-          });
+            });
+            return;
+          }
+
+          // Unhandled /api/* endpoints return 404 Not Found
+          res.statusCode = 404;
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify({ success: false, error: "API endpoint not found." }));
           return;
         }
 

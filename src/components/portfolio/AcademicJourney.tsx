@@ -122,7 +122,7 @@ const AcademicJourney: React.FC = () => {
                 <motion.div
                   initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true, margin: "-60px" }}
+                  viewport={{ once: false, margin: "-60px" }}
                   transition={{ duration: 0.65, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
                   className="w-full h-[1px] bg-[#1B1B18]/12 origin-left mb-8"
                 />
@@ -130,7 +130,7 @@ const AcademicJourney: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
+                  viewport={{ once: false, margin: "-60px" }}
                   transition={{
                     duration: 0.6,
                     delay: idx * 0.15 + 0.15,

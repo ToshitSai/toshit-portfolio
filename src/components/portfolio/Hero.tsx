@@ -104,25 +104,24 @@ const Hero: React.FC = () => {
     offset: ["start start", "end start"],
   });
 
-  // Hero Living Sky Scroll Motion Physics (Differential Parallax Speeds)
-  const heroScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.96]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.85]);
-  const heroTitleY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -35]);
+  // Master Scroll-Motion "Layered Atmosphere" Physics
+  const heroScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.985]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.9, 0.82]);
+  const heroTitleY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -18]);
   
-  // Clouds drift slower (-40px / -55px Y) and horizontally
-  const heroCloudsLeftY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -40]);
-  const heroCloudsLeftX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -30]);
-  const heroCloudsRightY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -55]);
-  const heroCloudsRightX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, 35]);
-  const heroCloudsOpacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.9, 0]);
+  // Clouds & Sun drift at distinct layered atmosphere speeds
+  const heroCloudsLeftY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
+  const heroCloudsLeftX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
+  const heroCloudsRightY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -16]);
+  const heroCloudsRightX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, 12]);
+  const heroCloudsOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.82]);
 
-  // Sun drifts significantly faster (-120px Y) for deep multi-layered sky depth & recedes
-  const heroSunY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -120]);
-  const heroSunX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -25]);
-  const heroSunScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.82]);
-  const heroSunOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.85, 0]);
+  const heroSunY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -15]);
+  const heroSunX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -8]);
+  const heroSunScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.95]);
+  const heroSunOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.82]);
 
-  const heroWaveY = useTransform(scrollYProgress, [0.4, 1], shouldReduceMotion ? [0, 0] : [0, -15]);
+  const heroWaveY = useTransform(scrollYProgress, [0.4, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
 
   // Motion physics for mouse parallax using Framer Motion springs
   const springConfig = { stiffness: 100, damping: 20 };
