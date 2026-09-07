@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import RecordScratchHeading from "./RecordScratchHeading";
 
 interface TimelineEntry {
   id: string;
@@ -47,15 +48,16 @@ const timelineEntries: TimelineEntry[] = [
 
 const AcademicJourney: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const timelineTrackRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
+  // Scroll Progress across the entire section for Timeline line drawing
+  const { scrollYProgress: sectionProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
+    offset: ["start 65%", "end 60%"],
   });
 
-  const headerY = useTransform(scrollYProgress, [0, 0.4, 0.85], shouldReduceMotion ? [0, 0, 0] : [20, 0, -10]);
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.6]);
+  const timelineScaleY = useTransform(sectionProgress, [0, 1], shouldReduceMotion ? [1, 1] : [0, 1]);
 
   return (
     <section
@@ -66,40 +68,51 @@ const AcademicJourney: React.FC = () => {
     >
       <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         
-        {/* HEADER ROW */}
-        <motion.div
-          style={{ y: headerY, opacity: headerOpacity }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#1B1B18]/12 pb-10 mb-16 sm:mb-24 gap-6"
-        >
-          <div>
-            <div className="flex items-center gap-2.5 font-mono text-xs sm:text-sm tracking-wider text-[#4A4A45] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]" />
-              <span>03 // ACADEMIC JOURNEY</span>
-            </div>
-            <h2
-              style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
-              className="font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-[#1B1B18]"
-            >
-              Academic<br />
-              <span className="text-[#A9A69C]">Timeline.</span>
-            </h2>
+        {/* HEADER ROW WITH RECORD-SCRATCH SECTION TRANSITION */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end pb-4 mb-16 sm:mb-24 gap-6">
+          <div className="flex-1">
+            <RecordScratchHeading
+              sectionTag="03 // ACADEMIC JOURNEY"
+              lineColor="bg-[#1B1B18]/12"
+              accentColor="#D9A62C"
+              title={
+                <h2
+                  style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+                  className="font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-[#1B1B18]"
+                >
+                  Academic<br />
+                  <span className="text-[#A9A69C]">Timeline.</span>
+                </h2>
+              }
+            />
           </div>
 
-          <p className="max-w-xs text-sm sm:text-base leading-relaxed text-[#55554F] md:text-right font-normal">
+          <p className="max-w-xs text-sm sm:text-base leading-relaxed text-[#55554F] md:text-right font-normal mb-10 sm:mb-16">
             A concise record of the academic foundations, core technical disciplines, and engineering history shaping my work.
           </p>
-        </motion.div>
+        </div>
 
         {/* TIMELINE SECTION */}
-        <div className="relative pl-8 sm:pl-12">
+        <div ref={timelineTrackRef} className="relative pl-8 sm:pl-12">
           
-          {/* Vertical Timeline Track Line */}
+          {/* Static Faint Vertical Timeline Track Line */}
           <div
             className="absolute left-[5px] top-2.5 bottom-2.5 w-[1px]"
             style={{
-              background: "linear-gradient(to bottom, rgba(27,27,24,0.18), rgba(27,27,24,0.05))",
+              background: "rgba(27,27,24,0.12)",
             }}
           />
+
+          {/* Active Fill-As-You-Scroll Vertical Timeline Line */}
+          <motion.div
+            style={{
+              scaleY: timelineScaleY,
+            }}
+            className="absolute left-[5px] top-2.5 bottom-2.5 w-[2px] bg-[#1B1B18] origin-top z-10"
+          >
+            {/* Spinning Needle Marker Dot at Leading Tip of Moving Timeline Line */}
+            <div className="absolute bottom-0 -left-[4px] w-2.5 h-2.5 rounded-full bg-[#D9A62C] shadow-[0_0_8px_#D9A62C]" />
+          </motion.div>
 
           {/* Timeline Entries */}
           <div className="space-y-16 sm:space-y-20">

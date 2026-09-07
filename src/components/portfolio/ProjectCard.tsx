@@ -48,8 +48,9 @@ export interface ProjectCardData {
   devices: ProjectDeviceConfig[];
 }
 
-interface ProjectCardProps {
+export interface ProjectCardProps {
   project: ProjectCardData;
+  cardIndex?: number;
 }
 
 interface ProjectVideoProps {
@@ -170,28 +171,36 @@ const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, 
   return (
     <div aria-hidden="true" className={device.className}>
       <motion.div
-      aria-hidden="true"
-      initial={shouldReduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: isPhone ? 36 : 24, scale: isPhone ? 0.9 : 0.94 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: shouldReduceMotion ? 0 : 0.82, delay: device.delay || 0, ease: [0.16, 1, 0.3, 1] }}
-      style={{ x: pointerX, y: composedY }}
-      className={`relative w-full ${shellChrome}`}
-    >
-      {isPhone && <div className="absolute left-1/2 top-[9px] z-10 h-[4px] w-9 -translate-x-1/2 rounded-full bg-white/20" />}
-      {isWatch && (
-        <>
-          <div className="absolute left-1/2 top-[-18%] h-[18%] w-1/2 -translate-x-1/2 rounded-t-[18px] bg-[#101114]" />
-          <div className="absolute bottom-[-18%] left-1/2 h-[18%] w-1/2 -translate-x-1/2 rounded-b-[18px] bg-[#101114]" />
-        </>
-      )}
-      <div className={`relative overflow-hidden bg-black ${screenChrome}`}>
-        <div className={device.screenAspect}>
-          <ProjectVideo active={active} shouldLoad={shouldLoad} project={project} device={device} />
+        aria-hidden="true"
+        initial={
+          shouldReduceMotion
+            ? { opacity: 1, y: 0, scale: 1, rotate: 0 }
+            : { opacity: 0, y: isPhone ? -30 : -22, scale: 0.94, rotate: -2 }
+        }
+        whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{
+          duration: shouldReduceMotion ? 0 : 0.75,
+          delay: device.delay || 0,
+          ease: [0.34, 1.56, 0.64, 1], // Tonearm needle-drop ease bounce
+        }}
+        style={{ x: pointerX, y: composedY }}
+        className={`relative w-full ${shellChrome}`}
+      >
+        {isPhone && <div className="absolute left-1/2 top-[9px] z-10 h-[4px] w-9 -translate-x-1/2 rounded-full bg-white/20" />}
+        {isWatch && (
+          <>
+            <div className="absolute left-1/2 top-[-18%] h-[18%] w-1/2 -translate-x-1/2 rounded-t-[18px] bg-[#101114]" />
+            <div className="absolute bottom-[-18%] left-1/2 h-[18%] w-1/2 -translate-x-1/2 rounded-b-[18px] bg-[#101114]" />
+          </>
+        )}
+        <div className={`relative overflow-hidden bg-black ${screenChrome}`}>
+          <div className={device.screenAspect}>
+            <ProjectVideo active={active} shouldLoad={shouldLoad} project={project} device={device} />
+          </div>
         </div>
-      </div>
-      {device.type === "laptop" && <div className="mx-auto mt-[7px] h-[5px] w-2/5 rounded-full bg-white/14" />}
-      {device.type === "desktop" && <div className="mx-auto mt-[8px] hidden h-[4px] w-1/5 rounded-full bg-white/12 sm:block" />}
+        {device.type === "laptop" && <div className="mx-auto mt-[7px] h-[5px] w-2/5 rounded-full bg-white/14" />}
+        {device.type === "desktop" && <div className="mx-auto mt-[8px] hidden h-[4px] w-1/5 rounded-full bg-white/12 sm:block" />}
       </motion.div>
     </div>
   );

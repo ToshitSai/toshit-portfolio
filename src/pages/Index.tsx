@@ -9,6 +9,8 @@ import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 import HelloAnimation from "@/components/portfolio/HelloAnimation";
 import SelectedWork from "@/components/portfolio/SelectedWork";
 
+import VelocityTiltWrapper from "@/components/portfolio/VelocityTiltWrapper";
+
 // Lazy-loaded heavy sections for bundle optimization and code-splitting
 const TechnicalSkills = React.lazy(() => import("@/components/portfolio/TechnicalSkills"));
 const Testimonials = React.lazy(() => import("@/components/portfolio/Testimonials"));
@@ -153,23 +155,25 @@ const Index = () => {
       />
       
       <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
-        <Hero />
-        <TechMarquee />
-        <About />
+        <VelocityTiltWrapper>
+          <Hero />
+          <TechMarquee />
+          <About />
 
-        <Suspense fallback={<SelectedWorkFallback />}>
-          <SelectedWork />
-        </Suspense>
+          <Suspense fallback={<SelectedWorkFallback />}>
+            <SelectedWork />
+          </Suspense>
 
-        <AcademicJourney />
+          <AcademicJourney />
 
-        <Suspense fallback={<TechnicalSkillsFallback />}>
-          <TechnicalSkills />
-        </Suspense>
+          <Suspense fallback={<TechnicalSkillsFallback />}>
+            <TechnicalSkills />
+          </Suspense>
 
-        <Suspense fallback={<TestimonialsFallback />}>
-          <Testimonials />
-        </Suspense>
+          <Suspense fallback={<TestimonialsFallback />}>
+            <Testimonials />
+          </Suspense>
+        </VelocityTiltWrapper>
       </main>
       <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
     </motion.div>

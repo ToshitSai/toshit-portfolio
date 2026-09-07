@@ -1,63 +1,23 @@
 import React, { useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-
 import ProjectStoryViewer from "./ProjectStoryViewer";
 import ProjectGrid from "./ProjectGrid";
+import RecordScratchHeading from "./RecordScratchHeading";
 
-// EDITORIAL PROJECTS INTRO HEADER
+// EDITORIAL PROJECTS INTRO HEADER WITH RECORD-SCRATCH TRANSITION
 const ProjectsHeader: React.FC<{ projectCount?: number }> = ({ projectCount: _projectCount }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-  const isInView = useInView(containerRef, { once: true, margin: "-60px" });
-
-  const headingLines = [
-    "Things I built",
-    "because I had",
-    "to know if they worked.",
-  ];
-
   return (
-    <div ref={containerRef} className="relative pb-4 mb-12 sm:mb-16">
-      <div className="flex items-center gap-2.5 font-mono text-xs sm:text-[13px] tracking-[0.18em] text-[#1D2024]/75 uppercase mb-6 sm:mb-8">
-        <motion.span
-          initial={{ scale: 0.8 }}
-          animate={isInView ? { scale: [1, 1.3, 1] } : {}}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block flex-shrink-0"
-        />
-        <span className="font-semibold text-[#1D2024]/80">02 // FEATURED WORK</span>
-      </div>
-
-      <div className="max-w-[760px] mb-6 sm:mb-8">
-        <h2 className="font-serif font-medium text-[clamp(28px,3.6vw,50px)] leading-[1.15] tracking-[-0.01em] text-[#1D2024] flex flex-col items-start gap-0.5">
-          {headingLines.map((line, idx) => (
-            <div key={idx} className="overflow-hidden py-0.5">
-              <motion.span
-                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
-                animate={isInView || shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.75,
-                  delay: idx * 0.1,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="block"
-              >
-                {line}
-              </motion.span>
-            </div>
-          ))}
-        </h2>
-      </div>
-
-      <motion.div
-        initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-        animate={isInView || shouldReduceMotion ? { scaleX: 1 } : {}}
-        transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full h-[1px] bg-[#1D2024]/12 origin-left"
-      />
-    </div>
+    <RecordScratchHeading
+      sectionTag="02 // FEATURED WORK"
+      title={
+        <div className="flex flex-col items-start gap-0.5">
+          <span>Things I built</span>
+          <span>because I had</span>
+          <span>to know if they worked.</span>
+        </div>
+      }
+    />
   );
 };
 

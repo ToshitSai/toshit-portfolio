@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import RecordScratchHeading from "./RecordScratchHeading";
 
 interface TestimonialItem {
   id: string;
@@ -174,26 +175,17 @@ const Testimonials: React.FC = () => {
         className="max-w-[1120px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10"
       >
 
-        {/* 1. SECTION LABEL & EDITORIAL HEADING */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-12 sm:mb-16 max-w-2xl"
-        >
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#FFD42A] inline-block shadow-xs" />
-            <span className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-[#1D2024]/60 font-semibold">
-              05 // WORDS FROM OTHERS
-            </span>
-          </div>
-
-          <h2 className="font-sans text-3xl sm:text-4xl lg:text-[46px] font-medium tracking-tight text-[#1D2024] leading-[1.12]">
-            A few words from people I&apos;ve built with.
-          </h2>
-          <div className="mt-2 w-24 h-[3px] bg-[#FFD42A] rounded-full" />
-        </motion.div>
+        {/* 1. SECTION LABEL & EDITORIAL HEADING WITH RECORD-SCRATCH TRANSITION */}
+        <RecordScratchHeading
+          sectionTag="05 // WORDS FROM OTHERS"
+          lineColor="bg-[#1D2024]/10"
+          accentColor="#FFD42A"
+          title={
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-[46px] font-medium tracking-tight text-[#1D2024] leading-[1.12]">
+              A few words from people I&apos;ve built with.
+            </h2>
+          }
+        />
 
         {/* 2. MAIN SINGLE QUOTE CONTAINER (STABLE HEIGHT - NO LAYOUT SHIFT) */}
         <div className="min-h-[260px] sm:min-h-[280px] flex flex-col justify-between max-w-[860px]">
