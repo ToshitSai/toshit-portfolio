@@ -256,34 +256,7 @@ const Testimonials: React.FC = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* 3. EDITORIAL FOOTER: COUNTER & ARROW NAVIGATION CONTROLS */}
-        <div className="mt-12 sm:mt-16 pt-6 border-t border-[#1D2024]/10 flex items-center justify-between max-w-[860px]">
-          {/* COUNTER & ACCENT PILL */}
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs sm:text-sm tracking-wider font-semibold text-[#1D2024] transition-opacity duration-300">
-              {String(activeIndex + 1).padStart(2, "0")} <span className="text-[#1D2024]/40">/</span> {String(total).padStart(2, "0")}
-            </span>
-            <span className="w-6 h-1 rounded-full bg-[#FFD42A] inline-block" />
-          </div>
 
-          {/* MINIMAL ARROW CONTROLS */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous recommendation"
-              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
-            >
-              ←
-            </button>
-            <button
-              onClick={handleNext}
-              aria-label="Next recommendation"
-              className="w-10 h-10 rounded-full border border-[#1D2024]/20 bg-transparent text-[#1D2024] hover:bg-[#1D2024] hover:text-[#FFF8E8] hover:border-[#1D2024] transition-all flex items-center justify-center text-sm font-bold cursor-pointer shadow-xs active:scale-95"
-            >
-              →
-            </button>
-          </div>
-        </div>
 
       </motion.div>
     </section>
