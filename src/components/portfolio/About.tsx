@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SECTION_APPROACH, motionDistance, useChapterDot } from "@/lib/scrollMotion";
+import { motionDistance } from "@/lib/scrollMotion";
 
 const About: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -11,7 +11,7 @@ const About: React.FC = () => {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: SECTION_APPROACH,
+    offset: ["start end", "end start"],
   });
 
   // Typographic Focus — label → headline mask → support
@@ -26,10 +26,7 @@ const About: React.FC = () => {
   const subtextOpacity = useTransform(scrollYProgress, [0.12, 0.38, 0.85, 1], [0, 1, 1, 0.75]);
 
   const bgY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 8)]);
-  const decorDotY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 28)]);
   const decorLineY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 20)]);
-
-  const chapterDot = useChapterDot(scrollYProgress, shouldReduceMotion);
 
   return (
     <section
@@ -45,10 +42,6 @@ const About: React.FC = () => {
       {/* Hand-Drawn Editorial Decorative Objects */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <motion.div
-          style={{ y: decorDotY }}
-          className="absolute top-12 left-[10%] sm:left-[15%] w-3 h-3 rounded-full bg-[#FFD42A] opacity-80 shadow-xs"
-        />
-        <motion.div
           style={{ y: decorLineY }}
           className="absolute bottom-16 right-[12%] sm:right-[18%] w-16 h-[2px] bg-[#1D2024]/12 rounded-full"
         />
@@ -60,7 +53,6 @@ const About: React.FC = () => {
           style={{ y: labelY, opacity: labelOpacity }}
           className="flex items-center gap-2 font-mono text-xs sm:text-[13px] tracking-[0.18em] uppercase text-[#20252B]/60 font-semibold mb-6 sm:mb-8"
         >
-          <motion.span style={{ y: chapterDot.y, opacity: chapterDot.opacity }} className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs" />
           <span>02 // ABOUT</span>
         </motion.div>
 
