@@ -26,7 +26,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       {/* Line 1: Dedicated Fixed Height Overlapping Word Viewport */}
-      <div className="relative w-full h-[1.15em] min-h-[46px] xs:min-h-[52px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
+      <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="popLayout">
           <motion.span
             key={currentWord}
@@ -169,7 +169,7 @@ const Hero: React.FC = () => {
   return (
     <motion.section
       ref={heroRef}
-      className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
+      className="relative w-full min-h-[100svh] sm:min-h-[580px] max-h-[880px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
     >
       {/* Background layer — slowest parallax */}
       <motion.div
@@ -189,16 +189,16 @@ const Hero: React.FC = () => {
       </svg>
 
       {/* Top spacing spacer for floating navbar */}
-      <div className="pt-16 sm:pt-24" />
+      <div className="pt-20 sm:pt-24" />
 
       {/* BACKGROUND SCENERY & MULTI-LAYER PARALLAX GRAPHICS */}
       <motion.div style={{ y: heroBackgroundY }} className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
         {/* Patterned Yellow Sun Graphic */}
         <motion.div
           style={{ y: heroSunY }}
-          className="absolute top-20 right-3 sm:top-20 sm:right-12 md:right-16 w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28"
+          className="absolute top-16 right-2 sm:top-20 sm:right-12 md:right-16 w-12 h-12 sm:w-24 sm:h-24 md:w-28 md:h-28"
         >
-          <div className="w-full h-full rounded-full bg-[#FFD42A] p-1.5 sm:p-2 shadow-xl opacity-95 animate-spin-slow">
+          <div className="w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow">
             <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center">
               <div className="w-3/4 h-3/4 rounded-full bg-[radial-gradient(#20252B_1.5px,transparent_1.5px)] [background-size:8px_8px] opacity-40" />
             </div>
@@ -208,7 +208,7 @@ const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Left */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[18%] sm:top-[28%] left-[1%] sm:left-[5%] w-20 sm:w-32 md:w-36"
+          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[5%] w-14 sm:w-32 md:w-36"
         >
           <div>
             <svg viewBox="0 0 160 90" fill="none" className="w-full drop-shadow-sm filter">
@@ -223,7 +223,7 @@ const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Right */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[12%] sm:top-[22%] right-[1%] sm:right-[10%] w-28 sm:w-[220px] md:w-[250px]"
+          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[10%] w-20 sm:w-[220px] md:w-[250px]"
         >
           <div>
             <svg viewBox="0 0 200 110" fill="none" className="w-full drop-shadow-md filter">
@@ -237,7 +237,7 @@ const Hero: React.FC = () => {
       </motion.div>
 
       {/* MAIN HERO CONTENT AREA */}
-      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-2 sm:pt-4 pb-4 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
+      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-1 sm:pt-4 pb-2 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
         <motion.div
           style={{ y: heroTitleY, opacity: heroTitleOpacity }}
           className="w-full max-w-[780px] flex flex-col items-center relative"
@@ -248,30 +248,30 @@ const Hero: React.FC = () => {
               DESIGN / DETAILS / CODE
             </span>
           </div>
-          {/* ANIMATION F — Eyebrow Badge with Pulsing Yellow Dot & High-Contrast Backdrop */}
+          {/* Eyebrow Badge with Pulsing Yellow Dot & High-Contrast Backdrop */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2.5 mb-3 sm:mb-6 select-none"
+            className="inline-flex items-center gap-2 mb-2 sm:mb-6 select-none max-w-full overflow-hidden px-2"
           >
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
-            <span className="text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap drop-shadow-xs">
+            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.12em] sm:tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap truncate drop-shadow-xs">
               01 // HOME · TOSHIT SAI GALAM —
             </span>
           </motion.div>
 
-          {/* ANIMATION H — Display Headline with Staggered Entrance Reveal */}
+          {/* Display Headline with Staggered Entrance Reveal */}
           <motion.h1
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.88] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
+            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(1.85rem,7.5vw,6.2rem)] leading-[0.88] tracking-[-0.02em] mb-3 sm:mb-6 flex flex-col items-center justify-center"
           >
             <RotatingHeroWord />
           </motion.h1>
 
-          {/* ANIMATION E — Centered Interactive Now Building Card */}
+          {/* Centered Interactive Now Building Card */}
           <motion.div
             style={{ y: heroSupportingY }}
             data-cursor="now-building"
@@ -283,7 +283,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onMouseEnter={() => setIsCardHovered(true)}
             onMouseLeave={() => setIsCardHovered(false)}
-            className="group/card w-full max-w-[460px] bg-[#FFF8E8] rounded-full p-2 sm:p-3 px-3.5 sm:px-5 shadow-2xl border border-white/80 flex items-center justify-between gap-2 cursor-pointer relative select-none focus:outline-none focus:ring-2 focus:ring-[#FFD42A]"
+            className="group/card w-[calc(100%-24px)] xs:w-[calc(100%-32px)] sm:w-full max-w-[460px] bg-[#FFF8E8] rounded-full p-1.5 sm:p-3 px-3 sm:px-5 shadow-2xl border border-white/80 flex items-center justify-between gap-1.5 cursor-pointer relative select-none focus:outline-none focus:ring-2 focus:ring-[#FFD42A]"
           >
             {/* LEFT VINYL DISC (PREVIOUS PROJECT) */}
             <div className="relative flex-shrink-0 z-20">
@@ -327,14 +327,14 @@ const Hero: React.FC = () => {
               onClick={handleCardClick}
               onMouseEnter={() => setIsCenterHovered(true)}
               onMouseLeave={() => setIsCenterHovered(false)}
-              className="flex-1 text-center px-1 overflow-hidden h-[36px] sm:h-[38px] flex flex-col justify-center relative cursor-pointer z-10"
+              className="flex-1 text-center px-1 overflow-hidden h-[34px] sm:h-[38px] flex flex-col justify-center relative cursor-pointer z-10"
             >
-              <div className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.18em] text-[#4A525D] font-bold">
+              <div className="text-[8.5px] xs:text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#4A525D] font-bold">
                 NOW BUILDING
               </div>
 
               {/* PROJECT TITLE & SUBTITLE ANIMATED VIEWPORT */}
-              <div className="relative h-[22px] sm:h-[20px] overflow-hidden flex items-center justify-center">
+              <div className="relative h-[20px] sm:h-[20px] overflow-hidden flex items-center justify-center">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentProject.id}
@@ -344,7 +344,7 @@ const Hero: React.FC = () => {
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute inset-0 flex items-center justify-center gap-1.5"
                   >
-                    <span className="text-[11px] sm:text-sm font-sans font-bold text-[#20252B] leading-tight truncate">
+                    <span className="text-[10.5px] xs:text-[11px] sm:text-sm font-sans font-bold text-[#20252B] leading-tight truncate">
                       {currentProject.title}
                     </span>
                     <span className="hidden sm:inline text-[11px] font-sans text-[#20252B]/70 truncate">
@@ -411,11 +411,11 @@ const Hero: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* ANIMATION F — BOTTOM SCROLL INDICATOR & BOUNCING ARROW */}
-      <motion.div style={{ y: heroDecorY }} className="relative z-20 w-full flex flex-col items-center pb-2">
+      {/* BOTTOM SCROLL INDICATOR & BOUNCING ARROW */}
+      <motion.div style={{ y: heroDecorY }} className="relative z-20 w-full flex flex-col items-center pb-1">
         <a
           href="#about"
-          className="group inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#20252B] font-bold hover:text-[#FFF8E8] transition-colors mb-2 bg-white/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/40 shadow-sm"
+          className="group inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[#20252B] font-bold hover:text-[#FFF8E8] transition-colors mb-1 bg-white/30 backdrop-blur-md px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/40 shadow-sm"
         >
           <span>SCROLL TO WORK</span>
           <motion.span
@@ -430,7 +430,7 @@ const Hero: React.FC = () => {
         {/* Organic Rolling Waves Transition to Cream Background */}
         <motion.div
           style={{ y: heroWaveY }}
-          className="w-full h-14 sm:h-16 relative overflow-hidden pointer-events-none"
+          className="w-full h-8 sm:h-16 relative overflow-hidden pointer-events-none"
         >
           <svg
             viewBox="0 0 1440 120"
