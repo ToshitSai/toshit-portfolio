@@ -125,142 +125,33 @@ const TechnicalSkills: React.FC = () => {
     }
   }, []);
 
-  // Main Coordinated RAF Animation Loop
+  // Update highlight position based on active/hovered/selected skill
+  const updateHighlightPosition = useCallback(() => {
+    const active = hoveredSkill || selectedSkill || semanticActiveSkill;
+    if (!active || !listGridRef.current || !highlightRef.current) return;
+
+    const el = document.getElementById(`skill-btn-${active.id}`);
+    if (!el) return;
+
+    const containerRect = listGridRef.current.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+
+    const x = rect.left - containerRect.left;
+    const y = rect.top - containerRect.top;
+    const w = rect.width;
+    const h = rect.height;
+
+    highlightRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    highlightRef.current.style.width = `${w}px`;
+    highlightRef.current.style.height = `${h}px`;
+    highlightRef.current.style.opacity = "1";
+  }, [hoveredSkill, selectedSkill, semanticActiveSkill]);
+
   useEffect(() => {
-    measureLayout();
-
-    const handleResize = () => {
-      measureLayout();
-    };
-    window.addEventListener("resize", handleResize);
-
-    // Continuous motion tick
-    const tick = () => {
-      // 1. Calculate target scroll progress through skills section
-      if (sectionRef.current && listGridRef.current) {
-        const secRect = sectionRef.current.getBoundingClientRect();
-        const winHeight = window.innerHeight;
-
-        // Continuous normalized scroll progress (0.0 to 5.0 across 6 rows)
-        const startOffset = winHeight * 0.7;
-        const endOffset = -secRect.height + winHeight * 0.3;
-        const totalDist = startOffset - endOffset;
-        const currentDist = startOffset - secRect.top;
-
-        let rawProgress = Math.max(0, Math.min(1, currentDist / totalDist));
-        // Continuous float row index (0.00 -> 5.00)
-        let floatRowProgress = rawProgress * 5.0;
-
-        // Determine active category column (default 'dev' = 1)
-        let col = 1;
-        if (hoveredSkillRef.current) {
-          col = CATEGORY_MAP[hoveredSkillRef.current.category];
-        } else if (selectedCategoryRef.current) {
-          col = CATEGORY_MAP[selectedCategoryRef.current];
-        } else if (selectedSkillRef.current) {
-          col = CATEGORY_MAP[selectedSkillRef.current.category];
-        }
-        currentColIndexRef.current = col;
-
-        // Determine target Y, X, W, H
-        let targetX = 0;
-        let targetY = 0;
-        let targetW = 0;
-        let targetH = 0;
-        let targetOpacity = 1;
-
-        if (hoveredSkillRef.current) {
-          // Mouse hover target position
-          const hCol = CATEGORY_MAP[hoveredSkillRef.current.category];
-          const hRow = SKILL_GROUPS[hCol].items.findIndex((i) => i.id === hoveredSkillRef.current?.id);
-          const bound = itemBoundsRef.current[hCol][Math.max(0, hRow)];
-          if (bound) {
-            targetX = bound.x;
-            targetY = bound.y;
-            targetW = bound.width;
-            targetH = bound.height;
-          }
-        } else if (selectedSkillRef.current) {
-          // Selected skill target position
-          const sCol = CATEGORY_MAP[selectedSkillRef.current.category];
-          const sRow = SKILL_GROUPS[sCol].items.findIndex((i) => i.id === selectedSkillRef.current?.id);
-          const bound = itemBoundsRef.current[sCol][Math.max(0, sRow)];
-          if (bound) {
-            targetX = bound.x;
-            targetY = bound.y;
-            targetW = bound.width;
-            targetH = bound.height;
-          }
-        } else {
-          // CONTINUOUS SCROLL INTERPOLATION BETWEEN ROWS
-          const baseRow = Math.min(4, Math.floor(floatRowProgress));
-          const nextRow = Math.min(5, baseRow + 1);
-          const rowFraction = floatRowProgress - baseRow;
-
-          const bound1 = itemBoundsRef.current[col][baseRow];
-          const bound2 = itemBoundsRef.current[col][nextRow];
-
-          if (bound1 && bound2) {
-            targetX = bound1.x + (bound2.x - bound1.x) * rowFraction;
-            targetY = bound1.y + (bound2.y - bound1.y) * rowFraction;
-            targetW = bound1.width + (bound2.width - bound1.width) * rowFraction;
-            targetH = bound1.height + (bound2.height - bound1.height) * rowFraction;
-          } else if (bound1) {
-            targetX = bound1.x;
-            targetY = bound1.y;
-            targetW = bound1.width;
-            targetH = bound1.height;
-          }
-        }
-
-        targetMotion.current = {
-          x: targetX,
-          y: targetY,
-          w: targetW,
-          h: targetH,
-          opacity: targetOpacity,
-        };
-
-        // 2. Smooth Lerp Interpolation (Responsive 0.16 smoothing factor)
-        const lerp = 0.16;
-        currentMotion.current.x += (targetMotion.current.x - currentMotion.current.x) * lerp;
-        currentMotion.current.y += (targetMotion.current.y - currentMotion.current.y) * lerp;
-        currentMotion.current.w += (targetMotion.current.w - currentMotion.current.w) * lerp;
-        currentMotion.current.h += (targetMotion.current.h - currentMotion.current.h) * lerp;
-        currentMotion.current.opacity += (targetMotion.current.opacity - currentMotion.current.opacity) * lerp;
-
-        // Apply GPU transform directly to single floating highlight element
-        if (highlightRef.current && currentMotion.current.w > 0) {
-          const el = highlightRef.current;
-          el.style.transform = `translate3d(${currentMotion.current.x}px, ${currentMotion.current.y}px, 0)`;
-          el.style.width = `${currentMotion.current.w}px`;
-          el.style.height = `${currentMotion.current.h}px`;
-          el.style.opacity = `${currentMotion.current.opacity}`;
-        }
-
-        // 3. Derived Semantic Skill for Core AI Disc Role Label
-        const nearestRow = Math.min(5, Math.max(0, Math.round(floatRowProgress)));
-        const activeItem =
-          hoveredSkillRef.current ||
-          selectedSkillRef.current ||
-          SKILL_GROUPS[col].items[nearestRow];
-
-        if (activeItem && activeItem.id !== lastSemanticIdRef.current) {
-          lastSemanticIdRef.current = activeItem.id;
-          setSemanticActiveSkill(activeItem);
-        }
-      }
-
-      rafIdRef.current = requestAnimationFrame(tick);
-    };
-
-    rafIdRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-    };
-  }, [measureLayout]);
+    updateHighlightPosition();
+    window.addEventListener("resize", updateHighlightPosition);
+    return () => window.removeEventListener("resize", updateHighlightPosition);
+  }, [updateHighlightPosition]);
 
   const handleMouseEnterSkill = (item: SkillItem) => {
     setHoveredSkill(item);

@@ -14,16 +14,19 @@ const CustomScrollbar: React.FC = () => {
   const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let ticking = false;
+    let visibleState = false;
 
     const updateScrollProgress = () => {
       const docEl = document.documentElement;
       const body = document.body;
 
-      // Check if body scroll is locked by loader or modal
       const isScrollLocked = window.getComputedStyle(body).overflow === "hidden";
       if (isScrollLocked) {
-        setIsVisible(false);
+        if (visibleState) {
+          visibleState = false;
+          setIsVisible(false);
+        }
         return;
       }
 
@@ -45,47 +48,33 @@ const CustomScrollbar: React.FC = () => {
       const thumbHeight = Math.max(40, Math.min(85, (clientHeight / (scrollHeight || 1)) * trackHeight));
       
       thumbRef.current.style.height = `${thumbHeight}px`;
-
       const availableSpace = trackHeight - thumbHeight;
-      targetY.current = progress * availableSpace;
+      const posY = progress * availableSpace;
 
-      if (prefersReducedMotion) {
-        currentY.current = targetY.current;
-        if (thumbRef.current) {
-          thumbRef.current.style.transform = `translate3d(0, ${currentY.current}px, 0)`;
-        }
-      }
+      thumbRef.current.style.transform = `translate3d(0, ${posY.toFixed(2)}px, 0)`;
     };
 
     const handleScrollActivity = () => {
-      updateScrollProgress();
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateScrollProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
 
-      // Show scrollbar on scroll activity
-      setIsVisible(true);
+      if (!visibleState) {
+        visibleState = true;
+        setIsVisible(true);
+      }
 
-      // Auto-hide scrollbar after 1.2s of inactivity
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
       scrollTimeoutRef.current = setTimeout(() => {
+        visibleState = false;
         setIsVisible(false);
       }, 1200);
-    };
-
-    const renderLoop = () => {
-      if (!prefersReducedMotion) {
-        const diff = targetY.current - currentY.current;
-        if (Math.abs(diff) > 0.05) {
-          currentY.current += diff * 0.18;
-        } else {
-          currentY.current = targetY.current;
-        }
-
-        if (thumbRef.current) {
-          thumbRef.current.style.transform = `translate3d(0, ${currentY.current.toFixed(2)}px, 0)`;
-        }
-      }
-      animationFrameId.current = requestAnimationFrame(renderLoop);
     };
 
     const onScroll = () => {
@@ -100,21 +89,12 @@ const CustomScrollbar: React.FC = () => {
     window.addEventListener("resize", onResize, { passive: true });
 
     updateScrollProgress();
-    currentY.current = targetY.current;
-    if (thumbRef.current) {
-      thumbRef.current.style.transform = `translate3d(0, ${currentY.current}px, 0)`;
-    }
-
-    animationFrameId.current = requestAnimationFrame(renderLoop);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
-      }
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
       }
     };
   }, [location.pathname]);

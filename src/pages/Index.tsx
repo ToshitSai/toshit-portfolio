@@ -24,22 +24,19 @@ const TestimonialsFallback = () => <div className="min-h-[400px] w-full bg-cream
 // PHYSICAL HOME CANVAS TRANSITION VARIANTS
 const homeCanvasVariants = {
   initial: {
-    opacity: 0.92,
-    y: -12,
+    opacity: 0.95,
   },
   animate: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.4,
       ease: [0.16, 1, 0.3, 1] as const,
     },
   },
   exit: {
-    opacity: 0.92,
-    y: -12,
+    opacity: 0.95,
     transition: {
-      duration: 0.4,
+      duration: 0.3,
       ease: [0.16, 1, 0.3, 1] as const,
     },
   },

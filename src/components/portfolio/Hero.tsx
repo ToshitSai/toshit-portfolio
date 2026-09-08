@@ -104,45 +104,18 @@ const Hero: React.FC = () => {
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: HERO_EXIT,
+    offset: ["start start", "end start"],
   });
 
-  // Layered Poster — continuous scroll-linked depth (first 30% of hero exit)
-  const scrollPhase = useTransform(scrollYProgress, [0, 0.3, 1], [0, 1, 1]);
-  const heroTitleY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 18)]);
-  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.92, 0.82]);
-  const heroSupportingY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 12)]);
-  const heroBackgroundY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 6)]);
-  const heroDecorY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 12)]);
-
-  // Clouds & Sun drift at distinct layered atmosphere speeds
-  const heroCloudsLeftY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
-  const heroCloudsLeftX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
-  const heroCloudsRightY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -16]);
-  const heroCloudsRightX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, 12]);
-  const heroCloudsOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.82]);
-
-  const heroSunY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -15]);
-  const heroSunX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -8]);
-  const heroSunScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.95]);
-  const heroSunOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.82]);
-
-  // Paper turn — wave lifts as About enters
-  const heroWaveY = useTransform(scrollYProgress, [0.35, 0.85, 1], shouldReduceMotion ? [0, 0, 0] : [0, -14, -18]);
-
-  // Motion physics for mouse parallax using Framer Motion springs
-  const springConfig = { stiffness: 100, damping: 20 };
-
-  // Parallax layer outputs
-  // Title layer: ±8px
-  const titleX = useSpring(useMotionValue(0), springConfig);
-  const titleY = useSpring(useMotionValue(0), springConfig);
-  // Cloud layer: ±18px
-  const cloudsX = useSpring(useMotionValue(0), springConfig);
-  const cloudsY = useSpring(useMotionValue(0), springConfig);
-  // Sun layer: ∓14px (opposite direction)
-  const sunX = useSpring(useMotionValue(0), springConfig);
-  const sunY = useSpring(useMotionValue(0), springConfig);
+  // Lightweight section entrance & scroll exit transforms
+  const heroTitleY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -30]);
+  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.85]);
+  const heroSupportingY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -18]);
+  const heroBackgroundY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
+  const heroCloudsY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -15]);
+  const heroSunY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -12]);
+  const heroDecorY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
+  const heroWaveY = useTransform(scrollYProgress, [0.35, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
 
   // Automatic Project Rotation (every 4.5s, pauses on manual interaction)
   useEffect(() => {
@@ -191,38 +164,11 @@ const Hero: React.FC = () => {
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-
-    // Normalised mouse coordinates (-1 to 1)
-    const normX = (clientX / innerWidth - 0.5) * 2;
-    const normY = (clientY / innerHeight - 0.5) * 2;
-
-    titleX.set(normX * 8);
-    titleY.set(normY * 8);
-
-    cloudsX.set(normX * 18);
-    cloudsY.set(normY * 18);
-
-    sunX.set(normX * -14);
-    sunY.set(normY * -14);
-  };
-
-  const composedTitleY = useTransform(() => titleY.get() + heroTitleY.get());
-  const composedLeftCloudsX = useTransform(() => cloudsX.get() + heroCloudsLeftX.get());
-  const composedLeftCloudsY = useTransform(() => cloudsY.get() + heroCloudsLeftY.get());
-  const composedRightCloudsX = useTransform(() => cloudsX.get() + heroCloudsRightX.get());
-  const composedRightCloudsY = useTransform(() => cloudsY.get() + heroCloudsRightY.get());
-  const composedSunX = useTransform(() => sunX.get() + heroSunX.get());
-  const composedSunY = useTransform(() => sunY.get() + heroSunY.get());
-
   const currentProject = NOW_BUILDING_PROJECTS[projectIndex];
 
   return (
     <motion.section
       ref={heroRef}
-      onMouseMove={handleMouseMove}
       className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
     >
       {/* Background layer — slowest parallax */}
@@ -247,14 +193,9 @@ const Hero: React.FC = () => {
 
       {/* BACKGROUND SCENERY & MULTI-LAYER PARALLAX GRAPHICS */}
       <motion.div style={{ y: heroBackgroundY }} className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-        {/* ANIMATION C — Patterned Yellow Sun Graphic with Continuous Slow Rotation & Faster Parallax Drift */}
+        {/* Patterned Yellow Sun Graphic */}
         <motion.div
-          style={{
-            x: composedSunX,
-            y: composedSunY,
-            scale: heroSunScale,
-            opacity: heroSunOpacity,
-          }}
+          style={{ y: heroSunY }}
           className="absolute top-20 right-3 sm:top-20 sm:right-12 md:right-16 w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28"
         >
           <div className="w-full h-full rounded-full bg-[#FFD42A] p-1.5 sm:p-2 shadow-xl opacity-95 animate-spin-slow">
@@ -264,13 +205,9 @@ const Hero: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* ANIMATION D — Organic Cutout Cloud Left (Slower Drift) */}
+        {/* Organic Cutout Cloud Left */}
         <motion.div
-          style={{
-            x: composedLeftCloudsX,
-            y: composedLeftCloudsY,
-            opacity: heroCloudsOpacity,
-          }}
+          style={{ y: heroCloudsY }}
           className="absolute top-[18%] sm:top-[28%] left-[1%] sm:left-[5%] w-20 sm:w-32 md:w-36"
         >
           <div>
@@ -283,13 +220,9 @@ const Hero: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* ANIMATION D — Organic Cutout Cloud Right (Slower Drift) */}
+        {/* Organic Cutout Cloud Right */}
         <motion.div
-          style={{
-            x: composedRightCloudsX,
-            y: composedRightCloudsY,
-            opacity: heroCloudsOpacity,
-          }}
+          style={{ y: heroCloudsY }}
           className="absolute top-[12%] sm:top-[22%] right-[1%] sm:right-[10%] w-28 sm:w-[220px] md:w-[250px]"
         >
           <div>
@@ -305,9 +238,8 @@ const Hero: React.FC = () => {
 
       {/* MAIN HERO CONTENT AREA */}
       <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-2 sm:pt-4 pb-4 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
-        {/* ANIMATION B — Headline Title Motion Physics Layer */}
         <motion.div
-          style={{ x: titleX, y: composedTitleY, opacity: heroTitleOpacity }}
+          style={{ y: heroTitleY, opacity: heroTitleOpacity }}
           className="w-full max-w-[780px] flex flex-col items-center relative"
         >
           {/* Vertical Side Tagline directly beside the main display headline */}
