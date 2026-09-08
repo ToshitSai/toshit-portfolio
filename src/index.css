@@ -112,27 +112,6 @@
     font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
   }
 
-  /* Global Cursor Suppression for Desktop & Fine Pointer Devices */
-  @media (hover: hover) and (pointer: fine) {
-    html,
-    body,
-    *,
-    *::before,
-    *::after,
-    a,
-    button,
-    select,
-    [role="button"] {
-      cursor: none !important;
-    }
-
-    input,
-    textarea,
-    [contenteditable="true"] {
-      cursor: text !important;
-    }
-  }
-
   p {
     font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
     letter-spacing: -0.012em;
