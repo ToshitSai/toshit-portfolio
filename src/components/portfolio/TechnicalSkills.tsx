@@ -281,16 +281,16 @@ const TechnicalSkills: React.FC = () => {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full bg-cream-paper border-2 border-ink flex flex-col items-center justify-center text-center p-4 relative shadow-2xl transition-transform"
             >
-              <span className="absolute top-4 left-5 text-[9px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
+              <span className="absolute top-3 left-4 sm:top-4 sm:left-5 text-[8px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
                 CORE
               </span>
-              <span className="absolute top-4 right-5 text-[9px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
+              <span className="absolute top-3 right-4 sm:top-4 sm:right-5 text-[8px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
                 LLM
               </span>
-              <span className="absolute bottom-4 left-5 text-[9px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
+              <span className="absolute bottom-3 left-4 sm:bottom-4 sm:left-5 text-[8px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
                 API
               </span>
-              <span className="absolute bottom-4 right-5 text-[9px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
+              <span className="absolute bottom-3 right-4 sm:bottom-4 sm:right-5 text-[8px] sm:text-[10px] font-mono text-ink/75 font-bold uppercase tracking-widest">
                 BUILD
               </span>
 

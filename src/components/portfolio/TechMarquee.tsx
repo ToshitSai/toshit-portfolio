@@ -113,8 +113,8 @@ const TechMarquee: React.FC = () => {
       aria-label="Technology Showcase Strip"
     >
       {/* Edge gradient mask overlays for soft elegant disappearance */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-r from-[#FFF8E8] via-[#FFF8E8]/90 to-transparent z-20 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-l from-[#FFF8E8] via-[#FFF8E8]/90 to-transparent z-20 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-8 xs:w-16 sm:w-36 md:w-48 bg-gradient-to-r from-[#FFF8E8] via-[#FFF8E8]/90 to-transparent z-20 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-8 xs:w-16 sm:w-36 md:w-48 bg-gradient-to-l from-[#FFF8E8] via-[#FFF8E8]/90 to-transparent z-20 pointer-events-none" />
 
       {/* CONTINUOUS TICKER TRACK */}
       <div

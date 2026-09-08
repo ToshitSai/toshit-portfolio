@@ -208,7 +208,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           </a>
 
           {/* STATIC DESKTOP NAV LINKS */}
-          <div className="hidden md:flex items-center gap-[12px] whitespace-nowrap ml-2.5">
+          <div className="hidden lg:flex items-center gap-[12px] whitespace-nowrap ml-2.5">
             {NAV_ITEMS.map((item) => {
               const isActive =
                 (item.id === "about" && isAboutRoute) ||
@@ -235,7 +235,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           <button
             type="button"
             onClick={handleWorkWithMeClick}
-            className="group flex items-center justify-center gap-1.5 sm:gap-2 w-auto px-3 sm:px-3.5 sm:w-[170px] h-[36px] sm:h-[40px] rounded-full bg-white/90 text-[#20252B] text-xs sm:text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
+            className="group flex items-center justify-center gap-1.5 sm:gap-2 w-auto px-3 sm:px-3.5 lg:w-[170px] h-[36px] sm:h-[40px] rounded-full bg-white/90 text-[#20252B] text-xs sm:text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
           >
             <svg
               className="w-4 h-3 sm:w-[18px] sm:h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
@@ -307,7 +307,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         </motion.div>
 
         {/* MOBILE CONTROLS */}
-        <div className="flex md:hidden items-center gap-1.5 ml-1 pr-0.5">
+        <div className="flex lg:hidden items-center gap-1.5 ml-1 pr-0.5">
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

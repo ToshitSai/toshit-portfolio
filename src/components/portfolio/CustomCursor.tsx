@@ -29,10 +29,16 @@ const CustomCursor: React.FC = () => {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [cursorState, setCursorState] = useState<CursorState>(DEFAULT_STATE);
 
-  // Single Source of Position Coordinates
-  const pointerPos = useRef({ x: -100, y: -100 });
-  const cursorPos = useRef({ x: -100, y: -100 });
-  const isPointerInitialized = useRef(false);
+  // Single Source of Position Coordinates (Initializes to window center so cursor renders immediately)
+  const pointerPos = useRef({
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
+  });
+  const cursorPos = useRef({
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
+  });
+  const isPointerInitialized = useRef(true);
 
   // State Refs for RAF loop access without re-renders
   const stateRef = useRef<CursorState>(DEFAULT_STATE);
@@ -46,16 +52,23 @@ const CustomCursor: React.FC = () => {
   // Entry Pulse Ref
   const lastProjectId = useRef<string | null>(null);
   const isPulsing = useRef(false);
+  const pulseStartTime = useRef<number>(0);
   const pulseScale = useRef(1);
 
   // DOM Refs for Single Root & Sub-parts
   const rootRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
 
-  // Check Touch Device Capability
+  // Check Touch & Pointer Capability
   useEffect(() => {
     const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const checkPointer = () => setIsTouchDevice(!mediaQuery.matches);
+
+    const checkPointer = () => {
+      // Desktop fine-pointer devices use custom cursor; purely coarse touch devices use native
+      const isFinePointer = mediaQuery.matches;
+      setIsTouchDevice(!isFinePointer);
+    };
+
     checkPointer();
 
     if (mediaQuery.addEventListener) {
@@ -64,14 +77,54 @@ const CustomCursor: React.FC = () => {
       mediaQuery.addListener(checkPointer);
     }
 
+    const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" || e.pointerType === "pen") {
+        setIsTouchDevice(false);
+      }
+    };
+
+    const handleTouchStart = () => {
+      if (!mediaQuery.matches) {
+        setIsTouchDevice(true);
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("resize", checkPointer);
+
     return () => {
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener("change", checkPointer);
       } else {
         mediaQuery.removeListener(checkPointer);
       }
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("resize", checkPointer);
     };
   }, []);
+
+  // Manage Global CSS Class on html and body root elements
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    if (!isTouchDevice) {
+      document.documentElement.classList.add("custom-cursor-active", "has-custom-cursor");
+      document.body.classList.add("custom-cursor-active", "has-custom-cursor");
+      document.documentElement.classList.remove("is-touch-device");
+      document.body.classList.remove("is-touch-device");
+      return () => {
+        document.documentElement.classList.remove("custom-cursor-active", "has-custom-cursor");
+        document.body.classList.remove("custom-cursor-active", "has-custom-cursor");
+      };
+    } else {
+      document.documentElement.classList.remove("custom-cursor-active", "has-custom-cursor");
+      document.body.classList.remove("custom-cursor-active", "has-custom-cursor");
+      document.documentElement.classList.add("is-touch-device");
+      document.body.classList.add("is-touch-device");
+    }
+  }, [isTouchDevice]);
 
   // Single Unified rAF Animation & Position Update Loop
   useEffect(() => {
@@ -118,7 +171,7 @@ const CustomCursor: React.FC = () => {
 
         // 4. One-time Entry Pulse Animation (scale 1 -> 1.06 -> 1 over ~240ms)
         if (isPulsing.current) {
-          const t = Date.now() - (pulseScale.current || Date.now());
+          const t = Date.now() - pulseStartTime.current;
           if (t < 240) {
             const p = Math.sin((t / 240) * Math.PI);
             pulseScale.current = 1 + p * 0.06;
@@ -179,7 +232,8 @@ const CustomCursor: React.FC = () => {
       if (lastProjectId.current !== pId) {
         lastProjectId.current = pId;
         isPulsing.current = true;
-        pulseScale.current = Date.now(); // Store start timestamp
+        pulseStartTime.current = Date.now();
+        pulseScale.current = 1;
       }
 
       const labelText = isDwelling.current && dwellProgress >= 1 ? "OPEN ↗" : "VIEW ↗";
@@ -279,23 +333,8 @@ const CustomCursor: React.FC = () => {
     if (isTouchDevice) return;
 
     const handlePointerMove = (e: PointerEvent) => {
-      // Small magnetic snap effect on small CTA buttons only (3-4px max)
-      const target = e.target as HTMLElement | null;
-      const smallBtn = target?.closest("button.btn-magnetic, .nav-item-magnetic") as HTMLElement | null;
-
-      let pX = e.clientX;
-      let pY = e.clientY;
-
-      if (smallBtn) {
-        const rect = smallBtn.getBoundingClientRect();
-        const cX = rect.left + rect.width / 2;
-        const cY = rect.top + rect.height / 2;
-        const dist = Math.hypot(pX - cX, pY - cY);
-        if (dist < 32) {
-          pX = pX + (cX - pX) * 0.15;
-          pY = pY + (cY - pY) * 0.15;
-        }
-      }
+      const pX = e.clientX;
+      const pY = e.clientY;
 
       pointerPos.current.x = pX;
       pointerPos.current.y = pY;

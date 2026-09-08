@@ -60,8 +60,22 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry, idx }) => {
 
   const { scrollYProgress } = useScroll({
     target: rowRef,
-    offset: ["start 90%", "center center", "start 20%"],
+    offset: ["start 85%", "center center", "start 15%"],
   });
+
+  const [isReached, setIsReached] = React.useState(entry.isCurrent);
+
+  React.useEffect(() => {
+    if (entry.isCurrent) return;
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      if (latest > 0.15) {
+        setIsReached(true);
+      } else {
+        setIsReached(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress, entry.isCurrent]);
 
   const lineScale = useTransform(scrollYProgress, [0, 0.18], shouldReduceMotion ? [1, 1] : [0, 1]);
   const dateOpacity = useTransform(scrollYProgress, [0.08, 0.22], [0, 1]);
@@ -70,21 +84,44 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry, idx }) => {
   const titleY = useTransform(scrollYProgress, [0.2, 0.5, 0.8], shouldReduceMotion ? [0, 0, 0] : [0, -motionDistance(isMobile, 6), 0]);
 
   return (
-    <div ref={rowRef} className="group/row relative">
-      <motion.div style={{ scaleX: lineScale }} className="w-full h-[1px] bg-[#1B1B18]/12 origin-left mb-8" />
+    <div ref={rowRef} className="group/row relative w-full">
+      {/* TIMELINE NODE DOT - Centered precisely on the vertical line axis */}
+      <motion.div
+        animate={{
+          scale: isReached ? 1 : 0.95,
+        }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`absolute left-4 sm:left-6 top-3 sm:top-3.5 -translate-x-1/2 z-20 w-[13px] h-[13px] rounded-full transition-all duration-300 flex items-center justify-center pointer-events-none ${
+          entry.isCurrent
+            ? "bg-[#D9A62C] border-2 border-[#1B1B18] shadow-[0_0_0_4px_rgba(217,166,44,0.25)] group-hover/row:scale-125 group-hover/row:shadow-[0_0_0_6px_rgba(217,166,44,0.38)]"
+            : isReached
+            ? "bg-[#1B1B18] border-2 border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.2)] group-hover/row:scale-125 group-hover/row:bg-[#D9A62C]"
+            : "bg-[#F7F2E7] border-2 border-[#1B1B18]/50 group-hover/row:border-[#D9A62C] group-hover/row:bg-[#D9A62C]/20 group-hover/row:scale-110"
+        }`}
+      >
+        {/* Inner dot core indicator when active */}
+        {entry.isCurrent ? (
+          <span className="w-1.5 h-1.5 rounded-full bg-[#1B1B18] animate-pulse" />
+        ) : (
+          <motion.span
+            initial={{ scale: 0 }}
+            animate={{ scale: isReached ? 1 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]"
+          />
+        )}
+      </motion.div>
 
+      {/* TOP HORIZONTAL ACCENT LINE */}
+      <div className="pl-12 sm:pl-16 w-full mb-8">
+        <motion.div style={{ scaleX: lineScale }} className="w-full h-[1px] bg-[#1B1B18]/12 origin-left" />
+      </div>
+
+      {/* ROW CONTENT GRID */}
       <motion.div
         style={{ opacity: contentOpacity }}
-        className="relative grid grid-cols-1 md:grid-cols-[130px_1fr] gap-6 md:gap-10 pb-16 transition-transform duration-300 ease-out group-hover/row:translate-x-1"
+        className="relative grid grid-cols-1 md:grid-cols-[130px_1fr] gap-6 md:gap-10 pb-16 pl-12 sm:pl-16 transition-transform duration-300 ease-out group-hover/row:translate-x-1"
       >
-        <div
-          className={`absolute -left-[32px] sm:-left-[48px] top-1.5 w-[11px] h-[11px] rounded-full border-[1.5px] transition-all duration-300 ${
-            entry.isCurrent
-              ? "bg-[#D9A62C] border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.18)] group-hover/row:scale-125"
-              : "bg-[#F7F2E7] border-[#1B1B18] group-hover/row:bg-[#D9A62C] group-hover/row:border-[#D9A62C]"
-          }`}
-        />
-
         <motion.div style={{ opacity: dateOpacity }} className="font-mono text-xs sm:text-sm text-[#85847C] pt-0.5">
           <div className="leading-snug">
             {entry.startYear}
@@ -94,11 +131,23 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry, idx }) => {
             {entry.endYear}
           </div>
           <span
-            className={`block mt-2.5 font-mono text-[11px] tracking-wider font-semibold ${
-              entry.isCurrent ? "text-[#B08420]" : "text-[#85847C]"
+            className={`inline-flex items-center gap-1.5 mt-2.5 font-mono text-[11px] tracking-wider font-semibold transition-colors duration-300 ${
+              entry.isCurrent || isReached ? "text-[#B08420]" : "text-[#85847C]"
             }`}
           >
-            {entry.statusLabel}
+            {entry.isCurrent ? (
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D9A62C] animate-ping" />
+                <span>● IN PROGRESS</span>
+              </>
+            ) : isReached ? (
+              <>
+                <span className="text-[#D9A62C] font-bold">✓</span>
+                <span>COMPLETED</span>
+              </>
+            ) : (
+              entry.statusLabel
+            )}
           </span>
         </motion.div>
 
@@ -199,13 +248,13 @@ const AcademicJourney: React.FC = () => {
         </div>
 
         {/* TIMELINE SECTION */}
-        <div ref={timelineTrackRef} className="relative pl-8 sm:pl-12">
+        <div ref={timelineTrackRef} className="relative w-full">
           
           {/* Static Faint Vertical Timeline Track Line */}
           <div
-            className="absolute left-[5px] top-2.5 bottom-2.5 w-[1px]"
+            className="absolute left-4 sm:left-6 -translate-x-1/2 top-3 bottom-3 w-[1.5px]"
             style={{
-              background: "rgba(27,27,24,0.12)",
+              background: "rgba(27,27,24,0.14)",
             }}
           />
 
@@ -214,10 +263,10 @@ const AcademicJourney: React.FC = () => {
             style={{
               scaleY: timelineScaleY,
             }}
-            className="absolute left-[5px] top-2.5 bottom-2.5 w-[2px] bg-[#1B1B18] origin-top z-10"
+            className="absolute left-4 sm:left-6 -translate-x-1/2 top-3 bottom-3 w-[2.5px] bg-[#1B1B18] origin-top z-10 pointer-events-none"
           >
-            {/* Spinning Needle Marker Dot at Leading Tip of Moving Timeline Line */}
-            <div className="absolute bottom-0 -left-[4px] w-2.5 h-2.5 rounded-full bg-[#D9A62C] shadow-[0_0_8px_#D9A62C]" />
+            {/* Needle Tip Marker Dot at Leading Tip of Moving Timeline Line */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#D9A62C] shadow-[0_0_10px_#D9A62C] border-2 border-[#1B1B18] z-20" />
           </motion.div>
 
           {/* Timeline Entries */}

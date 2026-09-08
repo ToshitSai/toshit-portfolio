@@ -112,6 +112,8 @@
     font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
   }
 
+
+
   p {
     font-family: 'Plus Jakarta Sans', 'Space Grotesk', 'DM Sans', system-ui, -apple-system, sans-serif;
     letter-spacing: -0.012em;
@@ -167,6 +169,55 @@
   /* Custom Noise Overlay */
   .studio-noise-bg {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+}
+
+/* HIGH-SPECIFICITY GLOBAL DESKTOP CUSTOM CURSOR SUPPRESSION (OVERWRITES ALL TAILWIND & UTILITY CURSORS) */
+html.custom-cursor-active,
+html.custom-cursor-active body,
+html.custom-cursor-active body *,
+html.custom-cursor-active body *::before,
+html.custom-cursor-active body *::after,
+body.custom-cursor-active,
+body.custom-cursor-active *,
+html.has-custom-cursor,
+html.has-custom-cursor body,
+html.has-custom-cursor body *,
+html.has-custom-cursor body *::before,
+html.has-custom-cursor body *::after,
+body.has-custom-cursor,
+body.has-custom-cursor * {
+  cursor: none !important;
+}
+
+html.custom-cursor-active input,
+html.custom-cursor-active textarea,
+html.custom-cursor-active [contenteditable="true"],
+body.custom-cursor-active input,
+body.custom-cursor-active textarea,
+body.custom-cursor-active [contenteditable="true"],
+html.has-custom-cursor input,
+html.has-custom-cursor textarea,
+html.has-custom-cursor [contenteditable="true"],
+body.has-custom-cursor input,
+body.has-custom-cursor textarea,
+body.has-custom-cursor [contenteditable="true"] {
+  cursor: text !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html:not(.is-touch-device),
+  html:not(.is-touch-device) body,
+  html:not(.is-touch-device) *,
+  html:not(.is-touch-device) *::before,
+  html:not(.is-touch-device) *::after {
+    cursor: none !important;
+  }
+
+  html:not(.is-touch-device) input,
+  html:not(.is-touch-device) textarea,
+  html:not(.is-touch-device) [contenteditable="true"] {
+    cursor: text !important;
   }
 }
 

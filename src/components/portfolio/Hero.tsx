@@ -196,7 +196,7 @@ const Hero: React.FC = () => {
         {/* Patterned Yellow Sun Graphic */}
         <motion.div
           style={{ y: heroSunY }}
-          className="absolute top-16 right-2 sm:top-20 sm:right-12 md:right-16 w-12 h-12 sm:w-24 sm:h-24 md:w-28 md:h-28"
+          className="absolute top-16 right-2 sm:top-20 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28"
         >
           <div className="w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow">
             <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center">
@@ -208,7 +208,7 @@ const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Left */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[5%] w-14 sm:w-32 md:w-36"
+          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36"
         >
           <div>
             <svg viewBox="0 0 160 90" fill="none" className="w-full drop-shadow-sm filter">
@@ -223,7 +223,7 @@ const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Right */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[10%] w-20 sm:w-[220px] md:w-[250px]"
+          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px]"
         >
           <div>
             <svg viewBox="0 0 200 110" fill="none" className="w-full drop-shadow-md filter">

@@ -14,9 +14,7 @@ const About: React.FC = () => {
     offset: ["start end", "end start"],
   });
 
-  // Typographic Focus — label → headline mask → support
-  const labelY = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], shouldReduceMotion ? [0, 0, 0, 0] : [12, 0, -6, -12]);
-  const labelOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0.8]);
+
 
   const headingY = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], shouldReduceMotion ? [0, 0, 0, 0] : [motionDistance(isMobile, 28), 0, -motionDistance(isMobile, 18), -motionDistance(isMobile, 18)]);
   const headingMask = useTransform(scrollYProgress, [0.05, 0.35], shouldReduceMotion ? ["inset(0% 0 0 0)", "inset(0% 0 0 0)"] : ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]);
@@ -48,13 +46,7 @@ const About: React.FC = () => {
       </div>
 
       <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
-        {/* Chapter Tag Label */}
-        <motion.div
-          style={{ y: labelY, opacity: labelOpacity }}
-          className="flex items-center gap-2 font-mono text-xs sm:text-[13px] tracking-[0.18em] uppercase text-[#20252B]/60 font-semibold mb-6 sm:mb-8"
-        >
-          <span>02 // ABOUT</span>
-        </motion.div>
+
 
         {/* Display Heading Statement — vertical mask reveal */}
         <Link to="/about" className="group block w-full">

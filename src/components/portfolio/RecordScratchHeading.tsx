@@ -29,13 +29,13 @@ export const RecordScratchHeading: React.FC<RecordScratchHeadingProps> = ({
   const scratchVariants = {
     initial: shouldReduceMotion
       ? { opacity: 1, rotate: 0, scale: 1, y: 0 }
-      : { opacity: 0, rotate: -5, scale: 0.94, y: 20 },
+      : { opacity: 0, rotate: -2, scale: 0.96, y: 15 },
     animate: shouldReduceMotion
       ? { opacity: 1, rotate: 0, scale: 1, y: 0 }
       : {
           opacity: 1,
-          rotate: [ -5, 3.5, -1.8, 0.8, 0 ],
-          scale: [ 0.94, 1.02, 0.99, 1 ],
+          rotate: [-2, 1.5, -0.8, 0],
+          scale: [0.96, 1.01, 0.99, 1],
           y: 0,
         },
   };

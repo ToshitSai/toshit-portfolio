@@ -359,7 +359,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
       {/* 1. TOP METADATA BAR */}
       <motion.div
         style={{ opacity: titleReveal.opacity, y: titleReveal.y }}
-        className="w-full flex items-center justify-between font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
+        className="w-full flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 xs:gap-4 font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
       >
         <div className="flex items-center gap-2.5 tracking-[0.18em] uppercase">
           <span className="w-2 h-2 rounded-full bg-[#FFD42A] inline-block shadow-xs" />

@@ -281,6 +281,8 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
       }
     } else {
       // Mobile stage
+      const mobileOffset = typeof window !== "undefined" && window.innerWidth < 420 ? 110 : 160;
+
       if (diff === 0) {
         return {
           x: dragFactor * 0.9,
@@ -294,29 +296,29 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
         };
       } else if (diff === 1) {
         return {
-          x: 240 + dragFactor * 0.5,
+          x: mobileOffset + dragFactor * 0.5,
           y: 0,
           z: -80,
           rotateY: -8,
-          scale: 0.72,
-          opacity: 0.32,
+          scale: 0.65,
+          opacity: 0.25,
           zIndex: 20,
           pointerEvents: "auto" as const,
         };
       } else if (diff === -1) {
         return {
-          x: -240 + dragFactor * 0.5,
+          x: -mobileOffset + dragFactor * 0.5,
           y: 0,
           z: -80,
           rotateY: 8,
-          scale: 0.72,
-          opacity: 0.32,
+          scale: 0.65,
+          opacity: 0.25,
           zIndex: 20,
           pointerEvents: "auto" as const,
         };
       } else {
         return {
-          x: (diff > 0 ? 420 : -420) + dragFactor,
+          x: (diff > 0 ? mobileOffset * 2 : -mobileOffset * 2) + dragFactor,
           y: 0,
           z: -180,
           rotateY: diff > 0 ? -15 : 15,
