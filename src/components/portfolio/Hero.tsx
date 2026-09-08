@@ -257,7 +257,7 @@ const Hero: React.FC = () => {
           >
             <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
             <span className="text-[10px] xs:text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.12em] sm:tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap truncate drop-shadow-xs">
-              01 // HOME · TOSHIT SAI GALAM —
+              PRODUCTION BUILD TEST 84721 — 01 // HOME · TOSHIT SAI GALAM —
             </span>
           </motion.div>
 
