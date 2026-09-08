@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useInView, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Loader2, X, ArrowUp, Github, Linkedin, Instagram } from "lucide-react";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { SECTION_APPROACH, motionDistance, useStaggerReveal } from "@/lib/scrollMotion";
 
 interface ContactFooterProps {
   isDrawerOpen?: boolean;
@@ -120,15 +122,20 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"],
+    offset: SECTION_APPROACH,
   });
 
-  const footerCenterY = useTransform(scrollYProgress, [0, 0.5], shouldReduceMotion ? [0, 0] : [20, 0]);
+  const footerCenterY = useTransform(scrollYProgress, [0, 0.45], shouldReduceMotion ? [0, 0] : [motionDistance(isMobile, 20), 0]);
+  const ledeReveal = useStaggerReveal(scrollYProgress, 0.08, 0.22, shouldReduceMotion, 14);
+  const titleReveal = useStaggerReveal(scrollYProgress, 0.14, 0.32, shouldReduceMotion, 18);
+  const stageReveal = useStaggerReveal(scrollYProgress, 0.22, 0.42, shouldReduceMotion, 12);
+  const inkLineScale = useTransform(scrollYProgress, [0.55, 0.72], shouldReduceMotion ? [1, 1] : [0, 1]);
+  const footerLinksReveal = useStaggerReveal(scrollYProgress, 0.62, 0.78, shouldReduceMotion, 10);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -351,14 +358,12 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
       {/* 1. TOP METADATA BAR */}
       <motion.div
-        initial={{ opacity: 0, y: -15 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{ opacity: titleReveal.opacity, y: titleReveal.y }}
         className="w-full flex items-center justify-between font-mono text-xs sm:text-sm text-[#1B1B18]/70 font-medium z-10"
       >
         <div className="flex items-center gap-2.5 tracking-[0.18em] uppercase">
           <span className="w-2 h-2 rounded-full bg-[#FFD42A] inline-block shadow-xs" />
-          <span>06 // CONTACT</span>
+          <span>08 // CONTACT</span>
         </div>
         <div className="flex items-center gap-2">
           <span>📍 Based in Hyderabad, India</span>
@@ -373,9 +378,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
         {/* Lede Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          style={{ opacity: ledeReveal.opacity, y: ledeReveal.y }}
           className="text-[#1B1B18]/75 text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-6 font-normal"
         >
           From early prototypes to production systems, I help teams ship AI-powered products that are fast, thoughtful, and built to scale.
@@ -383,9 +386,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
         {/* H1 Main Title with Underline on Cursor Hover */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          style={{ opacity: titleReveal.opacity, y: titleReveal.y }}
           onMouseEnter={() => setIsTitleHovered(true)}
           onMouseLeave={() => setIsTitleHovered(false)}
           onClick={() => setIsDrawerOpen(true)}
@@ -407,9 +408,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
 
         {/* 3. INTERACTIVE SYSTEM NODE DIAGRAM STAGE */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          style={{ opacity: stageReveal.opacity, y: stageReveal.y }}
           ref={stageRef}
           onMouseEnter={() => setIsHoveringStage(true)}
           onMouseLeave={() => setIsHoveringStage(false)}
@@ -469,15 +468,11 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
       {/* 5. BOTTOM FOOTER BAR WITH BACK TO TOP */}
       <div className="w-full relative z-10 pt-6">
         <motion.div
-          initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          style={{ scaleX: inkLineScale }}
           className="w-full h-[1px] bg-[#1B1B18]/10 origin-left mb-6"
         />
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          style={{ opacity: footerLinksReveal.opacity, y: footerLinksReveal.y }}
           className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs sm:text-sm text-[#1B1B18]/70"
         >
         <p>© 2026 Toshit Sai Galam • All rights reserved</p>

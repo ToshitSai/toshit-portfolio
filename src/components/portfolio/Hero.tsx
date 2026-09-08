@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { HERO_EXIT, motionDistance } from "@/lib/scrollMotion";
 
 const HERO_WORDS = [
   "AI-POWERED",
@@ -97,18 +99,22 @@ const Hero: React.FC = () => {
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
   const heroRef = useRef<HTMLElement>(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ["start start", "end start"],
+    offset: HERO_EXIT,
   });
 
-  // Master Scroll-Motion "Layered Atmosphere" Physics
-  const heroScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.985]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.9, 0.82]);
-  const heroTitleY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -18]);
-  
+  // Layered Poster — continuous scroll-linked depth (first 30% of hero exit)
+  const scrollPhase = useTransform(scrollYProgress, [0, 0.3, 1], [0, 1, 1]);
+  const heroTitleY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 18)]);
+  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.92, 0.82]);
+  const heroSupportingY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 12)]);
+  const heroBackgroundY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 6)]);
+  const heroDecorY = useTransform(scrollPhase, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 12)]);
+
   // Clouds & Sun drift at distinct layered atmosphere speeds
   const heroCloudsLeftY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
   const heroCloudsLeftX = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
@@ -121,7 +127,8 @@ const Hero: React.FC = () => {
   const heroSunScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1, 0.95]);
   const heroSunOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 0.95, 0.82]);
 
-  const heroWaveY = useTransform(scrollYProgress, [0.4, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
+  // Paper turn — wave lifts as About enters
+  const heroWaveY = useTransform(scrollYProgress, [0.35, 0.85, 1], shouldReduceMotion ? [0, 0, 0] : [0, -14, -18]);
 
   // Motion physics for mouse parallax using Framer Motion springs
   const springConfig = { stiffness: 100, damping: 20 };
@@ -216,13 +223,17 @@ const Hero: React.FC = () => {
     <motion.section
       ref={heroRef}
       onMouseMove={handleMouseMove}
-      style={{
-        background: "linear-gradient(180deg, #7EB8E8 0%, #A9D3F0 45%, #5B9BD5 100%)",
-        scale: heroScale,
-        opacity: heroOpacity,
-      }}
-      className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10 origin-top"
+      className="relative w-full h-[82vh] min-h-[520px] sm:min-h-[580px] max-h-[820px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
     >
+      {/* Background layer — slowest parallax */}
+      <motion.div
+        aria-hidden="true"
+        style={{
+          y: heroBackgroundY,
+          background: "linear-gradient(180deg, #7EB8E8 0%, #A9D3F0 45%, #5B9BD5 100%)",
+        }}
+        className="absolute inset-0 z-0"
+      />
       {/* SVG Noise Overlay */}
       <svg className="pointer-events-none absolute inset-0 opacity-[0.035] w-full h-full z-0">
         <filter id="studio-noise">
@@ -235,7 +246,7 @@ const Hero: React.FC = () => {
       <div className="pt-16 sm:pt-24" />
 
       {/* BACKGROUND SCENERY & MULTI-LAYER PARALLAX GRAPHICS */}
-      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+      <motion.div style={{ y: heroBackgroundY }} className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
         {/* ANIMATION C — Patterned Yellow Sun Graphic with Continuous Slow Rotation & Faster Parallax Drift */}
         <motion.div
           style={{
@@ -262,24 +273,14 @@ const Hero: React.FC = () => {
           }}
           className="absolute top-[18%] sm:top-[28%] left-[1%] sm:left-[5%] w-20 sm:w-32 md:w-36"
         >
-          <motion.div
-            animate={{
-              x: [-8, 8, -8],
-              y: [-4, 4, -4],
-            }}
-            transition={{
-              duration: 22,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
+          <div>
             <svg viewBox="0 0 160 90" fill="none" className="w-full drop-shadow-sm filter">
               <path
                 d="M20 70 C 10 70, 0 60, 0 45 C 0 32, 10 20, 25 20 C 35 10, 55 5, 75 15 C 85 5, 115 5, 130 20 C 145 20, 160 30, 160 45 C 160 60, 145 70, 130 70 Z"
                 fill="#FFF8E8"
               />
             </svg>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* ANIMATION D — Organic Cutout Cloud Right (Slower Drift) */}
@@ -291,32 +292,22 @@ const Hero: React.FC = () => {
           }}
           className="absolute top-[12%] sm:top-[22%] right-[1%] sm:right-[10%] w-28 sm:w-[220px] md:w-[250px]"
         >
-          <motion.div
-            animate={{
-              x: [12, -12, 12],
-              y: [6, -6, 6],
-            }}
-            transition={{
-              duration: 28,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
+          <div>
             <svg viewBox="0 0 200 110" fill="none" className="w-full drop-shadow-md filter">
               <path
                 d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
                 fill="#FFF8E8"
               />
             </svg>
-          </motion.div>
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* MAIN HERO CONTENT AREA */}
       <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-2 sm:pt-4 pb-4 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
         {/* ANIMATION B — Headline Title Motion Physics Layer */}
         <motion.div
-          style={{ x: titleX, y: composedTitleY }}
+          style={{ x: titleX, y: composedTitleY, opacity: heroTitleOpacity }}
           className="w-full max-w-[780px] flex flex-col items-center relative"
         >
           {/* Vertical Side Tagline directly beside the main display headline */}
@@ -334,7 +325,7 @@ const Hero: React.FC = () => {
           >
             <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
             <span className="text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap drop-shadow-xs">
-              HELLO, I'M TOSHIT SAI GALAM. A —
+              01 // HOME · TOSHIT SAI GALAM —
             </span>
           </motion.div>
 
@@ -350,6 +341,7 @@ const Hero: React.FC = () => {
 
           {/* ANIMATION E — Centered Interactive Now Building Card */}
           <motion.div
+            style={{ y: heroSupportingY }}
             data-cursor="now-building"
             tabIndex={0}
             role="region"
@@ -488,7 +480,7 @@ const Hero: React.FC = () => {
       </div>
 
       {/* ANIMATION F — BOTTOM SCROLL INDICATOR & BOUNCING ARROW */}
-      <div className="relative z-20 w-full flex flex-col items-center pb-2">
+      <motion.div style={{ y: heroDecorY }} className="relative z-20 w-full flex flex-col items-center pb-2">
         <a
           href="#about"
           className="group inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#20252B] font-bold hover:text-[#FFF8E8] transition-colors mb-2 bg-white/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/40 shadow-sm"
@@ -520,7 +512,7 @@ const Hero: React.FC = () => {
             />
           </svg>
         </motion.div>
-      </div>
+      </motion.div>
     </motion.section>
   );
 };

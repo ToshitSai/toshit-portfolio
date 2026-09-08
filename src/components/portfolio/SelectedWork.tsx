@@ -9,7 +9,7 @@ import RecordScratchHeading from "./RecordScratchHeading";
 const ProjectsHeader: React.FC<{ projectCount?: number }> = ({ projectCount: _projectCount }) => {
   return (
     <RecordScratchHeading
-      sectionTag="02 // FEATURED WORK"
+      sectionTag="03 // PROJECTS"
       title={
         <div className="flex flex-col items-start gap-0.5">
           <span>Things I built</span>

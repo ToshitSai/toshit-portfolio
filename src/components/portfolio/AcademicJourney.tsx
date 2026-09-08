@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import RecordScratchHeading from "./RecordScratchHeading";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { motionDistance, useFocusBand } from "@/lib/scrollMotion";
 
 interface TimelineEntry {
   id: string;
@@ -46,6 +48,110 @@ const timelineEntries: TimelineEntry[] = [
   },
 ];
 
+interface ArchiveRowProps {
+  entry: TimelineEntry;
+  idx: number;
+}
+
+const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry, idx }) => {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
+
+  const { scrollYProgress } = useScroll({
+    target: rowRef,
+    offset: ["start 90%", "center center", "start 20%"],
+  });
+
+  const lineScale = useTransform(scrollYProgress, [0, 0.18], shouldReduceMotion ? [1, 1] : [0, 1]);
+  const dateOpacity = useTransform(scrollYProgress, [0.08, 0.22], [0, 1]);
+  const contentOpacity = useTransform(scrollYProgress, [0.14, 0.32], [0, 1]);
+  const titleFocus = useFocusBand(scrollYProgress, 0.5);
+  const titleY = useTransform(scrollYProgress, [0.2, 0.5, 0.8], shouldReduceMotion ? [0, 0, 0] : [0, -motionDistance(isMobile, 6), 0]);
+
+  return (
+    <div ref={rowRef} className="group/row relative">
+      <motion.div style={{ scaleX: lineScale }} className="w-full h-[1px] bg-[#1B1B18]/12 origin-left mb-8" />
+
+      <motion.div
+        style={{ opacity: contentOpacity }}
+        className="relative grid grid-cols-1 md:grid-cols-[130px_1fr] gap-6 md:gap-10 pb-16 transition-transform duration-300 ease-out group-hover/row:translate-x-1"
+      >
+        <div
+          className={`absolute -left-[32px] sm:-left-[48px] top-1.5 w-[11px] h-[11px] rounded-full border-[1.5px] transition-all duration-300 ${
+            entry.isCurrent
+              ? "bg-[#D9A62C] border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.18)] group-hover/row:scale-125"
+              : "bg-[#F7F2E7] border-[#1B1B18] group-hover/row:bg-[#D9A62C] group-hover/row:border-[#D9A62C]"
+          }`}
+        />
+
+        <motion.div style={{ opacity: dateOpacity }} className="font-mono text-xs sm:text-sm text-[#85847C] pt-0.5">
+          <div className="leading-snug">
+            {entry.startYear}
+            <br />
+            —
+            <br />
+            {entry.endYear}
+          </div>
+          <span
+            className={`block mt-2.5 font-mono text-[11px] tracking-wider font-semibold ${
+              entry.isCurrent ? "text-[#B08420]" : "text-[#85847C]"
+            }`}
+          >
+            {entry.statusLabel}
+          </span>
+        </motion.div>
+
+        <div className="space-y-4">
+          <motion.div style={{ opacity: titleFocus, y: titleY }} className="flex items-baseline gap-2 flex-wrap">
+            <span
+              style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+              className="font-bold text-2xl sm:text-3xl text-[#1B1B18]"
+            >
+              {entry.degree}
+            </span>
+            <span
+              style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
+              className="font-medium text-2xl sm:text-3xl text-[#A9A69C]"
+            >
+              {entry.field}
+            </span>
+          </motion.div>
+
+          <div>
+            <div className="text-base sm:text-lg font-medium text-[#3A3A35]">{entry.institution}</div>
+            <div className="text-sm text-[#85847C] mt-0.5">{entry.subinstitution}</div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 pt-4">
+            <div>
+              <div className="font-mono text-xs tracking-wider text-[#B08420] font-semibold mb-2">FOCUS</div>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-[#55554F]">
+                {entry.focusArea.map((tag, tIdx) => (
+                  <React.Fragment key={tag}>
+                    <span>{tag}</span>
+                    {tIdx < entry.focusArea.length - 1 && <span className="text-[#C9C6BA] font-light">/</span>}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+
+            <a
+              href={entry.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View ${entry.institution} location on Google Maps`}
+              className="w-[38px] h-[38px] rounded-full border border-[#1B1B18]/20 flex items-center justify-center text-[#1B1B18] hover:bg-[#1B1B18] hover:text-[#F7F7F7] hover:border-[#1B1B18] transition-all duration-200 flex-shrink-0"
+            >
+              <ArrowUpRight className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const AcademicJourney: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const timelineTrackRef = useRef<HTMLDivElement>(null);
@@ -72,7 +178,7 @@ const AcademicJourney: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end pb-4 mb-16 sm:mb-24 gap-6">
           <div className="flex-1">
             <RecordScratchHeading
-              sectionTag="03 // ACADEMIC JOURNEY"
+              sectionTag="04 // EXPERIENCE"
               lineColor="bg-[#1B1B18]/12"
               accentColor="#D9A62C"
               title={
@@ -117,115 +223,7 @@ const AcademicJourney: React.FC = () => {
           {/* Timeline Entries */}
           <div className="space-y-16 sm:space-y-20">
             {timelineEntries.map((entry, idx) => (
-              <div key={entry.id} className="group/row relative">
-                {/* Horizontal Archival Separator Line (scaleX 0 -> 1) */}
-                <motion.div
-                  initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: false, margin: "-60px" }}
-                  transition={{ duration: 0.65, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full h-[1px] bg-[#1B1B18]/12 origin-left mb-8"
-                />
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, margin: "-60px" }}
-                  transition={{
-                    duration: 0.6,
-                    delay: idx * 0.15 + 0.15,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="relative grid grid-cols-1 md:grid-cols-[130px_1fr] gap-6 md:gap-10 pb-16 transition-transform duration-300 ease-out group-hover/row:translate-x-1"
-                >
-                  {/* Timeline Node Bullet */}
-                  <div
-                    className={`absolute -left-[32px] sm:-left-[48px] top-1.5 w-[11px] h-[11px] rounded-full border-[1.5px] transition-all duration-300 ${
-                      entry.isCurrent
-                        ? "bg-[#D9A62C] border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.18)] group-hover/row:scale-125"
-                        : "bg-[#F7F2E7] border-[#1B1B18] group-hover/row:bg-[#D9A62C] group-hover/row:border-[#D9A62C]"
-                    }`}
-                  />
-
-                  {/* Period Column */}
-                  <div className="font-mono text-xs sm:text-sm text-[#85847C] pt-0.5">
-                    <div className="leading-snug">
-                      {entry.startYear}
-                      <br />
-                      —
-                      <br />
-                      {entry.endYear}
-                    </div>
-                    <span
-                      className={`block mt-2.5 font-mono text-[11px] tracking-wider font-semibold ${
-                        entry.isCurrent ? "text-[#B08420]" : "text-[#85847C]"
-                      }`}
-                    >
-                      {entry.statusLabel}
-                    </span>
-                  </div>
-
-                  {/* Main Content Column */}
-                  <div className="space-y-4">
-                    {/* Degree Title Row */}
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <span
-                        style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
-                        className="font-bold text-2xl sm:text-3xl text-[#1B1B18]"
-                      >
-                        {entry.degree}
-                      </span>
-                      <span
-                        style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
-                        className="font-medium text-2xl sm:text-3xl text-[#A9A69C]"
-                      >
-                        {entry.field}
-                      </span>
-                    </div>
-
-                    {/* Institutions */}
-                    <div>
-                      <div className="text-base sm:text-lg font-medium text-[#3A3A35]">
-                        {entry.institution}
-                      </div>
-                      <div className="text-sm text-[#85847C] mt-0.5">
-                        {entry.subinstitution}
-                      </div>
-                    </div>
-
-                    {/* Detail Row: Focus Tags + Link Arrow */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 pt-4">
-                      <div>
-                        <div className="font-mono text-xs tracking-wider text-[#B08420] font-semibold mb-2">
-                          FOCUS
-                        </div>
-                        <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-[#55554F]">
-                          {entry.focusArea.map((tag, tIdx) => (
-                            <React.Fragment key={tag}>
-                              <span>{tag}</span>
-                              {tIdx < entry.focusArea.length - 1 && (
-                                <span className="text-[#C9C6BA] font-light">/</span>
-                              )}
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Circular Interactive Arrow Button */}
-                      <a
-                        href={entry.mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`View ${entry.institution} location on Google Maps`}
-                        className="w-[38px] h-[38px] rounded-full border border-[#1B1B18]/20 flex items-center justify-center text-[#1B1B18] hover:bg-[#1B1B18] hover:text-[#F7F7F7] hover:border-[#1B1B18] transition-all duration-200 flex-shrink-0"
-                      >
-                        <ArrowUpRight className="w-4 h-4" />
-                      </a>
-                    </div>
-
-                  </div>
-                </motion.div>
-              </div>
+              <ArchiveRow key={entry.id} entry={entry} idx={idx} />
             ))}
           </div>
 

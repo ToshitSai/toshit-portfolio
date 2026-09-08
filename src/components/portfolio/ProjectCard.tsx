@@ -9,6 +9,8 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowUpRight, Github } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { SECTION_APPROACH, motionDistance } from "@/lib/scrollMotion";
 
 type DeviceType = "laptop" | "desktop" | "phone" | "tablet" | "watch" | "cinema";
 type DeviceMedia = "desktop" | "mobile";
@@ -142,13 +144,29 @@ interface DeviceShellProps {
   parallaxY: MotionValue<number>;
   pointerX: MotionValue<number>;
   pointerY: MotionValue<number>;
+  scrollOpacity: MotionValue<number>;
+  scrollScale: MotionValue<number>;
+  scrollY: MotionValue<number>;
 }
 
-const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, device, parallaxY, pointerX, pointerY }) => {
+const DeviceShell: React.FC<DeviceShellProps> = ({
+  active,
+  shouldLoad,
+  project,
+  device,
+  parallaxY,
+  pointerX,
+  pointerY,
+  scrollOpacity,
+  scrollScale,
+  scrollY,
+}) => {
   const shouldReduceMotion = useReducedMotion();
   const isPhone = device.type === "phone";
   const isWatch = device.type === "watch";
-  const composedY = useTransform(() => parallaxY.get() + pointerY.get());
+  const composedY = useTransform(() => parallaxY.get() + pointerY.get() + scrollY.get());
+  const composedScale = useTransform(() => scrollScale.get());
+  const composedOpacity = useTransform(() => scrollOpacity.get());
 
   const shellChrome = {
     laptop: "rounded-[18px] border border-black/18 bg-[#101114] p-[7px] shadow-[0_26px_65px_rgba(29,32,36,0.22)] sm:rounded-[24px] sm:p-[9px]",
@@ -170,21 +188,10 @@ const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, 
 
   return (
     <div aria-hidden="true" className={device.className}>
+      {/* Scroll layer */}
       <motion.div
         aria-hidden="true"
-        initial={
-          shouldReduceMotion
-            ? { opacity: 1, y: 0, scale: 1, rotate: 0 }
-            : { opacity: 0, y: isPhone ? -30 : -22, scale: 0.94, rotate: -2 }
-        }
-        whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{
-          duration: shouldReduceMotion ? 0 : 0.75,
-          delay: device.delay || 0,
-          ease: [0.34, 1.56, 0.64, 1], // Tonearm needle-drop ease bounce
-        }}
-        style={{ x: pointerX, y: composedY }}
+        style={{ x: pointerX, y: composedY, scale: composedScale, opacity: composedOpacity }}
         className={`relative w-full ${shellChrome}`}
       >
         {isPhone && <div className="absolute left-1/2 top-[9px] z-10 h-[4px] w-9 -translate-x-1/2 rounded-full bg-white/20" />}
@@ -206,9 +213,10 @@ const DeviceShell: React.FC<DeviceShellProps> = ({ active, shouldLoad, project, 
   );
 };
 
-const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project }) => {
+const ProjectDeviceScene: React.FC<{ project: ProjectCardData; cardIndex?: number }> = ({ project, cardIndex = 0 }) => {
   const sceneRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
   const [shouldLoad, setShouldLoad] = useState(false);
   const [active, setActive] = useState(false);
   const pointerX = useMotionValue(0);
@@ -218,13 +226,21 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
 
   const { scrollYProgress } = useScroll({
     target: sceneRef,
-    offset: ["start end", "end start"],
+    offset: SECTION_APPROACH,
   });
 
-  // Art Exhibition Depth Layering: Background (-10px), Primary Device (-18px), Secondary Device (-25px)
-  const bgY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [10, -10]);
-  const primaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [18, -18]);
-  const secondaryY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [25, -25]);
+  // Exhibition layers — background slow, device medium, foreground fast
+  const bgY = useTransform(scrollYProgress, [0, 0.5, 1], shouldReduceMotion ? [0, 0, 0] : [motionDistance(isMobile, 10), 0, -motionDistance(isMobile, 10)]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.2, 0.7, 1], [0.7, 1, 1, 0.85]);
+  const fgY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [motionDistance(isMobile, 12), -motionDistance(isMobile, 24)]);
+
+  const deviceScrollY = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], shouldReduceMotion ? [0, 0, 0, 0] : [motionDistance(isMobile, 24), 0, -motionDistance(isMobile, 8), -motionDistance(isMobile, 14)]);
+  const deviceOpacity = useTransform(scrollYProgress, [0, 0.22, 0.78, 1], shouldReduceMotion ? [1, 1, 1, 1] : [0, 1, 1, 0.75]);
+  const deviceScale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], shouldReduceMotion ? [1, 1, 1, 1] : [0.975, 1, 1, 0.99]);
+
+  // Subtle personality per project
+  const primaryParallax = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, project.id === "greetly" ? 22 : 18)]);
+  const secondaryParallax = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, project.id === "hirescope" ? 20 : 25)]);
 
   const primaryPointerX = useTransform(smoothPointerX, (value) => (shouldReduceMotion ? 0 : value));
   const primaryPointerY = useTransform(smoothPointerY, (value) => (shouldReduceMotion ? 0 : value));
@@ -278,44 +294,58 @@ const ProjectDeviceScene: React.FC<{ project: ProjectCardData }> = ({ project })
       ref={sceneRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className={`absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 transition-transform duration-350 ease-out group-hover/project:scale-[1.03] sm:px-8 ${project.sceneClassName || "bg-[#EFEAD8]"}`}
+      className={`absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 sm:px-8 ${project.sceneClassName || "bg-[#EFEAD8]"}`}
     >
-      <motion.div style={{ y: bgY }} className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
-        <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
-        <div className={`absolute rounded-full blur-3xl ${project.sceneDecorClassName || "left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 bg-white/20"}`} />
-        <div className="absolute bottom-[17%] left-1/2 h-10 w-[58%] -translate-x-1/2 rounded-full bg-[#1D2024]/10 blur-2xl" />
-      </motion.div>
-      <div className="relative h-full w-full">
-        {project.devices.map((device, index) => (
-          <DeviceShell
-            key={device.id}
-            active={active}
-            shouldLoad={shouldLoad}
-            project={project}
-            device={device}
-            parallaxY={index === 0 ? primaryY : secondaryY}
-            pointerX={index === 0 ? primaryPointerX : secondaryPointerX}
-            pointerY={index === 0 ? primaryPointerY : secondaryPointerY}
-          />
-        ))}
+      {/* Hover layer — separate from scroll transforms */}
+      <div className="relative h-full w-full transition-transform duration-350 ease-out group-hover/project:scale-[1.03]">
+        <motion.div style={{ y: bgY, opacity: bgOpacity }} className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-x-8 top-8 h-px bg-[#1D2024]/10" />
+          <div className="absolute bottom-8 left-8 h-px w-24 bg-[#1D2024]/10 sm:w-36" />
+          <div className={`absolute rounded-full blur-3xl ${project.sceneDecorClassName || "left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 bg-white/20"}`} />
+          <div className="absolute bottom-[17%] left-1/2 h-10 w-[58%] -translate-x-1/2 rounded-full bg-[#1D2024]/10 blur-2xl" />
+        </motion.div>
+
+        {/* Foreground decoration — faster layer */}
+        <motion.div style={{ y: fgY }} className="pointer-events-none absolute inset-0 z-[5]">
+          <div className="absolute right-[12%] top-[14%] h-[2px] w-10 bg-[#FFD42A]/80" />
+          <span className="absolute bottom-[12%] left-[10%] font-mono text-[10px] font-bold tracking-[0.2em] text-[#1D2024]/35">
+            {String(cardIndex + 1).padStart(2, "0")}
+          </span>
+        </motion.div>
+
+        <div className="relative h-full w-full">
+          {project.devices.map((device, index) => (
+            <DeviceShell
+              key={device.id}
+              active={active}
+              shouldLoad={shouldLoad}
+              project={project}
+              device={device}
+              parallaxY={index === 0 ? primaryParallax : secondaryParallax}
+              pointerX={index === 0 ? primaryPointerX : secondaryPointerX}
+              pointerY={index === 0 ? primaryPointerY : secondaryPointerY}
+              scrollOpacity={deviceOpacity}
+              scrollScale={deviceScale}
+              scrollY={deviceScrollY}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project, cardIndex = 0 }) => {
   const shouldReduceMotion = useReducedMotion();
   const articleRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: articleRef,
-    offset: ["start end", "end start"],
+    offset: SECTION_APPROACH,
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [14, -14]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.6, 1, 1, 0.75]);
-  const scale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], shouldReduceMotion ? [1, 1, 1, 1] : [0.98, 1, 1, 0.98]);
+  const metadataOpacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0, 1, 1, 0.7]);
+  const metadataY = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], shouldReduceMotion ? [0, 0, 0, 0] : [12, 0, 0, -6]);
 
   const aspectClass = {
     feature: "aspect-[1.02/1] sm:aspect-[1.45/1]",
@@ -325,11 +355,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   }[project.tileSize];
 
   return (
-    <motion.article
-      ref={articleRef}
-      style={{ y, opacity, scale }}
-      className="relative w-full select-none font-sans"
-    >
+    <article ref={articleRef} className="relative w-full select-none font-sans">
       <a
         href={project.liveUrl}
         target="_blank"
@@ -337,9 +363,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         aria-label={`Open ${project.title}`}
         data-cursor="project"
         data-accent={project.accentColor}
-        className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] bg-[#EFEAD8] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-all duration-500 ease-out hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80 sm:rounded-[34px] lg:rounded-[38px]`}
+        className={`group/project relative block w-full ${aspectClass} overflow-hidden rounded-[24px] bg-[#EFEAD8] shadow-[0_20px_60px_rgba(29,32,36,0.1)] outline-none ring-1 ring-[#1D2024]/10 transition-shadow duration-500 ease-out hover:shadow-[0_30px_80px_rgba(29,32,36,0.16)] focus-visible:ring-2 focus-visible:ring-[#1D2024]/80 sm:rounded-[34px] lg:rounded-[38px]`}
       >
-        <ProjectDeviceScene project={project} />
+        <ProjectDeviceScene project={project} cardIndex={cardIndex} />
 
         {/* UNIFIED FULL-CARD BLUR & TEXT OVERLAY */}
         <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center sm:p-10 bg-[#121417]/65 backdrop-blur-md opacity-0 transition-opacity duration-350 ease-out group-hover/project:opacity-100 group-focus-visible/project:opacity-100">
@@ -353,7 +379,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         </div>
       </a>
 
-      <div className="mt-4 flex flex-col gap-3 sm:mt-5 sm:flex-row sm:items-start sm:justify-between">
+      <motion.div style={{ opacity: metadataOpacity, y: metadataY }} className="mt-4 flex flex-col gap-3 sm:mt-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-[560px]">
           <div className="flex items-center gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1D2024]/58">
             <span style={{ color: project.accentColor }}>{project.number}</span>
@@ -386,8 +412,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             </a>
           )}
         </div>
-      </div>
-    </motion.article>
+      </motion.div>
+    </article>
   );
 };
 

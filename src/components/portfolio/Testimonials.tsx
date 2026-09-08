@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import RecordScratchHeading from "./RecordScratchHeading";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { SECTION_APPROACH, motionDistance } from "@/lib/scrollMotion";
 
 interface TestimonialItem {
   id: string;
@@ -59,14 +61,18 @@ const Testimonials: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
+    offset: SECTION_APPROACH,
   });
 
-  const sectionY = useTransform(scrollYProgress, [0, 0.4, 0.9], shouldReduceMotion ? [0, 0, 0] : [18, 0, -10]);
-  const sectionOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.7]);
+  const headingY = useTransform(scrollYProgress, [0, 0.35, 0.85], shouldReduceMotion ? [0, 0, 0] : [motionDistance(isMobile, 8), 0, -motionDistance(isMobile, 5)]);
+  const quoteY = useTransform(scrollYProgress, [0, 0.4, 0.9], shouldReduceMotion ? [0, 0, 0] : [motionDistance(isMobile, 8), 0, -motionDistance(isMobile, 4)]);
+  const personY = useTransform(scrollYProgress, [0.1, 0.45, 0.9], shouldReduceMotion ? [0, 0, 0] : [motionDistance(isMobile, 5), 0, -motionDistance(isMobile, 3)]);
+  const bgY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 5)]);
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.5, 1, 1, 0.85]);
   
   // Timer & Touch Swipe Refs
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -106,7 +112,7 @@ const Testimonials: React.FC = () => {
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
-  // Automatic Rotation System (3.5s Display Hold Interval, single timer instance)
+  // Automatic Rotation System (3.5s — scroll does not reset timer)
   useEffect(() => {
     if (isPaused || shouldReduceMotion) return;
 
@@ -120,7 +126,7 @@ const Testimonials: React.FC = () => {
         timerRef.current = null;
       }
     };
-  }, [isPaused, shouldReduceMotion, activeIndex, total]);
+  }, [isPaused, shouldReduceMotion, total]);
 
   // Touch Swipe Handlers
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -165,19 +171,16 @@ const Testimonials: React.FC = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* ATMOSPHERIC DECORATIVE CANVAS */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+      <motion.div style={{ y: bgY }} className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-[#FFD42A]/10 blur-3xl" />
         <div className="absolute inset-0 bg-[radial-gradient(#1D2024_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.02]" />
-      </div>
+      </motion.div>
 
-      <motion.div
-        style={{ y: sectionY, opacity: sectionOpacity }}
-        className="max-w-[1120px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10"
-      >
-
+      <motion.div style={{ opacity: sectionOpacity }} className="max-w-[1120px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
+        <motion.div style={{ y: headingY }}>
         {/* 1. SECTION LABEL & EDITORIAL HEADING WITH RECORD-SCRATCH TRANSITION */}
         <RecordScratchHeading
-          sectionTag="05 // WORDS FROM OTHERS"
+          sectionTag="06 // WORDS FROM OTHERS"
           lineColor="bg-[#1D2024]/10"
           accentColor="#FFD42A"
           title={
@@ -186,9 +189,10 @@ const Testimonials: React.FC = () => {
             </h2>
           }
         />
+        </motion.div>
 
         {/* 2. MAIN SINGLE QUOTE CONTAINER (STABLE HEIGHT - NO LAYOUT SHIFT) */}
-        <div className="min-h-[260px] sm:min-h-[280px] flex flex-col justify-between max-w-[860px]">
+        <motion.div style={{ y: quoteY }} className="min-h-[260px] sm:min-h-[280px] flex flex-col justify-between max-w-[860px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={current.id}
@@ -226,6 +230,7 @@ const Testimonials: React.FC = () => {
 
               {/* PERSON IDENTITY (NAME, ROLE, BADGE MONOGRAM) */}
               <motion.div
+                style={{ y: personY }}
                 initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
                 animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
                 transition={
@@ -249,7 +254,7 @@ const Testimonials: React.FC = () => {
               </motion.div>
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* 3. EDITORIAL FOOTER: COUNTER & ARROW NAVIGATION CONTROLS */}
         <div className="mt-12 sm:mt-16 pt-6 border-t border-[#1D2024]/10 flex items-center justify-between max-w-[860px]">

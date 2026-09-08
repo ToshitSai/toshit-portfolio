@@ -328,7 +328,7 @@ const TechnicalSkills: React.FC = () => {
             >
               <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-[0_0_8px_#FFD42A]" />
               <span className="label-mono text-ink-light tracking-[0.2em] uppercase font-bold">
-                04 // TOOLKIT
+                05 // SKILLS
               </span>
             </motion.div>
 
