@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Hero from "@/components/portfolio/Hero";
-import YellowInkThread from "@/components/portfolio/YellowInkThread";
 import TechMarquee from "@/components/portfolio/TechMarquee";
 import About from "@/components/portfolio/About";
 import AcademicJourney from "@/components/portfolio/AcademicJourney";
@@ -154,9 +153,8 @@ const Index = () => {
       
       <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
         <VelocityTiltWrapper>
-          <div className="relative">
+          <div>
             <Hero />
-            <YellowInkThread />
           </div>
           <TechMarquee />
           <About />
