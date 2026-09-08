@@ -180,7 +180,7 @@ const Testimonials: React.FC = () => {
         <motion.div style={{ y: headingY }}>
         {/* 1. SECTION LABEL & EDITORIAL HEADING WITH RECORD-SCRATCH TRANSITION */}
         <RecordScratchHeading
-          sectionTag="06 // WORDS FROM OTHERS — LIVE TEST"
+          sectionTag="06 // WORDS FROM OTHERS"
           lineColor="bg-[#1D2024]/10"
           accentColor="#FFD42A"
           title={
