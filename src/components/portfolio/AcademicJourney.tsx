@@ -86,31 +86,33 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry, idx }) => {
   return (
     <div ref={rowRef} className="group/row relative w-full">
       {/* TIMELINE NODE DOT - Centered precisely on the vertical line axis */}
-      <motion.div
-        animate={{
-          scale: isReached ? 1 : 0.95,
-        }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`absolute left-4 sm:left-6 top-3 sm:top-3.5 -translate-x-1/2 z-20 w-[13px] h-[13px] rounded-full transition-all duration-300 flex items-center justify-center pointer-events-none ${
-          entry.isCurrent
-            ? "bg-[#D9A62C] border-2 border-[#1B1B18] shadow-[0_0_0_4px_rgba(217,166,44,0.25)] group-hover/row:scale-125 group-hover/row:shadow-[0_0_0_6px_rgba(217,166,44,0.38)]"
-            : isReached
-            ? "bg-[#1B1B18] border-2 border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.2)] group-hover/row:scale-125 group-hover/row:bg-[#D9A62C]"
-            : "bg-[#F7F2E7] border-2 border-[#1B1B18]/50 group-hover/row:border-[#D9A62C] group-hover/row:bg-[#D9A62C]/20 group-hover/row:scale-110"
-        }`}
-      >
-        {/* Inner dot core indicator when active */}
-        {entry.isCurrent ? (
-          <span className="w-1.5 h-1.5 rounded-full bg-[#1B1B18] animate-pulse" />
-        ) : (
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: isReached ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
-            className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]"
-          />
-        )}
-      </motion.div>
+      <div className="absolute left-4 sm:left-6 top-3 sm:top-3.5 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+        <motion.div
+          animate={{
+            scale: isReached ? 1 : 0.95,
+          }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className={`w-[13px] h-[13px] rounded-full transition-all duration-300 flex items-center justify-center ${
+            entry.isCurrent
+              ? "bg-[#D9A62C] border-2 border-[#1B1B18] shadow-[0_0_0_4px_rgba(217,166,44,0.25)] group-hover/row:scale-125 group-hover/row:shadow-[0_0_0_6px_rgba(217,166,44,0.38)]"
+              : isReached
+              ? "bg-[#1B1B18] border-2 border-[#D9A62C] shadow-[0_0_0_4px_rgba(217,166,44,0.2)] group-hover/row:scale-125 group-hover/row:bg-[#D9A62C]"
+              : "bg-[#F7F2E7] border-2 border-[#1B1B18]/50 group-hover/row:border-[#D9A62C] group-hover/row:bg-[#D9A62C]/20 group-hover/row:scale-110"
+          }`}
+        >
+          {/* Inner dot core indicator when active */}
+          {entry.isCurrent ? (
+            <span className="w-1.5 h-1.5 rounded-full bg-[#1B1B18] animate-pulse" />
+          ) : (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: isReached ? 1 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-1.5 h-1.5 rounded-full bg-[#D9A62C]"
+            />
+          )}
+        </motion.div>
+      </div>
 
       {/* TOP HORIZONTAL ACCENT LINE */}
       <div className="pl-12 sm:pl-16 w-full mb-8">
@@ -259,15 +261,17 @@ const AcademicJourney: React.FC = () => {
           />
 
           {/* Active Fill-As-You-Scroll Vertical Timeline Line */}
-          <motion.div
-            style={{
-              scaleY: timelineScaleY,
-            }}
-            className="absolute left-4 sm:left-6 -translate-x-1/2 top-3 bottom-3 w-[2.5px] bg-[#1B1B18] origin-top z-10 pointer-events-none"
-          >
-            {/* Needle Tip Marker Dot at Leading Tip of Moving Timeline Line */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#D9A62C] shadow-[0_0_10px_#D9A62C] border-2 border-[#1B1B18] z-20" />
-          </motion.div>
+          <div className="absolute left-4 sm:left-6 -translate-x-1/2 top-3 bottom-3 w-[2.5px] z-10 pointer-events-none">
+            <motion.div
+              style={{
+                scaleY: timelineScaleY,
+              }}
+              className="w-full h-full bg-[#1B1B18] origin-top relative"
+            >
+              {/* Needle Tip Marker Dot at Leading Tip of Moving Timeline Line */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#D9A62C] shadow-[0_0_10px_#D9A62C] border-2 border-[#1B1B18] z-20" />
+            </motion.div>
+          </div>
 
           {/* Timeline Entries */}
           <div className="space-y-16 sm:space-y-20">
