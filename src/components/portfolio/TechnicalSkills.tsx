@@ -86,22 +86,26 @@ const TechnicalSkills: React.FC = () => {
     [null, null, null, null, null, null],
   ]);
 
-  // Motion target & current visual position values (in pixels)
-  const targetMotion = useRef({ x: 0, y: 0, w: 0, h: 0, opacity: 0 });
-  const currentMotion = useRef({ x: 0, y: 0, w: 0, h: 0, opacity: 0 });
+  // Current physical motion state for frame-by-frame lerping
+  const currentMotion = useRef({
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+    opacity: 0,
+    initialized: false,
+  });
 
-  // Hover & Scroll status refs
+  // Sync refs for RAF loop access without state re-binding
   const hoveredSkillRef = useRef<SkillItem | null>(null);
   const selectedSkillRef = useRef<SkillItem | null>(null);
   const selectedCategoryRef = useRef<"ai" | "dev" | "backend" | null>(null);
-  const currentColIndexRef = useRef<number>(1);
-  const lastSemanticIdRef = useRef<string>("");
-  const rafIdRef = useRef<number | null>(null);
+  const semanticActiveSkillRef = useRef<SkillItem>(SKILL_GROUPS[1].items[0]);
 
-  // Sync state refs for RAF loop access without re-binding
   hoveredSkillRef.current = hoveredSkill;
   selectedSkillRef.current = selectedSkill;
   selectedCategoryRef.current = selectedCategory;
+  semanticActiveSkillRef.current = semanticActiveSkill;
 
   // Measure all row button positions inside the list grid
   const measureLayout = useCallback(() => {
@@ -125,33 +129,181 @@ const TechnicalSkills: React.FC = () => {
     }
   }, []);
 
-  // Update highlight position based on active/hovered/selected skill
-  const updateHighlightPosition = useCallback(() => {
-    const active = hoveredSkill || selectedSkill || semanticActiveSkill;
-    if (!active || !listGridRef.current || !highlightRef.current) return;
-
-    const el = document.getElementById(`skill-btn-${active.id}`);
-    if (!el) return;
-
-    const containerRect = listGridRef.current.getBoundingClientRect();
-    const rect = el.getBoundingClientRect();
-
-    const x = rect.left - containerRect.left;
-    const y = rect.top - containerRect.top;
-    const w = rect.width;
-    const h = rect.height;
-
-    highlightRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    highlightRef.current.style.width = `${w}px`;
-    highlightRef.current.style.height = `${h}px`;
-    highlightRef.current.style.opacity = "1";
-  }, [hoveredSkill, selectedSkill, semanticActiveSkill]);
-
+  // Single Continuous RAF Animation Loop for Highlight Position & Lerp Smoothing
   useEffect(() => {
-    updateHighlightPosition();
-    window.addEventListener("resize", updateHighlightPosition);
-    return () => window.removeEventListener("resize", updateHighlightPosition);
-  }, [updateHighlightPosition]);
+    let animationFrameId: number;
+
+    measureLayout();
+    const timer = setTimeout(measureLayout, 100);
+
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(measureLayout);
+    }
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && listGridRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        measureLayout();
+      });
+      resizeObserver.observe(listGridRef.current);
+    }
+
+    const handleResize = () => {
+      measureLayout();
+    };
+    window.addEventListener("resize", handleResize);
+
+    const LERP_FACTOR = 0.16; // Responsive smoothing factor per frame
+
+    const updateFrame = () => {
+      if (listGridRef.current && highlightRef.current) {
+        const gridRect = listGridRef.current.getBoundingClientRect();
+        const vh = window.innerHeight || 800;
+        const isMobile = window.innerWidth < 768;
+
+        let targetX = 0;
+        let targetY = 0;
+        let targetW = 0;
+        let targetH = 0;
+        let targetOpacity = 1;
+        let activeSemanticItem: SkillItem | null = null;
+
+        const hovered = hoveredSkillRef.current;
+        const selected = selectedSkillRef.current;
+        const selCat = selectedCategoryRef.current;
+
+        if (hovered) {
+          const c = CATEGORY_MAP[hovered.category];
+          const r = SKILL_GROUPS[c].items.findIndex((it) => it.id === hovered.id);
+          const bound = itemBoundsRef.current[c]?.[r];
+          if (bound) {
+            targetX = bound.x;
+            targetY = bound.y;
+            targetW = bound.width;
+            targetH = bound.height;
+            activeSemanticItem = hovered;
+          }
+        } else if (selected) {
+          const c = CATEGORY_MAP[selected.category];
+          const r = SKILL_GROUPS[c].items.findIndex((it) => it.id === selected.id);
+          const bound = itemBoundsRef.current[c]?.[r];
+          if (bound) {
+            targetX = bound.x;
+            targetY = bound.y;
+            targetW = bound.width;
+            targetH = bound.height;
+            activeSemanticItem = selected;
+          }
+        } else {
+          // Continuous local section scroll progress calculation
+          // startThreshold: when grid top enters comfortable upper view range
+          // endThreshold: when grid top reaches upper boundary of section scroll
+          const startThreshold = isMobile ? vh * 0.70 : vh * 0.55;
+          const endThreshold = isMobile ? vh * -0.40 : vh * 0.15;
+          const rawProgress = (startThreshold - gridRect.top) / (startThreshold - endThreshold);
+          const clampedT = Math.max(0, Math.min(1, rawProgress));
+
+          if (isMobile) {
+            // Mobile stacked 1-column layout (18 total items)
+            const TOTAL_ITEMS = 18;
+            const progressVal = clampedT * (TOTAL_ITEMS - 1);
+            const indexA = Math.floor(progressVal);
+            const indexB = Math.min(TOTAL_ITEMS - 1, indexA + 1);
+            const frac = progressVal - indexA;
+
+            const colA = Math.floor(indexA / 6);
+            const rowA = indexA % 6;
+            const colB = Math.floor(indexB / 6);
+            const rowB = indexB % 6;
+
+            const boundA = itemBoundsRef.current[colA]?.[rowA];
+            const boundB = itemBoundsRef.current[colB]?.[rowB];
+
+            if (boundA && boundB) {
+              targetX = boundA.x + (boundB.x - boundA.x) * frac;
+              targetY = boundA.y + (boundB.y - boundA.y) * frac;
+              targetW = boundA.width + (boundB.width - boundA.width) * frac;
+              targetH = boundA.height + (boundB.height - boundA.height) * frac;
+            }
+
+            const closestIdx = Math.round(progressVal);
+            const closestCol = Math.floor(closestIdx / 6);
+            const closestRow = closestIdx % 6;
+            activeSemanticItem = SKILL_GROUPS[closestCol]?.items[closestRow] || null;
+          } else {
+            // Desktop 3-column layout (6 items per column)
+            let activeCol = 1; // Default to dev column
+            if (selCat) {
+              activeCol = CATEGORY_MAP[selCat];
+            } else if (semanticActiveSkillRef.current) {
+              activeCol = CATEGORY_MAP[semanticActiveSkillRef.current.category];
+            }
+
+            const NUM_ROWS = 6;
+            const progressVal = clampedT * (NUM_ROWS - 1);
+            const rowA = Math.floor(progressVal);
+            const rowB = Math.min(NUM_ROWS - 1, rowA + 1);
+            const frac = progressVal - rowA;
+
+            const boundA = itemBoundsRef.current[activeCol]?.[rowA];
+            const boundB = itemBoundsRef.current[activeCol]?.[rowB];
+
+            if (boundA && boundB) {
+              targetX = boundA.x + (boundB.x - boundA.x) * frac;
+              targetY = boundA.y + (boundB.y - boundA.y) * frac;
+              targetW = boundA.width + (boundB.width - boundA.width) * frac;
+              targetH = boundA.height + (boundB.height - boundA.height) * frac;
+            }
+
+            const closestRow = Math.round(progressVal);
+            activeSemanticItem = SKILL_GROUPS[activeCol]?.items[closestRow] || null;
+          }
+        }
+
+        // Initialize motion state directly on first frame with valid measurements
+        if (!currentMotion.current.initialized && targetW > 0) {
+          currentMotion.current.x = targetX;
+          currentMotion.current.y = targetY;
+          currentMotion.current.w = targetW;
+          currentMotion.current.h = targetH;
+          currentMotion.current.opacity = targetOpacity;
+          currentMotion.current.initialized = true;
+        } else if (currentMotion.current.initialized) {
+          currentMotion.current.x += (targetX - currentMotion.current.x) * LERP_FACTOR;
+          currentMotion.current.y += (targetY - currentMotion.current.y) * LERP_FACTOR;
+          currentMotion.current.w += (targetW - currentMotion.current.w) * LERP_FACTOR;
+          currentMotion.current.h += (targetH - currentMotion.current.h) * LERP_FACTOR;
+          currentMotion.current.opacity += (targetOpacity - currentMotion.current.opacity) * LERP_FACTOR;
+        }
+
+        if (currentMotion.current.initialized) {
+          const el = highlightRef.current;
+          el.style.transform = `translate3d(${currentMotion.current.x.toFixed(2)}px, ${currentMotion.current.y.toFixed(2)}px, 0)`;
+          el.style.width = `${currentMotion.current.w.toFixed(2)}px`;
+          el.style.height = `${currentMotion.current.h.toFixed(2)}px`;
+          el.style.opacity = currentMotion.current.opacity.toFixed(2);
+        }
+
+        if (
+          activeSemanticItem &&
+          activeSemanticItem.id !== semanticActiveSkillRef.current?.id
+        ) {
+          setSemanticActiveSkill(activeSemanticItem);
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(updateFrame);
+    };
+
+    animationFrameId = requestAnimationFrame(updateFrame);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(timer);
+      window.removeEventListener("resize", handleResize);
+      if (resizeObserver) resizeObserver.disconnect();
+    };
+  }, [measureLayout]);
 
   const handleMouseEnterSkill = (item: SkillItem) => {
     setHoveredSkill(item);
@@ -186,7 +338,7 @@ const TechnicalSkills: React.FC = () => {
   const activeCategory =
     hoveredSkill?.category ||
     selectedCategory ||
-    (selectedSkill ? selectedSkill.category : "dev");
+    (selectedSkill ? selectedSkill.category : semanticActiveSkill.category);
 
   return (
     <section
