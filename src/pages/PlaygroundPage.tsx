@@ -45,10 +45,6 @@ const PlaygroundPage: React.FC = () => {
             <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
             <span>Back to Home</span>
           </Link>
-          <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/85">
-            <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block" />
-            <span>07 // PLAYGROUND</span>
-          </div>
         </div>
 
         <div className="text-center max-w-xl mx-auto mb-6 sm:mb-10 space-y-3">
