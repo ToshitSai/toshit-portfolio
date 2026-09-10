@@ -45,27 +45,6 @@ export const RecordScratchHeading: React.FC<RecordScratchHeadingProps> = ({
       ref={containerRef}
       className={`relative pb-4 mb-10 sm:mb-16 select-none ${align === "center" ? "text-center flex flex-col items-center" : ""} ${className}`}
     >
-      {/* SECTION NUMBER & RECURRING VINYL RECORD BADGE MOTIF */}
-      <div className={`flex items-center gap-2.5 font-mono text-xs sm:text-[13px] tracking-[0.18em] uppercase mb-4 sm:mb-6 ${tagColor} ${align === "center" ? "justify-center" : ""}`}>
-        {/* Spinning Vinyl Record Badge Motif */}
-        <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={isInView ? { scale: 1, rotate: 360 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-5 h-5 rounded-full bg-[#1D2024] p-[3px] shadow-sm flex items-center justify-center flex-shrink-0"
-        >
-          {/* Inner Groove Line */}
-          <div className="w-full h-full rounded-full border border-dashed border-white/40 flex items-center justify-center">
-            {/* Center Yellow Label */}
-            <div
-              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-              style={{ backgroundColor: accentColor, boxShadow: `0 0 6px ${accentColor}` }}
-            />
-          </div>
-        </motion.div>
-
-        <span className="font-semibold">{sectionTag}</span>
-      </div>
 
       {/* HEADING WITH RECORD-SCRATCH ROTATION WOBBLE */}
       <motion.div

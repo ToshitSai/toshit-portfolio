@@ -118,15 +118,44 @@ const TechnicalSkills: React.FC = () => {
         const el = document.getElementById(`skill-btn-${itemId}`);
         if (el) {
           const rect = el.getBoundingClientRect();
-          itemBoundsRef.current[c][r] = {
+          if (rect.width > 20 && rect.height > 10) {
+            itemBoundsRef.current[c][r] = {
+              x: rect.left - containerRect.left,
+              y: rect.top - containerRect.top,
+              width: rect.width,
+              height: rect.height,
+            };
+          }
+        }
+      }
+    }
+  }, []);
+
+  // Helper to safely retrieve or on-demand measure item bounds
+  const getBound = useCallback((col: number, row: number): ItemBound | null => {
+    const existing = itemBoundsRef.current[col]?.[row];
+    if (existing && existing.width > 20 && existing.height > 10) {
+      return existing;
+    }
+    const itemId = SKILL_GROUPS[col]?.items[row]?.id;
+    if (itemId && listGridRef.current) {
+      const el = document.getElementById(`skill-btn-${itemId}`);
+      if (el) {
+        const containerRect = listGridRef.current.getBoundingClientRect();
+        const rect = el.getBoundingClientRect();
+        if (rect.width > 20 && rect.height > 10) {
+          const measured: ItemBound = {
             x: rect.left - containerRect.left,
             y: rect.top - containerRect.top,
             width: rect.width,
             height: rect.height,
           };
+          itemBoundsRef.current[col][row] = measured;
+          return measured;
         }
       }
     }
+    return null;
   }, []);
 
   // Single Continuous RAF Animation Loop for Highlight Position & Lerp Smoothing
@@ -175,7 +204,7 @@ const TechnicalSkills: React.FC = () => {
         if (hovered) {
           const c = CATEGORY_MAP[hovered.category];
           const r = SKILL_GROUPS[c].items.findIndex((it) => it.id === hovered.id);
-          const bound = itemBoundsRef.current[c]?.[r];
+          const bound = getBound(c, r);
           if (bound) {
             targetX = bound.x;
             targetY = bound.y;
@@ -186,7 +215,7 @@ const TechnicalSkills: React.FC = () => {
         } else if (selected) {
           const c = CATEGORY_MAP[selected.category];
           const r = SKILL_GROUPS[c].items.findIndex((it) => it.id === selected.id);
-          const bound = itemBoundsRef.current[c]?.[r];
+          const bound = getBound(c, r);
           if (bound) {
             targetX = bound.x;
             targetY = bound.y;
@@ -196,8 +225,6 @@ const TechnicalSkills: React.FC = () => {
           }
         } else {
           // Continuous local section scroll progress calculation
-          // startThreshold: when grid top enters comfortable upper view range
-          // endThreshold: when grid top reaches upper boundary of section scroll
           const startThreshold = isMobile ? vh * 0.70 : vh * 0.55;
           const endThreshold = isMobile ? vh * -0.40 : vh * 0.15;
           const rawProgress = (startThreshold - gridRect.top) / (startThreshold - endThreshold);
@@ -216,14 +243,24 @@ const TechnicalSkills: React.FC = () => {
             const colB = Math.floor(indexB / 6);
             const rowB = indexB % 6;
 
-            const boundA = itemBoundsRef.current[colA]?.[rowA];
-            const boundB = itemBoundsRef.current[colB]?.[rowB];
+            const boundA = getBound(colA, rowA);
+            const boundB = getBound(colB, rowB);
 
             if (boundA && boundB) {
               targetX = boundA.x + (boundB.x - boundA.x) * frac;
               targetY = boundA.y + (boundB.y - boundA.y) * frac;
               targetW = boundA.width + (boundB.width - boundA.width) * frac;
               targetH = boundA.height + (boundB.height - boundA.height) * frac;
+            } else if (boundA) {
+              targetX = boundA.x;
+              targetY = boundA.y;
+              targetW = boundA.width;
+              targetH = boundA.height;
+            } else if (boundB) {
+              targetX = boundB.x;
+              targetY = boundB.y;
+              targetW = boundB.width;
+              targetH = boundB.height;
             }
 
             const closestIdx = Math.round(progressVal);
@@ -245,14 +282,24 @@ const TechnicalSkills: React.FC = () => {
             const rowB = Math.min(NUM_ROWS - 1, rowA + 1);
             const frac = progressVal - rowA;
 
-            const boundA = itemBoundsRef.current[activeCol]?.[rowA];
-            const boundB = itemBoundsRef.current[activeCol]?.[rowB];
+            const boundA = getBound(activeCol, rowA);
+            const boundB = getBound(activeCol, rowB);
 
             if (boundA && boundB) {
               targetX = boundA.x + (boundB.x - boundA.x) * frac;
               targetY = boundA.y + (boundB.y - boundA.y) * frac;
               targetW = boundA.width + (boundB.width - boundA.width) * frac;
               targetH = boundA.height + (boundB.height - boundA.height) * frac;
+            } else if (boundA) {
+              targetX = boundA.x;
+              targetY = boundA.y;
+              targetW = boundA.width;
+              targetH = boundA.height;
+            } else if (boundB) {
+              targetX = boundB.x;
+              targetY = boundB.y;
+              targetW = boundB.width;
+              targetH = boundB.height;
             }
 
             const closestRow = Math.round(progressVal);
@@ -260,19 +307,23 @@ const TechnicalSkills: React.FC = () => {
           }
         }
 
+        // Apply strict min bounds to prevent any zero-width or zero-height collapse
+        const safeW = Math.max(120, targetW);
+        const safeH = Math.max(36, targetH);
+
         // Initialize motion state directly on first frame with valid measurements
-        if (!currentMotion.current.initialized && targetW > 0) {
+        if (!currentMotion.current.initialized && safeW > 120) {
           currentMotion.current.x = targetX;
           currentMotion.current.y = targetY;
-          currentMotion.current.w = targetW;
-          currentMotion.current.h = targetH;
+          currentMotion.current.w = safeW;
+          currentMotion.current.h = safeH;
           currentMotion.current.opacity = targetOpacity;
           currentMotion.current.initialized = true;
         } else if (currentMotion.current.initialized) {
           currentMotion.current.x += (targetX - currentMotion.current.x) * LERP_FACTOR;
           currentMotion.current.y += (targetY - currentMotion.current.y) * LERP_FACTOR;
-          currentMotion.current.w += (targetW - currentMotion.current.w) * LERP_FACTOR;
-          currentMotion.current.h += (targetH - currentMotion.current.h) * LERP_FACTOR;
+          currentMotion.current.w += (safeW - currentMotion.current.w) * LERP_FACTOR;
+          currentMotion.current.h += (safeH - currentMotion.current.h) * LERP_FACTOR;
           currentMotion.current.opacity += (targetOpacity - currentMotion.current.opacity) * LERP_FACTOR;
         }
 
@@ -303,7 +354,7 @@ const TechnicalSkills: React.FC = () => {
       window.removeEventListener("resize", handleResize);
       if (resizeObserver) resizeObserver.disconnect();
     };
-  }, [measureLayout]);
+  }, [measureLayout, getBound]);
 
   const handleMouseEnterSkill = (item: SkillItem) => {
     setHoveredSkill(item);
@@ -362,18 +413,6 @@ const TechnicalSkills: React.FC = () => {
         {/* 1. HEADER SECTION & INTRO */}
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8 mb-10 lg:mb-16">
           <div className="max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-3 mb-4"
-            >
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-accent shadow-[0_0_8px_#FFD42A]" />
-              <span className="label-mono text-ink-light tracking-[0.2em] uppercase font-bold">
-                05 // SKILLS
-              </span>
-            </motion.div>
 
             <motion.h2
               initial={{ opacity: 0, y: 25 }}
@@ -480,17 +519,20 @@ const TechnicalSkills: React.FC = () => {
           ref={listGridRef}
           className="relative grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mt-6 lg:mt-12 pt-6 sm:pt-8 border-t border-ink/10"
         >
-          {/* SINGLE CONTINUOUS REUSABLE HIGHLIGHT ELEMENT */}
+          {/* SINGLE PERSISTENT HIGHLIGHT WRAPPER (Layer 1: Position & Dimensions) */}
           <div
             ref={highlightRef}
-            className="absolute top-0 left-0 bg-cream rounded-lg shadow-xs border border-ink/25 pointer-events-none z-10 flex items-center justify-end pr-3 transition-opacity duration-200"
+            className="absolute top-0 left-0 pointer-events-none z-10 transition-opacity duration-200"
             style={{
               willChange: "transform, width, height, opacity",
               opacity: 0,
             }}
           >
-            {/* SINGLE CONTINUOUS YELLOW ACCENT DOT INSIDE HIGHLIGHT */}
-            <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_8px_#FFD42A]" />
+            {/* Layer 2: HighlightVisual (Geometry, Border, Background) */}
+            <div className="w-full h-full bg-cream rounded-lg shadow-xs border border-ink/25 flex items-center justify-end pr-3">
+              {/* Layer 3: YellowDot */}
+              <span className="w-2 h-2 rounded-full bg-yellow-accent shadow-[0_0_8px_#FFD42A] shrink-0" />
+            </div>
           </div>
 
           {SKILL_GROUPS.map((group, colIdx) => {

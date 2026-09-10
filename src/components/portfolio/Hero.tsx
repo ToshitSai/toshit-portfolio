@@ -248,18 +248,6 @@ const Hero: React.FC = () => {
               DESIGN / DETAILS / CODE
             </span>
           </div>
-          {/* Eyebrow Badge with Pulsing Yellow Dot & High-Contrast Backdrop */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 mb-2 sm:mb-6 select-none max-w-full overflow-hidden px-2"
-          >
-            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFD42A] shadow-[0_0_10px_#FFD42A] animate-pulse flex-shrink-0" />
-            <span className="text-[10px] xs:text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.12em] sm:tracking-[0.18em] uppercase text-white font-bold whitespace-nowrap truncate drop-shadow-xs">
-              01 // HOME · TOSHIT SAI GALAM —
-            </span>
-          </motion.div>
 
           {/* Display Headline with Staggered Entrance Reveal */}
           <motion.h1

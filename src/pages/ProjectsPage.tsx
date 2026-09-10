@@ -54,10 +54,6 @@ const ProjectsPage: React.FC = () => {
 
           {/* PAGE TITLE HEADER */}
           <div className="max-w-[800px] mb-12 sm:mb-16">
-            <div className="flex items-center gap-2.5 font-mono text-xs sm:text-[13px] tracking-[0.18em] text-[#1D2024]/75 uppercase mb-4">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A] shadow-xs inline-block" />
-              <span className="font-semibold text-[#1D2024]/80">COMPLETE ARCHIVE</span>
-            </div>
             <h1 className="font-serif font-medium text-[clamp(32px,4.5vw,62px)] leading-[1.1] tracking-[-0.01em] text-[#1D2024]">
               All Projects &amp; Experiments
             </h1>

@@ -337,11 +337,7 @@ const AboutPage: React.FC = () => {
               <span>Back to Home</span>
             </Link>
 
-            {/* TOP-LEFT ABOUT BADGE */}
-            <div className="flex items-center gap-2 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/80">
-              <span className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-xs inline-block" />
-              <span>ABOUT ME</span>
-            </div>
+
           </div>
         </motion.div>
 
@@ -413,10 +409,7 @@ const AboutPage: React.FC = () => {
 
                   {/* Mobile Horizontal Heading */}
                   <div className="lg:hidden">
-                    <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-[#20252B]/60 mb-2">
-                      <span className="w-2 h-2 rounded-full bg-[#FFD42A]" />
-                      <span>CURATED ARCHIVE</span>
-                    </div>
+
                     <h2 className="font-serif text-4xl sm:text-5xl text-[#20252B] font-bold uppercase tracking-tight">
                       Experience
                     </h2>
