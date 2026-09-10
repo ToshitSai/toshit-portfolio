@@ -184,7 +184,7 @@ const Testimonials: React.FC = () => {
           lineColor="bg-[#1D2024]/10"
           accentColor="#FFD42A"
           title={
-            <h2 className="font-sans text-3xl sm:text-4xl lg:text-[46px] font-medium tracking-tight text-[#1D2024] leading-[1.12]">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[-0.035em] text-[#1D2024] leading-[1.05]">
               A few words from people I&apos;ve built with.
             </h2>
           }
@@ -220,10 +220,10 @@ const Testimonials: React.FC = () => {
             >
               {/* HERO QUOTE TEXT */}
               <div className="relative pl-1 sm:pl-2">
-                <span className="absolute -left-5 sm:-left-7 top-0 font-serif text-3xl sm:text-4xl text-[#FFD42A] select-none leading-none">
+                <span className="absolute -left-5 sm:-left-7 top-0 font-sans text-3xl sm:text-4xl text-[#FFD42A] select-none leading-none font-bold">
                   “
                 </span>
-                <blockquote className="font-sans text-xl sm:text-2xl lg:text-3xl font-normal leading-[1.38] text-[#1D2024] tracking-tight">
+                <blockquote className="font-sans text-xl sm:text-2xl lg:text-3xl font-normal leading-[1.45] text-[#1D2024] tracking-[-0.015em]">
                   {current.quote}
                 </blockquote>
               </div>

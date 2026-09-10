@@ -417,7 +417,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col items-center space-y-2"
             >
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#20252B] tracking-tight leading-tight">
+              <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl font-bold text-[#20252B] tracking-[-0.035em] leading-tight">
                 {activeCert.title}
               </h2>
               <div className="flex items-center gap-2 font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-[#20252B]/60">
@@ -465,7 +465,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                 <div className="flex items-center gap-3">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#FFD42A]" />
                   <div>
-                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#20252B] leading-tight">
+                    <h3 className="font-sans text-lg sm:text-xl font-bold text-[#20252B] leading-tight tracking-[-0.025em]">
                       {selectedModalCert.title}
                     </h3>
                     <span className="font-mono text-[10px] uppercase tracking-widest text-[#20252B]/60">

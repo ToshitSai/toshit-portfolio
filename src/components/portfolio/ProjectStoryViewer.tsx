@@ -549,8 +549,8 @@ const HeroSlideView: React.FC<{
 
         {/* Main Title & Tagline */}
         <h1
-          style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-          className="text-4xl sm:text-6xl font-medium tracking-tight leading-[1.05] mb-4"
+          style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+          className="text-4xl sm:text-6xl font-bold tracking-[-0.035em] leading-[1.05] mb-4"
         >
           {project.titleMain}
         </h1>
@@ -637,8 +637,8 @@ const FeatureSlideView: React.FC<{
 
         {/* Feature Title */}
         <h2
-          style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-          className="text-3xl sm:text-5xl font-medium tracking-tight leading-tight mb-4"
+          style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+          className="text-3xl sm:text-5xl font-bold tracking-[-0.035em] leading-tight mb-4"
         >
           {slide.title}
         </h2>
@@ -680,7 +680,7 @@ const QuoteSlideView: React.FC<{
     return (
       <>
         {parts[0]}
-        <span className="text-[#FFD42A] font-serif underline decoration-2 underline-offset-8">
+        <span className="text-[#FFD42A] font-sans font-bold underline decoration-2 underline-offset-8">
           {slide.highlightedPhrase}
         </span>
         {parts[1]}
@@ -691,11 +691,11 @@ const QuoteSlideView: React.FC<{
   return (
     <div className={`p-8 sm:p-14 lg:p-16 rounded-3xl border backdrop-blur-xl ${styles.cardBg} ${styles.text} shadow-2xl flex flex-col justify-between items-center text-center min-h-[460px] sm:min-h-[500px]`}>
       <div className="my-auto max-w-3xl">
-        <span className="font-serif text-6xl sm:text-8xl leading-none text-[#FFD42A] opacity-80 block mb-2">
+        <span className="font-sans font-bold text-6xl sm:text-8xl leading-none text-[#FFD42A] opacity-80 block mb-2">
           “
         </span>
 
-        <h2 className="font-serif font-normal text-2xl sm:text-4xl lg:text-5xl leading-[1.3] tracking-tight mb-8">
+        <h2 className="font-sans font-semibold text-2xl sm:text-4xl lg:text-5xl leading-[1.2] tracking-[-0.03em] mb-8">
           {renderHighlightedQuote()}
         </h2>
 
@@ -724,8 +724,8 @@ const GridSlideView: React.FC<{
             SYSTEM COMPARISON & BREAKDOWN
           </span>
           <h2
-            style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-            className="text-2xl sm:text-4xl font-medium tracking-tight"
+            style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+            className="text-2xl sm:text-4xl font-bold tracking-[-0.035em]"
           >
             {slide.title}
           </h2>
@@ -795,8 +795,8 @@ const ReadNextSlideView: React.FC<{
         </h2>
 
         <h1
-          style={{ fontFamily: "'Instrument Sans', sans-serif" }}
-          className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight mb-4 text-white"
+          style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+          className="text-4xl sm:text-6xl font-bold tracking-[-0.035em] leading-tight mb-4 text-white"
         >
           {slide.nextProjectTitle}
         </h1>

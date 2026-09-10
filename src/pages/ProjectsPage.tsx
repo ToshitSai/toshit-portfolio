@@ -54,7 +54,7 @@ const ProjectsPage: React.FC = () => {
 
           {/* PAGE TITLE HEADER */}
           <div className="max-w-[800px] mb-12 sm:mb-16">
-            <h1 className="font-serif font-medium text-[clamp(32px,4.5vw,62px)] leading-[1.1] tracking-[-0.01em] text-[#1D2024]">
+            <h1 className="font-sans font-bold text-[clamp(32px,4.5vw,62px)] leading-[1.02] tracking-[-0.035em] text-[#1D2024]">
               All Projects &amp; Experiments
             </h1>
             <p className="mt-4 font-sans text-base sm:text-lg text-[#1D2024]/75 max-w-[620px] leading-relaxed">

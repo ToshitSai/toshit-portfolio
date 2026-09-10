@@ -38,7 +38,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity" }}
-            className="absolute inset-x-0 text-center text-[#FFD42A] font-serif tracking-tight whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+            className="absolute inset-x-0 text-center text-[#FFD42A] font-sans font-extrabold tracking-[-0.04em] whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
           >
             {currentWord}
           </motion.span>
@@ -46,7 +46,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
       </div>
 
       {/* Line 2: Permanent Static DEVELOPER Line */}
-      <span className="text-[#20252B] block drop-shadow-sm font-normal">
+      <span className="text-[#20252B] block drop-shadow-sm font-sans font-extrabold tracking-[-0.04em]">
         DEVELOPER
       </span>
     </div>
@@ -254,7 +254,7 @@ const Hero: React.FC = () => {
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(1.85rem,7.5vw,6.2rem)] leading-[0.88] tracking-[-0.02em] mb-3 sm:mb-6 flex flex-col items-center justify-center"
+            className="w-full text-center text-[#20252B] font-sans font-bold text-[clamp(1.85rem,7.5vw,6.2rem)] leading-[0.96] tracking-[-0.04em] mb-3 sm:mb-6 flex flex-col items-center justify-center"
           >
             <RotatingHeroWord />
           </motion.h1>

@@ -58,7 +58,7 @@ export const RecordScratchHeading: React.FC<RecordScratchHeadingProps> = ({
         className="origin-bottom-left max-w-[840px]"
       >
         {typeof title === "string" ? (
-          <h2 className="font-serif font-medium text-[clamp(28px,3.8vw,52px)] leading-[1.12] tracking-[-0.01em] text-[#1D2024]">
+          <h2 className="font-sans font-bold text-[clamp(28px,3.8vw,52px)] leading-[1.02] tracking-[-0.035em] text-[#1D2024]">
             {title}
           </h2>
         ) : (

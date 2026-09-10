@@ -401,7 +401,7 @@ const TechnicalSkills: React.FC = () => {
 
       {/* OVERSIZED EDITORIAL BACKGROUND WATERMARK: "TOOLKIT" */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
-        <span className="text-[clamp(9rem,26vw,24rem)] font-serif text-ink opacity-[0.035] leading-none uppercase tracking-widest font-bold">
+        <span className="text-[clamp(9rem,26vw,24rem)] font-sans text-ink opacity-[0.035] leading-none uppercase tracking-widest font-extrabold">
           TOOLKIT
         </span>
       </div>
@@ -419,7 +419,7 @@ const TechnicalSkills: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-display text-[clamp(2.2rem,5.5vw,4.8rem)] text-ink leading-[0.95] tracking-[-0.02em] font-serif uppercase font-bold"
+              className="text-[clamp(2.2rem,5.5vw,4.8rem)] text-ink leading-[0.96] tracking-[-0.04em] font-sans font-extrabold uppercase"
             >
               THE TOOLS <br />
               BEHIND MY BUILDS.
@@ -430,7 +430,7 @@ const TechnicalSkills: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-sm sm:text-base md:text-lg text-ink/75 font-sans italic mt-4 max-w-xl"
+              className="text-sm sm:text-base md:text-lg text-ink/75 font-sans mt-4 max-w-xl"
             >
               A mix of AI, code, APIs and platforms I use to turn ideas into working products.
             </motion.p>
@@ -491,7 +491,7 @@ const TechnicalSkills: React.FC = () => {
                 ● CORE SYSTEM
               </span>
 
-              <span className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink tracking-tight">
+              <span className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold text-ink tracking-tight">
                 [ AI ]
               </span>
 

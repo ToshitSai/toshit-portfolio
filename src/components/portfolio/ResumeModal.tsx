@@ -68,7 +68,7 @@ const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => {
                 <FileText className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-serif font-bold text-2xl sm:text-3xl text-[#FFF8E8] tracking-tight">
+                <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#FFF8E8] tracking-[-0.035em]">
                   Toshit Sai Galam — Official Resume
                 </h3>
                 <p className="font-mono text-xs text-[#FFD42A] uppercase tracking-wider font-semibold">

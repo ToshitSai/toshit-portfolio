@@ -15,12 +15,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        host: ['"Host Grotesk"', 'sans-serif'],
-        serif: ['Instrument Serif', 'Georgia', 'serif'],
-        instrument: ['Instrument Sans', 'sans-serif'],
-        sans: ['"Host Grotesk"', 'Inter', 'Neue Haas Grotesk', 'Helvetica Neue', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-        grotesk: ['"Host Grotesk"', 'Inter', 'Plus Jakarta Sans', 'Space Grotesk', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        grotesk: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        host: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        instrument: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        serif: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        mono: ['"Geist Mono"', '"JetBrains Mono"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

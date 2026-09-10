@@ -366,11 +366,11 @@ const AboutPage: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                fontFamily: '"Host Grotesk", sans-serif',
-                fontWeight: 400,
+                fontFamily: 'Manrope, "Plus Jakarta Sans", sans-serif',
+                fontWeight: 500,
                 color: '#333333'
               }}
-              className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] max-w-[820px] mx-auto mb-6 sm:mb-10 text-center"
+              className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] max-w-[820px] mx-auto mb-6 sm:mb-10 text-center tracking-[-0.02em]"
             >
               I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
             </motion.h1>
@@ -400,7 +400,7 @@ const AboutPage: React.FC = () => {
                   {/* Desktop Vertical Heading */}
                   <div className="hidden lg:block">
                     <span
-                      className="font-serif font-bold text-[clamp(52px,5.5vw,72px)] tracking-widest text-[#20252B]/22 uppercase select-none block"
+                      className="font-sans font-extrabold text-[clamp(52px,5.5vw,72px)] tracking-[-0.04em] text-[#20252B]/22 uppercase select-none block"
                       style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                     >
                       EXPERIENCE
@@ -410,7 +410,7 @@ const AboutPage: React.FC = () => {
                   {/* Mobile Horizontal Heading */}
                   <div className="lg:hidden">
 
-                    <h2 className="font-serif text-4xl sm:text-5xl text-[#20252B] font-bold uppercase tracking-tight">
+                    <h2 className="font-sans text-4xl sm:text-5xl text-[#20252B] font-extrabold uppercase tracking-[-0.04em]">
                       Experience
                     </h2>
                   </div>
@@ -443,7 +443,7 @@ const AboutPage: React.FC = () => {
                             {row.number}
                           </span>
                           <div>
-                            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#20252B] leading-tight group-hover:text-black transition-colors">
+                            <h3 className="font-sans text-2xl sm:text-3xl font-bold text-[#20252B] leading-tight group-hover:text-black transition-colors tracking-[-0.025em]">
                               {row.title}
                             </h3>
                             <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#20252B]/55 block mt-1">
@@ -593,7 +593,7 @@ const AboutPage: React.FC = () => {
             {/* SECTION 4: EDITORIAL FOOTER STATEMENT */}
             <div className="mt-20 pt-12 border-t border-[#20252B]/16 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <span className="font-serif italic text-2xl text-[#20252B]/70 font-normal">
+                <span className="font-sans font-medium text-xl text-[#20252B]/70 tracking-[-0.02em]">
                   Still building. More to come.
                 </span>
               </div>

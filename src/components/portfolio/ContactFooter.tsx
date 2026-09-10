@@ -389,8 +389,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           className="relative inline-block max-w-full mb-6 sm:mb-8 cursor-pointer"
         >
           <h1
-            style={{ fontFamily: "'Instrument Serif', serif" }}
-            className="text-[clamp(28px,5vw,76px)] font-normal leading-tight text-[#1B1B18] sm:whitespace-nowrap max-w-full"
+            style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+            className="text-[clamp(28px,5vw,76px)] font-bold tracking-[-0.04em] leading-[1.02] text-[#1B1B18] sm:whitespace-nowrap max-w-full"
           >
             Let's build something thoughtful together
           </h1>
@@ -582,8 +582,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5, delay: 0.15 }}
-                          style={{ fontFamily: "'Instrument Serif', serif" }}
-                          className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.05] text-[#1B1B18] tracking-tight mb-3"
+                          style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+                          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] text-[#1B1B18] tracking-[-0.035em] mb-3"
                         >
                           Grow together?
                         </motion.h2>
@@ -619,8 +619,8 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.4, delay: 1.05, ease: "easeOut" }}
-                          style={{ fontFamily: "'Instrument Serif', serif" }}
-                          className="text-[48px] sm:text-[72px] lg:text-[88px] font-normal leading-[0.92] text-[#1B1B18] tracking-tight"
+                          style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+                          className="text-[48px] sm:text-[72px] lg:text-[88px] font-bold leading-[0.92] text-[#1B1B18] tracking-[-0.035em]"
                         >
                           GOT IT.
                         </motion.h3>
