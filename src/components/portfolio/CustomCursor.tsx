@@ -474,20 +474,6 @@ const CustomCursor: React.FC = () => {
             </svg>
           )}
 
-          {/* CONTEXTUAL LENS TOP & BOTTOM ARCS */}
-          {isLens && (
-            <>
-              <div
-                className="absolute -top-1 w-3 h-[2px] rounded-full transition-colors duration-200"
-                style={{ backgroundColor: accentColor }}
-              />
-              <div
-                className="absolute -bottom-1 w-3 h-[2px] rounded-full transition-colors duration-200"
-                style={{ backgroundColor: accentColor }}
-              />
-            </>
-          )}
-
           {/* CONTEXTUAL TEXT LABEL */}
           {text && (
             <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#191916] whitespace-nowrap z-10">

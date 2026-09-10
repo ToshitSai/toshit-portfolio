@@ -234,8 +234,8 @@ const AcademicJourney: React.FC = () => {
               accentColor="#D9A62C"
               title={
                 <h2
-                  style={{ fontFamily: "'Instrument Sans', 'Space Grotesk', sans-serif" }}
-                  className="font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-[#1B1B18]"
+                  style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+                  className="font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.035em] text-[#1B1B18]"
                 >
                   Academic<br />
                   <span className="text-[#A9A69C]">Timeline.</span>
@@ -261,16 +261,13 @@ const AcademicJourney: React.FC = () => {
           />
 
           {/* Active Fill-As-You-Scroll Vertical Timeline Line */}
-          <div className="absolute left-4 sm:left-6 -translate-x-1/2 top-3 bottom-3 w-[2.5px] z-10 pointer-events-none">
+          <div className="absolute left-4 sm:left-6 -translate-x-1/2 top-3 bottom-3 w-[2px] z-10 pointer-events-none overflow-hidden">
             <motion.div
               style={{
                 scaleY: timelineScaleY,
               }}
-              className="w-full h-full bg-[#1B1B18] origin-top relative"
-            >
-              {/* Needle Tip Marker Dot at Leading Tip of Moving Timeline Line */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#D9A62C] shadow-[0_0_10px_#D9A62C] border-2 border-[#1B1B18] z-20" />
-            </motion.div>
+              className="w-full h-full bg-[#1B1B18] origin-top"
+            />
           </div>
 
           {/* Timeline Entries */}
