@@ -386,11 +386,11 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
           onMouseEnter={() => setIsTitleHovered(true)}
           onMouseLeave={() => setIsTitleHovered(false)}
           onClick={() => setIsDrawerOpen(true)}
-          className="relative inline-block max-w-full mb-6 sm:mb-8 cursor-pointer"
+          className="relative inline-block max-w-4xl mx-auto mb-6 sm:mb-8 cursor-pointer"
         >
           <h1
             style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
-            className="text-[clamp(28px,5vw,76px)] font-bold tracking-[-0.04em] leading-[1.02] text-[#1B1B18] sm:whitespace-nowrap max-w-full"
+            className="text-[clamp(28px,4.5vw,62px)] font-semibold tracking-[-0.03em] leading-[1.08] text-[#1B1B18] max-w-full text-center"
           >
             Let's build something thoughtful together
           </h1>
@@ -398,7 +398,7 @@ const ContactFooter: React.FC<ContactFooterProps> = ({
             initial={{ scaleX: 0 }}
             animate={{ scaleX: isTitleHovered ? 1 : 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="h-[3px] bg-[#1B1B18] w-full mt-2 origin-left rounded-full"
+            className="h-[2px] bg-[#1B1B18] w-full mt-2 origin-left rounded-full"
           />
         </motion.div>
 
