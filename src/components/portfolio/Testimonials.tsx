@@ -256,16 +256,6 @@ const Testimonials: React.FC = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* 3. EDITORIAL FOOTER: COUNTER */}
-        <div className="mt-12 sm:mt-16 pt-6 border-t border-[#1D2024]/10 flex items-center justify-between max-w-[860px]">
-          {/* COUNTER & ACCENT PILL */}
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs sm:text-sm tracking-wider font-semibold text-[#1D2024] transition-opacity duration-300">
-              {String(activeIndex + 1).padStart(2, "0")} <span className="text-[#1D2024]/40">/</span> {String(total).padStart(2, "0")}
-            </span>
-            <span className="w-6 h-1 rounded-full bg-[#FFD42A] inline-block" />
-          </div>
-        </div>
 
       </motion.div>
     </section>
