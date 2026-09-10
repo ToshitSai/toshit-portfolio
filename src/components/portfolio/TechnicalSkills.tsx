@@ -434,7 +434,7 @@ const TechnicalSkills: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="text-sm sm:text-base md:text-lg text-ink/75 font-sans mt-4 max-w-xl"
             >
-              A mix of AI, code, APIs and platforms I use to turn ideas into working products.
+              A mix of <span className="font-script text-[1.3em] font-normal text-ink px-1">AI</span>, code, APIs and platforms I use to turn <span className="font-script text-[1.3em] font-normal text-ink px-1">ideas</span> into working products.
             </motion.p>
           </div>
         </div>

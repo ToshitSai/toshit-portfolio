@@ -132,6 +132,10 @@
 }
 
 @layer utilities {
+  .font-script {
+    font-family: 'Alex Brush', 'Great Vibes', 'Sacramento', cursive;
+  }
+
   .text-display {
     font-family: 'Instrument Serif', Georgia, serif;
     letter-spacing: -0.02em;
