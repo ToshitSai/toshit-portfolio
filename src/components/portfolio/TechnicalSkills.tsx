@@ -419,10 +419,12 @@ const TechnicalSkills: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[clamp(2.2rem,5.5vw,4.8rem)] text-ink leading-[0.96] tracking-[-0.04em] font-sans font-extrabold uppercase"
+              style={{ fontFamily: "Manrope, 'Plus Jakarta Sans', sans-serif" }}
+              className="text-[clamp(32px,4.5vw,60px)] text-ink leading-[1.02] tracking-[-0.03em] font-semibold uppercase max-w-[700px]"
             >
               THE TOOLS <br />
-              BEHIND MY BUILDS.
+              BEHIND MY <br />
+              BUILDS.
             </motion.h2>
 
             <motion.p
