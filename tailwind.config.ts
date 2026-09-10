@@ -18,8 +18,8 @@ export default {
         sans: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
         grotesk: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
         host: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-        instrument: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-        serif: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        instrument: ['"Instrument Serif"', 'Georgia', 'serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         mono: ['"Geist Mono"', '"JetBrains Mono"', 'monospace'],
       },
       colors: {
