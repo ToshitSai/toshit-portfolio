@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus } from "lucide-react";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
@@ -123,137 +123,6 @@ const AbstractEditorialCanvas: React.FC = () => {
   );
 };
 
-// HANDCRAFTED EDITORIAL AI ENGINE TERMINAL (CENTRAL PERSONAL VISUAL)
-const AIEngineTerminal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"build" | "stack" | "status">("build");
-
-  return (
-    <div className="relative w-full max-w-[680px] mx-auto rounded-[22px] sm:rounded-[28px] bg-[#121417] text-white p-4 sm:p-7 shadow-[0_25px_70px_rgba(29,32,36,0.18)] border border-white/12 overflow-hidden group">
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#FFD42A]/20 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
-
-      <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2.5 sm:gap-0 border-b border-white/12 pb-3.5 mb-4 sm:mb-5">
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FF5F56]" />
-          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FFBD2E]" />
-          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#27C93F]" />
-          <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-white/50 ml-1 sm:ml-2 truncate">
-            toshit_engine.v2.sh
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1 bg-white/6 p-0.5 sm:p-1 rounded-full border border-white/10 font-mono text-[9px] sm:text-[10px] tracking-wider uppercase self-end xs:self-auto">
-          <button
-            type="button"
-            onClick={() => setActiveTab("build")}
-            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
-              activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-            }`}
-          >
-            Build
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("stack")}
-            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
-              activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-            }`}
-          >
-            Stack
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("status")}
-            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
-              activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-            }`}
-          >
-            Status
-          </button>
-        </div>
-      </div>
-
-      <div className="min-h-[150px] sm:min-h-[160px] font-mono text-xs sm:text-sm text-white/85 leading-relaxed flex flex-col justify-between">
-        {activeTab === "build" && (
-          <div className="space-y-2 sm:space-y-2.5">
-            <div className="flex items-center gap-2 text-[#FFD42A] text-[11px] sm:text-xs md:text-sm">
-              <Terminal className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="break-all sm:break-normal">toshit-sai@portfolio:~$ build-experience --mode=creative</span>
-            </div>
-            <p className="text-white/70 pl-4 sm:pl-6 border-l border-white/15 text-[11px] sm:text-xs md:text-sm">
-              &gt; Initializing Generative AI models &amp; web architecture...
-            </p>
-            <p className="text-white/70 pl-4 sm:pl-6 border-l border-white/15 text-[11px] sm:text-xs md:text-sm">
-              &gt; Connecting Gemini API + React 18 + Framer Motion.
-            </p>
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold pl-4 sm:pl-6 text-[11px] sm:text-xs md:text-sm">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0" />
-              <span>[OK] Experience Engine Compiled Successfully.</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "stack" && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-[#FFD42A] text-[11px] sm:text-xs">
-              <Code2 className="w-4 h-4" />
-              <span>SELECTED TOOLKIT &amp; STACK</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">AI / ML</span>
-                <span className="font-semibold text-white text-[11px] sm:text-xs">Gemini API, Python, LLMs</span>
-              </div>
-              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">Frontend</span>
-                <span className="font-semibold text-white text-[11px] sm:text-xs">React, TypeScript, Tailwind</span>
-              </div>
-              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">Motion</span>
-                <span className="font-semibold text-white text-[11px] sm:text-xs">Framer Motion, GSAP</span>
-              </div>
-              <div className="bg-white/5 p-2 sm:p-2.5 rounded-xl border border-white/8">
-                <span className="text-white/50 block text-[9px] sm:text-[10px] uppercase">Architecture</span>
-                <span className="font-semibold text-white text-[11px] sm:text-xs">Vite, REST APIs, Git</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "status" && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-[#FFD42A] text-[11px] sm:text-xs">
-              <Cpu className="w-4 h-4" />
-              <span>CURRENT DISPATCH &amp; FOCUS</span>
-            </div>
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between items-center bg-white/5 p-2 px-3 rounded-lg">
-                <span className="text-white/70 text-[11px] sm:text-xs">Location</span>
-                <span className="text-white font-medium text-[11px] sm:text-xs">Hyderabad, India</span>
-              </div>
-              <div className="flex justify-between items-center bg-white/5 p-2 px-3 rounded-lg">
-                <span className="text-white/70 text-[11px] sm:text-xs">Specialization</span>
-                <span className="text-white font-medium text-[11px] sm:text-xs">AI Engineering &amp; Web</span>
-              </div>
-              <div className="flex justify-between items-center bg-white/5 p-2 px-3 rounded-lg">
-                <span className="text-white/70 text-[11px] sm:text-xs">Status</span>
-                <span className="text-emerald-400 font-bold text-[11px] sm:text-xs">● Available for Work</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-1 xs:gap-0 text-[10px] sm:text-[11px] text-white/45">
-          <span>IDENTITY: TOSHIT SAI GALAM</span>
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-[#FFD42A]" />
-            AI &amp; CREATIVE CODE
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const pageCanvasVariants = {
   initial: {
     opacity: 0,
@@ -287,14 +156,6 @@ const AboutPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  const heroY = useTransform(scrollYProgress, [0, 0.4], [0, shouldReduceMotion ? 0 : -35]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.35], [1, shouldReduceMotion ? 1 : 0.4]);
-
   const toggleAccordion = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -309,14 +170,14 @@ const AboutPage: React.FC = () => {
       className="min-h-screen bg-[#F7F1E5] text-[#1D2024] selection:bg-[#FFD42A] selection:text-[#1D2024] font-sans relative overflow-x-hidden"
     >
       {/* MAIN ABOUT PAGE CONTENT */}
-      <main className="relative z-10 pt-24 sm:pt-32 pb-24 sm:pb-32 select-none">
+      <main className="relative z-10 pt-20 sm:pt-28 pb-20 sm:pb-28 select-none">
         {/* TOP BACK TO HOME BREADCRUMB */}
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20 mb-8 sm:mb-12"
+          className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20 mb-10 sm:mb-16"
         >
           <div className="flex items-center justify-between border-b border-[#1D2024]/12 pb-4 sm:pb-5">
             <Link
@@ -329,41 +190,116 @@ const AboutPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* SECTION 1: FULL-SCREEN ABOUT HERO / INTRO */}
-        <section className="relative min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 pt-2 pb-16 sm:pb-24">
+        {/* SECTION 1: EDITORIAL 2-COLUMN ABOUT INTRO (MATCHING REFERENCE COMPOSITION) */}
+        <section className="relative z-10 pb-20 sm:pb-28">
           <AbstractEditorialCanvas />
 
-          <motion.div
-            style={{ y: heroY, opacity: heroOpacity }}
-            className="w-full max-w-[1040px] mx-auto text-center relative z-10 flex flex-col items-center"
-          >
-            {/* PRIMARY ABOUT HERO STATEMENT IN REFINED SANS-SERIF */}
-            <motion.h1
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.75, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                fontFamily: 'Manrope, "Plus Jakarta Sans", sans-serif',
-                fontWeight: 500,
-                color: "#1D2024",
-              }}
-              className="text-xl sm:text-3xl md:text-[32px] leading-[1.45] max-w-[900px] mx-auto mb-8 sm:mb-12 text-center tracking-[-0.02em]"
-            >
-              I’m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I build complete AI applications, experiment relentlessly, and turn ideas into useful digital products.
-            </motion.h1>
+          <div className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
+              {/* LEFT COLUMN: LARGE BOLD VERTICAL ABOUT LABEL */}
+              <div className="lg:col-span-3 flex flex-col justify-start items-center text-center">
+                <div className="w-full flex justify-center items-center text-center pt-2 lg:pt-4">
+                  {/* Desktop Vertical Heading */}
+                  <div className="hidden lg:flex items-center justify-center w-full text-center">
+                    <span
+                      className="font-sans font-bold text-[clamp(56px,5.5vw,80px)] tracking-[-0.03em] text-[#1D2024] uppercase select-none leading-none inline-block mx-auto text-center"
+                      style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                    >
+                      ABOUT
+                    </span>
+                  </div>
 
-            {/* CENTRAL PERSONAL VISUAL ELEMENT */}
-            <motion.div
-              initial={shouldReduceMotion ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.97, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.97, y: -10 }}
-              transition={{ duration: 0.65, delay: 0.58, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full mt-2 mb-8"
-            >
-              <AIEngineTerminal />
-            </motion.div>
-          </motion.div>
+                  {/* Mobile Horizontal Heading */}
+                  <div className="lg:hidden mb-6 border-b border-[#1D2024]/14 pb-4 w-full text-center">
+                    <h2 className="font-sans text-4xl sm:text-5xl text-[#1D2024] font-bold uppercase tracking-[-0.04em]">
+                      About
+                    </h2>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: EDITORIAL PERSONAL STATEMENT & FOCUS PILLARS */}
+              <div className="lg:col-span-9 flex flex-col justify-center">
+                {/* SMALL MONOSPACE METADATA BADGE */}
+                <motion.div
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center gap-3 mb-6"
+                >
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#FFD42A]" />
+                  <span className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#1D2024]/70">
+                    01 // ABOUT INTRO
+                  </span>
+                </motion.div>
+
+                {/* LARGE PERSONAL STATEMENT */}
+                <motion.h1
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.65, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    fontFamily: 'Manrope, "Plus Jakarta Sans", sans-serif',
+                    fontWeight: 600,
+                    color: "#1D2024",
+                  }}
+                  className="text-2xl sm:text-3xl md:text-[38px] lg:text-[42px] leading-[1.3] tracking-[-0.03em] max-w-[960px] mb-8 sm:mb-12"
+                >
+                  I’m Toshit Sai — a Computer Science Engineering student specializing in AI &amp; Machine Learning. I build complete AI applications, experiment with Generative AI, and turn ideas into useful digital products.
+                </motion.h1>
+
+                {/* SUPPORTING DETAIL & FOCUS PILLARS */}
+                <motion.div
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 pt-6 sm:pt-8 border-t border-[#1D2024]/12"
+                >
+                  <div>
+                    <h3 className="font-mono text-xs uppercase tracking-[0.16em] text-[#1D2024]/60 mb-3 font-semibold">
+                      AI &amp; MACHINE LEARNING FOCUS
+                    </h3>
+                    <p className="font-sans text-base sm:text-lg text-[#1D2024]/85 leading-relaxed font-normal">
+                      Deeply focused on Generative AI workflows, LLM applications, intelligent automation, Gemini API integrations, structured JSON outputs, and prompt engineering.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-mono text-xs uppercase tracking-[0.16em] text-[#1D2024]/60 mb-3 font-semibold">
+                      WEB ENGINEERING &amp; PRODUCTS
+                    </h3>
+                    <p className="font-sans text-base sm:text-lg text-[#1D2024]/85 leading-relaxed font-normal">
+                      Architecting full-stack React &amp; TypeScript applications, building responsive design systems, hardware-accelerated motion, and performance-optimized digital experiences.
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* SMALL METADATA PILLARS / TAGS */}
+                <motion.div
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-wrap items-center gap-3 sm:gap-4 mt-8 sm:mt-10"
+                >
+                  <span className="px-3.5 py-1.5 rounded-full border border-[#1D2024]/15 bg-[#1D2024]/4 font-mono text-xs font-semibold uppercase tracking-wider text-[#1D2024]/80">
+                    AI / ML
+                  </span>
+                  <span className="px-3.5 py-1.5 rounded-full border border-[#1D2024]/15 bg-[#1D2024]/4 font-mono text-xs font-semibold uppercase tracking-wider text-[#1D2024]/80">
+                    GENERATIVE AI
+                  </span>
+                  <span className="px-3.5 py-1.5 rounded-full border border-[#1D2024]/15 bg-[#1D2024]/4 font-mono text-xs font-semibold uppercase tracking-wider text-[#1D2024]/80">
+                    LLM APPLICATIONS
+                  </span>
+                  <span className="px-3.5 py-1.5 rounded-full border border-[#1D2024]/15 bg-[#1D2024]/4 font-mono text-xs font-semibold uppercase tracking-wider text-[#1D2024]/80">
+                    WEB DEVELOPMENT
+                  </span>
+                  <span className="px-3.5 py-1.5 rounded-full border border-[#1D2024]/15 bg-[#1D2024]/4 font-mono text-xs font-semibold uppercase tracking-wider text-[#1D2024]/80">
+                    PRODUCT BUILDING
+                  </span>
+                </motion.div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* SECTION 2: EDITORIAL 2-COLUMN EXPERIENCE ARCHIVE (IMAGE 1 VISUAL REFERENCE) */}
