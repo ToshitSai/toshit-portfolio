@@ -370,13 +370,13 @@ const AboutPage: React.FC = () => {
         <section id="experience" className="relative z-10 pt-20 sm:pt-28 border-t border-[#1D2024]/14">
           <div className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
-              {/* LEFT COLUMN: LARGE BOLD VERTICAL EXPERIENCE LABEL (IMAGE 1 REFERENCE) */}
-              <div className="lg:col-span-3 flex flex-col justify-start">
-                <div className="lg:sticky lg:top-36">
+              {/* LEFT COLUMN: LARGE BOLD VERTICAL EXPERIENCE LABEL (PERFECTLY CENTERED) */}
+              <div className="lg:col-span-3 flex flex-col items-center justify-center">
+                <div className="w-full flex justify-center items-center lg:sticky lg:top-1/2 lg:-translate-y-1/2">
                   {/* Desktop Vertical Heading */}
-                  <div className="hidden lg:block">
+                  <div className="hidden lg:flex items-center justify-center w-full text-center">
                     <span
-                      className="font-sans font-bold text-[clamp(44px,4.5vw,64px)] tracking-[-0.03em] text-[#1D2024] uppercase select-none leading-none block"
+                      className="font-sans font-bold text-[clamp(44px,4.5vw,64px)] tracking-[-0.03em] text-[#1D2024] uppercase select-none leading-none inline-block mx-auto text-center"
                       style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                     >
                       EXPERIENCE
@@ -384,7 +384,7 @@ const AboutPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Horizontal Heading */}
-                  <div className="lg:hidden mb-6 border-b border-[#1D2024]/14 pb-4">
+                  <div className="lg:hidden mb-6 border-b border-[#1D2024]/14 pb-4 w-full text-center">
                     <h2 className="font-sans text-4xl sm:text-5xl text-[#1D2024] font-bold uppercase tracking-[-0.04em]">
                       Experience
                     </h2>
