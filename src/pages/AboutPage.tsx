@@ -21,8 +21,8 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     id: "ai-projects",
     number: "01",
     title: "AI & Full-Stack Applications",
-    role: "Creator & Lead Developer",
-    timeframe: "2024 – Present",
+    role: "CREATOR & LEAD DEVELOPER",
+    timeframe: "2024 — PRESENT",
     description:
       "Architecting end-to-end intelligent web platforms that combine modern LLMs, generative APIs, structured JSON workflows, and responsive motion interfaces.",
     highlights: [
@@ -41,8 +41,8 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     id: "tech-capabilities",
     number: "02",
     title: "Core Technical Capabilities",
-    role: "AI / ML & Software Development",
-    timeframe: "Core Focus",
+    role: "AI / ML & SOFTWARE DEVELOPMENT",
+    timeframe: "CORE FOCUS",
     description:
       "Specializing in modern web engineering, generative AI workflows, frontend design systems, and software performance optimization.",
     highlights: [
@@ -56,8 +56,8 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     id: "academic-journey",
     number: "03",
     title: "Academic & Computer Science Foundation",
-    role: "Engineering Student (AI / ML Specialization)",
-    timeframe: "Academic Journey",
+    role: "ENGINEERING STUDENT (AI / ML SPECIALIZATION)",
+    timeframe: "ACADEMIC JOURNEY",
     description:
       "Pursuing Computer Science Engineering with a specialization in Artificial Intelligence and Machine Learning. Combining core algorithms with hands-on application development.",
     highlights: [
@@ -71,8 +71,8 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     id: "design-philosophy",
     number: "04",
     title: "Design & Building Philosophy",
-    role: "Creative Engineer",
-    timeframe: "Ongoing Mindset",
+    role: "CREATIVE ENGINEER",
+    timeframe: "ONGOING MINDSET",
     description:
       "I believe great technology should feel simple, useful, and human. Code should be clean, interfaces should be intuitive, and motion should serve clarity.",
     highlights: [
@@ -89,38 +89,35 @@ const AbstractEditorialCanvas: React.FC = () => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Soft Ambient Radial Warm Glow */}
-      <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[90vw] max-w-[1200px] h-[600px] rounded-full bg-gradient-to-b from-[#FFD42A]/18 via-[#FFF8E8]/40 to-transparent blur-3xl" />
+      <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[90vw] max-w-[1200px] h-[600px] rounded-full bg-gradient-to-b from-[#FFD42A]/18 via-[#F7F1E5]/40 to-transparent blur-3xl" />
 
       {/* Organic Sun / Geometric Circle Accent */}
-      <div className="absolute top-[6%] right-[-6%] sm:top-[12%] sm:right-[8%] w-36 h-36 sm:w-72 sm:h-72 rounded-full border border-[#20252B]/10 bg-[#FFD42A]/15 blur-xs animate-pulse duration-10000" />
+      <div className="absolute top-[6%] right-[-6%] sm:top-[12%] sm:right-[8%] w-36 h-36 sm:w-72 sm:h-72 rounded-full border border-[#1D2024]/10 bg-[#FFD42A]/15 blur-xs animate-pulse duration-10000" />
 
       {/* Hand-Drawn Editorial Linework & Abstract Shapes */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.14]" xmlns="http://www.w3.org/2000/svg">
-        {/* Soft Organic Ground Curve */}
         <path
           d="M-100 450 Q 300 320, 800 480 T 1800 380"
           fill="none"
-          stroke="#20252B"
+          stroke="#1D2024"
           strokeWidth="1.5"
           strokeDasharray="6 6"
         />
         <path
           d="M-50 520 Q 500 390, 1100 550 T 2000 440"
           fill="none"
-          stroke="#20252B"
+          stroke="#1D2024"
           strokeWidth="1"
         />
 
-        {/* Corner Cross Accents */}
-        <circle cx="12%" cy="22%" r="4" fill="#20252B" />
-        <circle cx="88%" cy="38%" r="6" fill="#FFD42A" stroke="#20252B" strokeWidth="1" />
-        <line x1="8%" y1="18%" x2="16%" y2="18%" stroke="#20252B" strokeWidth="1.5" />
-        <line x1="12%" y1="14%" x2="12%" y2="22%" stroke="#20252B" strokeWidth="1.5" />
+        <circle cx="12%" cy="22%" r="4" fill="#1D2024" />
+        <circle cx="88%" cy="38%" r="6" fill="#FFD42A" stroke="#1D2024" strokeWidth="1" />
+        <line x1="8%" y1="18%" x2="16%" y2="18%" stroke="#1D2024" strokeWidth="1.5" />
+        <line x1="12%" y1="14%" x2="12%" y2="22%" stroke="#1D2024" strokeWidth="1.5" />
 
-        {/* Decorative Grid Accent Lines */}
-        <line x1="85%" y1="65%" x2="95%" y2="65%" stroke="#20252B" strokeWidth="1" />
-        <line x1="85%" y1="70%" x2="92%" y2="70%" stroke="#20252B" strokeWidth="1" />
-        <line x1="85%" y1="75%" x2="90%" y2="75%" stroke="#20252B" strokeWidth="1" />
+        <line x1="85%" y1="65%" x2="95%" y2="65%" stroke="#1D2024" strokeWidth="1" />
+        <line x1="85%" y1="70%" x2="92%" y2="70%" stroke="#1D2024" strokeWidth="1" />
+        <line x1="85%" y1="75%" x2="90%" y2="75%" stroke="#1D2024" strokeWidth="1" />
       </svg>
     </div>
   );
@@ -131,11 +128,9 @@ const AIEngineTerminal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"build" | "stack" | "status">("build");
 
   return (
-    <div className="relative w-full max-w-[680px] mx-auto rounded-[22px] sm:rounded-[28px] bg-[#121417] text-white p-4 sm:p-7 shadow-[0_25px_70px_rgba(32,37,43,0.22)] border border-white/12 overflow-hidden group">
-      {/* Glow highlight */}
+    <div className="relative w-full max-w-[680px] mx-auto rounded-[22px] sm:rounded-[28px] bg-[#121417] text-white p-4 sm:p-7 shadow-[0_25px_70px_rgba(29,32,36,0.18)] border border-white/12 overflow-hidden group">
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#FFD42A]/20 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
 
-      {/* Terminal Header */}
       <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2.5 sm:gap-0 border-b border-white/12 pb-3.5 mb-4 sm:mb-5">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FF5F56]" />
@@ -146,36 +141,37 @@ const AIEngineTerminal: React.FC = () => {
           </span>
         </div>
 
-        {/* Tab Controls */}
         <div className="flex items-center gap-1 bg-white/6 p-0.5 sm:p-1 rounded-full border border-white/10 font-mono text-[9px] sm:text-[10px] tracking-wider uppercase self-end xs:self-auto">
           <button
             type="button"
             onClick={() => setActiveTab("build")}
-            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-              }`}
+            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
+              activeTab === "build" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+            }`}
           >
             Build
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("stack")}
-            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-              }`}
+            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
+              activeTab === "stack" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+            }`}
           >
             Stack
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("status")}
-            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
-              }`}
+            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
+              activeTab === "status" ? "bg-[#FFD42A] text-[#121417] font-bold" : "text-white/70 hover:text-white"
+            }`}
           >
             Status
           </button>
         </div>
       </div>
 
-      {/* Terminal Body */}
       <div className="min-h-[150px] sm:min-h-[160px] font-mono text-xs sm:text-sm text-white/85 leading-relaxed flex flex-col justify-between">
         {activeTab === "build" && (
           <div className="space-y-2 sm:space-y-2.5">
@@ -246,7 +242,6 @@ const AIEngineTerminal: React.FC = () => {
           </div>
         )}
 
-        {/* Terminal Footer info line */}
         <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-1 xs:gap-0 text-[10px] sm:text-[11px] text-white/45">
           <span>IDENTITY: TOSHIT SAI GALAM</span>
           <span className="flex items-center gap-1.5">
@@ -259,7 +254,6 @@ const AIEngineTerminal: React.FC = () => {
   );
 };
 
-// SAFE ELEGANT PAGE VARIANTS FOR ROUTE TRANSITIONS (NO BLANK SCREEN CLIP-PATH)
 const pageCanvasVariants = {
   initial: {
     opacity: 0,
@@ -285,7 +279,7 @@ const pageCanvasVariants = {
 
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // First row open by default
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -302,7 +296,7 @@ const AboutPage: React.FC = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.35], [1, shouldReduceMotion ? 1 : 0.4]);
 
   const toggleAccordion = (index: number) => {
-    setExpandedIndex(prevIndex => (prevIndex === index ? null : index));
+    setExpandedIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
@@ -312,51 +306,38 @@ const AboutPage: React.FC = () => {
       animate="animate"
       exit="exit"
       ref={containerRef}
-      className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden"
+      className="min-h-screen bg-[#F7F1E5] text-[#1D2024] selection:bg-[#FFD42A] selection:text-[#1D2024] font-sans relative overflow-x-hidden"
     >
       {/* MAIN ABOUT PAGE CONTENT */}
       <main className="relative z-10 pt-24 sm:pt-32 pb-24 sm:pb-32 select-none">
-
-        {/* TOP BACK TO HOME BREADCRUMB + ABOUT ME BADGE */}
+        {/* TOP BACK TO HOME BREADCRUMB */}
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-[1360px] px-4 sm:px-10 lg:px-16 mb-6 sm:mb-8"
+          className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20 mb-8 sm:mb-12"
         >
-          <div className="flex items-center justify-between border-b border-[#20252B]/12 pb-4 sm:pb-5">
+          <div className="flex items-center justify-between border-b border-[#1D2024]/12 pb-4 sm:pb-5">
             <Link
               to="/"
-              className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#20252B]/75 transition-colors hover:text-[#20252B]"
+              className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#1D2024]/75 transition-colors hover:text-[#1D2024]"
             >
               <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span>Back to Home</span>
             </Link>
-
-
           </div>
         </motion.div>
 
-        {/* SECTION 1: FULL-SCREEN ABOUT HERO */}
-        <section className="relative min-h-[75vh] sm:min-h-[90vh] flex flex-col justify-center items-center px-4 sm:px-10 lg:px-16 pt-2 pb-12 sm:pb-16">
+        {/* SECTION 1: FULL-SCREEN ABOUT HERO / INTRO */}
+        <section className="relative min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 pt-2 pb-16 sm:pb-24">
           <AbstractEditorialCanvas />
-
-          {/* VERTICAL SIDE EDITORIAL LABEL (DESKTOP ONLY) */}
-          <div className="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 z-10">
-            <span
-              className="font-mono text-[11px] font-semibold tracking-[0.25em] text-[#20252B]/45 uppercase select-none"
-              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-            >
-              AI / CODE / BUILD / EXPLORE
-            </span>
-          </div>
 
           <motion.div
             style={{ y: heroY, opacity: heroOpacity }}
-            className="w-full max-w-[980px] mx-auto text-center relative z-10 flex flex-col items-center"
+            className="w-full max-w-[1040px] mx-auto text-center relative z-10 flex flex-col items-center"
           >
-            {/* STAGGER 1: PRIMARY ABOUT HERO STATEMENT IN REFINED GROTESK */}
+            {/* PRIMARY ABOUT HERO STATEMENT IN REFINED SANS-SERIF */}
             <motion.h1
               initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -365,14 +346,14 @@ const AboutPage: React.FC = () => {
               style={{
                 fontFamily: 'Manrope, "Plus Jakarta Sans", sans-serif',
                 fontWeight: 500,
-                color: '#333333'
+                color: "#1D2024",
               }}
-              className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] max-w-[820px] mx-auto mb-6 sm:mb-10 text-center tracking-[-0.02em]"
+              className="text-xl sm:text-3xl md:text-[32px] leading-[1.45] max-w-[900px] mx-auto mb-8 sm:mb-12 text-center tracking-[-0.02em]"
             >
-              I’m Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
+              I’m Toshit Sai, a Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I build complete AI applications, experiment relentlessly, and turn ideas into useful digital products.
             </motion.h1>
 
-            {/* STAGGER 3: CENTRAL PERSONAL VISUAL ELEMENT */}
+            {/* CENTRAL PERSONAL VISUAL ELEMENT */}
             <motion.div
               initial={shouldReduceMotion ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.97, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -385,19 +366,17 @@ const AboutPage: React.FC = () => {
           </motion.div>
         </section>
 
-        {/* SECTION 2: EDITORIAL EXPERIENCE & ACCORDION ARCHIVE */}
-        <section id="experience" className="relative z-10 pt-16 sm:pt-24 border-t border-[#20252B]/12">
-          <div className="mx-auto max-w-[1360px] px-6 sm:px-10 lg:px-16">
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-
-              {/* LEFT COLUMN: VERTICAL / HORIZONTAL SECTION TITLE */}
+        {/* SECTION 2: EDITORIAL 2-COLUMN EXPERIENCE ARCHIVE (IMAGE 1 VISUAL REFERENCE) */}
+        <section id="experience" className="relative z-10 pt-20 sm:pt-28 border-t border-[#1D2024]/14">
+          <div className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
+              {/* LEFT COLUMN: LARGE BOLD VERTICAL EXPERIENCE LABEL (IMAGE 1 REFERENCE) */}
               <div className="lg:col-span-3 flex flex-col justify-start">
                 <div className="lg:sticky lg:top-36">
                   {/* Desktop Vertical Heading */}
                   <div className="hidden lg:block">
                     <span
-                      className="font-sans font-extrabold text-[clamp(52px,5.5vw,72px)] tracking-[-0.04em] text-[#20252B]/22 uppercase select-none block"
+                      className="font-sans font-bold text-[clamp(64px,7.5vw,100px)] tracking-[-0.04em] text-[#1D2024] uppercase select-none leading-none block"
                       style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                     >
                       EXPERIENCE
@@ -405,26 +384,27 @@ const AboutPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Horizontal Heading */}
-                  <div className="lg:hidden">
-
-                    <h2 className="font-sans text-4xl sm:text-5xl text-[#20252B] font-extrabold uppercase tracking-[-0.04em]">
+                  <div className="lg:hidden mb-6 border-b border-[#1D2024]/14 pb-4">
+                    <h2 className="font-sans text-4xl sm:text-5xl text-[#1D2024] font-bold uppercase tracking-[-0.04em]">
                       Experience
                     </h2>
                   </div>
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: EXPANDABLE ACCORDION ROWS */}
-              <div className="lg:col-span-9 flex flex-col gap-6">
-
+              {/* RIGHT COLUMN: REFINED EDITORIAL ACCORDION ROWS (IMAGE 1 REFERENCE) */}
+              <div className="lg:col-span-9 flex flex-col">
                 {FACTUAL_EXPERIENCE_DATA.map((row, index) => {
                   const isOpen = expandedIndex === index;
 
                   return (
-                    <div
+                    <motion.div
                       key={row.id}
-                      className={`group border-b border-[#20252B]/16 pb-6 transition-all duration-300 ${isOpen ? "bg-white/40 p-6 sm:p-8 rounded-[24px] border border-[#20252B]/12 shadow-xs" : "hover:bg-white/20 px-2 py-3 rounded-2xl"
-                        }`}
+                      initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                      className="group border-b border-[#1D2024]/14 transition-colors duration-300"
                     >
                       {/* ACCORDION ROW HEADER BUTTON */}
                       <button
@@ -433,61 +413,74 @@ const AboutPage: React.FC = () => {
                         aria-expanded={isOpen}
                         aria-controls={`accordion-content-${row.id}`}
                         onClick={() => toggleAccordion(index)}
-                        className="w-full flex items-start justify-between gap-4 text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#20252B] rounded-xl p-1"
+                        className={`w-full flex items-start sm:items-center justify-between gap-4 text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#1D2024] py-8 sm:py-10 px-2 sm:px-4 rounded-2xl transition-all duration-300 ${
+                          isOpen ? "bg-white/40" : "hover:bg-white/20"
+                        }`}
                       >
-                        <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 flex-1">
-                          <span className="font-mono text-xs font-bold tracking-widest text-[#FFD42A] bg-[#121417] px-2.5 py-1 rounded-md">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 flex-1">
+                          {/* NUMBER BADGE */}
+                          <span className="font-mono text-xs font-bold tracking-widest text-[#FFD42A] bg-[#1D2024] w-9 h-7 rounded-full flex items-center justify-center flex-shrink-0">
                             {row.number}
                           </span>
+
+                          {/* TITLE & ROLE */}
                           <div>
-                            <h3 className="font-sans text-2xl sm:text-3xl font-bold text-[#20252B] leading-tight group-hover:text-black transition-colors tracking-[-0.025em]">
+                            <h3
+                              style={{ fontFamily: 'Manrope, "Plus Jakarta Sans", sans-serif' }}
+                              className="text-2xl sm:text-3xl font-semibold text-[#1D2024] leading-tight transition-transform duration-300 group-hover:translate-x-1 tracking-[-0.02em]"
+                            >
                               {row.title}
                             </h3>
-                            <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#20252B]/55 block mt-1">
+                            <span className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-[#1D2024]/55 block mt-1">
                               {row.role}
                             </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 flex-shrink-0 pt-1">
-                          <span className="hidden sm:inline-block font-mono text-xs font-medium tracking-wider text-[#20252B]/60 uppercase">
+                        {/* RIGHT METADATA & CIRCULAR PLUS BUTTON */}
+                        <div className="flex items-center gap-6 flex-shrink-0 pt-1 sm:pt-0">
+                          <span className="hidden sm:inline-block font-mono text-xs font-medium tracking-[0.18em] text-[#1D2024]/60 uppercase whitespace-nowrap">
                             {row.timeframe}
                           </span>
 
-                          {/* ACCORDION TOGGLE ICON (+ to ×) */}
+                          {/* ELEGANT CIRCULAR PLUS CONTROL */}
                           <div
-                            className={`w-9 h-9 rounded-full border border-[#20252B]/20 flex items-center justify-center bg-white/80 text-[#20252B] transition-transform duration-350 ease-out ${isOpen ? "rotate-45 bg-[#121417] text-white border-transparent" : "group-hover:scale-105"
-                              }`}
+                            className={`w-11 h-11 rounded-full border border-[#1D2024]/20 flex items-center justify-center bg-transparent text-[#1D2024] transition-all duration-350 ease-out ${
+                              isOpen ? "rotate-45 bg-[#1D2024] text-white border-transparent shadow-xs" : "group-hover:border-[#1D2024] group-hover:scale-105"
+                            }`}
                           >
                             <Plus className="w-5 h-5" />
                           </div>
                         </div>
                       </button>
 
-                      {/* EXPANDABLE ACCORDION CONTENT (GRID 0fr -> 1fr) */}
+                      {/* EXPANDABLE ACCORDION CONTENT */}
                       <div
                         id={`accordion-content-${row.id}`}
                         role="region"
                         aria-labelledby={`accordion-button-${row.id}`}
                         style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-                        className={`grid transition-all duration-350 ${isOpen ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
-                          }`}
+                        className={`grid transition-all duration-400 ${
+                          isOpen ? "grid-rows-[1fr] opacity-100 mb-8" : "grid-rows-[0fr] opacity-0 mb-0 pointer-events-none"
+                        }`}
                       >
                         <div className="overflow-hidden">
-                          <div className="pt-2 border-t border-[#20252B]/10 space-y-5">
-
-                            <p className="font-sans text-base sm:text-lg text-[#20252B]/85 leading-relaxed font-normal">
+                          <div className="pt-4 px-2 sm:px-6 space-y-6">
+                            <p
+                              style={{ fontFamily: 'Manrope, "Plus Jakarta Sans", sans-serif' }}
+                              className="text-base sm:text-lg text-[#1D2024]/85 leading-relaxed font-normal"
+                            >
                               {row.description}
                             </p>
 
                             {/* Key Highlights List */}
                             <div>
-                              <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#20252B]/60 block mb-2.5">
+                              <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#1D2024]/60 block mb-3">
                                 KEY HIGHLIGHTS &amp; OUTCOMES
                               </span>
-                              <ul className="space-y-2">
+                              <ul className="space-y-2.5">
                                 {row.highlights.map((highlight, hIdx) => (
-                                  <li key={hIdx} className="flex items-start gap-2.5 text-sm sm:text-base text-[#20252B]/80 font-medium">
+                                  <li key={hIdx} className="flex items-start gap-3 text-sm sm:text-base text-[#1D2024]/85 font-medium">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#FFD42A] mt-2 flex-shrink-0" />
                                     <span>{highlight}</span>
                                   </li>
@@ -497,14 +490,14 @@ const AboutPage: React.FC = () => {
 
                             {/* Tech Stack Pills */}
                             <div>
-                              <span className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#20252B]/60 block mb-2.5">
+                              <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#1D2024]/60 block mb-3">
                                 TECHNOLOGIES &amp; TOOLKIT
                               </span>
                               <div className="flex flex-wrap gap-2">
                                 {row.techStack.map((tech) => (
                                   <span
                                     key={tech}
-                                    className="font-mono text-xs font-semibold px-3 py-1 rounded-full bg-[#20252B]/8 text-[#20252B] border border-[#20252B]/10"
+                                    className="font-mono text-xs font-semibold px-3.5 py-1 rounded-full bg-[#1D2024]/6 text-[#1D2024] border border-[#1D2024]/10"
                                   >
                                     {tech}
                                   </span>
@@ -514,7 +507,7 @@ const AboutPage: React.FC = () => {
 
                             {/* Links if available */}
                             {row.links && (
-                              <div className="pt-3 flex flex-wrap items-center gap-4">
+                              <div className="pt-2 flex flex-wrap items-center gap-5">
                                 {row.links.map((link) => (
                                   <Link
                                     key={link.label}
@@ -525,7 +518,7 @@ const AboutPage: React.FC = () => {
                                         window.open(link.url, "_blank", "noopener,noreferrer");
                                       }
                                     }}
-                                    className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#20252B] hover:underline"
+                                    className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#1D2024] hover:underline"
                                   >
                                     <span>{link.label}</span>
                                     <ArrowUpRight className="w-4 h-4 text-[#FFD42A]" />
@@ -533,54 +526,50 @@ const AboutPage: React.FC = () => {
                                 ))}
                               </div>
                             )}
-
                           </div>
                         </div>
                       </div>
-
-                    </div>
+                    </motion.div>
                   );
                 })}
-
               </div>
-
             </div>
 
             {/* SECTION 3: PERSONAL DETAILS GRID */}
-            <div className="mt-20 pt-12 border-t border-[#20252B]/16">
+            <div className="mt-24 pt-14 border-t border-[#1D2024]/14">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/50 block mb-2">
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
                     BASED IN
                   </span>
-                  <p className="font-sans text-base font-semibold text-[#20252B]">
+                  <p className="font-sans text-base font-semibold text-[#1D2024]">
                     Hyderabad, India
                   </p>
                 </div>
 
                 <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/50 block mb-2">
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
                     FOCUS
                   </span>
-                  <p className="font-sans text-base font-semibold text-[#20252B]">
+                  <p className="font-sans text-base font-semibold text-[#1D2024]">
                     AI Engineering &amp; Web
                   </p>
                 </div>
 
                 <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/50 block mb-2">
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
                     BUILDING
                   </span>
-                  <p className="font-sans text-base font-semibold text-[#20252B]">
+                  <p className="font-sans text-base font-semibold text-[#1D2024]">
                     Generative Applications
                   </p>
                 </div>
 
                 <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#20252B]/50 block mb-2">
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
                     INTERESTS
                   </span>
-                  <p className="font-sans text-base font-semibold text-[#20252B]">
+                  <p className="font-sans text-base font-semibold text-[#1D2024]">
                     AI · Motion · Open Source
                   </p>
                 </div>
@@ -588,17 +577,15 @@ const AboutPage: React.FC = () => {
             </div>
 
             {/* SECTION 4: EDITORIAL FOOTER STATEMENT */}
-            <div className="mt-20 pt-12 border-t border-[#20252B]/16 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="mt-20 pt-12 border-t border-[#1D2024]/14 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <span className="font-sans font-medium text-xl text-[#20252B]/70 tracking-[-0.02em]">
+                <span className="font-sans font-medium text-xl text-[#1D2024]/70 tracking-[-0.02em]">
                   Still building. More to come.
                 </span>
               </div>
             </div>
-
           </div>
         </section>
-
       </main>
     </motion.div>
   );
