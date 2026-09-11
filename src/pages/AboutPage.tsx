@@ -279,7 +279,7 @@ const pageCanvasVariants = {
 
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
