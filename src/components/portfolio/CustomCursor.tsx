@@ -261,38 +261,18 @@ const CustomCursor: React.FC = () => {
     // Reset project id tracking when off projects
     lastProjectId.current = null;
 
-    // 3. Certificate Stage Hover (Direction-Aware)
+    // 3. Certificate Stage Hover (Test Marker)
     const certStage = target.closest('[data-cursor="certificate-stage"], [data-cursor="certificate"]') as HTMLElement | null;
     if (certStage) {
-      const rect = certStage.getBoundingClientRect();
-      const pX = pointerPos.current.x;
-      const relativeX = (pX - rect.left) / rect.width;
-
-      if (relativeX < 0.45) {
-        if (stateRef.current.mode !== "CERTIFICATE_PREV" || stateRef.current.text !== "PREVIOUS ←") {
-          setCursorState({
-            mode: "CERTIFICATE_PREV",
-            text: "PREVIOUS ←",
-            accentColor: "rgba(25, 25, 22, 0.4)",
-            projectId: null,
-          });
-        }
-        return;
-      } else if (relativeX > 0.55) {
-        if (stateRef.current.mode !== "CERTIFICATE_NEXT" || stateRef.current.text !== "NEXT →") {
-          setCursorState({
-            mode: "CERTIFICATE_NEXT",
-            text: "NEXT →",
-            accentColor: "rgba(25, 25, 22, 0.4)",
-            projectId: null,
-          });
-        }
-        return;
-      } else {
-        // Center dead zone (45% - 55%): Normal default cursor (no label)
-        resetToDefault();
-        return;
+      if (stateRef.current.text !== "CERTIFICATE TEST 84721") {
+        setCursorState({
+          mode: "CERTIFICATE_PREV",
+          text: "CERTIFICATE TEST 84721",
+          accentColor: "rgba(25, 25, 22, 0.4)",
+          projectId: null,
+        });
       }
+      return;
     }
 
     // 4. "Work with me" / Contact Triggers
@@ -424,8 +404,8 @@ const CustomCursor: React.FC = () => {
   if (isProject) {
     showDot = false;
   } else if (isCert) {
-    width = 84;
-    height = 84;
+    width = 165;
+    height = 165;
     showDot = false;
     isLens = true;
   } else if (mode === "SAY_HI") {
