@@ -418,11 +418,6 @@ const AboutPage: React.FC = () => {
                         }`}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 flex-1">
-                          {/* NUMBER BADGE */}
-                          <span className="font-mono text-xs font-bold tracking-widest text-[#FFD42A] bg-[#1D2024] w-9 h-7 rounded-full flex items-center justify-center flex-shrink-0">
-                            {row.number}
-                          </span>
-
                           {/* TITLE & ROLE */}
                           <div>
                             <h3
