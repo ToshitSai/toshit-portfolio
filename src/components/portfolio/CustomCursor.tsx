@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 export type CursorMode =
   | "DEFAULT"
   | "PROJECT"
-  | "CERTIFICATE"
+  | "CERTIFICATE_PREV"
+  | "CERTIFICATE_NEXT"
   | "SAY_HI"
   | "OPEN"
   | "BUTTON"
@@ -26,8 +29,14 @@ const DEFAULT_STATE: CursorState = {
 };
 
 const CustomCursor: React.FC = () => {
+  const location = useLocation();
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [cursorState, setCursorState] = useState<CursorState>(DEFAULT_STATE);
+
+  // Reset cursor state immediately on route navigation
+  useEffect(() => {
+    setCursorState(DEFAULT_STATE);
+  }, [location.pathname]);
 
   // Single Source of Position Coordinates (Initializes to window center so cursor renders immediately)
   const pointerPos = useRef({
@@ -151,9 +160,9 @@ const CustomCursor: React.FC = () => {
         cursorPos.current.x += (pX - cursorPos.current.x) * lerpFactor;
         cursorPos.current.y += (pY - cursorPos.current.y) * lerpFactor;
 
-        // 3. Dwell Progress Logic for Projects & Certificates
+        // 3. Dwell Progress Logic for Projects
         const currentMode = stateRef.current.mode;
-        if ((currentMode === "PROJECT" || currentMode === "CERTIFICATE") && mouseDelta < 1.2) {
+        if (currentMode === "PROJECT" && mouseDelta < 1.2) {
           dwellTimer.current += 1;
           if (dwellTimer.current > 40) {
             // ~700ms threshold (40 frames at 60fps)
@@ -252,19 +261,38 @@ const CustomCursor: React.FC = () => {
     // Reset project id tracking when off projects
     lastProjectId.current = null;
 
-    // 3. Certificate Hover
-    const certEl = target.closest('[data-cursor="certificate"], .certificate-card') as HTMLElement | null;
-    if (certEl) {
-      const labelText = isDwelling.current && dwellProgress >= 1 ? "GO ↗" : "OPEN ↗";
-      if (stateRef.current.mode !== "CERTIFICATE" || stateRef.current.text !== labelText) {
-        setCursorState({
-          mode: "CERTIFICATE",
-          text: labelText,
-          accentColor: "#FFD42A",
-          projectId: null,
-        });
+    // 3. Certificate Stage Hover (Direction-Aware)
+    const certStage = target.closest('[data-cursor="certificate-stage"], [data-cursor="certificate"]') as HTMLElement | null;
+    if (certStage) {
+      const rect = certStage.getBoundingClientRect();
+      const pX = pointerPos.current.x;
+      const relativeX = (pX - rect.left) / rect.width;
+
+      if (relativeX < 0.45) {
+        if (stateRef.current.mode !== "CERTIFICATE_PREV" || stateRef.current.text !== "PREVIOUS ←") {
+          setCursorState({
+            mode: "CERTIFICATE_PREV",
+            text: "PREVIOUS ←",
+            accentColor: "rgba(25, 25, 22, 0.4)",
+            projectId: null,
+          });
+        }
+        return;
+      } else if (relativeX > 0.55) {
+        if (stateRef.current.mode !== "CERTIFICATE_NEXT" || stateRef.current.text !== "NEXT →") {
+          setCursorState({
+            mode: "CERTIFICATE_NEXT",
+            text: "NEXT →",
+            accentColor: "rgba(25, 25, 22, 0.4)",
+            projectId: null,
+          });
+        }
+        return;
+      } else {
+        // Center dead zone (45% - 55%): Normal default cursor (no label)
+        resetToDefault();
+        return;
       }
-      return;
     }
 
     // 4. "Work with me" / Contact Triggers
@@ -384,6 +412,9 @@ const CustomCursor: React.FC = () => {
   // Mode Specs & Dimensions
   const isProject = mode === "PROJECT";
   const isInput = mode === "INPUT";
+  const isCertPrev = mode === "CERTIFICATE_PREV";
+  const isCertNext = mode === "CERTIFICATE_NEXT";
+  const isCert = isCertPrev || isCertNext;
 
   let width = 38;
   let height = 38;
@@ -392,9 +423,9 @@ const CustomCursor: React.FC = () => {
 
   if (isProject) {
     showDot = false;
-  } else if (mode === "CERTIFICATE") {
-    width = 54;
-    height = 54;
+  } else if (isCert) {
+    width = 84;
+    height = 84;
     showDot = false;
     isLens = true;
   } else if (mode === "SAY_HI") {
@@ -474,12 +505,29 @@ const CustomCursor: React.FC = () => {
             </svg>
           )}
 
-          {/* CONTEXTUAL TEXT LABEL */}
-          {text && (
-            <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#191916] whitespace-nowrap z-10">
-              {text}
-            </span>
-          )}
+          {/* CONTEXTUAL TEXT LABEL WITH DIRECTIONAL TRANSITION */}
+          <AnimatePresence mode="wait">
+            {text && (
+              <motion.span
+                key={text}
+                initial={{
+                  opacity: 0,
+                  scale: 0.88,
+                  x: text.includes("←") ? 6 : text.includes("→") ? -6 : 0,
+                }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.88,
+                  x: text.includes("←") ? -6 : text.includes("→") ? 6 : 0,
+                }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                className="font-mono text-[10px] font-bold uppercase tracking-[0.10em] text-[#191916] whitespace-nowrap z-10 select-none pointer-events-none"
+              >
+                {text}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
       )}
 

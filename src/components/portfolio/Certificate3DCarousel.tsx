@@ -331,17 +331,42 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
     }
   };
 
+  const handleStageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (selectedModalCert) return;
+    if (Math.abs(dragOffset) > 10) return;
+
+    if (!stageRef.current) return;
+    const rect = stageRef.current.getBoundingClientRect();
+    const relativeX = (e.clientX - rect.left) / rect.width;
+
+    if (relativeX < 0.45) {
+      handlePrev();
+    } else if (relativeX > 0.55) {
+      handleNext();
+    } else {
+      // Center dead zone click (45% - 55%): Do not trigger prev/next.
+      // If clicking active certificate card, open modal viewer.
+      const target = e.target as HTMLElement;
+      const cardEl = target.closest('[data-certificate-card]') as HTMLElement | null;
+      if (cardEl) {
+        setSelectedModalCert(activeCert);
+      }
+    }
+  };
+
   return (
     <div className="relative w-full flex flex-col items-center select-none py-4 sm:py-8">
       {/* 3D CAROUSEL STAGE CONTAINER */}
       <div
         ref={stageRef}
+        data-cursor="certificate-stage"
         className="relative w-full max-w-[1280px] h-[340px] sm:h-[440px] md:h-[500px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing"
         style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
+        onClick={handleStageClick}
       >
         {/* CERTIFICATE CARDS */}
         {certificates.map((cert, index) => {
@@ -370,15 +395,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                 pointerEvents: transform.pointerEvents,
                 transformStyle: "preserve-3d",
               }}
-              onClick={() => {
-                if (isDragging || Math.abs(dragOffset) > 10) return;
-                if (isActive) {
-                  setSelectedModalCert(cert);
-                } else {
-                  navigateTo(index);
-                }
-              }}
-              data-cursor="certificate"
+              data-certificate-card={isActive ? "active" : "side"}
               className="group cursor-pointer flex items-center justify-center"
             >
               {/* TIGHT ZERO-PADDING DOCUMENT WRAPPER */}
