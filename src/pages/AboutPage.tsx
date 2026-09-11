@@ -534,56 +534,6 @@ const AboutPage: React.FC = () => {
                 })}
               </div>
             </div>
-
-            {/* SECTION 3: PERSONAL DETAILS GRID */}
-            <div className="mt-24 pt-14 border-t border-[#1D2024]/14">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
-                    BASED IN
-                  </span>
-                  <p className="font-sans text-base font-semibold text-[#1D2024]">
-                    Hyderabad, India
-                  </p>
-                </div>
-
-                <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
-                    FOCUS
-                  </span>
-                  <p className="font-sans text-base font-semibold text-[#1D2024]">
-                    AI Engineering &amp; Web
-                  </p>
-                </div>
-
-                <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
-                    BUILDING
-                  </span>
-                  <p className="font-sans text-base font-semibold text-[#1D2024]">
-                    Generative Applications
-                  </p>
-                </div>
-
-                <div>
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#1D2024]/50 block mb-2">
-                    INTERESTS
-                  </span>
-                  <p className="font-sans text-base font-semibold text-[#1D2024]">
-                    AI · Motion · Open Source
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* SECTION 4: EDITORIAL FOOTER STATEMENT */}
-            <div className="mt-20 pt-12 border-t border-[#1D2024]/14 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div>
-                <span className="font-sans font-medium text-xl text-[#1D2024]/70 tracking-[-0.02em]">
-                  Still building. More to come.
-                </span>
-              </div>
-            </div>
           </div>
         </section>
       </main>
