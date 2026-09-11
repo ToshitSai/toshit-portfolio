@@ -369,10 +369,10 @@ const AboutPage: React.FC = () => {
         {/* SECTION 2: EDITORIAL 2-COLUMN EXPERIENCE ARCHIVE (IMAGE 1 VISUAL REFERENCE) */}
         <section id="experience" className="relative z-10 pt-20 sm:pt-28 border-t border-[#1D2024]/14">
           <div className="mx-auto max-w-[1440px] px-6 sm:px-12 lg:px-20">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-stretch">
-              {/* LEFT COLUMN: LARGE BOLD VERTICAL EXPERIENCE LABEL (PERFECTLY CENTERED) */}
-              <div className="lg:col-span-3 flex flex-col items-center justify-center text-center self-stretch">
-                <div className="w-full flex justify-center items-center text-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
+              {/* LEFT COLUMN: LARGE BOLD VERTICAL EXPERIENCE LABEL (STATIONARY ANCHORED) */}
+              <div className="lg:col-span-3 flex flex-col justify-start items-center text-center">
+                <div className="w-full flex justify-center items-center text-center pt-4 lg:pt-8">
                   {/* Desktop Vertical Heading */}
                   <div className="hidden lg:flex items-center justify-center w-full text-center">
                     <span
