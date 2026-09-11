@@ -224,11 +224,6 @@ const AboutPage: React.FC = () => {
                         </span>
                       </div>
                     </div>
-
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-[10px] font-semibold text-[#1E2024]/75">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFD21F]" />
-                      ACTIVE
-                    </span>
                   </div>
 
                   <p className="font-sans text-sm sm:text-base text-[#1E2024]/85 leading-relaxed font-medium">
@@ -267,9 +262,6 @@ const AboutPage: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1E2024]/60">
                       02 // FEATURED FOCUS
                     </span>
-                    <div className="p-2 rounded-xl bg-[#1E2024]/6 border border-[#1E2024]/10">
-                      <Sparkles className="w-5 h-5 text-[#FFD21F]" />
-                    </div>
                   </div>
 
                   <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#1E2024] tracking-[-0.025em]">
@@ -301,9 +293,6 @@ const AboutPage: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
                       01 // SYSTEM
                     </span>
-                    <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
-                      <Cpu className="w-4 h-4 text-[#FFD21F]" />
-                    </div>
                   </div>
 
                   <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em]">
@@ -328,9 +317,6 @@ const AboutPage: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
                       03 // FRONTEND
                     </span>
-                    <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
-                      <Code2 className="w-4 h-4 text-[#FFD21F]" />
-                    </div>
                   </div>
 
                   <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em]">
@@ -355,9 +341,6 @@ const AboutPage: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
                       04 // ARCHITECTURE
                     </span>
-                    <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
-                      <Layers className="w-4 h-4 text-[#FFD21F]" />
-                    </div>
                   </div>
 
                   <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em]">
