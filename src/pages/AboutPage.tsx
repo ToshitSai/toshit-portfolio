@@ -376,7 +376,7 @@ const AboutPage: React.FC = () => {
                   {/* Desktop Vertical Heading */}
                   <div className="hidden lg:block">
                     <span
-                      className="font-sans font-bold text-[clamp(64px,7.5vw,100px)] tracking-[-0.04em] text-[#1D2024] uppercase select-none leading-none block"
+                      className="font-sans font-bold text-[clamp(44px,4.5vw,64px)] tracking-[-0.03em] text-[#1D2024] uppercase select-none leading-none block"
                       style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                     >
                       EXPERIENCE
