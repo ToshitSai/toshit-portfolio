@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus, Terminal, Code2, Sparkles, Cpu } from "lucide-react";
-import ContactFooter from "@/components/portfolio/ContactFooter";
-import Testimonials from "@/components/portfolio/Testimonials";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
@@ -287,7 +285,6 @@ const pageCanvasVariants = {
 
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
-  const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // First row open by default
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -603,10 +600,6 @@ const AboutPage: React.FC = () => {
         </section>
 
       </main>
-
-      <Testimonials />
-
-      <ContactFooter isDrawerOpen={isContactDrawerOpen} setIsDrawerOpen={setIsContactDrawerOpen} />
     </motion.div>
   );
 };
