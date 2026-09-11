@@ -11,10 +11,20 @@ const ProjectsHeader: React.FC<{ projectCount?: number }> = ({ projectCount: _pr
     <RecordScratchHeading
       sectionTag="03 // PROJECTS"
       title={
-        <div className="flex flex-col items-start gap-0.5">
-          <span>Things I built</span>
+        <div className="flex flex-col items-start gap-0.5 font-sans font-bold text-[clamp(28px,3.8vw,52px)] leading-[1.02] tracking-[-0.035em] text-[#1D2024]">
+          <span>
+            Things I{" "}
+            <span className="font-gothic font-normal text-[1.12em] leading-[0.92] text-[#1D2024] tracking-[-0.01em] select-text">
+              built
+            </span>
+          </span>
           <span>because I had</span>
-          <span>to know if they worked.</span>
+          <span>
+            to know if they{" "}
+            <span className="font-gothic font-normal text-[1.12em] leading-[0.92] text-[#1D2024] tracking-[-0.01em] select-text">
+              worked.
+            </span>
+          </span>
         </div>
       }
     />

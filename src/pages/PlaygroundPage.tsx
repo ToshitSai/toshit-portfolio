@@ -49,7 +49,10 @@ const PlaygroundPage: React.FC = () => {
 
         <div className="text-center max-w-xl mx-auto mb-6 sm:mb-10 space-y-3">
           <h1 className="font-sans text-3xl sm:text-4xl md:text-5xl font-bold text-[#20252B] tracking-[-0.035em] leading-[1.02]">
-            Curated Archive
+            Curated{" "}
+            <span className="font-gothic font-normal text-[1.12em] leading-[0.92] text-[#20252B] tracking-[-0.01em]">
+              Archive
+            </span>
           </h1>
           <p className="font-sans text-sm sm:text-base text-[#20252B]/75 leading-relaxed">
             A small archive of things I've learned, built, and explored.
