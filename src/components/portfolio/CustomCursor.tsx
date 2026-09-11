@@ -424,8 +424,8 @@ const CustomCursor: React.FC = () => {
   if (isProject) {
     showDot = false;
   } else if (isCert) {
-    width = 84;
-    height = 84;
+    width = 64;
+    height = 64;
     showDot = false;
     isLens = true;
   } else if (mode === "SAY_HI") {
@@ -479,7 +479,7 @@ const CustomCursor: React.FC = () => {
       ) : (
         /* 2. DEFAULT & OTHER MODES — CLEAN CIRCULAR LENS RING & DOT */
         <div
-          className="relative flex items-center justify-center rounded-full transition-all duration-260 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          className="relative flex items-center justify-center rounded-full transition-all duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
           style={{
             width: `${width}px`,
             height: `${height}px`,
@@ -522,7 +522,7 @@ const CustomCursor: React.FC = () => {
                   x: text.includes("←") ? -6 : text.includes("→") ? 6 : 0,
                 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                className="font-mono text-[10px] font-bold uppercase tracking-[0.10em] text-[#191916] whitespace-nowrap z-10 select-none pointer-events-none"
+                className="font-mono text-[9.5px] font-bold uppercase tracking-[0.05em] text-[#191916] whitespace-nowrap z-10 select-none pointer-events-none"
               >
                 {text}
               </motion.span>
