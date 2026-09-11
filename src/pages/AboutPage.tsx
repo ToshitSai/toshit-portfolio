@@ -279,7 +279,7 @@ const pageCanvasVariants = {
 
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -296,7 +296,7 @@ const AboutPage: React.FC = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.35], [1, shouldReduceMotion ? 1 : 0.4]);
 
   const toggleAccordion = (index: number) => {
-    setExpandedIndex((prevIndex) => (prevIndex === index ? null : index));
+    setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
@@ -395,15 +395,11 @@ const AboutPage: React.FC = () => {
               {/* RIGHT COLUMN: REFINED EDITORIAL ACCORDION ROWS (IMAGE 1 REFERENCE) */}
               <div className="lg:col-span-9 flex flex-col">
                 {FACTUAL_EXPERIENCE_DATA.map((row, index) => {
-                  const isOpen = expandedIndex === index;
+                  const isOpen = openIndex === index;
 
                   return (
-                    <motion.div
+                    <div
                       key={row.id}
-                      initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
                       className="group border-b border-[#1D2024]/14 transition-colors duration-300"
                     >
                       {/* ACCORDION ROW HEADER BUTTON */}
@@ -524,7 +520,7 @@ const AboutPage: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
