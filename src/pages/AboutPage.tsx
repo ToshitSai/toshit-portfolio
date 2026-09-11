@@ -376,7 +376,7 @@ const AboutPage: React.FC = () => {
                   {/* Desktop Vertical Heading */}
                   <div className="hidden lg:flex items-center justify-center w-full text-center">
                     <span
-                      className="font-sans font-bold text-[clamp(44px,4.5vw,64px)] tracking-[-0.03em] text-[#1D2024] uppercase select-none leading-none inline-block mx-auto text-center"
+                      className="font-sans font-bold text-[clamp(56px,5.5vw,80px)] tracking-[-0.03em] text-[#1D2024] uppercase select-none leading-none inline-block mx-auto text-center"
                       style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                     >
                       EXPERIENCE
