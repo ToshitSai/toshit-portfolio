@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Cpu, Sparkles, Code2, Layers, Compass } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus, Cpu, Sparkles, Code2, Layers, Activity, Zap } from "lucide-react";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
@@ -84,70 +84,50 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
   },
 ];
 
-// INTERACTIVE CREATIVE DESK ARTIFACT INTERFACE
-interface WorkspaceArtifact {
-  id: string;
-  badge: string;
-  title: string;
-  subtitle: string;
-  icon: React.ReactNode;
-  detail: string;
-  desktopPosition: string; // Tailwind grid / relative class
-  rotation: string;
-}
+// LIVE LIGHTWEIGHT METRIC COUNTER & SPARKLINE FOR FEATURED CARD
+const LiveTokenMetric: React.FC = () => {
+  const [tokenCount, setTokenCount] = useState(1428950);
 
-const WORKSPACE_ARTIFACTS: WorkspaceArtifact[] = [
-  {
-    id: "ai-ml-nodes",
-    badge: "01 // SYSTEM",
-    title: "AI / ML SYSTEMS",
-    subtitle: "Neural Nets & Architectures",
-    icon: <Cpu className="w-4 h-4 text-[#FFD21F]" />,
-    detail: "Architecting intelligent systems with neural networks, machine learning algorithms, and data preprocessing pipelines.",
-    desktopPosition: "lg:col-span-4 lg:col-start-1 lg:row-start-1",
-    rotation: "hover:-rotate-1",
-  },
-  {
-    id: "generative-ai",
-    badge: "02 // LLM",
-    title: "GENERATIVE AI",
-    subtitle: "Gemini API & Workflows",
-    icon: <Sparkles className="w-4 h-4 text-[#FFD21F]" />,
-    detail: "Creating dynamic AI applications with structured JSON outputs, RAG concepts, and agentic prompt workflows.",
-    desktopPosition: "lg:col-span-4 lg:col-start-9 lg:row-start-1",
-    rotation: "hover:rotate-1",
-  },
-  {
-    id: "web-engineering",
-    badge: "03 // FRONTEND",
-    title: "WEB ENGINEERING",
-    subtitle: "React 18 & TypeScript",
-    icon: <Code2 className="w-4 h-4 text-[#FFD21F]" />,
-    detail: "Full-stack React engineering with modern design systems, Framer Motion, and performance optimization.",
-    desktopPosition: "lg:col-span-4 lg:col-start-1 lg:row-start-2",
-    rotation: "hover:rotate-1",
-  },
-  {
-    id: "product-building",
-    badge: "04 // ARCHITECTURE",
-    title: "PRODUCT BUILDING",
-    subtitle: "Idea → Execution → Ship",
-    icon: <Layers className="w-4 h-4 text-[#FFD21F]" />,
-    detail: "Turning raw concepts into complete, responsive, user-centered digital products with editorial UI polish.",
-    desktopPosition: "lg:col-span-4 lg:col-start-9 lg:row-start-2",
-    rotation: "hover:-rotate-1",
-  },
-  {
-    id: "academic-archive",
-    badge: "05 // FOUNDATION",
-    title: "CS & AI SPECIALIZATION",
-    subtitle: "Engineering Degree Student",
-    icon: <Compass className="w-4 h-4 text-[#FFD21F]" />,
-    detail: "Computer Science Engineering student focusing on data structures, algorithms, and AI/ML principles.",
-    desktopPosition: "lg:col-span-12 lg:row-start-3 lg:w-[600px] lg:mx-auto",
-    rotation: "hover:-rotate-0.5",
-  },
-];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTokenCount((prev) => prev + Math.floor(Math.random() * 16) + 3);
+    }, 1200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="mt-5 pt-4 border-t border-[#1E2024]/12 flex flex-wrap items-center justify-between gap-3">
+      <div className="flex items-center gap-2">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD21F] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FFD21F]"></span>
+        </span>
+        <span className="font-mono text-xs font-semibold text-[#1E2024]">
+          GEMINI 1.5 PRO · ACTIVE PIPELINE
+        </span>
+      </div>
+
+      {/* MINI SVG SPARKLINE */}
+      <div className="flex items-center gap-3">
+        <svg className="w-20 h-5 opacity-80" viewBox="0 0 80 20">
+          <polyline
+            fill="none"
+            stroke="#1E2024"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            points="0,14 12,10 24,16 36,6 48,12 60,4 72,9 80,3"
+          />
+        </svg>
+
+        <div className="flex items-center gap-1.5 bg-[#1E2024]/6 px-3 py-1 rounded-lg border border-[#1E2024]/10 font-mono text-xs text-[#1E2024]">
+          <Zap className="w-3.5 h-3.5 text-[#FFD21F]" />
+          <span>TOKENS: <strong className="font-bold">{tokenCount.toLocaleString()}</strong></span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const pageCanvasVariants = {
   initial: { opacity: 0, y: 10 },
@@ -158,7 +138,6 @@ const pageCanvasVariants = {
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [activeArtifactId, setActiveArtifactId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -167,10 +146,6 @@ const AboutPage: React.FC = () => {
 
   const toggleAccordion = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
-
-  const handleArtifactClick = (id: string) => {
-    setActiveArtifactId((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -203,7 +178,7 @@ const AboutPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* SECTION 1: VISUAL CREATIVE WORKSPACE COMPOSITION */}
+        {/* SECTION 1: ASYMMETRIC BENTO GRID ABOUT / SKILLS WORKSPACE */}
         <section className="relative z-10 pb-20 sm:pb-28">
           <div className="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
             {/* SMALL TOP MONOSPACE BADGE */}
@@ -215,124 +190,185 @@ const AboutPage: React.FC = () => {
             >
               <span className="w-2.5 h-2.5 rounded-full bg-[#FFD21F] animate-pulse" />
               <span className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#1E2024]/70">
-                01 // ABOUT ME — CREATIVE ENGINEER DESK
+                01 // ABOUT ME — CREATIVE ENGINEER BENTO
               </span>
             </motion.div>
 
-            {/* CREATIVE WORKSPACE OBJECT COMPOSITION GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center relative">
-              {/* CENTRAL IDENTITY CARD OBJECT (THE PRIMARY ANCHOR) */}
+            {/* BENTO GRID CONTAINER WITH EXPLICIT STACKING & SPANS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-stretch relative">
+              
+              {/* 1. CENTER PROFILE CARD (PRIMARY ANCHOR — ORDER 1 ON MOBILE, SPANS 5 COLS ON DESKTOP) */}
               <motion.div
-                initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.012 }}
-                className="lg:col-span-4 lg:col-start-5 lg:row-start-1 z-20 w-full max-w-[460px] mx-auto rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_16px_48px_rgba(30,32,36,0.08)] relative group transition-all duration-300"
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -3 }}
+                className="order-1 lg:col-span-5 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group transition-all duration-300"
               >
                 {/* Micro Ambient Glow Accent */}
-                <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#FFD21F]/25 rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+                <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#FFD21F]/20 rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
 
                 {/* Identity Header */}
-                <div className="flex items-center justify-between border-b border-[#1E2024]/12 pb-5 mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#1E2024] text-[#F7F1E5] flex items-center justify-center font-bold text-base font-sans shadow-xs">
-                      T
+                <div>
+                  <div className="flex items-center justify-between border-b border-[#1E2024]/12 pb-5 mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#1E2024] text-[#F7F1E5] flex items-center justify-center font-bold text-base font-sans shadow-xs">
+                        T
+                      </div>
+                      <div>
+                        <h2 className="font-sans font-bold text-xl sm:text-2xl text-[#1E2024] tracking-[-0.02em]">
+                          Toshit Sai
+                        </h2>
+                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1E2024]/60 block mt-0.5">
+                          CREATIVE ENGINEER
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="font-sans font-bold text-xl sm:text-2xl text-[#1E2024] tracking-[-0.02em]">
-                        Toshit Sai
-                      </h2>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1E2024]/60 block mt-0.5">
-                        CREATIVE ENGINEER
-                      </span>
-                    </div>
+
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-[10px] font-semibold text-[#1E2024]/75">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFD21F]" />
+                      ACTIVE
+                    </span>
                   </div>
 
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-[10px] font-semibold text-[#1E2024]/75">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFD21F]" />
-                    ACTIVE
-                  </span>
-                </div>
-
-                {/* Identity Body */}
-                <div className="space-y-4">
                   <p className="font-sans text-sm sm:text-base text-[#1E2024]/85 leading-relaxed font-medium">
                     Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning.
                   </p>
+                </div>
 
-                  <div className="pt-2">
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/50 block mb-2">
-                      BUILDING PHILOSOPHY
-                    </span>
-                    {/* PROCESS SIGNATURE: EXPERIMENT → BUILD → SHIP */}
-                    <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
-                      <span>EXPERIMENT</span>
-                      <span className="text-[#FFD21F]">→</span>
-                      <span>BUILD</span>
-                      <span className="text-[#FFD21F]">→</span>
-                      <span>SHIP</span>
-                    </div>
+                {/* Building Philosophy Pill Signature */}
+                <div className="pt-6">
+                  <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/50 block mb-2">
+                    BUILDING PHILOSOPHY
+                  </span>
+                  <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
+                    <span>EXPERIMENT</span>
+                    <span className="text-[#FFD21F]">→</span>
+                    <span>BUILD</span>
+                    <span className="text-[#FFD21F]">→</span>
+                    <span>SHIP</span>
                   </div>
                 </div>
               </motion.div>
 
-              {/* SURROUNDING INTERACTIVE CREATIVE ARTIFACTS */}
-              {WORKSPACE_ARTIFACTS.map((artifact, idx) => {
-                const isActive = activeArtifactId === artifact.id;
+              {/* 2. FEATURED GENERATIVE AI CARD (ORDER 2 ON MOBILE, SPANS 7 COLS / 2 COLS WIDTH ON DESKTOP) */}
+              <motion.div
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -3 }}
+                className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group transition-all duration-300 hover:border-[#1E2024]/30"
+              >
+                {/* Micro Ambient Glow Accent */}
+                <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#FFD21F]/25 rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
 
-                return (
-                  <motion.div
-                    key={artifact.id}
-                    initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.35 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                    onClick={() => handleArtifactClick(artifact.id)}
-                    className={`${artifact.desktopPosition} relative z-10 cursor-pointer group`}
-                  >
-                    <div
-                      className={`p-5 sm:p-6 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 shadow-[0_8px_24px_rgba(30,32,36,0.04)] transition-all duration-300 ${artifact.rotation} group-hover:-translate-y-1 group-hover:border-[#1E2024]/30 ${
-                        isActive ? "border-[#1E2024] bg-white/60 shadow-md" : ""
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
-                          {artifact.badge}
-                        </span>
-                        <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
-                          {artifact.icon}
-                        </div>
-                      </div>
-
-                      <h3 className="font-sans font-semibold text-lg text-[#1E2024] tracking-[-0.02em]">
-                        {artifact.title}
-                      </h3>
-                      <span className="font-mono text-xs text-[#1E2024]/60 block mt-0.5">
-                        {artifact.subtitle}
-                      </span>
-
-                      {/* MICRO TOOLTIP / DETAIL POPOVER ON HOVER / TAP */}
-                      <AnimatePresence>
-                        {(isActive || undefined) && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="mt-3 pt-3 border-t border-[#1E2024]/12 text-xs font-sans text-[#1E2024]/80 leading-relaxed overflow-hidden"
-                          >
-                            {artifact.detail}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {/* ALWAYS VISIBLE HOVER TOOLTIP ON DESKTOP */}
-                      <div className="hidden lg:block opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-3 pt-3 border-t border-[#1E2024]/10 text-xs font-sans text-[#1E2024]/80 leading-relaxed">
-                        {artifact.detail}
-                      </div>
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1E2024]/60">
+                      02 // FEATURED FOCUS
+                    </span>
+                    <div className="p-2 rounded-xl bg-[#1E2024]/6 border border-[#1E2024]/10">
+                      <Sparkles className="w-5 h-5 text-[#FFD21F]" />
                     </div>
-                  </motion.div>
-                );
-              })}
+                  </div>
+
+                  <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#1E2024] tracking-[-0.025em]">
+                    Generative AI &amp; LLM Workflows
+                  </h3>
+                  <span className="font-mono text-xs text-[#1E2024]/65 block mt-1">
+                    Structured JSON Schemas · Gemini API Integration · RAG Concepts
+                  </span>
+
+                  <p className="font-sans text-sm sm:text-base text-[#1E2024]/80 leading-relaxed font-normal mt-3">
+                    Architecting end-to-end generative workflows that produce structured JSON data, power automated syllabi generators, resume evaluators, and dynamic micro-apps.
+                  </p>
+                </div>
+
+                {/* LIVE TICKING METRIC & SPARKLINE BAR */}
+                <LiveTokenMetric />
+              </motion.div>
+
+              {/* 3. COMPACT CARD: AI/ML SYSTEMS (ORDER 3 ON MOBILE, SPANS 4 COLS ON DESKTOP) */}
+              <motion.div
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -3 }}
+                className="order-3 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-all duration-300 hover:border-[#1E2024]/28"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
+                      01 // SYSTEM
+                    </span>
+                    <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
+                      <Cpu className="w-4 h-4 text-[#FFD21F]" />
+                    </div>
+                  </div>
+
+                  <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em]">
+                    AI / ML Systems
+                  </h3>
+                  <span className="font-mono text-xs text-[#1E2024]/60 block mt-0.5">
+                    Neural Nets &amp; Preprocessing
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* 4. COMPACT CARD: WEB ENGINEERING (ORDER 4 ON MOBILE, SPANS 4 COLS ON DESKTOP) */}
+              <motion.div
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.46, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -3 }}
+                className="order-4 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-all duration-300 hover:border-[#1E2024]/28"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
+                      03 // FRONTEND
+                    </span>
+                    <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
+                      <Code2 className="w-4 h-4 text-[#FFD21F]" />
+                    </div>
+                  </div>
+
+                  <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em]">
+                    Web Engineering
+                  </h3>
+                  <span className="font-mono text-xs text-[#1E2024]/60 block mt-0.5">
+                    React 18 &amp; TypeScript Systems
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* 5. COMPACT CARD: PRODUCT BUILDING (ORDER 5 ON MOBILE, SPANS 4 COLS ON DESKTOP) */}
+              <motion.div
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -3 }}
+                className="order-5 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-all duration-300 hover:border-[#1E2024]/28"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
+                      04 // ARCHITECTURE
+                    </span>
+                    <div className="p-1.5 rounded-lg bg-[#1E2024]/6 border border-[#1E2024]/10">
+                      <Layers className="w-4 h-4 text-[#FFD21F]" />
+                    </div>
+                  </div>
+
+                  <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em]">
+                    Product Building
+                  </h3>
+                  <span className="font-mono text-xs text-[#1E2024]/60 block mt-0.5">
+                    Idea → Execution → Ship
+                  </span>
+                </div>
+              </motion.div>
+
             </div>
           </div>
         </section>
