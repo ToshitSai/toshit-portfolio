@@ -19,7 +19,7 @@ export interface AiUsageData {
   periodEnd: string;
   isLive: boolean;
   freshness?: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
-  source?: "redis" | "local_json" | "memory";
+  source?: "github_json" | "local_json" | "memory";
   eventCount: number;
   metrics: {
     openai: MetricSummary | null;

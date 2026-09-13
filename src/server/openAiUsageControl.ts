@@ -1,5 +1,5 @@
 import { isRateLimited } from "./security.js";
-import { recordUsageEvent, type AiUsageEvent } from "./aiUsageStore.js";
+import { hasPersistentUsageStore, recordUsageEvent, type AiUsageEvent } from "./aiUsageStore.js";
 
 interface ControlResult {
   status: number;
@@ -32,7 +32,6 @@ export async function handleOpenAiUsageControlRequest(
   const requiredSecret = process.env.USAGE_INGEST_SECRET?.trim();
   const openAiKey = process.env.OPENAI_API_KEY?.trim();
   const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
-  const hasDurableStore = Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 
   if (!requiredSecret) {
     return { status: 503, data: { success: false, error: "Missing server variable: USAGE_INGEST_SECRET." } };
@@ -47,10 +46,13 @@ export async function handleOpenAiUsageControlRequest(
     return { status: 503, data: { success: false, error: "Missing server variable: OPENAI_API_KEY." } };
   }
 
-  if (isProd && !hasDurableStore) {
+  if (isProd && !hasPersistentUsageStore()) {
     return {
       status: 503,
-      data: { success: false, error: "Missing durable production usage store: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN." },
+      data: {
+        success: false,
+        error: "Missing durable production usage store: GITHUB_USAGE_STORE_TOKEN and GITHUB_USAGE_STORE_REPO.",
+      },
     };
   }
 

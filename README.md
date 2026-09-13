@@ -97,17 +97,19 @@ Create `.env.local` for local development when using the contact API:
 
 ```bash
 CONTACT_EMAIL=
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
 USAGE_INGEST_SECRET=
 OPENAI_API_KEY=
 OPENAI_USAGE_MODEL=
 PORTFOLIO_API_URL=
+GITHUB_USAGE_STORE_TOKEN=
+GITHUB_USAGE_STORE_REPO=
+GITHUB_USAGE_STORE_BRANCH=
+GITHUB_USAGE_STORE_PATH=
 ```
 
-`CONTACT_EMAIL` is required for server-side contact delivery. Upstash variables are optional; the app falls back to in-memory rate limiting locally.
+`CONTACT_EMAIL` is required for server-side contact delivery.
 `USAGE_INGEST_SECRET` is required for AI usage ingestion. `OPENAI_API_KEY` stays server-side and is used only by `/api/ai-usage-control-request` to make a real OpenAI request and record its returned usage tokens. `OPENAI_USAGE_MODEL` is optional and defaults to `gpt-4.1-mini`. `PORTFOLIO_API_URL` is used by the local OpenAI and Antigravity usage collector scripts.
-Upstash Redis is required for durable production usage storage; without it, production ingest endpoints return a configuration error instead of accepting non-persistent data.
+Production AI usage is stored in a GitHub-backed JSON file because Vercel serverless functions cannot persist project-local file writes. Set `GITHUB_USAGE_STORE_TOKEN` to a server-side GitHub token with contents read/write access, `GITHUB_USAGE_STORE_REPO` to `owner/repo`, and optionally override `GITHUB_USAGE_STORE_BRANCH` and `GITHUB_USAGE_STORE_PATH`. Without these, production ingest endpoints return a configuration error instead of accepting non-persistent data.
 
 ## Project Structure
 

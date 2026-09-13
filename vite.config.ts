@@ -7,7 +7,7 @@ import { processContactSubmission } from "./src/server/contactHandler";
 import { handleGetAiUsage, handleRecordAiUsage } from "./src/server/aiUsageHandler";
 import { handleOpenAiUsageControlRequest } from "./src/server/openAiUsageControl";
 
-dotenv.config({ quiet: true });
+dotenv.config({ path: [".env.local", ".env"], quiet: true });
 
 function securityHeadersPlugin(): Plugin {
   return {

@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { Redis } from "@upstash/redis";
 
 export type AiUsageProvider = "openai" | "antigravity";
 export type AiUsageMetricType = "tokens_processed" | "quota_remaining";
@@ -40,7 +39,7 @@ export interface AiUsageResponseData {
   periodEnd: string;
   isLive: boolean;
   freshness: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
-  source: "redis" | "local_json" | "memory";
+  source: "github_json" | "local_json" | "memory";
   eventCount: number;
   metrics: {
     openai: MetricSummary | null;
@@ -53,16 +52,11 @@ let memoryEvents: AiUsageEvent[] = [];
 let isInitialized = false;
 let activeSource: AiUsageResponseData["source"] = "memory";
 
-let redis: Redis | null = null;
-if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-  try {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
-  } catch (err) {
-    console.error("[AiUsageStore] Redis init error:", err);
-  }
+interface GithubUsageStoreConfig {
+  token: string;
+  repo: string;
+  path: string;
+  branch: string;
 }
 
 function getStorageFilePath(): string {
@@ -76,7 +70,7 @@ function getStorageFilePath(): string {
 async function withTimeout<T>(promise: Promise<T>, ms: number = 1500): Promise<T> {
   let timeoutId: NodeJS.Timeout | undefined;
   const timeoutPromise = new Promise<never>((_, reject) => {
-    timeoutId = setTimeout(() => reject(new Error("Redis operation timed out")), ms);
+    timeoutId = setTimeout(() => reject(new Error("Usage store operation timed out")), ms);
   });
 
   try {
@@ -84,6 +78,88 @@ async function withTimeout<T>(promise: Promise<T>, ms: number = 1500): Promise<T
   } finally {
     if (timeoutId) clearTimeout(timeoutId);
   }
+}
+
+function getGithubConfig(): GithubUsageStoreConfig | null {
+  const token = process.env.GITHUB_USAGE_STORE_TOKEN?.trim();
+  const repo = process.env.GITHUB_USAGE_STORE_REPO?.trim();
+  if (!token || !repo) return null;
+
+  return {
+    token,
+    repo,
+    path: process.env.GITHUB_USAGE_STORE_PATH?.trim() || "data/ai_usage_db.json",
+    branch: process.env.GITHUB_USAGE_STORE_BRANCH?.trim() || "main",
+  };
+}
+
+export function hasPersistentUsageStore(): boolean {
+  return Boolean(getGithubConfig());
+}
+
+function isProductionRuntime(): boolean {
+  return process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+}
+
+async function githubRequest<T>(config: GithubUsageStoreConfig, method: "GET" | "PUT", body?: unknown): Promise<T> {
+  const response = await withTimeout(
+    fetch(`https://api.github.com/repos/${config.repo}/contents/${encodeURIComponent(config.path).replace(/%2F/g, "/")}${method === "GET" ? `?ref=${encodeURIComponent(config.branch)}` : ""}`, {
+      method,
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${config.token}`,
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    }),
+    5000
+  );
+
+  if (!response.ok) {
+    const message = await response.text().catch(() => "");
+    throw new Error(`GitHub usage store ${method} failed with ${response.status}: ${message.slice(0, 240)}`);
+  }
+
+  return (await response.json()) as T;
+}
+
+interface GithubContentResponse {
+  content?: string;
+  encoding?: string;
+  sha?: string;
+}
+
+function encodeBase64(value: string): string {
+  return Buffer.from(value, "utf-8").toString("base64");
+}
+
+function decodeBase64(value: string): string {
+  return Buffer.from(value.replace(/\s/g, ""), "base64").toString("utf-8");
+}
+
+async function loadFromGithub(config: GithubUsageStoreConfig): Promise<AiUsageEvent[]> {
+  const data = await githubRequest<GithubContentResponse>(config, "GET");
+  if (!data.content || data.encoding !== "base64") return [];
+  return normalizeStoredEvents(JSON.parse(decodeBase64(data.content)));
+}
+
+async function saveToGithub(config: GithubUsageStoreConfig, events: AiUsageEvent[]): Promise<void> {
+  let sha: string | undefined;
+  try {
+    const existing = await githubRequest<GithubContentResponse>(config, "GET");
+    sha = existing.sha;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "";
+    if (!message.includes("failed with 404")) throw err;
+  }
+
+  await githubRequest(config, "PUT", {
+    message: "chore: update AI usage events",
+    content: encodeBase64(`${JSON.stringify(events, null, 2)}\n`),
+    branch: config.branch,
+    sha,
+  });
 }
 
 function isNonNegativeInteger(value: unknown): value is number {
@@ -190,15 +266,18 @@ function normalizeStoredEvents(rawEvents: unknown): AiUsageEvent[] {
 export async function initializeStore(): Promise<void> {
   if (isInitialized) return;
 
-  if (redis) {
+  const githubConfig = getGithubConfig();
+  if (githubConfig) {
     try {
-      const redisData = await withTimeout(redis.get<AiUsageEvent[]>("ai_usage:events"), 1500);
-      memoryEvents = normalizeStoredEvents(redisData);
-      activeSource = "redis";
+      memoryEvents = await loadFromGithub(githubConfig);
+      activeSource = "github_json";
       isInitialized = true;
       return;
     } catch (err) {
-      console.warn("[AiUsageStore] Redis load warning:", err instanceof Error ? err.message : err);
+      console.warn("[AiUsageStore] GitHub load warning:", err instanceof Error ? err.message : err);
+      if (isProductionRuntime()) {
+        throw err;
+      }
     }
   }
 
@@ -221,12 +300,20 @@ export async function initializeStore(): Promise<void> {
 }
 
 async function saveStore(): Promise<void> {
-  const filePath = getStorageFilePath();
-  fs.writeFileSync(filePath, JSON.stringify(memoryEvents, null, 2), "utf-8");
-
-  if (redis) {
-    await withTimeout(redis.set("ai_usage:events", memoryEvents), 1500);
+  const githubConfig = getGithubConfig();
+  if (githubConfig) {
+    await saveToGithub(githubConfig, memoryEvents);
+    activeSource = "github_json";
+    return;
   }
+
+  if (isProductionRuntime()) {
+    throw new Error("Persistent usage store is not configured.");
+  }
+
+  const filePath = getStorageFilePath();
+  fs.writeFileSync(filePath, `${JSON.stringify(memoryEvents, null, 2)}\n`, "utf-8");
+  activeSource = "local_json";
 }
 
 export async function recordUsageEvent(event: AiUsageEvent): Promise<{ success: true; isDuplicate: boolean }> {
