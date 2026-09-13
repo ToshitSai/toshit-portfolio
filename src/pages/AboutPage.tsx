@@ -164,9 +164,6 @@ const AboutPage: React.FC = () => {
                 whileHover={{ y: -3 }}
                 className="order-1 lg:col-span-5 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group transition-all duration-300"
               >
-                {/* Micro Ambient Glow Accent */}
-                <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#FFD21F]/20 rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
-
                 {/* Identity Header */}
                 <div>
                   <div className="flex items-center justify-between border-b border-[#1E2024]/12 pb-5 mb-5">
