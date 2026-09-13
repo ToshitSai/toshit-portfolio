@@ -44,8 +44,17 @@ export async function handleRecordAiUsage(
   clientIp: string = "127.0.0.1",
   authHeader?: string
 ): Promise<AiUsageApiResult> {
-  // Optional security check: if USAGE_INGEST_SECRET is defined, verify header
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+
+  // Production ingest must be authenticated so the public site cannot forge usage totals.
   const requiredSecret = process.env.USAGE_INGEST_SECRET?.trim();
+  if (isProd && !requiredSecret) {
+    return {
+      status: 503,
+      data: { success: false, error: "Usage ingest is not configured." },
+    };
+  }
+
   if (requiredSecret) {
     const token = authHeader?.replace(/^Bearer\s+/i, "").trim();
     if (token !== requiredSecret) {

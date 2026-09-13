@@ -15,8 +15,12 @@ export interface AiUsageData {
   updatedAt: string;
   lastEventTime?: string;
   period: "all_time" | "today" | "this_month";
+  periodStart?: string;
+  periodEnd: string;
   isLive: boolean;
-  freshness?: "LIVE" | "STALE";
+  freshness?: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
+  source?: "redis" | "local_json" | "memory";
+  eventCount: number;
   metrics: {
     openai: MetricSummary | null;
     antigravity: MetricSummary | null;
@@ -119,12 +123,16 @@ export const LiveAiUsageCounter: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastSuccessfulData, setLastSuccessfulData] = useState<AiUsageData | null>(null);
   const [showModels, setShowModels] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
   const abortControllerRef = useRef<AbortController | null>(null);
+  const requestSequenceRef = useRef(0);
+  const dataRef = useRef<AiUsageData | null>(null);
   const activePeriodRef = useRef<"all_time" | "today" | "this_month">(period);
   activePeriodRef.current = period;
+  dataRef.current = data;
 
   const fetchUsage = useCallback(
     async (selectedPeriod: "all_time" | "today" | "this_month", isManual: boolean = false) => {
@@ -134,15 +142,18 @@ export const LiveAiUsageCounter: React.FC = () => {
       }
       const controller = new AbortController();
       abortControllerRef.current = controller;
+      const requestSequence = requestSequenceRef.current + 1;
+      requestSequenceRef.current = requestSequence;
 
       if (isManual) setRefreshing(true);
-      else if (!data) setLoading(true);
+      else if (!dataRef.current) setLoading(true);
 
       setError(null);
 
       try {
-        const response = await fetch(`/api/ai-usage?period=${selectedPeriod}`, {
+        const response = await fetch(`/api/ai-usage?period=${selectedPeriod}&requestedAt=${Date.now()}`, {
           headers: { Accept: "application/json" },
+          cache: "no-store",
           signal: controller.signal,
         });
 
@@ -152,12 +163,13 @@ export const LiveAiUsageCounter: React.FC = () => {
 
         const result: AiUsageData = await response.json();
         // Guard against stale response if period changed while request was in-flight
-        if (activePeriodRef.current !== selectedPeriod) {
+        if (activePeriodRef.current !== selectedPeriod || requestSequenceRef.current !== requestSequence) {
           return;
         }
 
         if (result && result.success) {
           setData(result);
+          setLastSuccessfulData(result);
         } else {
           throw new Error("Invalid API response");
         }
@@ -166,16 +178,15 @@ export const LiveAiUsageCounter: React.FC = () => {
           // Request was aborted due to filter switch; ignore
           return;
         }
-        console.error("[LiveAiUsageCounter] Fetch error:", err);
         setError("DATA TEMPORARILY UNAVAILABLE");
       } finally {
-        if (activePeriodRef.current === selectedPeriod) {
+        if (activePeriodRef.current === selectedPeriod && requestSequenceRef.current === requestSequence) {
           setLoading(false);
           setRefreshing(false);
         }
       }
     },
-    [data]
+    []
   );
 
   useEffect(() => {
@@ -206,6 +217,7 @@ export const LiveAiUsageCounter: React.FC = () => {
   const openaiMetric = data?.metrics?.openai;
   const antigravityMetric = data?.metrics?.antigravity;
   const combinedMetric = data?.metrics?.combined;
+  const hasUsageData = Boolean(openaiMetric || antigravityMetric || combinedMetric || (data?.eventCount || 0) > 0);
 
   // Determine if both metrics are token usage and can be combined
   const canCombine =
@@ -312,7 +324,7 @@ export const LiveAiUsageCounter: React.FC = () => {
           <div>
             <p className="font-semibold text-[#1E2024]">Data Provenance &amp; Verification</p>
             <p className="mt-0.5 leading-relaxed text-[11px]">
-              Aggregated live metrics from verified backend AI execution events. OpenAI tokens are calculated from actual API payload usage. Antigravity interaction metrics track real LLM execution activity without exposing API credentials.
+              Metrics come from backend-ingested usage events only. OpenAI token totals require actual API usage payloads. Antigravity is shown as tokens only when token events are recorded; quota remaining is shown separately and never added to token totals.
             </p>
           </div>
         </motion.div>
@@ -320,14 +332,11 @@ export const LiveAiUsageCounter: React.FC = () => {
 
       {/* MAIN METRIC DISPLAY AREA */}
       {loading ? (
-        /* LOADING SKELETON */
-        <div className="py-6 space-y-3">
-          <div className="h-10 w-48 bg-[#1E2024]/10 rounded-xl animate-pulse" />
-          <div className="h-4 w-32 bg-[#1E2024]/8 rounded-md animate-pulse" />
-          <div className="grid grid-cols-2 gap-4 pt-3">
-            <div className="h-8 bg-[#1E2024]/6 rounded-lg animate-pulse" />
-            <div className="h-8 bg-[#1E2024]/6 rounded-lg animate-pulse" />
-          </div>
+        /* LOADING STATE */
+        <div className="py-6">
+          <span className="font-mono text-sm font-bold uppercase tracking-[0.18em] text-[#1E2024]/70">
+            SYNCING...
+          </span>
         </div>
       ) : error ? (
         /* ERROR STATE */
@@ -336,9 +345,18 @@ export const LiveAiUsageCounter: React.FC = () => {
           <div>
             <span className="font-bold block">{error}</span>
             <span className="text-[11px] opacity-75">
-              {data?.updatedAt ? `LAST KNOWN SYNC: ${formatRelativeTime(data.updatedAt)}` : "Unable to contact usage backend."}
+              {lastSuccessfulData?.lastEventTime
+                ? `LAST SUCCESSFUL SYNC: ${formatRelativeTime(lastSuccessfulData.lastEventTime)}`
+                : "Unable to contact usage backend."}
             </span>
           </div>
+        </div>
+      ) : !hasUsageData ? (
+        <div className="py-6 px-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-xs">
+          <span className="font-bold block text-[#1E2024]">NO USAGE DATA AVAILABLE</span>
+          <span className="mt-1 block text-[11px] uppercase tracking-[0.12em] text-[#1E2024]/55">
+            Waiting for verified backend usage events.
+          </span>
         </div>
       ) : (
         /* FACTUAL DATA DISPLAY */
@@ -447,7 +465,13 @@ export const LiveAiUsageCounter: React.FC = () => {
 
             {/* RELATIVE TIMESTAMP */}
             <span className="text-[11px] font-semibold text-[#1E2024]/50 uppercase">
-              {data?.freshness === "STALE" ? "STALE DATA — " : ""}UPDATED {data?.updatedAt ? formatRelativeTime(data.updatedAt) : "JUST NOW"}
+              {data?.freshness === "LIVE"
+                ? "LIVE"
+                : data?.freshness === "STALE"
+                ? "STALE"
+                : data?.lastEventTime
+                ? `UPDATED ${formatRelativeTime(data.lastEventTime)}`
+                : "NO DATA"}
             </span>
           </div>
 

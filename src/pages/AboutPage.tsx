@@ -97,6 +97,7 @@ const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isFeaturedExpanded, setIsFeaturedExpanded] = useState<boolean>(false);
+  const [hasOpenedFeatured, setHasOpenedFeatured] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -105,6 +106,14 @@ const AboutPage: React.FC = () => {
 
   const toggleAccordion = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const toggleFeaturedCard = () => {
+    setIsFeaturedExpanded((prev) => {
+      const next = !prev;
+      if (next) setHasOpenedFeatured(true);
+      return next;
+    });
   };
 
   return (
@@ -194,25 +203,19 @@ const AboutPage: React.FC = () => {
                   </span>
                   <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
                     <span>EXPERIMENT</span>
-                    <span className="relative inline-flex items-center overflow-hidden w-[14px] h-4 text-[#FFD21F] select-none pointer-events-none align-middle">
-                      <span
-                        className="flex items-center animate-arrow-flow motion-reduce:animate-none"
-                        style={{ animationDelay: "0s" }}
-                      >
-                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
-                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
-                      </span>
-                    </span>
+                    <div className="arrow-viewport relative inline-flex items-center overflow-hidden w-[28px] h-4 select-none pointer-events-none align-middle text-[#FFD21F]">
+                      <div className="arrow-track arrow-track-anim-1 flex items-center w-max">
+                        <span className="inline-block w-[28px] text-center flex-shrink-0">→</span>
+                        <span className="inline-block w-[28px] text-center flex-shrink-0">→</span>
+                      </div>
+                    </div>
                     <span>BUILD</span>
-                    <span className="relative inline-flex items-center overflow-hidden w-[14px] h-4 text-[#FFD21F] select-none pointer-events-none align-middle">
-                      <span
-                        className="flex items-center animate-arrow-flow motion-reduce:animate-none"
-                        style={{ animationDelay: "0.2s" }}
-                      >
-                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
-                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
-                      </span>
-                    </span>
+                    <div className="arrow-viewport relative inline-flex items-center overflow-hidden w-[28px] h-4 select-none pointer-events-none align-middle text-[#FFD21F]">
+                      <div className="arrow-track arrow-track-anim-2 flex items-center w-max">
+                        <span className="inline-block w-[28px] text-center flex-shrink-0">→</span>
+                        <span className="inline-block w-[28px] text-center flex-shrink-0">→</span>
+                      </div>
+                    </div>
                     <span>SHIP</span>
                   </div>
                 </div>
@@ -227,11 +230,11 @@ const AboutPage: React.FC = () => {
                 role="button"
                 tabIndex={0}
                 aria-expanded={isFeaturedExpanded}
-                onClick={() => setIsFeaturedExpanded((prev) => !prev)}
+                onClick={toggleFeaturedCard}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setIsFeaturedExpanded((prev) => !prev);
+                    toggleFeaturedCard();
                   }
                 }}
                 className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group cursor-pointer transition-all duration-300 hover:border-[#1E2024]/30 select-none"
@@ -257,14 +260,21 @@ const AboutPage: React.FC = () => {
 
                 {/* EXPANDABLE REAL DATA-DRIVEN LIVE AI USAGE COUNTER */}
                 <AnimatePresence initial={false}>
-                  {isFeaturedExpanded && (
+                  {hasOpenedFeatured && (
                     <motion.div
                       key="usage-panel"
                       initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
-                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      animate={
+                        isFeaturedExpanded
+                          ? shouldReduceMotion
+                            ? { opacity: 1 }
+                            : { opacity: 1, height: "auto" }
+                          : shouldReduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, height: 0 }
+                      }
                       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                      className="overflow-hidden"
+                      className={`overflow-hidden ${isFeaturedExpanded ? "" : "pointer-events-none"}`}
                     >
                       <LiveAiUsageCounter />
                     </motion.div>

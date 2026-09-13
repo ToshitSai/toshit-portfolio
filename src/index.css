@@ -243,26 +243,30 @@ body.has-custom-cursor [contenteditable="true"] {
   100% { r: 42px; opacity: 0; }
 }
 
-@keyframes arrowFlowRight {
+@keyframes arrowTrackFlow {
   0% {
-    transform: translate3d(-14px, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(0px, 0, 0);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-.animate-arrow-flow {
-  animation: arrowFlowRight 1.5s linear infinite;
+.arrow-track-anim-1 {
+  animation: arrowTrackFlow 1.5s linear infinite;
+  animation-delay: 0s;
   will-change: transform;
 }
 
-.group:hover .animate-arrow-flow {
-  animation-duration: 1.0s;
+.arrow-track-anim-2 {
+  animation: arrowTrackFlow 1.5s linear infinite;
+  animation-delay: 0.2s;
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-arrow-flow {
+  .arrow-track-anim-1,
+  .arrow-track-anim-2 {
     animation: none !important;
     transform: none !important;
   }

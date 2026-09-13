@@ -45,7 +45,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       "127.0.0.1";
 
     const authHeader = req.headers.authorization as string | undefined;
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    let body: unknown;
+    try {
+      body = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    } catch {
+      return res.status(400).json({ success: false, error: "Request body must be valid JSON." });
+    }
 
     const result = await handleRecordAiUsage(body, clientIp, authHeader);
     return res.status(result.status).json(result.data);

@@ -99,9 +99,12 @@ Create `.env.local` for local development when using the contact API:
 CONTACT_EMAIL=
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
+USAGE_INGEST_SECRET=
+PORTFOLIO_API_URL=
 ```
 
 `CONTACT_EMAIL` is required for server-side contact delivery. Upstash variables are optional; the app falls back to in-memory rate limiting locally.
+`USAGE_INGEST_SECRET` is required for production AI usage ingestion. `PORTFOLIO_API_URL` is used by the local Antigravity usage collector script.
 
 ## Project Structure
 
