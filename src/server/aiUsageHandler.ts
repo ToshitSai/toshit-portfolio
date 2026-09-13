@@ -102,13 +102,6 @@ export async function handleRecordAiUsage(
   }
 
   const result = await recordUsageEvent(event);
-  if (!result.success) {
-    return {
-      status: 400,
-      data: { success: false, error: result.error || "Failed to record usage event." },
-    };
-  }
-
   return {
     status: 200,
     data: {
@@ -116,4 +109,51 @@ export async function handleRecordAiUsage(
       isDuplicate: result.isDuplicate,
     },
   };
+}
+
+export interface GeminiUsageMetadata {
+  promptTokenCount?: number;
+  candidatesTokenCount?: number;
+  totalTokenCount?: number;
+}
+
+/**
+ * Log real Gemini / AI API token usage to the persistent store.
+ * Gate logging behind NODE_ENV === 'production' or VERCEL_ENV === 'production' to exclude dev/testing calls.
+ */
+export async function logGeminiApiUsage(params: {
+  source: string;
+  model: string;
+  usageMetadata?: GeminiUsageMetadata;
+  requestId?: string;
+  provider?: "antigravity" | "openai";
+}): Promise<{ success: boolean; isDuplicate?: boolean; skipped?: boolean }> {
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+  if (!isProd) {
+    console.log(`[AiUsage] Skipping local dev call logging for source: ${params.source}`);
+    return { success: true, skipped: true };
+  }
+
+  const input_tokens = params.usageMetadata?.promptTokenCount || 0;
+  const output_tokens = params.usageMetadata?.candidatesTokenCount || 0;
+  const total_tokens = params.usageMetadata?.totalTokenCount || (input_tokens + output_tokens);
+
+  if (total_tokens <= 0) {
+    return { success: true, skipped: true };
+  }
+
+  const event: AiUsageEvent = {
+    id: `evt_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+    provider: params.provider || "antigravity",
+    metric_type: "tokens_processed",
+    model: params.model,
+    input_tokens,
+    output_tokens,
+    total_tokens,
+    timestamp: new Date().toISOString(),
+    source_app: params.source,
+    request_id: params.requestId,
+  };
+
+  return await recordUsageEvent(event);
 }

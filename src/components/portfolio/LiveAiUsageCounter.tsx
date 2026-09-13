@@ -333,10 +333,12 @@ export const LiveAiUsageCounter: React.FC = () => {
       {/* MAIN METRIC DISPLAY AREA */}
       {loading ? (
         /* LOADING STATE */
-        <div className="py-6">
-          <span className="font-mono text-sm font-bold uppercase tracking-[0.18em] text-[#1E2024]/70">
-            SYNCING...
-          </span>
+        <div className="py-6 px-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-xs flex items-center gap-3 animate-pulse">
+          <RefreshCw className="w-4 h-4 animate-spin text-[#FFD21F]" />
+          <div>
+            <span className="font-bold block text-[#1E2024]">SYNCING TOKEN USAGE...</span>
+            <span className="text-[11px] text-[#1E2024]/60">Fetching verified backend metrics</span>
+          </div>
         </div>
       ) : error ? (
         /* ERROR STATE */
