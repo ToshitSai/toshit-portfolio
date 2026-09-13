@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export type AiUsageProvider = "openai" | "antigravity";
+export type AiUsageProvider = "openai" | "antigravity" | "codex";
 export type AiUsageMetricType = "tokens_processed" | "quota_remaining";
 export type AiUsagePeriod = "all_time" | "today" | "this_month";
 
@@ -30,7 +30,14 @@ export interface MetricSummary {
   source: "usage_events";
 }
 
+export interface PeriodTotals {
+  antigravity: number;
+  codex: number;
+  total: number;
+}
+
 export interface AiUsageResponseData {
+  status: "ok";
   success: true;
   updatedAt: string;
   lastEventTime?: string;
@@ -41,9 +48,13 @@ export interface AiUsageResponseData {
   freshness: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
   source: "github_json" | "local_json" | "memory";
   eventCount: number;
+  allTime: PeriodTotals;
+  today: PeriodTotals;
+  thisMonth: PeriodTotals;
   metrics: {
     openai: MetricSummary | null;
     antigravity: MetricSummary | null;
+    codex: MetricSummary | null;
     combined: MetricSummary | null;
   };
 }
@@ -184,8 +195,8 @@ export function normalizeUsageEvent(payload: Partial<AiUsageEvent>): AiUsageEven
     throw new Error("A stable unique event id is required.");
   }
 
-  if (payload.provider !== "openai" && payload.provider !== "antigravity") {
-    throw new Error("Provider must be 'openai' or 'antigravity'.");
+  if (payload.provider !== "openai" && payload.provider !== "antigravity" && payload.provider !== "codex") {
+    throw new Error("Provider must be 'openai', 'antigravity', or 'codex'.");
   }
 
   if (payload.metric_type !== "tokens_processed" && payload.metric_type !== "quota_remaining") {
@@ -411,6 +422,35 @@ function getFreshness(lastEventTime?: string): AiUsageResponseData["freshness"] 
   return "STALE";
 }
 
+function calculateTotalsForPeriod(events: AiUsageEvent[], period: AiUsagePeriod): PeriodTotals {
+  const { start, end } = getPeriodBounds(period);
+  const filtered = events.filter((e) => {
+    const time = Date.parse(e.timestamp);
+    if (!Number.isFinite(time)) return false;
+    return (!start || time >= start.getTime()) && time <= end.getTime();
+  });
+
+  let antigravity = 0;
+  let codex = 0;
+
+  for (const event of filtered) {
+    if (event.metric_type === "tokens_processed" && typeof event.total_tokens === "number") {
+      if (event.provider === "antigravity") {
+        antigravity += event.total_tokens;
+      } else if (event.provider === "codex" || event.provider === "openai") {
+        codex += event.total_tokens;
+      }
+    }
+  }
+
+  const total = antigravity + codex;
+  if (total !== antigravity + codex) {
+    throw new Error(`Data validation failure: total (${total}) does not equal antigravity (${antigravity}) + codex (${codex}).`);
+  }
+
+  return { antigravity, codex, total };
+}
+
 export async function getAggregatedMetrics(period: AiUsagePeriod = "all_time"): Promise<AiUsageResponseData> {
   await initializeStore();
 
@@ -422,29 +462,42 @@ export async function getAggregatedMetrics(period: AiUsagePeriod = "all_time"): 
   });
 
   const openaiSummary = summarizeProvider(filteredEvents.filter((event) => event.provider === "openai"));
+  const codexSummaryRaw = summarizeProvider(filteredEvents.filter((event) => event.provider === "codex"));
+  const codexSummary = codexSummaryRaw || openaiSummary;
   const antigravitySummary = summarizeProvider(filteredEvents.filter((event) => event.provider === "antigravity"));
 
+  const antigravityTokens = antigravitySummary?.type === "tokens_processed" ? antigravitySummary.value : 0;
+  const codexTokens = codexSummary?.type === "tokens_processed" ? codexSummary.value : 0;
+
   let combinedSummary: MetricSummary | null = null;
-  if (
-    openaiSummary?.type === "tokens_processed" &&
-    antigravitySummary?.type === "tokens_processed"
-  ) {
+  if (antigravityTokens > 0 || codexTokens > 0) {
+    const combinedTotal = antigravityTokens + codexTokens;
+
+    // Strict validation check
+    if (combinedTotal !== antigravityTokens + codexTokens) {
+      throw new Error(`Data validation error: combinedTotal (${combinedTotal}) does not match provider sum (${antigravityTokens + codexTokens})`);
+    }
+
     combinedSummary = {
       type: "tokens_processed",
-      value: openaiSummary.value + antigravitySummary.value,
+      value: combinedTotal,
       unit: "tokens",
       models: {
-        ...(openaiSummary.models || {}),
-        ...(antigravitySummary.models || {}),
+        ...(openaiSummary?.models || {}),
+        ...(codexSummaryRaw?.models || {}),
+        ...(antigravitySummary?.models || {}),
       },
-      lastEventTime: [openaiSummary.lastEventTime, antigravitySummary.lastEventTime].filter(Boolean).sort().at(-1),
+      lastEventTime: [openaiSummary?.lastEventTime, codexSummaryRaw?.lastEventTime, antigravitySummary?.lastEventTime]
+        .filter(Boolean)
+        .sort()
+        .at(-1),
       source: "usage_events",
     };
-
-    if (combinedSummary.value !== openaiSummary.value + antigravitySummary.value) {
-      throw new Error("Combined total does not equal provider totals.");
-    }
   }
+
+  const allTimeTotals = calculateTotalsForPeriod(memoryEvents, "all_time");
+  const todayTotals = calculateTotalsForPeriod(memoryEvents, "today");
+  const thisMonthTotals = calculateTotalsForPeriod(memoryEvents, "this_month");
 
   const lastEventTime = filteredEvents
     .map((event) => event.timestamp)
@@ -453,6 +506,7 @@ export async function getAggregatedMetrics(period: AiUsagePeriod = "all_time"): 
   const freshness = getFreshness(lastEventTime);
 
   return {
+    status: "ok",
     success: true,
     updatedAt: new Date().toISOString(),
     lastEventTime,
@@ -463,9 +517,13 @@ export async function getAggregatedMetrics(period: AiUsagePeriod = "all_time"): 
     freshness,
     source: activeSource,
     eventCount: filteredEvents.length,
+    allTime: allTimeTotals,
+    today: todayTotals,
+    thisMonth: thisMonthTotals,
     metrics: {
       openai: openaiSummary,
       antigravity: antigravitySummary,
+      codex: codexSummary,
       combined: combinedSummary,
     },
   };

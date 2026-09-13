@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": "test_ag_1789300042959",
+    "provider": "antigravity",
+    "metric_type": "tokens_processed",
+    "model": "gemini-1.5-pro",
+    "timestamp": "2026-09-13T11:47:22.959Z",
+    "request_id": "req_ag_1789300042959",
+    "source_app": "antigravity-cli-headless",
+    "input_tokens": 1250,
+    "output_tokens": 840,
+    "total_tokens": 2090
+  },
+  {
+    "id": "test_codex_1789300042961",
+    "provider": "codex",
+    "metric_type": "tokens_processed",
+    "model": "gpt-4o-codex",
+    "timestamp": "2026-09-13T11:47:22.961Z",
+    "request_id": "req_codex_1789300042961",
+    "source_app": "codex-agent-api",
+    "input_tokens": 3400,
+    "output_tokens": 1120,
+    "total_tokens": 4520
+  }
+]

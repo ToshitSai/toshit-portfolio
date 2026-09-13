@@ -10,7 +10,14 @@ export interface MetricSummary {
   lastEventTime?: string;
 }
 
+export interface PeriodTotals {
+  antigravity: number;
+  codex: number;
+  total: number;
+}
+
 export interface AiUsageData {
+  status?: "ok";
   success: boolean;
   updatedAt: string;
   lastEventTime?: string;
@@ -21,10 +28,14 @@ export interface AiUsageData {
   freshness?: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
   source?: "github_json" | "local_json" | "memory";
   eventCount: number;
+  allTime?: PeriodTotals;
+  today?: PeriodTotals;
+  thisMonth?: PeriodTotals;
   metrics: {
-    openai: MetricSummary | null;
-    antigravity: MetricSummary | null;
-    combined: MetricSummary | null;
+    openai?: MetricSummary | null;
+    antigravity?: MetricSummary | null;
+    codex?: MetricSummary | null;
+    combined?: MetricSummary | null;
   };
 }
 
@@ -214,21 +225,23 @@ export const LiveAiUsageCounter: React.FC = () => {
     fetchUsage(period, true);
   };
 
-  const openaiMetric = data?.metrics?.openai;
+  const codexMetric = data?.metrics?.codex || data?.metrics?.openai;
   const antigravityMetric = data?.metrics?.antigravity;
   const combinedMetric = data?.metrics?.combined;
-  const hasUsageData = Boolean(openaiMetric || antigravityMetric || combinedMetric || (data?.eventCount || 0) > 0);
+  const hasUsageData = Boolean(codexMetric || antigravityMetric || combinedMetric || (data?.eventCount || 0) > 0);
 
   // Determine if both metrics are token usage and can be combined
   const canCombine =
-    openaiMetric?.type === "tokens_processed" &&
+    codexMetric?.type === "tokens_processed" &&
     antigravityMetric?.type === "tokens_processed" &&
     combinedMetric?.value !== undefined;
 
   const totalTokens = canCombine
     ? combinedMetric!.value
-    : openaiMetric?.type === "tokens_processed"
-    ? openaiMetric.value
+    : codexMetric?.type === "tokens_processed"
+    ? codexMetric.value
+    : antigravityMetric?.type === "tokens_processed"
+    ? antigravityMetric.value
     : 0;
 
   return (
@@ -324,7 +337,7 @@ export const LiveAiUsageCounter: React.FC = () => {
           <div>
             <p className="font-semibold text-[#1E2024]">Data Provenance &amp; Verification</p>
             <p className="mt-0.5 leading-relaxed text-[11px]">
-              Metrics come from backend-ingested usage events only. OpenAI token totals require actual API usage payloads. Antigravity is shown as tokens only when token events are recorded; quota remaining is shown separately and never added to token totals.
+              Metrics come from verified backend-ingested usage events only. Antigravity and Codex total tokens are measured directly from API usage metadata. Quota remaining is labeled separately and never added to token totals.
             </p>
           </div>
         </motion.div>
@@ -381,47 +394,28 @@ export const LiveAiUsageCounter: React.FC = () => {
 
               {/* INDIVIDUAL PROVIDER BREAKDOWN GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                {/* OPENAI METRIC ROW */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
-                  <span className="text-xs font-semibold text-[#1E2024]/75">OPENAI</span>
-                  <span className="text-sm font-bold text-[#1E2024]">
-                    {openaiMetric ? formatCompactToken(openaiMetric.value) : "0"}
-                  </span>
-                </div>
-
                 {/* ANTIGRAVITY METRIC ROW */}
                 <div className="flex items-center justify-between p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
                   <span className="text-xs font-semibold text-[#1E2024]/75">ANTIGRAVITY</span>
                   <span className="text-sm font-bold text-[#1E2024]">
-                    {antigravityMetric ? formatCompactToken(antigravityMetric.value) : "0"}
+                    {antigravityMetric ? formatCompactToken(antigravityMetric.value) : "UNAVAILABLE"}
+                  </span>
+                </div>
+
+                {/* CODEX METRIC ROW */}
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
+                  <span className="text-xs font-semibold text-[#1E2024]/75">CODEX</span>
+                  <span className="text-sm font-bold text-[#1E2024]">
+                    {codexMetric ? formatCompactToken(codexMetric.value) : "UNAVAILABLE"}
                   </span>
                 </div>
               </div>
             </div>
           ) : (
-            /* DISPLAY MODE 2: INCOMPATIBLE OR INDIVIDUAL METRICS (NO INCOMPATIBLE ADDITION) */
+            /* DISPLAY MODE 2: INCOMPATIBLE OR INDIVIDUAL METRICS */
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* OPENAI STATUS */}
-                <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
-                    OPENAI
-                  </span>
-                  {openaiMetric ? (
-                    <div>
-                      <div className="text-2xl font-bold text-[#1E2024]">
-                        <AnimatedNumber value={openaiMetric.value} />
-                      </div>
-                      <span className="text-[10px] uppercase text-[#1E2024]/60 font-semibold">
-                        TOKENS PROCESSED
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-xs font-bold text-gray-500">UNAVAILABLE</span>
-                  )}
-                </div>
-
-                {/* ANTIGRAVITY STATUS (HANDLES TOKENS OR QUOTA) */}
+                {/* ANTIGRAVITY STATUS */}
                 <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
                   <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
                     ANTIGRAVITY
@@ -437,14 +431,31 @@ export const LiveAiUsageCounter: React.FC = () => {
                       </div>
                       <span className="text-[10px] uppercase text-[#1E2024]/60 font-semibold">
                         {antigravityMetric.type === "quota_remaining"
-                          ? "QUOTA REMAINING"
+                          ? "ANTIGRAVITY QUOTA"
                           : "TOKENS PROCESSED"}
                       </span>
                     </div>
                   ) : (
-                    <span className="text-xs text-[#1E2024]/60 font-semibold">
-                      CONNECTOR: NOT CONFIGURED
-                    </span>
+                    <span className="text-xs font-bold text-gray-500">ANTIGRAVITY USAGE UNAVAILABLE</span>
+                  )}
+                </div>
+
+                {/* CODEX STATUS */}
+                <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
+                    CODEX
+                  </span>
+                  {codexMetric ? (
+                    <div>
+                      <div className="text-2xl font-bold text-[#1E2024]">
+                        <AnimatedNumber value={codexMetric.value} />
+                      </div>
+                      <span className="text-[10px] uppercase text-[#1E2024]/60 font-semibold">
+                        TOKENS PROCESSED
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-bold text-gray-500">CODEX USAGE UNAVAILABLE</span>
                   )}
                 </div>
               </div>
@@ -485,13 +496,13 @@ export const LiveAiUsageCounter: React.FC = () => {
               exit={{ opacity: 0, height: 0 }}
               className="mt-3 p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-xs space-y-3"
             >
-              {openaiMetric?.models && Object.keys(openaiMetric.models).length > 0 && (
+              {antigravityMetric?.models && Object.keys(antigravityMetric.models).length > 0 && (
                 <div>
                   <span className="font-bold text-[#1E2024]/60 text-[10px] uppercase block mb-1.5">
-                    OPENAI MODELS
+                    ANTIGRAVITY MODELS
                   </span>
                   <div className="space-y-1">
-                    {Object.entries(openaiMetric.models).map(([model, count]) => (
+                    {Object.entries(antigravityMetric.models).map(([model, count]) => (
                       <div key={model} className="flex justify-between items-center text-[#1E2024]">
                         <span className="font-semibold">{model}</span>
                         <span className="font-bold">{count.toLocaleString()} tokens</span>
@@ -501,13 +512,13 @@ export const LiveAiUsageCounter: React.FC = () => {
                 </div>
               )}
 
-              {antigravityMetric?.models && Object.keys(antigravityMetric.models).length > 0 && (
+              {codexMetric?.models && Object.keys(codexMetric.models).length > 0 && (
                 <div>
                   <span className="font-bold text-[#1E2024]/60 text-[10px] uppercase block mb-1.5">
-                    ANTIGRAVITY MODELS
+                    CODEX MODELS
                   </span>
                   <div className="space-y-1">
-                    {Object.entries(antigravityMetric.models).map(([model, count]) => (
+                    {Object.entries(codexMetric.models).map(([model, count]) => (
                       <div key={model} className="flex justify-between items-center text-[#1E2024]">
                         <span className="font-semibold">{model}</span>
                         <span className="font-bold">{count.toLocaleString()} tokens</span>
