@@ -149,18 +149,6 @@ const AboutPage: React.FC = () => {
         {/* SECTION 1: ASYMMETRIC BENTO GRID ABOUT / SKILLS WORKSPACE */}
         <section className="relative z-10 pb-20 sm:pb-28">
           <div className="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
-            {/* SMALL TOP MONOSPACE BADGE */}
-            <motion.div
-              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-2.5 mb-8 sm:mb-12"
-            >
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FFD21F] animate-pulse" />
-              <span className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#1E2024]/70">
-                01 // ABOUT ME — CREATIVE ENGINEER BENTO
-              </span>
-            </motion.div>
 
             {/* BENTO GRID CONTAINER WITH EXPLICIT STACKING & SPANS */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-stretch relative">
