@@ -231,18 +231,6 @@ const AboutPage: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1E2024]/60">
                       02 // FEATURED FOCUS
                     </span>
-
-                    {/* Elegant Chevron Open/Collapse Indicator */}
-                    <div
-                      className="w-7 h-7 rounded-full border border-[#1E2024]/18 bg-[#1E2024]/5 flex items-center justify-center text-[#1E2024] transition-all duration-300 group-hover:bg-[#1E2024] group-hover:text-white"
-                      title={isFeaturedExpanded ? "Collapse AI Usage Panel" : "Expand AI Usage Panel"}
-                    >
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-300 ${
-                          isFeaturedExpanded ? "rotate-180" : "rotate-0"
-                        }`}
-                      />
-                    </div>
                   </div>
 
                   <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#1E2024] tracking-[-0.025em]">
