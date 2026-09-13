@@ -4,6 +4,7 @@ import path from "path";
 import dotenv from "dotenv";
 import type { IncomingMessage, ServerResponse } from "http";
 import { processContactSubmission } from "./src/server/contactHandler";
+import { handleGetAiUsage, handleRecordAiUsage } from "./src/server/aiUsageHandler";
 
 dotenv.config({ quiet: true });
 
@@ -28,6 +29,59 @@ function securityHeadersPlugin(): Plugin {
 
         // Handle API Endpoints
         if (req.url?.startsWith("/api/")) {
+          // 1. AI Usage Endpoint
+          if (req.url === "/api/ai-usage" || req.url?.startsWith("/api/ai-usage?")) {
+            const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
+            const queryParams: Record<string, string> = {};
+            urlObj.searchParams.forEach((v, k) => {
+              queryParams[k] = v;
+            });
+
+            if (req.method === "GET") {
+              const result = await handleGetAiUsage(queryParams);
+              res.statusCode = result.status;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify(result.data));
+              return;
+            }
+
+            if (req.method === "POST") {
+              const clientIp =
+                (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
+                (req.headers["x-real-ip"] as string) ||
+                req.socket?.remoteAddress ||
+                "127.0.0.1";
+
+              let bodyStr = "";
+              req.on("data", (chunk: Buffer) => {
+                bodyStr += chunk.toString();
+              });
+
+              req.on("end", async () => {
+                try {
+                  const body = bodyStr ? JSON.parse(bodyStr) : {};
+                  const authHeader = req.headers.authorization as string | undefined;
+                  const result = await handleRecordAiUsage(body, clientIp, authHeader);
+                  res.statusCode = result.status;
+                  res.setHeader("Content-Type", "application/json");
+                  res.end(JSON.stringify(result.data));
+                } catch {
+                  res.statusCode = 400;
+                  res.setHeader("Content-Type", "application/json");
+                  res.end(JSON.stringify({ success: false, error: "Invalid JSON body" }));
+                }
+              });
+              return;
+            }
+
+            res.statusCode = 405;
+            res.setHeader("Allow", ["GET", "POST"]);
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ success: false, error: "Method Not Allowed" }));
+            return;
+          }
+
+          // 2. Contact Form Endpoint
           if (req.url === "/api/contact" || req.url?.startsWith("/api/contact?")) {
             if (req.method !== "POST") {
               res.statusCode = 405;

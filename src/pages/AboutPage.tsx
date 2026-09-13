@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Cpu, Sparkles, Code2, Layers, Activity, Zap } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus, Zap } from "lucide-react";
+import LiveAiUsageCounter from "@/components/portfolio/LiveAiUsageCounter";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
@@ -84,50 +85,7 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
   },
 ];
 
-// LIVE LIGHTWEIGHT METRIC COUNTER & SPARKLINE FOR FEATURED CARD
-const LiveTokenMetric: React.FC = () => {
-  const [tokenCount, setTokenCount] = useState(1428950);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTokenCount((prev) => prev + Math.floor(Math.random() * 16) + 3);
-    }, 1200);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="mt-5 pt-4 border-t border-[#1E2024]/12 flex flex-wrap items-center justify-between gap-3">
-      <div className="flex items-center gap-2">
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD21F] opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FFD21F]"></span>
-        </span>
-        <span className="font-mono text-xs font-semibold text-[#1E2024]">
-          GEMINI 1.5 PRO · ACTIVE PIPELINE
-        </span>
-      </div>
-
-      {/* MINI SVG SPARKLINE */}
-      <div className="flex items-center gap-3">
-        <svg className="w-20 h-5 opacity-80" viewBox="0 0 80 20">
-          <polyline
-            fill="none"
-            stroke="#1E2024"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            points="0,14 12,10 24,16 36,6 48,12 60,4 72,9 80,3"
-          />
-        </svg>
-
-        <div className="flex items-center gap-1.5 bg-[#1E2024]/6 px-3 py-1 rounded-lg border border-[#1E2024]/10 font-mono text-xs text-[#1E2024]">
-          <Zap className="w-3.5 h-3.5 text-[#FFD21F]" />
-          <span>TOKENS: <strong className="font-bold">{tokenCount.toLocaleString()}</strong></span>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const pageCanvasVariants = {
   initial: { opacity: 0, y: 10 },
@@ -276,8 +234,8 @@ const AboutPage: React.FC = () => {
                   </p>
                 </div>
 
-                {/* LIVE TICKING METRIC & SPARKLINE BAR */}
-                <LiveTokenMetric />
+                {/* REAL DATA-DRIVEN LIVE AI USAGE COUNTER */}
+                <LiveAiUsageCounter />
               </motion.div>
 
               {/* 3. COMPACT CARD: AI/ML SYSTEMS (ORDER 3 ON MOBILE, SPANS 4 COLS ON DESKTOP) */}
