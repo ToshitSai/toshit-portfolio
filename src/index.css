@@ -243,23 +243,23 @@ body.has-custom-cursor [contenteditable="true"] {
   100% { r: 42px; opacity: 0; }
 }
 
-@keyframes arrowTrackFlow {
+@keyframes arrowTrackFlowRight {
   0% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(-50%, 0, 0);
   }
   100% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(0%, 0, 0);
   }
 }
 
 .arrow-track-anim-1 {
-  animation: arrowTrackFlow 1.5s linear infinite;
+  animation: arrowTrackFlowRight 1.4s linear infinite;
   animation-delay: 0s;
   will-change: transform;
 }
 
 .arrow-track-anim-2 {
-  animation: arrowTrackFlow 1.5s linear infinite;
+  animation: arrowTrackFlowRight 1.4s linear infinite;
   animation-delay: 0.2s;
   will-change: transform;
 }
