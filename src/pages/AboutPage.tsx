@@ -85,6 +85,31 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
   },
 ];
 
+// MEMOIZED BUILDING PHILOSOPHY PILL
+// Isolated from parent re-renders to prevent arrow flicker/glitching on sibling card hovers
+const BuildingPhilosophyPill: React.FC = React.memo(() => {
+  return (
+    <div className="pt-6">
+      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/50 block mb-2">
+        BUILDING PHILOSOPHY
+      </span>
+      <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 sm:p-3.5 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
+        <span>EXPERIMENT</span>
+        <div className="process-arrow-slot">
+          <span className="process-arrow-one">→</span>
+        </div>
+        <span>BUILD</span>
+        <div className="process-arrow-slot">
+          <span className="process-arrow-two">→</span>
+        </div>
+        <span>SHIP</span>
+      </div>
+    </div>
+  );
+});
+
+BuildingPhilosophyPill.displayName = "BuildingPhilosophyPill";
+
 
 
 const pageCanvasVariants = {
@@ -185,22 +210,7 @@ const AboutPage: React.FC = () => {
                 </div>
 
                 {/* Building Philosophy Pill Signature */}
-                <div className="pt-6">
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/50 block mb-2">
-                    BUILDING PHILOSOPHY
-                  </span>
-                  <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 sm:p-3.5 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
-                    <span>EXPERIMENT</span>
-                    <div className="process-arrow-slot">
-                      <span className="process-arrow-one">→</span>
-                    </div>
-                    <span>BUILD</span>
-                    <div className="process-arrow-slot">
-                      <span className="process-arrow-two">→</span>
-                    </div>
-                    <span>SHIP</span>
-                  </div>
-                </div>
+                <BuildingPhilosophyPill />
               </motion.div>
 
               {/* 2. FEATURED GENERATIVE AI CARD (ORDER 2 ON MOBILE, SPANS 7 COLS / 2 COLS WIDTH ON DESKTOP) */}
