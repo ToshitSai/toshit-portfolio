@@ -223,9 +223,6 @@ const AboutPage: React.FC = () => {
                 }}
                 className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group cursor-pointer transition-all duration-300 hover:border-[#1E2024]/30 select-none"
               >
-                {/* Micro Ambient Glow Accent */}
-                <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#FFD21F]/25 rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
-
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1E2024]/60">
