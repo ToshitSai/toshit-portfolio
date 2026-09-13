@@ -3,6 +3,7 @@ import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus } from "lucide-react";
 import LiveAiUsageCounter from "@/components/portfolio/LiveAiUsageCounter";
+import HowAnIdeaBecomesReal from "@/components/portfolio/HowAnIdeaBecomesReal";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
 interface ExperienceRow {
@@ -231,29 +232,39 @@ const AboutPage: React.FC = () => {
                 className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group cursor-pointer transition-all duration-300 hover:border-[#1E2024]/30 select-none"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1E2024]/60">
-                      02 // FEATURED FOCUS
+                      02 // HOW AN IDEA BECOMES REAL
+                    </span>
+                    <span className="font-mono text-[10px] font-bold text-[#1E2024]/70 tracking-wider">
+                      {isFeaturedExpanded ? "CLICK TO COLLAPSE ↑" : "CLICK TO EXPLORE →"}
                     </span>
                   </div>
 
                   <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#1E2024] tracking-[-0.025em]">
-                    Generative AI &amp; LLM Workflows
+                    HOW AN IDEA BECOMES REAL
                   </h3>
-                  <span className="font-mono text-xs text-[#1E2024]/65 block mt-1">
-                    Structured JSON Schemas · Gemini API Integration · RAG Concepts
+                  <span className="font-sans text-sm sm:text-base text-[#1E2024]/80 block mt-1 font-medium">
+                    How I turn a problem into a working digital product.
                   </span>
 
-                  <p className="font-sans text-sm sm:text-base text-[#1E2024]/80 leading-relaxed font-normal mt-3">
-                    Architecting end-to-end generative workflows that produce structured JSON data, power automated syllabi generators, resume evaluators, and dynamic micro-apps.
-                  </p>
+                  {/* COMPACT PROCESS PREVIEW WHEN COLLAPSED */}
+                  <div className="mt-4 pt-3.5 border-t border-[#1E2024]/12 flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-[#1E2024]">
+                    <span className="px-2 py-1 rounded-md bg-[#1E2024]/8 border border-[#1E2024]/12">IDEA</span>
+                    <span className="text-[#1E2024]/40">──</span>
+                    <span className="px-2 py-1 rounded-md bg-[#1E2024]/8 border border-[#1E2024]/12">THINK</span>
+                    <span className="text-[#1E2024]/40">──</span>
+                    <span className="px-2 py-1 rounded-md bg-[#FFD21F]/20 border border-[#FFD21F]/60">BUILD</span>
+                    <span className="text-[#1E2024]/40">──</span>
+                    <span className="px-2 py-1 rounded-md bg-[#1E2024] text-[#F7F1E5]">SHIP</span>
+                  </div>
                 </div>
 
-                {/* EXPANDABLE REAL DATA-DRIVEN LIVE AI USAGE COUNTER */}
+                {/* EXPANDABLE INTERACTIVE "HOW AN IDEA BECOMES REAL" WORKFLOW STORY */}
                 <AnimatePresence initial={false}>
                   {hasOpenedFeatured && (
                     <motion.div
-                      key="usage-panel"
+                      key="idea-workflow-panel"
                       initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
                       animate={
                         isFeaturedExpanded
@@ -267,7 +278,7 @@ const AboutPage: React.FC = () => {
                       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                       className={`overflow-hidden ${isFeaturedExpanded ? "" : "pointer-events-none"}`}
                     >
-                      <LiveAiUsageCounter />
+                      <HowAnIdeaBecomesReal isExpanded={isFeaturedExpanded} />
                     </motion.div>
                   )}
                 </AnimatePresence>
