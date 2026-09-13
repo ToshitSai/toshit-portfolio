@@ -100,11 +100,14 @@ CONTACT_EMAIL=
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 USAGE_INGEST_SECRET=
+OPENAI_API_KEY=
+OPENAI_USAGE_MODEL=
 PORTFOLIO_API_URL=
 ```
 
 `CONTACT_EMAIL` is required for server-side contact delivery. Upstash variables are optional; the app falls back to in-memory rate limiting locally.
-`USAGE_INGEST_SECRET` is required for production AI usage ingestion. `PORTFOLIO_API_URL` is used by the local Antigravity usage collector script.
+`USAGE_INGEST_SECRET` is required for AI usage ingestion. `OPENAI_API_KEY` stays server-side and is used only by `/api/ai-usage-control-request` to make a real OpenAI request and record its returned usage tokens. `OPENAI_USAGE_MODEL` is optional and defaults to `gpt-4.1-mini`. `PORTFOLIO_API_URL` is used by the local OpenAI and Antigravity usage collector scripts.
+Upstash Redis is required for durable production usage storage; without it, production ingest endpoints return a configuration error instead of accepting non-persistent data.
 
 ## Project Structure
 

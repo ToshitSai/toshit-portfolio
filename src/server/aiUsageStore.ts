@@ -220,14 +220,12 @@ export async function initializeStore(): Promise<void> {
   isInitialized = true;
 }
 
-function saveStoreLocally(): void {
+async function saveStore(): Promise<void> {
   const filePath = getStorageFilePath();
   fs.writeFileSync(filePath, JSON.stringify(memoryEvents, null, 2), "utf-8");
 
   if (redis) {
-    redis.set("ai_usage:events", memoryEvents).catch((err) => {
-      console.error("[AiUsageStore] Redis sync error:", err);
-    });
+    await withTimeout(redis.set("ai_usage:events", memoryEvents), 1500);
   }
 }
 
@@ -240,7 +238,7 @@ export async function recordUsageEvent(event: AiUsageEvent): Promise<{ success: 
   }
 
   memoryEvents.push(normalizedEvent);
-  saveStoreLocally();
+  await saveStore();
 
   return { success: true, isDuplicate: false };
 }
