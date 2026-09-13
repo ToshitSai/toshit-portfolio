@@ -244,20 +244,40 @@ body.has-custom-cursor [contenteditable="true"] {
 }
 
 @keyframes processArrowOne {
-  0%, 100% {
+  0% {
+    opacity: 0.65;
     transform: translate3d(0, 0, 0);
   }
-  50% {
-    transform: translate3d(8px, 0, 0);
+  15% {
+    opacity: 1;
+    transform: translate3d(2px, 0, 0);
+  }
+  70% {
+    opacity: 1;
+    transform: translate3d(12px, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(16px, 0, 0);
   }
 }
 
 @keyframes processArrowTwo {
-  0%, 100% {
+  0% {
+    opacity: 0.65;
     transform: translate3d(0, 0, 0);
   }
-  50% {
-    transform: translate3d(8px, 0, 0);
+  15% {
+    opacity: 1;
+    transform: translate3d(2px, 0, 0);
+  }
+  70% {
+    opacity: 1;
+    transform: translate3d(12px, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(16px, 0, 0);
   }
 }
 
@@ -280,9 +300,9 @@ body.has-custom-cursor [contenteditable="true"] {
   font-weight: 700;
   color: #FFD21F;
   line-height: 1;
-  animation: processArrowOne 1.5s ease-in-out infinite;
+  animation: processArrowOne 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
   animation-delay: 0ms;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .process-arrow-two {
@@ -291,9 +311,9 @@ body.has-custom-cursor [contenteditable="true"] {
   font-weight: 700;
   color: #FFD21F;
   line-height: 1;
-  animation: processArrowTwo 1.5s ease-in-out infinite;
-  animation-delay: 180ms;
-  will-change: transform;
+  animation: processArrowTwo 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 750ms;
+  will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -301,6 +321,7 @@ body.has-custom-cursor [contenteditable="true"] {
   .process-arrow-two {
     animation: none !important;
     transform: none !important;
+    opacity: 1 !important;
   }
 }
 
