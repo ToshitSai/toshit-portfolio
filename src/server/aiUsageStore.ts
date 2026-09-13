@@ -281,6 +281,13 @@ export async function initializeStore(): Promise<void> {
     }
   }
 
+  if (isProductionRuntime()) {
+    memoryEvents = [];
+    activeSource = "memory";
+    isInitialized = true;
+    return;
+  }
+
   const filePath = getStorageFilePath();
   if (fs.existsSync(filePath)) {
     try {
