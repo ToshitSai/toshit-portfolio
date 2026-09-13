@@ -191,18 +191,12 @@ const AboutPage: React.FC = () => {
                   </span>
                   <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 sm:p-3.5 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
                     <span>EXPERIMENT</span>
-                    <div className="arrow-viewport relative inline-flex items-center justify-center overflow-hidden w-[32px] h-6 select-none pointer-events-none align-middle text-[#FFD21F]">
-                      <div className="arrow-track arrow-track-anim-1 flex items-center w-max">
-                        <span className="inline-block w-[32px] text-center flex-shrink-0 text-[18px] font-bold leading-none">→</span>
-                        <span className="inline-block w-[32px] text-center flex-shrink-0 text-[18px] font-bold leading-none">→</span>
-                      </div>
+                    <div className="arrow-slot-one">
+                      <span className="arrow-one">→</span>
                     </div>
                     <span>BUILD</span>
-                    <div className="arrow-viewport relative inline-flex items-center justify-center overflow-hidden w-[32px] h-6 select-none pointer-events-none align-middle text-[#FFD21F]">
-                      <div className="arrow-track arrow-track-anim-2 flex items-center w-max">
-                        <span className="inline-block w-[32px] text-center flex-shrink-0 text-[18px] font-bold leading-none">→</span>
-                        <span className="inline-block w-[32px] text-center flex-shrink-0 text-[18px] font-bold leading-none">→</span>
-                      </div>
+                    <div className="arrow-slot-two">
+                      <span className="arrow-two">→</span>
                     </div>
                     <span>SHIP</span>
                   </div>

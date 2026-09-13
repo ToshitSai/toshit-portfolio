@@ -243,30 +243,57 @@ body.has-custom-cursor [contenteditable="true"] {
   100% { r: 42px; opacity: 0; }
 }
 
-@keyframes arrowTrackFlowRight {
+@keyframes processArrowFlow {
   0% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(10px, 0, 0);
   }
   100% {
-    transform: translate3d(0%, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-.arrow-track-anim-1 {
-  animation: arrowTrackFlowRight 1.4s linear infinite;
+.arrow-slot-one,
+.arrow-slot-two {
+  position: relative;
+  overflow: hidden;
+  width: 36px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  user-select: none;
+  pointer-events: none;
+}
+
+.arrow-one {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFD21F;
+  line-height: 1;
+  animation: processArrowFlow 1.4s ease-in-out infinite;
   animation-delay: 0s;
   will-change: transform;
 }
 
-.arrow-track-anim-2 {
-  animation: arrowTrackFlowRight 1.4s linear infinite;
+.arrow-two {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFD21F;
+  line-height: 1;
+  animation: processArrowFlow 1.4s ease-in-out infinite;
   animation-delay: 0.2s;
   will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arrow-track-anim-1,
-  .arrow-track-anim-2 {
+  .arrow-one,
+  .arrow-two {
     animation: none !important;
     transform: none !important;
   }
