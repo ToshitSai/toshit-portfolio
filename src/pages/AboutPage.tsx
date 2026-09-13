@@ -23,7 +23,7 @@ const FACTUAL_EXPERIENCE_DATA: ExperienceRow[] = [
     number: "01",
     title: "AI & Full-Stack Applications",
     role: "CREATOR & LEAD DEVELOPER",
-    timeframe: "2024 — PRESENT",
+    timeframe: "PRESENT",
     description:
       "Architecting end-to-end intelligent web platforms that combine modern LLMs, generative APIs, structured JSON workflows, and responsive motion interfaces.",
     highlights: [
