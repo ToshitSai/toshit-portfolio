@@ -21,8 +21,9 @@ interface VercelResponse {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS & Security Headers
-  res.setHeader("Cache-Control", "public, max-age=10, s-maxage=60, stale-while-revalidate=300");
+  // Disable CDN caching so live metric queries and manual refreshes always return real fresh server state
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma", "no-cache");
 
   if (req.method === "GET") {
     const queryParams: Record<string, string | undefined> = {};

@@ -28,8 +28,10 @@ export interface MetricSummary {
 export interface AiUsageResponseData {
   success: boolean;
   updatedAt: string;
+  lastEventTime?: string;
   period: "all_time" | "today" | "this_month";
   isLive: boolean;
+  freshness: "LIVE" | "STALE";
   metrics: {
     openai: MetricSummary | null;
     antigravity: MetricSummary | null;
@@ -68,7 +70,7 @@ function getStorageFilePath(): string {
 }
 
 function getInitialSeedEvents(): AiUsageEvent[] {
-  const baseTime = new Date("2026-09-13T10:00:00Z").getTime();
+  const nowMs = Date.now();
   const seedEvents: AiUsageEvent[] = [];
 
   // Seed OpenAI events across models
@@ -86,7 +88,7 @@ function getInitialSeedEvents(): AiUsageEvent[] {
       const tokens = isLast ? m.total - tokenPerChunk * (m.chunks - 1) : tokenPerChunk;
       const input = Math.floor(tokens * 0.7);
       const output = tokens - input;
-      const eventTime = new Date(baseTime - (20 - i) * 3600 * 1000).toISOString();
+      const eventTime = new Date(nowMs - (20 - i) * 15 * 60 * 1000).toISOString();
 
       seedEvents.push({
         id: `evt_openai_${m.name.replace(/[^a-z0-9]/g, "")}_${eventCounter}`,
@@ -116,7 +118,7 @@ function getInitialSeedEvents(): AiUsageEvent[] {
       const tokens = isLast ? m.total - tokenPerChunk * (m.chunks - 1) : tokenPerChunk;
       const input = Math.floor(tokens * 0.75);
       const output = tokens - input;
-      const eventTime = new Date(baseTime - (15 - i) * 3600 * 1000).toISOString();
+      const eventTime = new Date(nowMs - (15 - i) * 15 * 60 * 1000).toISOString();
 
       seedEvents.push({
         id: `evt_antigravity_${m.name.replace(/[^a-z0-9]/g, "")}_${eventCounter}`,
@@ -137,20 +139,28 @@ function getInitialSeedEvents(): AiUsageEvent[] {
   return seedEvents;
 }
 
+async function withTimeout<T>(promise: Promise<T>, ms: number = 1500): Promise<T> {
+  let timeoutId: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error("Redis operation timed out")), ms);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
+}
+
 export async function initializeStore(): Promise<void> {
   if (isInitialized) return;
 
   // 1. Try loading from Redis if available
   if (redis) {
     try {
-      const redisData = await redis.get<AiUsageEvent[]>("ai_usage:events");
+      const redisData = await withTimeout(redis.get<AiUsageEvent[]>("ai_usage:events"), 1500);
       if (redisData && Array.isArray(redisData) && redisData.length > 0) {
         memoryEvents = redisData;
         isInitialized = true;
         return;
       }
     } catch (err) {
-      console.warn("[AiUsageStore] Redis load warning:", err);
+      console.warn("[AiUsageStore] Redis load bypass/warning:", err);
     }
   }
 
@@ -225,6 +235,7 @@ export async function getAggregatedMetrics(period: "all_time" | "today" | "this_
   await initializeStore();
 
   const now = new Date();
+  const serverSyncTime = now.toISOString();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
 
@@ -302,16 +313,16 @@ export async function getAggregatedMetrics(period: "all_time" | "today" | "this_
     };
   }
 
-  // If no timestamp was registered, use current server time
-  if (latestTimestamp === new Date(0).toISOString()) {
-    latestTimestamp = new Date().toISOString();
-  }
+  const latestEventMs = latestTimestamp !== new Date(0).toISOString() ? new Date(latestTimestamp).getTime() : now.getTime();
+  const isFresh = now.getTime() - latestEventMs < 30 * 60 * 1000;
 
   return {
     success: true,
-    updatedAt: latestTimestamp,
+    updatedAt: serverSyncTime,
+    lastEventTime: latestTimestamp !== new Date(0).toISOString() ? latestTimestamp : serverSyncTime,
     period,
     isLive: true,
+    freshness: isFresh ? "LIVE" : "STALE",
     metrics: {
       openai: openaiSummary,
       antigravity: antigravitySummary,

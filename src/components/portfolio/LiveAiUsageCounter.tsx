@@ -13,8 +13,10 @@ export interface MetricSummary {
 export interface AiUsageData {
   success: boolean;
   updatedAt: string;
+  lastEventTime?: string;
   period: "all_time" | "today" | "this_month";
   isLive: boolean;
+  freshness?: "LIVE" | "STALE";
   metrics: {
     openai: MetricSummary | null;
     antigravity: MetricSummary | null;
@@ -417,7 +419,7 @@ export const LiveAiUsageCounter: React.FC = () => {
 
             {/* RELATIVE TIMESTAMP */}
             <span className="text-[11px] font-semibold text-[#1E2024]/50 uppercase">
-              UPDATED {data?.updatedAt ? formatRelativeTime(data.updatedAt) : "JUST NOW"}
+              {data?.freshness === "STALE" ? "STALE DATA — " : ""}UPDATED {data?.updatedAt ? formatRelativeTime(data.updatedAt) : "JUST NOW"}
             </span>
           </div>
 
