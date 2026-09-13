@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Zap } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus, Zap, ChevronDown } from "lucide-react";
 import LiveAiUsageCounter from "@/components/portfolio/LiveAiUsageCounter";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
@@ -96,6 +96,7 @@ const pageCanvasVariants = {
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isFeaturedExpanded, setIsFeaturedExpanded] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -210,7 +211,17 @@ const AboutPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -3 }}
-                className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group transition-all duration-300 hover:border-[#1E2024]/30"
+                role="button"
+                tabIndex={0}
+                aria-expanded={isFeaturedExpanded}
+                onClick={() => setIsFeaturedExpanded((prev) => !prev)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIsFeaturedExpanded((prev) => !prev);
+                  }
+                }}
+                className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group cursor-pointer transition-all duration-300 hover:border-[#1E2024]/30 select-none"
               >
                 {/* Micro Ambient Glow Accent */}
                 <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#FFD21F]/25 rounded-full blur-2xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
@@ -220,6 +231,18 @@ const AboutPage: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1E2024]/60">
                       02 // FEATURED FOCUS
                     </span>
+
+                    {/* Elegant Chevron Open/Collapse Indicator */}
+                    <div
+                      className="w-7 h-7 rounded-full border border-[#1E2024]/18 bg-[#1E2024]/5 flex items-center justify-center text-[#1E2024] transition-all duration-300 group-hover:bg-[#1E2024] group-hover:text-white"
+                      title={isFeaturedExpanded ? "Collapse AI Usage Panel" : "Expand AI Usage Panel"}
+                    >
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-300 ${
+                          isFeaturedExpanded ? "rotate-180" : "rotate-0"
+                        }`}
+                      />
+                    </div>
                   </div>
 
                   <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#1E2024] tracking-[-0.025em]">
@@ -234,8 +257,21 @@ const AboutPage: React.FC = () => {
                   </p>
                 </div>
 
-                {/* REAL DATA-DRIVEN LIVE AI USAGE COUNTER */}
-                <LiveAiUsageCounter />
+                {/* EXPANDABLE REAL DATA-DRIVEN LIVE AI USAGE COUNTER */}
+                <AnimatePresence initial={false}>
+                  {isFeaturedExpanded && (
+                    <motion.div
+                      key="usage-panel"
+                      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
+                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <LiveAiUsageCounter />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
 
               {/* 3. COMPACT CARD: AI/ML SYSTEMS (ORDER 3 ON MOBILE, SPANS 4 COLS ON DESKTOP) */}

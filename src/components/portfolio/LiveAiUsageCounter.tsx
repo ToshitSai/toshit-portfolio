@@ -217,9 +217,12 @@ export const LiveAiUsageCounter: React.FC = () => {
           {/* Data provenance info toggle */}
           <button
             type="button"
-            onClick={() => setShowTooltip(!showTooltip)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTooltip(!showTooltip);
+            }}
             aria-label="Data provenance information"
-            className="text-[#1E2024]/50 hover:text-[#1E2024] transition-colors focus:outline-none"
+            className="text-[#1E2024]/50 hover:text-[#1E2024] transition-colors focus:outline-none cursor-pointer"
           >
             <Info className="w-3.5 h-3.5" />
           </button>
@@ -235,8 +238,11 @@ export const LiveAiUsageCounter: React.FC = () => {
                 <button
                   key={p}
                   type="button"
-                  onClick={() => handlePeriodChange(p)}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePeriodChange(p);
+                  }}
+                  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
                     isActive
                       ? "bg-[#1E2024] text-[#F7F1E5] shadow-xs"
                       : "text-[#1E2024]/70 hover:text-[#1E2024]"
@@ -250,10 +256,13 @@ export const LiveAiUsageCounter: React.FC = () => {
 
           <button
             type="button"
-            onClick={handleManualRefresh}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleManualRefresh();
+            }}
             disabled={refreshing}
             title="Refresh AI usage data"
-            className="p-1.5 rounded-lg border border-[#1E2024]/12 bg-[#1E2024]/5 text-[#1E2024] hover:bg-[#1E2024]/10 transition-all active:scale-95 disabled:opacity-50"
+            className="p-1.5 rounded-lg border border-[#1E2024]/12 bg-[#1E2024]/5 text-[#1E2024] hover:bg-[#1E2024]/10 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin text-[#FFD21F]" : ""}`} />
           </button>
@@ -266,6 +275,7 @@ export const LiveAiUsageCounter: React.FC = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
+          onClick={(e) => e.stopPropagation()}
           className="mb-4 p-3 rounded-xl bg-[#1E2024]/6 border border-[#1E2024]/12 font-mono text-xs text-[#1E2024]/80 flex items-start gap-2"
         >
           <Zap className="w-4 h-4 text-[#FFD21F] flex-shrink-0 mt-0.5" />
@@ -309,7 +319,7 @@ export const LiveAiUsageCounter: React.FC = () => {
               {/* BIG NUMERICAL COUNTER */}
               <div className="flex items-baseline gap-3">
                 <div
-                  className="font-sans font-bold text-4xl sm:text-5xl md:text-6xl text-[#1E2024] tracking-[-0.03em] leading-none cursor-pointer"
+                  className="font-sans font-bold text-4xl sm:text-5xl md:text-6xl text-[#1E2024] tracking-[-0.03em] leading-none"
                   title={`Exact value: ${totalTokens.toLocaleString()} tokens`}
                 >
                   <AnimatedNumber value={totalTokens} formatAsCompact={true} />
@@ -395,8 +405,11 @@ export const LiveAiUsageCounter: React.FC = () => {
           <div className="mt-4 flex items-center justify-between border-t border-[#1E2024]/10 pt-3 font-mono text-xs">
             <button
               type="button"
-              onClick={() => setShowModels(!showModels)}
-              className="inline-flex items-center gap-1.5 text-[#1E2024]/70 hover:text-[#1E2024] font-semibold transition-colors focus:outline-none"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowModels(!showModels);
+              }}
+              className="inline-flex items-center gap-1.5 text-[#1E2024]/70 hover:text-[#1E2024] font-semibold transition-colors focus:outline-none cursor-pointer"
             >
               <span>MODEL BREAKDOWN</span>
               {showModels ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
