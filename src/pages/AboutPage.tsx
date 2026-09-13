@@ -176,14 +176,14 @@ const AboutPage: React.FC = () => {
           <div className="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
 
             {/* BENTO GRID CONTAINER WITH EXPLICIT STACKING & SPANS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-stretch relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-start relative">
               
               {/* 1. CENTER PROFILE CARD (PRIMARY ANCHOR — ORDER 1 ON MOBILE, SPANS 5 COLS ON DESKTOP) */}
               <motion.div
                 initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0 }}
-                className="order-1 lg:col-span-5 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group"
+                className="order-1 lg:col-span-5 self-start rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between relative group"
               >
                 {/* Identity Header */}
                 <div>
