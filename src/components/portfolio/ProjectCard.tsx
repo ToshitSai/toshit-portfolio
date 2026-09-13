@@ -161,7 +161,6 @@ const DeviceShell: React.FC<DeviceShellProps> = ({
   scrollScale,
   scrollY,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
   const isPhone = device.type === "phone";
   const isWatch = device.type === "watch";
   const composedY = useTransform(() => parallaxY.get() + pointerY.get() + scrollY.get());

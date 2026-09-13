@@ -50,10 +50,9 @@ const timelineEntries: TimelineEntry[] = [
 
 interface ArchiveRowProps {
   entry: TimelineEntry;
-  idx: number;
 }
 
-const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry, idx }) => {
+const ArchiveRow: React.FC<ArchiveRowProps> = ({ entry }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useIsMobile();

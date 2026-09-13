@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Plus, Zap, ChevronDown } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus } from "lucide-react";
 import LiveAiUsageCounter from "@/components/portfolio/LiveAiUsageCounter";
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA

@@ -13,14 +13,11 @@ interface RecordScratchHeadingProps {
 }
 
 export const RecordScratchHeading: React.FC<RecordScratchHeadingProps> = ({
-  sectionTag,
   title,
   subtitle,
   align = "left",
   className = "",
-  tagColor = "text-[#1D2024]/80",
   lineColor = "bg-[#1D2024]/12",
-  accentColor = "#FFD42A",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();

@@ -1,4 +1,4 @@
-import { useTransform, type MotionValue } from "framer-motion";
+import { useTransform, type MotionValue, type UseScrollOptions } from "framer-motion";
 
 /** Scale motion distances for mobile (8–15px) vs desktop (20–30px). */
 export function motionDistance(isMobile: boolean, desktop: number): number {
@@ -7,9 +7,11 @@ export function motionDistance(isMobile: boolean, desktop: number): number {
 }
 
 /** Standard section scroll offsets: approaching → passed. */
-export const SECTION_APPROACH = ["start end", "end start"] as (any);
-export const SECTION_DOMINANT = ["start 75%", "end 25%"] as (any);
-export const HERO_EXIT = ["start start", "end start"] as (any);
+type ScrollOffset = NonNullable<UseScrollOptions["offset"]>;
+
+export const SECTION_APPROACH = ["start end", "end start"] as ScrollOffset;
+export const SECTION_DOMINANT = ["start 75%", "end 25%"] as ScrollOffset;
+export const HERO_EXIT = ["start start", "end start"] as ScrollOffset;
 
 /** Map 0–1 section progress to a focus band (0.65 → 1 → 0.65). */
 export function useFocusBand(progress: MotionValue<number>, peak = 0.5) {

@@ -194,7 +194,7 @@ const TechnicalSkills: React.FC = () => {
         let targetY = 0;
         let targetW = 0;
         let targetH = 0;
-        let targetOpacity = 1;
+        const targetOpacity = 1;
         let activeSemanticItem: SkillItem | null = null;
 
         const hovered = hoveredSkillRef.current;

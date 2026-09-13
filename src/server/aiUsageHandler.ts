@@ -48,10 +48,18 @@ export async function handleRecordAiUsage(
 
   // Production ingest must be authenticated so the public site cannot forge usage totals.
   const requiredSecret = process.env.USAGE_INGEST_SECRET?.trim();
+  const hasDurableStore = Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
   if (isProd && !requiredSecret) {
     return {
       status: 503,
       data: { success: false, error: "Usage ingest is not configured." },
+    };
+  }
+
+  if (isProd && !hasDurableStore) {
+    return {
+      status: 503,
+      data: { success: false, error: "Usage store is not configured." },
     };
   }
 

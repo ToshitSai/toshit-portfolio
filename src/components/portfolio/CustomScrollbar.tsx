@@ -9,10 +9,6 @@ const CustomScrollbar: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const currentY = useRef(0);
-  const targetY = useRef(0);
-  const animationFrameId = useRef<number | null>(null);
-
   useEffect(() => {
     let ticking = false;
     let visibleState = false;

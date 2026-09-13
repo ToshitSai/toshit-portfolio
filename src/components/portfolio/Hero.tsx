@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { HERO_EXIT, motionDistance } from "@/lib/scrollMotion";
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 
 const HERO_WORDS = [
   "AI-POWERED",
@@ -99,7 +97,6 @@ const Hero: React.FC = () => {
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const shouldReduceMotion = useReducedMotion();
-  const isMobile = useIsMobile();
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({

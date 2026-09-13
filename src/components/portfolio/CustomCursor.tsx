@@ -67,6 +67,7 @@ const CustomCursor: React.FC = () => {
   // DOM Refs for Single Root & Sub-parts
   const rootRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
+  const inspectElementRef = useRef<(target: HTMLElement) => void>(() => undefined);
 
   // Check Touch & Pointer Capability
   useEffect(() => {
@@ -200,7 +201,7 @@ const CustomCursor: React.FC = () => {
         if (frameCount % 3 === 0) {
           const target = document.elementFromPoint(pX, pY) as HTMLElement | null;
           if (target) {
-            inspectElementAndSetState(target);
+            inspectElementRef.current(target);
           } else {
             resetToDefault();
           }
@@ -356,6 +357,8 @@ const CustomCursor: React.FC = () => {
     }
   };
 
+  inspectElementRef.current = inspectElementAndSetState;
+
   // Pointer Event Listeners
   useEffect(() => {
     if (isTouchDevice) return;
@@ -418,7 +421,6 @@ const CustomCursor: React.FC = () => {
 
   let width = 38;
   let height = 38;
-  let isLens = false;
   let showDot = true;
 
   if (isProject) {
@@ -427,21 +429,17 @@ const CustomCursor: React.FC = () => {
     width = 64;
     height = 64;
     showDot = false;
-    isLens = true;
   } else if (mode === "SAY_HI") {
     width = 58;
     height = 58;
     showDot = false;
-    isLens = true;
   } else if (mode === "OPEN") {
     width = 48;
     height = 48;
     showDot = false;
-    isLens = true;
   } else if (mode === "BUTTON" || mode === "LINK") {
     width = 34;
     height = 34;
-    isLens = true;
   }
 
   const radius = width / 2 - 2;
@@ -462,8 +460,8 @@ const CustomCursor: React.FC = () => {
       {/* 1. PROJECT HOVER STATE — DARK CHARCOAL EDITORIAL PILL */}
       {isProject ? (
         <div
-          className="flex items-center justify-center rounded-full px-3.5 py-1.5 bg-[#1D1C18] border border-[#F6F0E4]/20 shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition-all duration-240 ease-[cubic-bezier(0.16,1,0.3,1)] animate-in fade-in zoom-in-90 duration-200"
-          style={{ height: "34px" }}
+          className="flex items-center justify-center rounded-full px-3.5 py-1.5 bg-[#1D1C18] border border-[#F6F0E4]/20 shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition-all animate-in fade-in zoom-in-90 duration-200"
+          style={{ height: "34px", transitionDuration: "240ms", transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
         >
           {/* TINY 4px PROJECT ACCENT DOT */}
           <span
@@ -479,12 +477,14 @@ const CustomCursor: React.FC = () => {
       ) : (
         /* 2. DEFAULT & OTHER MODES — CLEAN CIRCULAR LENS RING & DOT */
         <div
-          className="relative flex items-center justify-center rounded-full transition-all duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+          className="relative flex items-center justify-center rounded-full transition-all"
           style={{
             width: `${width}px`,
             height: `${height}px`,
             border: `1px solid ${accentColor}`,
             backgroundColor: "transparent",
+            transitionDuration: "220ms",
+            transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
           }}
         >
           {/* DWELL PROGRESS CIRCULAR SVG ARC */}
