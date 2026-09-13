@@ -243,9 +243,28 @@ body.has-custom-cursor [contenteditable="true"] {
   100% { r: 42px; opacity: 0; }
 }
 
-@keyframes particleRise {
-  0%   { opacity: 0; transform: translateY(0); }
-  25%  { opacity: 0.9; }
-  100% { opacity: 0; transform: translateY(-26px); }
+@keyframes arrowFlowRight {
+  0% {
+    transform: translate3d(-14px, 0, 0);
+  }
+  100% {
+    transform: translate3d(0px, 0, 0);
+  }
+}
+
+.animate-arrow-flow {
+  animation: arrowFlowRight 1.5s linear infinite;
+  will-change: transform;
+}
+
+.group:hover .animate-arrow-flow {
+  animation-duration: 1.0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-arrow-flow {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 

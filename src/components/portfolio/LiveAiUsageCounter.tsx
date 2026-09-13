@@ -122,8 +122,19 @@ export const LiveAiUsageCounter: React.FC = () => {
   const [showModels, setShowModels] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const activePeriodRef = useRef<"all_time" | "today" | "this_month">(period);
+  activePeriodRef.current = period;
+
   const fetchUsage = useCallback(
     async (selectedPeriod: "all_time" | "today" | "this_month", isManual: boolean = false) => {
+      // Cancel any ongoing fetch request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       if (isManual) setRefreshing(true);
       else if (!data) setLoading(true);
 
@@ -132,6 +143,7 @@ export const LiveAiUsageCounter: React.FC = () => {
       try {
         const response = await fetch(`/api/ai-usage?period=${selectedPeriod}`, {
           headers: { Accept: "application/json" },
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -139,17 +151,28 @@ export const LiveAiUsageCounter: React.FC = () => {
         }
 
         const result: AiUsageData = await response.json();
+        // Guard against stale response if period changed while request was in-flight
+        if (activePeriodRef.current !== selectedPeriod) {
+          return;
+        }
+
         if (result && result.success) {
           setData(result);
         } else {
           throw new Error("Invalid API response");
         }
       } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") {
+          // Request was aborted due to filter switch; ignore
+          return;
+        }
         console.error("[LiveAiUsageCounter] Fetch error:", err);
         setError("DATA TEMPORARILY UNAVAILABLE");
       } finally {
-        setLoading(false);
-        setRefreshing(false);
+        if (activePeriodRef.current === selectedPeriod) {
+          setLoading(false);
+          setRefreshing(false);
+        }
       }
     },
     [data]
@@ -163,7 +186,12 @@ export const LiveAiUsageCounter: React.FC = () => {
       fetchUsage(period);
     }, 90000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [period, fetchUsage]);
 
   const handlePeriodChange = (newPeriod: "all_time" | "today" | "this_month") => {

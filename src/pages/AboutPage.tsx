@@ -194,9 +194,25 @@ const AboutPage: React.FC = () => {
                   </span>
                   <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
                     <span>EXPERIMENT</span>
-                    <span className="text-[#FFD21F]">→</span>
+                    <span className="relative inline-flex items-center overflow-hidden w-[14px] h-4 text-[#FFD21F] select-none pointer-events-none align-middle">
+                      <span
+                        className="flex items-center animate-arrow-flow motion-reduce:animate-none"
+                        style={{ animationDelay: "0s" }}
+                      >
+                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
+                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
+                      </span>
+                    </span>
                     <span>BUILD</span>
-                    <span className="text-[#FFD21F]">→</span>
+                    <span className="relative inline-flex items-center overflow-hidden w-[14px] h-4 text-[#FFD21F] select-none pointer-events-none align-middle">
+                      <span
+                        className="flex items-center animate-arrow-flow motion-reduce:animate-none"
+                        style={{ animationDelay: "0.2s" }}
+                      >
+                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
+                        <span className="inline-block w-[14px] text-center flex-shrink-0">→</span>
+                      </span>
+                    </span>
                     <span>SHIP</span>
                   </div>
                 </div>

@@ -2,10 +2,14 @@ import fs from "fs";
 import path from "path";
 import { Redis } from "@upstash/redis";
 
+export type AiUsageProvider = "openai" | "antigravity";
+export type AiUsageMetricType = "tokens_processed" | "quota_remaining";
+export type AiUsagePeriod = "all_time" | "today" | "this_month";
+
 export interface AiUsageEvent {
-  id: string; // unique identifier for deduplication
-  provider: "openai" | "antigravity";
-  metric_type: "tokens_processed" | "quota_remaining";
+  id: string;
+  provider: AiUsageProvider;
+  metric_type: AiUsageMetricType;
   model: string;
   input_tokens?: number;
   output_tokens?: number;
@@ -13,25 +17,31 @@ export interface AiUsageEvent {
   cache_read_tokens?: number;
   total_tokens?: number;
   quota_percentage?: number;
-  timestamp: string; // ISO 8601 string
+  timestamp: string;
+  request_id?: string;
   source_app: string;
 }
 
 export interface MetricSummary {
-  type: "tokens_processed" | "quota_remaining";
+  type: AiUsageMetricType;
   value: number;
-  unit?: string;
+  unit: "tokens" | "%";
   models?: Record<string, number>;
   lastEventTime?: string;
+  source: "usage_events";
 }
 
 export interface AiUsageResponseData {
-  success: boolean;
+  success: true;
   updatedAt: string;
   lastEventTime?: string;
-  period: "all_time" | "today" | "this_month";
+  period: AiUsagePeriod;
+  periodStart?: string;
+  periodEnd: string;
   isLive: boolean;
-  freshness: "LIVE" | "STALE";
+  freshness: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
+  source: "redis" | "local_json" | "memory";
+  eventCount: number;
   metrics: {
     openai: MetricSummary | null;
     antigravity: MetricSummary | null;
@@ -39,9 +49,9 @@ export interface AiUsageResponseData {
   };
 }
 
-// In-memory cache + persistent JSON file backup
 let memoryEvents: AiUsageEvent[] = [];
 let isInitialized = false;
+let activeSource: AiUsageResponseData["source"] = "memory";
 
 let redis: Redis | null = null;
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
@@ -56,143 +66,163 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 }
 
 function getStorageFilePath(): string {
-  // Use project root data directory or temp
   const dataDir = path.resolve(process.cwd(), "data");
   if (!fs.existsSync(dataDir)) {
-    try {
-      fs.mkdirSync(dataDir, { recursive: true });
-    } catch {
-      // Fallback if unable to create directory
-      return path.resolve(process.cwd(), "ai_usage_db.json");
-    }
+    fs.mkdirSync(dataDir, { recursive: true });
   }
   return path.join(dataDir, "ai_usage_db.json");
 }
 
-function getInitialSeedEvents(): AiUsageEvent[] {
-  const nowMs = Date.now();
-  const seedEvents: AiUsageEvent[] = [];
-
-  // Seed OpenAI events across models
-  const openAiModels = [
-    { name: "gpt-4o", total: 642000, chunks: 12 },
-    { name: "gpt-4o-mini", total: 200000, chunks: 8 },
-  ];
-
-  let eventCounter = 1000;
-  for (const m of openAiModels) {
-    const tokenPerChunk = Math.floor(m.total / m.chunks);
-    for (let i = 0; i < m.chunks; i++) {
-      eventCounter++;
-      const isLast = i === m.chunks - 1;
-      const tokens = isLast ? m.total - tokenPerChunk * (m.chunks - 1) : tokenPerChunk;
-      const input = Math.floor(tokens * 0.7);
-      const output = tokens - input;
-      const eventTime = new Date(nowMs - (20 - i) * 15 * 60 * 1000).toISOString();
-
-      seedEvents.push({
-        id: `evt_openai_${m.name.replace(/[^a-z0-9]/g, "")}_${eventCounter}`,
-        provider: "openai",
-        metric_type: "tokens_processed",
-        model: m.name,
-        input_tokens: input,
-        output_tokens: output,
-        total_tokens: tokens,
-        timestamp: eventTime,
-        source_app: "toshit-portfolio-api",
-      });
-    }
-  }
-
-  // Seed Antigravity interaction events
-  const antigravityModels = [
-    { name: "gemini-1.5-pro", total: 400000, chunks: 10 },
-    { name: "gemini-1.5-flash", total: 188000, chunks: 6 },
-  ];
-
-  for (const m of antigravityModels) {
-    const tokenPerChunk = Math.floor(m.total / m.chunks);
-    for (let i = 0; i < m.chunks; i++) {
-      eventCounter++;
-      const isLast = i === m.chunks - 1;
-      const tokens = isLast ? m.total - tokenPerChunk * (m.chunks - 1) : tokenPerChunk;
-      const input = Math.floor(tokens * 0.75);
-      const output = tokens - input;
-      const eventTime = new Date(nowMs - (15 - i) * 15 * 60 * 1000).toISOString();
-
-      seedEvents.push({
-        id: `evt_antigravity_${m.name.replace(/[^a-z0-9]/g, "")}_${eventCounter}`,
-        provider: "antigravity",
-        metric_type: "tokens_processed",
-        model: m.name,
-        input_tokens: input,
-        output_tokens: output,
-        thinking_tokens: Math.floor(output * 0.2),
-        cache_read_tokens: Math.floor(input * 0.3),
-        total_tokens: tokens,
-        timestamp: eventTime,
-        source_app: "antigravity-agent-workflow",
-      });
-    }
-  }
-
-  return seedEvents;
-}
-
 async function withTimeout<T>(promise: Promise<T>, ms: number = 1500): Promise<T> {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: NodeJS.Timeout | undefined;
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => reject(new Error("Redis operation timed out")), ms);
   });
-  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
+
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isValidIsoTimestamp(value: string): boolean {
+  const time = Date.parse(value);
+  return Number.isFinite(time) && new Date(time).toISOString() === value;
+}
+
+function normalizeOptionalToken(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (!isNonNegativeInteger(value)) {
+    throw new Error("Token counts must be non-negative integers.");
+  }
+  return value;
+}
+
+export function normalizeUsageEvent(payload: Partial<AiUsageEvent>): AiUsageEvent {
+  if (!payload.id || typeof payload.id !== "string" || !payload.id.trim()) {
+    throw new Error("A stable unique event id is required.");
+  }
+
+  if (payload.provider !== "openai" && payload.provider !== "antigravity") {
+    throw new Error("Provider must be 'openai' or 'antigravity'.");
+  }
+
+  if (payload.metric_type !== "tokens_processed" && payload.metric_type !== "quota_remaining") {
+    throw new Error("Metric type must be 'tokens_processed' or 'quota_remaining'.");
+  }
+
+  if (!payload.model || typeof payload.model !== "string" || !payload.model.trim()) {
+    throw new Error("Model identifier string is required.");
+  }
+
+  if (!payload.timestamp || typeof payload.timestamp !== "string" || !isValidIsoTimestamp(payload.timestamp)) {
+    throw new Error("Timestamp must be an ISO 8601 UTC string.");
+  }
+
+  const event: AiUsageEvent = {
+    id: payload.id.trim(),
+    provider: payload.provider,
+    metric_type: payload.metric_type,
+    model: payload.model.trim(),
+    timestamp: payload.timestamp,
+    request_id: typeof payload.request_id === "string" ? payload.request_id.trim() : undefined,
+    source_app: typeof payload.source_app === "string" && payload.source_app.trim() ? payload.source_app.trim() : "usage-ingest",
+  };
+
+  if (event.metric_type === "tokens_processed") {
+    event.input_tokens = normalizeOptionalToken(payload.input_tokens);
+    event.output_tokens = normalizeOptionalToken(payload.output_tokens);
+    event.thinking_tokens = normalizeOptionalToken(payload.thinking_tokens);
+    event.cache_read_tokens = normalizeOptionalToken(payload.cache_read_tokens);
+
+    if (payload.total_tokens !== undefined) {
+      event.total_tokens = normalizeOptionalToken(payload.total_tokens);
+    } else if (event.input_tokens !== undefined || event.output_tokens !== undefined) {
+      event.total_tokens = (event.input_tokens || 0) + (event.output_tokens || 0);
+    }
+
+    if (!isNonNegativeInteger(event.total_tokens)) {
+      throw new Error("A non-negative integer total_tokens value is required for token usage events.");
+    }
+
+    const visibleTokenSum = (event.input_tokens || 0) + (event.output_tokens || 0);
+    if ((event.input_tokens !== undefined || event.output_tokens !== undefined) && visibleTokenSum !== event.total_tokens) {
+      throw new Error("total_tokens must equal input_tokens + output_tokens when both are provided.");
+    }
+  }
+
+  if (event.metric_type === "quota_remaining") {
+    if (!isNonNegativeInteger(payload.quota_percentage) || payload.quota_percentage > 100) {
+      throw new Error("quota_percentage must be an integer from 0 to 100.");
+    }
+    event.quota_percentage = payload.quota_percentage;
+  }
+
+  return event;
+}
+
+function normalizeStoredEvents(rawEvents: unknown): AiUsageEvent[] {
+  if (!Array.isArray(rawEvents)) return [];
+
+  const normalized: AiUsageEvent[] = [];
+  const seen = new Set<string>();
+
+  for (const rawEvent of rawEvents) {
+    try {
+      const event = normalizeUsageEvent(rawEvent as Partial<AiUsageEvent>);
+      if (!seen.has(event.id)) {
+        normalized.push(event);
+        seen.add(event.id);
+      }
+    } catch (err) {
+      console.warn("[AiUsageStore] Ignoring invalid stored usage event:", err instanceof Error ? err.message : err);
+    }
+  }
+
+  return normalized;
 }
 
 export async function initializeStore(): Promise<void> {
   if (isInitialized) return;
 
-  // 1. Try loading from Redis if available
   if (redis) {
     try {
       const redisData = await withTimeout(redis.get<AiUsageEvent[]>("ai_usage:events"), 1500);
-      if (redisData && Array.isArray(redisData) && redisData.length > 0) {
-        memoryEvents = redisData;
-        isInitialized = true;
-        return;
-      }
+      memoryEvents = normalizeStoredEvents(redisData);
+      activeSource = "redis";
+      isInitialized = true;
+      return;
     } catch (err) {
-      console.warn("[AiUsageStore] Redis load bypass/warning:", err);
+      console.warn("[AiUsageStore] Redis load warning:", err instanceof Error ? err.message : err);
     }
   }
 
-  // 2. Try loading from local file
   const filePath = getStorageFilePath();
   if (fs.existsSync(filePath)) {
     try {
-      const fileContent = fs.readFileSync(filePath, "utf-8");
-      const parsed = JSON.parse(fileContent);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        memoryEvents = parsed;
-        isInitialized = true;
-        return;
-      }
+      const parsed = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      memoryEvents = normalizeStoredEvents(parsed);
+      activeSource = "local_json";
+      isInitialized = true;
+      return;
     } catch (err) {
-      console.warn("[AiUsageStore] File read warning:", err);
+      console.warn("[AiUsageStore] File read warning:", err instanceof Error ? err.message : err);
     }
   }
 
-  // 3. Initialize with factual seed events if empty
-  memoryEvents = getInitialSeedEvents();
-  saveStoreLocally();
+  memoryEvents = [];
+  activeSource = "memory";
   isInitialized = true;
 }
 
 function saveStoreLocally(): void {
-  try {
-    const filePath = getStorageFilePath();
-    fs.writeFileSync(filePath, JSON.stringify(memoryEvents, null, 2), "utf-8");
-  } catch (err) {
-    console.error("[AiUsageStore] File write error:", err);
-  }
+  const filePath = getStorageFilePath();
+  fs.writeFileSync(filePath, JSON.stringify(memoryEvents, null, 2), "utf-8");
 
   if (redis) {
     redis.set("ai_usage:events", memoryEvents).catch((err) => {
@@ -201,128 +231,146 @@ function saveStoreLocally(): void {
   }
 }
 
-export async function recordUsageEvent(event: AiUsageEvent): Promise<{ success: boolean; error?: string; isDuplicate?: boolean }> {
+export async function recordUsageEvent(event: AiUsageEvent): Promise<{ success: true; isDuplicate: boolean }> {
   await initializeStore();
 
-  if (!event.id || !event.provider || !event.model) {
-    return { success: false, error: "Invalid usage event payload." };
-  }
-
-  // Check for duplicate request/interaction ID
-  const existing = memoryEvents.find((e) => e.id === event.id);
-  if (existing) {
+  const normalizedEvent = normalizeUsageEvent(event);
+  if (memoryEvents.some((existing) => existing.id === normalizedEvent.id)) {
     return { success: true, isDuplicate: true };
   }
 
-  // Ensure total_tokens is populated if tokens_processed
-  if (event.metric_type === "tokens_processed") {
-    if (event.total_tokens === undefined) {
-      event.total_tokens = (event.input_tokens || 0) + (event.output_tokens || 0);
-    }
-  }
-
-  if (!event.timestamp) {
-    event.timestamp = new Date().toISOString();
-  }
-
-  memoryEvents.push(event);
+  memoryEvents.push(normalizedEvent);
   saveStoreLocally();
 
-  return { success: true };
+  return { success: true, isDuplicate: false };
 }
 
-export async function getAggregatedMetrics(period: "all_time" | "today" | "this_month" = "all_time"): Promise<AiUsageResponseData> {
+function getPeriodBounds(period: AiUsagePeriod): { start?: Date; end: Date } {
+  const end = new Date();
+  if (period === "all_time") return { end };
+
+  const start = new Date(end);
+  start.setUTCHours(0, 0, 0, 0);
+
+  if (period === "this_month") {
+    start.setUTCDate(1);
+  }
+
+  return { start, end };
+}
+
+function summarizeProvider(events: AiUsageEvent[]): MetricSummary | null {
+  if (events.length === 0) return null;
+
+  const metricTypes = new Set(events.map((event) => event.metric_type));
+  if (metricTypes.size > 1) {
+    throw new Error("Provider has mixed usage metric types in the selected period.");
+  }
+
+  const metricType = events[0].metric_type;
+  const lastEventTime = events
+    .map((event) => event.timestamp)
+    .sort()
+    .at(-1);
+
+  if (metricType === "quota_remaining") {
+    const latestQuotaEvent = [...events].sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp))[0];
+    return {
+      type: "quota_remaining",
+      value: latestQuotaEvent.quota_percentage || 0,
+      unit: "%",
+      lastEventTime,
+      source: "usage_events",
+    };
+  }
+
+  const models: Record<string, number> = {};
+  let total = 0;
+  for (const event of events) {
+    const tokens = event.total_tokens;
+    if (!isNonNegativeInteger(tokens)) {
+      throw new Error("Token usage event is missing a valid total_tokens value.");
+    }
+    total += tokens;
+    models[event.model] = (models[event.model] || 0) + tokens;
+  }
+
+  const modelTotal = Object.values(models).reduce((sum, value) => sum + value, 0);
+  if (modelTotal !== total) {
+    throw new Error("Model breakdown total does not equal provider total.");
+  }
+
+  return {
+    type: "tokens_processed",
+    value: total,
+    unit: "tokens",
+    models,
+    lastEventTime,
+    source: "usage_events",
+  };
+}
+
+function getFreshness(lastEventTime?: string): AiUsageResponseData["freshness"] {
+  if (!lastEventTime) return "NO_DATA";
+
+  const ageMs = Date.now() - Date.parse(lastEventTime);
+  if (ageMs < 5 * 60 * 1000) return "LIVE";
+  if (ageMs < 30 * 60 * 1000) return "RECENT";
+  return "STALE";
+}
+
+export async function getAggregatedMetrics(period: AiUsagePeriod = "all_time"): Promise<AiUsageResponseData> {
   await initializeStore();
 
-  const now = new Date();
-  const serverSyncTime = now.toISOString();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-
-  const filteredEvents = memoryEvents.filter((e) => {
-    if (period === "all_time") return true;
-    const eventTime = new Date(e.timestamp).getTime();
-    if (period === "today") return eventTime >= startOfToday;
-    if (period === "this_month") return eventTime >= startOfMonth;
-    return true;
+  const { start, end } = getPeriodBounds(period);
+  const filteredEvents = memoryEvents.filter((event) => {
+    const eventMs = Date.parse(event.timestamp);
+    if (!Number.isFinite(eventMs)) return false;
+    return (!start || eventMs >= start.getTime()) && eventMs <= end.getTime();
   });
 
-  const openaiEvents = filteredEvents.filter((e) => e.provider === "openai");
-  const antigravityEvents = filteredEvents.filter((e) => e.provider === "antigravity");
+  const openaiSummary = summarizeProvider(filteredEvents.filter((event) => event.provider === "openai"));
+  const antigravitySummary = summarizeProvider(filteredEvents.filter((event) => event.provider === "antigravity"));
 
-  let latestTimestamp = new Date(0).toISOString();
-
-  const calculateMetricSummary = (events: AiUsageEvent[], providerName: string): MetricSummary | null => {
-    if (events.length === 0) return null;
-
-    // Check if any event for this provider is quota_remaining
-    const quotaEvent = events.find((e) => e.metric_type === "quota_remaining");
-    if (quotaEvent) {
-      if (quotaEvent.timestamp > latestTimestamp) {
-        latestTimestamp = quotaEvent.timestamp;
-      }
-      return {
-        type: "quota_remaining",
-        value: quotaEvent.quota_percentage ?? 0,
-        unit: "%",
-        lastEventTime: quotaEvent.timestamp,
-      };
-    }
-
-    let totalTokens = 0;
-    const models: Record<string, number> = {};
-    let lastTime = new Date(0).toISOString();
-
-    for (const ev of events) {
-      if (ev.metric_type === "tokens_processed" && typeof ev.total_tokens === "number") {
-        totalTokens += ev.total_tokens;
-        models[ev.model] = (models[ev.model] || 0) + ev.total_tokens;
-      }
-      if (ev.timestamp > lastTime) {
-        lastTime = ev.timestamp;
-      }
-      if (ev.timestamp > latestTimestamp) {
-        latestTimestamp = ev.timestamp;
-      }
-    }
-
-    return {
-      type: "tokens_processed",
-      value: totalTokens,
-      unit: "tokens",
-      models,
-      lastEventTime: lastTime,
-    };
-  };
-
-  const openaiSummary = calculateMetricSummary(openaiEvents, "openai");
-  const antigravitySummary = calculateMetricSummary(antigravityEvents, "antigravity");
-
-  // Determine combined total ONLY IF both are tokens_processed
   let combinedSummary: MetricSummary | null = null;
   if (
-    openaiSummary &&
-    openaiSummary.type === "tokens_processed" &&
-    antigravitySummary &&
-    antigravitySummary.type === "tokens_processed"
+    openaiSummary?.type === "tokens_processed" &&
+    antigravitySummary?.type === "tokens_processed"
   ) {
     combinedSummary = {
       type: "tokens_processed",
       value: openaiSummary.value + antigravitySummary.value,
       unit: "tokens",
+      models: {
+        ...(openaiSummary.models || {}),
+        ...(antigravitySummary.models || {}),
+      },
+      lastEventTime: [openaiSummary.lastEventTime, antigravitySummary.lastEventTime].filter(Boolean).sort().at(-1),
+      source: "usage_events",
     };
+
+    if (combinedSummary.value !== openaiSummary.value + antigravitySummary.value) {
+      throw new Error("Combined total does not equal provider totals.");
+    }
   }
 
-  const latestEventMs = latestTimestamp !== new Date(0).toISOString() ? new Date(latestTimestamp).getTime() : now.getTime();
-  const isFresh = now.getTime() - latestEventMs < 30 * 60 * 1000;
+  const lastEventTime = filteredEvents
+    .map((event) => event.timestamp)
+    .sort()
+    .at(-1);
+  const freshness = getFreshness(lastEventTime);
 
   return {
     success: true,
-    updatedAt: serverSyncTime,
-    lastEventTime: latestTimestamp !== new Date(0).toISOString() ? latestTimestamp : serverSyncTime,
+    updatedAt: new Date().toISOString(),
+    lastEventTime,
     period,
-    isLive: true,
-    freshness: isFresh ? "LIVE" : "STALE",
+    periodStart: start?.toISOString(),
+    periodEnd: end.toISOString(),
+    isLive: freshness === "LIVE",
+    freshness,
+    source: activeSource,
+    eventCount: filteredEvents.length,
     metrics: {
       openai: openaiSummary,
       antigravity: antigravitySummary,

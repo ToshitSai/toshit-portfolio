@@ -1,5 +1,6 @@
 import {
   getAggregatedMetrics,
+  normalizeUsageEvent,
   recordUsageEvent,
   AiUsageEvent,
   AiUsageResponseData,
@@ -70,43 +71,18 @@ export async function handleRecordAiUsage(
     };
   }
 
-  const payload = body as Partial<AiUsageEvent>;
-
-  if (!payload.provider || (payload.provider !== "openai" && payload.provider !== "antigravity")) {
+  let event: AiUsageEvent;
+  try {
+    event = normalizeUsageEvent(body as Partial<AiUsageEvent>);
+  } catch (err) {
     return {
       status: 400,
-      data: { success: false, error: "Provider must be 'openai' or 'antigravity'." },
+      data: {
+        success: false,
+        error: err instanceof Error ? err.message : "Invalid usage payload.",
+      },
     };
   }
-
-  if (!payload.metric_type || (payload.metric_type !== "tokens_processed" && payload.metric_type !== "quota_remaining")) {
-    return {
-      status: 400,
-      data: { success: false, error: "Metric type must be 'tokens_processed' or 'quota_remaining'." },
-    };
-  }
-
-  if (!payload.model || typeof payload.model !== "string") {
-    return {
-      status: 400,
-      data: { success: false, error: "Model identifier string is required." },
-    };
-  }
-
-  const event: AiUsageEvent = {
-    id: payload.id || `evt_${payload.provider}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-    provider: payload.provider,
-    metric_type: payload.metric_type,
-    model: payload.model.trim(),
-    input_tokens: typeof payload.input_tokens === "number" ? Math.max(0, payload.input_tokens) : undefined,
-    output_tokens: typeof payload.output_tokens === "number" ? Math.max(0, payload.output_tokens) : undefined,
-    thinking_tokens: typeof payload.thinking_tokens === "number" ? Math.max(0, payload.thinking_tokens) : undefined,
-    cache_read_tokens: typeof payload.cache_read_tokens === "number" ? Math.max(0, payload.cache_read_tokens) : undefined,
-    total_tokens: typeof payload.total_tokens === "number" ? Math.max(0, payload.total_tokens) : undefined,
-    quota_percentage: typeof payload.quota_percentage === "number" ? Math.min(100, Math.max(0, payload.quota_percentage)) : undefined,
-    timestamp: payload.timestamp || new Date().toISOString(),
-    source_app: typeof payload.source_app === "string" ? payload.source_app : "api-recorder",
-  };
 
   const result = await recordUsageEvent(event);
   if (!result.success) {

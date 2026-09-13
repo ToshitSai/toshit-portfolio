@@ -492,5 +492,16 @@
     "total_tokens": 15000,
     "timestamp": "2026-09-13T07:45:13.991Z",
     "source_app": "controlled-audit-runner"
+  },
+  {
+    "id": "evt_audit_verify_1789286455364",
+    "provider": "openai",
+    "metric_type": "tokens_processed",
+    "model": "gpt-4o",
+    "input_tokens": 1500,
+    "output_tokens": 684,
+    "total_tokens": 2184,
+    "timestamp": "2026-09-13T08:00:55.364Z",
+    "source_app": "controlled-audit-verify"
   }
 ]
