@@ -4,13 +4,17 @@ import {
   normalizeUsageEvent,
   recordUsageEvent,
   AiUsageEvent,
-  AiUsageResponseData,
 } from "./aiUsageStore.js";
+import {
+  getAiBuildActivitySummary,
+  ActivityFilterPeriod,
+  AiActivitySummary,
+} from "./aiActivityStore.js";
 import { isRateLimited } from "./security.js";
 
 export interface AiUsageApiResult {
   status: number;
-  data: AiUsageResponseData | { success: boolean; error?: string; isDuplicate?: boolean };
+  data: any;
 }
 
 export async function handleGetAiUsage(
@@ -18,12 +22,11 @@ export async function handleGetAiUsage(
 ): Promise<AiUsageApiResult> {
   try {
     const rawPeriod = queryParams.period?.toLowerCase();
-    let period: "all_time" | "today" | "this_month" = "all_time";
-    if (rawPeriod === "today" || rawPeriod === "this_month") {
-      period = rawPeriod;
-    }
+    let period: ActivityFilterPeriod = "recent";
+    if (rawPeriod === "today") period = "today";
+    if (rawPeriod === "all_activity" || rawPeriod === "all_time") period = "all_activity";
 
-    const data = await getAggregatedMetrics(period);
+    const data = getAiBuildActivitySummary(period);
     return {
       status: 200,
       data,
@@ -34,7 +37,7 @@ export async function handleGetAiUsage(
       status: 500,
       data: {
         success: false,
-        error: "Unable to retrieve AI usage data.",
+        error: "Unable to retrieve AI build activity data.",
       },
     };
   }

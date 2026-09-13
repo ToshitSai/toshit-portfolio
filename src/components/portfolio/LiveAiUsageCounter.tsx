@@ -1,211 +1,127 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { Zap, RefreshCw, ChevronDown, ChevronUp, Info, AlertCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Zap, RefreshCw, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 
-export interface MetricSummary {
-  type: "tokens_processed" | "quota_remaining";
-  value: number;
-  unit?: string;
-  models?: Record<string, number>;
-  lastEventTime?: string;
+export interface AiActivityEvent {
+  id: string;
+  project: string;
+  action: string;
+  provider: string;
+  model: string;
+  timestamp: string;
+  details?: string;
 }
 
-export interface PeriodTotals {
-  antigravity: number;
-  codex: number;
-  total: number;
-}
+export type ActivityFilterPeriod = "recent" | "today" | "all_activity";
 
-export interface AiUsageData {
+export interface AiActivityData {
   status?: "ok";
   success: boolean;
   updatedAt: string;
-  lastEventTime?: string;
-  period: "all_time" | "today" | "this_month";
-  periodStart?: string;
-  periodEnd: string;
   isLive: boolean;
+  lastActiveFormatted: string;
+  currentBuild: {
+    project: string;
+    action: string;
+    tools: string;
+    models: string;
+    timestamp: string;
+  } | null;
+  events: AiActivityEvent[];
   freshness?: "LIVE" | "RECENT" | "STALE" | "NO_DATA";
-  source?: "github_json" | "local_json" | "memory";
-  eventCount: number;
-  allTime?: PeriodTotals;
-  today?: PeriodTotals;
-  thisMonth?: PeriodTotals;
-  metrics: {
-    openai?: MetricSummary | null;
-    antigravity?: MetricSummary | null;
-    codex?: MetricSummary | null;
-    combined?: MetricSummary | null;
-  };
+  filterPeriod?: ActivityFilterPeriod;
 }
-
-interface AnimatedNumberProps {
-  value: number;
-  duration?: number;
-  formatAsCompact?: boolean;
-}
-
-const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
-  value,
-  duration = 600,
-  formatAsCompact = true,
-}) => {
-  const [displayValue, setDisplayValue] = useState(value);
-  const prevValueRef = useRef(value);
-  const shouldReduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (shouldReduceMotion || duration <= 0) {
-      setDisplayValue(value);
-      prevValueRef.current = value;
-      return;
-    }
-
-    const startValue = prevValueRef.current;
-    const endValue = value;
-    if (startValue === endValue) return;
-
-    const startTime = performance.now();
-
-    const updateNumber = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(startValue + (endValue - startValue) * easedProgress);
-
-      setDisplayValue(current);
-
-      if (progress < 1) {
-        requestAnimationFrame(updateNumber);
-      } else {
-        prevValueRef.current = value;
-      }
-    };
-
-    const animId = requestAnimationFrame(updateNumber);
-    return () => cancelAnimationFrame(animId);
-  }, [value, duration, shouldReduceMotion]);
-
-  const formatNumber = (num: number): string => {
-    if (formatAsCompact) {
-      if (num >= 1_000_000) {
-        return (num / 1_000_000).toFixed(2) + "M";
-      }
-      if (num >= 1000) {
-        return (num / 1000).toFixed(0) + "K";
-      }
-    }
-    return num.toLocaleString();
-  };
-
-  return <span title={value.toLocaleString()}>{formatNumber(displayValue)}</span>;
-};
 
 function formatRelativeTime(isoString: string): string {
-  if (!isoString) return "JUST NOW";
-  const date = new Date(isoString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMinutes = Math.floor(diffMs / 60000);
+  const timeMs = Date.parse(isoString);
+  if (!Number.isFinite(timeMs)) return "UNKNOWN";
 
-  if (diffMinutes < 1) return "JUST NOW";
-  if (diffMinutes === 1) return "1 MIN AGO";
-  if (diffMinutes < 60) return `${diffMinutes} MINS AGO`;
-  const diffHours = Math.floor(diffMinutes / 60);
-  if (diffHours === 1) return "1 HOUR AGO";
-  if (diffHours < 24) return `${diffHours} HOURS AGO`;
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  const diffSec = Math.floor((Date.now() - timeMs) / 1000);
+  if (diffSec < 60) return "LIVE NOW";
+
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin} MIN AGO`;
+
+  const diffHrs = Math.floor(diffMin / 60);
+  if (diffHrs < 24) return `${diffHrs} HRS AGO`;
+
+  const diffDays = Math.floor(diffHrs / 24);
+  return `${diffDays} DAYS AGO`;
 }
 
-function formatCompactToken(num: number): string {
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(2) + "M";
-  }
-  if (num >= 1_000) {
-    return (num / 1_000).toFixed(0) + "K";
-  }
-  return num.toString();
+function formatEventClockTime(isoString: string): string {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return "";
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
 export const LiveAiUsageCounter: React.FC = () => {
-  const [data, setData] = useState<AiUsageData | null>(null);
-  const [period, setPeriod] = useState<"all_time" | "today" | "this_month">("all_time");
+  const [data, setData] = useState<AiActivityData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastSuccessfulData, setLastSuccessfulData] = useState<AiUsageData | null>(null);
-  const [showModels, setShowModels] = useState<boolean>(false);
+  const [period, setPeriod] = useState<ActivityFilterPeriod>("recent");
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
+  const requestSeqRef = useRef<number>(0);
   const abortControllerRef = useRef<AbortController | null>(null);
-  const requestSequenceRef = useRef(0);
-  const dataRef = useRef<AiUsageData | null>(null);
-  const activePeriodRef = useRef<"all_time" | "today" | "this_month">(period);
-  activePeriodRef.current = period;
-  dataRef.current = data;
 
-  const fetchUsage = useCallback(
-    async (selectedPeriod: "all_time" | "today" | "this_month", isManual: boolean = false) => {
-      // Cancel any ongoing fetch request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+  const fetchActivity = useCallback(async (targetPeriod: ActivityFilterPeriod, isManualRefresh = false) => {
+    if (isManualRefresh) {
+      setRefreshing(true);
+    } else if (!data) {
+      setLoading(true);
+    }
+    setError(null);
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    const currentSeq = ++requestSeqRef.current;
+
+    try {
+      const response = await fetch(`/api/ai-usage?period=${targetPeriod}&_t=${Date.now()}`, {
+        signal: controller.signal,
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}`);
       }
-      const controller = new AbortController();
-      abortControllerRef.current = controller;
-      const requestSequence = requestSequenceRef.current + 1;
-      requestSequenceRef.current = requestSequence;
 
-      if (isManual) setRefreshing(true);
-      else if (!dataRef.current) setLoading(true);
+      const json: AiActivityData = await response.json();
 
-      setError(null);
+      if (currentSeq !== requestSeqRef.current) return;
 
-      try {
-        const response = await fetch(`/api/ai-usage?period=${selectedPeriod}&requestedAt=${Date.now()}`, {
-          headers: { Accept: "application/json" },
-          cache: "no-store",
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        const result: AiUsageData = await response.json();
-        // Guard against stale response if period changed while request was in-flight
-        if (activePeriodRef.current !== selectedPeriod || requestSequenceRef.current !== requestSequence) {
-          return;
-        }
-
-        if (result && result.success) {
-          setData(result);
-          setLastSuccessfulData(result);
-        } else {
-          throw new Error("Invalid API response");
-        }
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === "AbortError") {
-          // Request was aborted due to filter switch; ignore
-          return;
-        }
-        setError("DATA TEMPORARILY UNAVAILABLE");
-      } finally {
-        if (activePeriodRef.current === selectedPeriod && requestSequenceRef.current === requestSequence) {
-          setLoading(false);
-          setRefreshing(false);
-        }
+      if (!json.success && json.status !== "ok") {
+        throw new Error("Invalid response payload from activity API");
       }
-    },
-    []
-  );
+
+      setData(json);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      if (currentSeq !== requestSeqRef.current) return;
+
+      console.error("[AiActivity] Fetch error:", err);
+      setError("Unable to sync build activity telemetry.");
+    } finally {
+      if (currentSeq === requestSeqRef.current) {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    }
+  }, [data]);
 
   useEffect(() => {
-    fetchUsage(period);
+    fetchActivity(period);
 
-    // Frontend polling every 90 seconds
+    // Refresh every 90 seconds
     const interval = setInterval(() => {
-      fetchUsage(period);
+      fetchActivity(period, true);
     }, 90000);
 
     return () => {
@@ -214,44 +130,29 @@ export const LiveAiUsageCounter: React.FC = () => {
         abortControllerRef.current.abort();
       }
     };
-  }, [period, fetchUsage]);
+  }, [period, fetchActivity]);
 
-  const handlePeriodChange = (newPeriod: "all_time" | "today" | "this_month") => {
+  const handlePeriodChange = (newPeriod: ActivityFilterPeriod) => {
     if (newPeriod === period) return;
     setPeriod(newPeriod);
   };
 
   const handleManualRefresh = () => {
-    fetchUsage(period, true);
+    fetchActivity(period, true);
   };
 
-  const codexMetric = data?.metrics?.codex || data?.metrics?.openai;
-  const antigravityMetric = data?.metrics?.antigravity;
-  const combinedMetric = data?.metrics?.combined;
-  const hasUsageData = Boolean(codexMetric || antigravityMetric || combinedMetric || (data?.eventCount || 0) > 0);
-
-  // Determine if both metrics are token usage and can be combined
-  const canCombine =
-    codexMetric?.type === "tokens_processed" &&
-    antigravityMetric?.type === "tokens_processed" &&
-    combinedMetric?.value !== undefined;
-
-  const totalTokens = canCombine
-    ? combinedMetric!.value
-    : codexMetric?.type === "tokens_processed"
-    ? codexMetric.value
-    : antigravityMetric?.type === "tokens_processed"
-    ? antigravityMetric.value
-    : 0;
+  const currentBuild = data?.currentBuild;
+  const events = data?.events || [];
+  const hasEvents = events.length > 0 && Boolean(currentBuild);
 
   return (
     <div className="mt-6 pt-5 border-t border-[#1E2024]/14 select-none">
-      {/* HEADER BAR: LABEL, TIME RANGE SELECTOR & REFRESH BUTTON */}
+      {/* HEADER BAR: STATUS INDICATOR, TITLE, PERIOD FILTERS & REFRESH */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-2.5">
           {/* Status Indicator */}
           <span className="relative flex h-2.5 w-2.5">
-            {refreshing && (
+            {data?.isLive && (
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD21F] opacity-75" />
             )}
             <span
@@ -266,28 +167,15 @@ export const LiveAiUsageCounter: React.FC = () => {
           </span>
 
           <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#1E2024]">
-            AI ACTIVITY
+            AI BUILD ACTIVITY
           </span>
-
-          {/* Data provenance info toggle */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowTooltip(!showTooltip);
-            }}
-            aria-label="Data provenance information"
-            className="text-[#1E2024]/50 hover:text-[#1E2024] transition-colors focus:outline-none cursor-pointer"
-          >
-            <Info className="w-3.5 h-3.5" />
-          </button>
         </div>
 
         {/* TIME PERIOD TABS & MANUAL REFRESH BUTTON */}
         <div className="flex items-center gap-2">
           <div className="flex items-center bg-[#1E2024]/6 p-0.5 rounded-lg border border-[#1E2024]/10 font-mono text-[10px] font-bold">
-            {(["all_time", "today", "this_month"] as const).map((p) => {
-              const label = p === "all_time" ? "ALL TIME" : p === "today" ? "TODAY" : "THIS MONTH";
+            {(["recent", "today", "all_activity"] as const).map((p) => {
+              const label = p === "recent" ? "RECENT" : p === "today" ? "TODAY" : "ALL ACTIVITY";
               const isActive = period === p;
               return (
                 <button
@@ -316,7 +204,7 @@ export const LiveAiUsageCounter: React.FC = () => {
               handleManualRefresh();
             }}
             disabled={refreshing}
-            title="Refresh AI usage data"
+            title="Refresh AI build activity"
             className="p-1.5 rounded-lg border border-[#1E2024]/12 bg-[#1E2024]/5 text-[#1E2024] hover:bg-[#1E2024]/10 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin text-[#FFD21F]" : ""}`} />
@@ -324,33 +212,14 @@ export const LiveAiUsageCounter: React.FC = () => {
         </div>
       </div>
 
-      {/* PROVENANCE TOOLTIP BANNER */}
-      {showTooltip && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          onClick={(e) => e.stopPropagation()}
-          className="mb-4 p-3 rounded-xl bg-[#1E2024]/6 border border-[#1E2024]/12 font-mono text-xs text-[#1E2024]/80 flex items-start gap-2"
-        >
-          <Zap className="w-4 h-4 text-[#FFD21F] flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-[#1E2024]">Data Provenance &amp; Verification</p>
-            <p className="mt-0.5 leading-relaxed text-[11px]">
-              Metrics come from verified backend-ingested usage events only. Antigravity and Codex total tokens are measured directly from API usage metadata. Quota remaining is labeled separately and never added to token totals.
-            </p>
-          </div>
-        </motion.div>
-      )}
-
       {/* MAIN METRIC DISPLAY AREA */}
       {loading ? (
-        /* LOADING STATE */
+        /* LOADING SKELETON STATE */
         <div className="py-6 px-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-xs flex items-center gap-3 animate-pulse">
           <RefreshCw className="w-4 h-4 animate-spin text-[#FFD21F]" />
           <div>
-            <span className="font-bold block text-[#1E2024]">SYNCING TOKEN USAGE...</span>
-            <span className="text-[11px] text-[#1E2024]/60">Fetching verified backend metrics</span>
+            <span className="font-bold block text-[#1E2024]">SYNCING BUILD ACTIVITY...</span>
+            <span className="text-[11px] text-[#1E2024]/60">Fetching latest verified application telemetry</span>
           </div>
         </div>
       ) : error ? (
@@ -360,175 +229,132 @@ export const LiveAiUsageCounter: React.FC = () => {
           <div>
             <span className="font-bold block">{error}</span>
             <span className="text-[11px] opacity-75">
-              {lastSuccessfulData?.lastEventTime
-                ? `LAST SUCCESSFUL SYNC: ${formatRelativeTime(lastSuccessfulData.lastEventTime)}`
-                : "Unable to contact usage backend."}
+              Unable to contact telemetry endpoint.
             </span>
           </div>
         </div>
-      ) : !hasUsageData ? (
+      ) : !hasEvents ? (
+        /* HONEST EMPTY STATE */
         <div className="py-6 px-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-xs">
-          <span className="font-bold block text-[#1E2024]">NO USAGE DATA AVAILABLE</span>
+          <span className="font-bold block text-[#1E2024]">NO RECENT AI ACTIVITY</span>
           <span className="mt-1 block text-[11px] uppercase tracking-[0.12em] text-[#1E2024]/55">
-            Waiting for verified backend usage events.
+            Waiting for verified build events from active applications.
           </span>
         </div>
       ) : (
-        /* FACTUAL DATA DISPLAY */
-        <div>
-          {/* DISPLAY MODE 1: COMBINED TOKEN METRIC */}
-          {canCombine ? (
-            <div className="space-y-4">
-              {/* BIG NUMERICAL COUNTER */}
-              <div className="flex items-baseline gap-3">
-                <div
-                  className="font-sans font-bold text-4xl sm:text-5xl md:text-6xl text-[#1E2024] tracking-[-0.03em] leading-none"
-                  title={`Exact value: ${totalTokens.toLocaleString()} tokens`}
-                >
-                  <AnimatedNumber value={totalTokens} formatAsCompact={true} />
-                </div>
-                <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-[#1E2024]/65">
-                  TOKENS PROCESSED
-                </span>
-              </div>
-
-              {/* INDIVIDUAL PROVIDER BREAKDOWN GRID */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                {/* ANTIGRAVITY METRIC ROW */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
-                  <span className="text-xs font-semibold text-[#1E2024]/75">ANTIGRAVITY</span>
-                  <span className="text-sm font-bold text-[#1E2024]">
-                    {antigravityMetric ? formatCompactToken(antigravityMetric.value) : "UNAVAILABLE"}
-                  </span>
-                </div>
-
-                {/* CODEX METRIC ROW */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
-                  <span className="text-xs font-semibold text-[#1E2024]/75">CODEX</span>
-                  <span className="text-sm font-bold text-[#1E2024]">
-                    {codexMetric ? formatCompactToken(codexMetric.value) : "UNAVAILABLE"}
-                  </span>
-                </div>
+        /* REAL ACTIVITY DASHBOARD GRID */
+        <div className="space-y-4">
+          {/* PRIMARY 2-COLUMN TELEMETRY GRID */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* CURRENT BUILD */}
+            <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
+                CURRENT BUILD
+              </span>
+              <div className="text-lg sm:text-xl font-bold text-[#1E2024] tracking-[-0.01em]">
+                {currentBuild?.project}
               </div>
             </div>
-          ) : (
-            /* DISPLAY MODE 2: INCOMPATIBLE OR INDIVIDUAL METRICS */
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* ANTIGRAVITY STATUS */}
-                <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
-                    ANTIGRAVITY
-                  </span>
-                  {antigravityMetric ? (
-                    <div>
-                      <div className="text-2xl font-bold text-[#1E2024]">
-                        {antigravityMetric.type === "quota_remaining" ? (
-                          `${antigravityMetric.value}%`
-                        ) : (
-                          <AnimatedNumber value={antigravityMetric.value} />
-                        )}
-                      </div>
-                      <span className="text-[10px] uppercase text-[#1E2024]/60 font-semibold">
-                        {antigravityMetric.type === "quota_remaining"
-                          ? "ANTIGRAVITY QUOTA"
-                          : "TOKENS PROCESSED"}
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-xs font-bold text-gray-500">ANTIGRAVITY USAGE UNAVAILABLE</span>
-                  )}
-                </div>
 
-                {/* CODEX STATUS */}
-                <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
-                    CODEX
-                  </span>
-                  {codexMetric ? (
-                    <div>
-                      <div className="text-2xl font-bold text-[#1E2024]">
-                        <AnimatedNumber value={codexMetric.value} />
-                      </div>
-                      <span className="text-[10px] uppercase text-[#1E2024]/60 font-semibold">
-                        TOKENS PROCESSED
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-xs font-bold text-gray-500">CODEX USAGE UNAVAILABLE</span>
-                  )}
-                </div>
+            {/* LAST AI ACTION */}
+            <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
+                LAST AI ACTION
+              </span>
+              <div className="text-xs sm:text-sm font-semibold text-[#1E2024] leading-snug">
+                {currentBuild?.action}
               </div>
             </div>
-          )}
 
-          {/* MODEL BREAKDOWN ACCORDION TOGGLE */}
-          <div className="mt-4 flex items-center justify-between border-t border-[#1E2024]/10 pt-3 font-mono text-xs">
+            {/* ACTIVE TOOLS */}
+            <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
+                ACTIVE TOOLS
+              </span>
+              <div className="text-sm font-bold text-[#1E2024]">
+                {currentBuild?.tools || "ANTIGRAVITY · CODEX"}
+              </div>
+            </div>
+
+            {/* MODELS USED */}
+            <div className="p-4 rounded-2xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#1E2024]/60 block mb-1">
+                MODELS USED
+              </span>
+              <div className="text-sm font-bold text-[#1E2024]">
+                {currentBuild?.models || "MODEL DATA UNAVAILABLE"}
+              </div>
+            </div>
+          </div>
+
+          {/* LAST ACTIVE FOOTER BAR */}
+          <div className="flex items-center justify-between border-t border-[#1E2024]/10 pt-3 font-mono text-xs">
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                setShowModels(!showModels);
+                setShowHistory(!showHistory);
               }}
               className="inline-flex items-center gap-1.5 text-[#1E2024]/70 hover:text-[#1E2024] font-semibold transition-colors focus:outline-none cursor-pointer"
             >
-              <span>MODEL BREAKDOWN</span>
-              {showModels ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              <span>RECENT ACTIVITY ({events.length})</span>
+              {showHistory ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
 
             {/* RELATIVE TIMESTAMP */}
-            <span className="text-[11px] font-semibold text-[#1E2024]/50 uppercase">
-              {data?.freshness === "LIVE"
-                ? "LIVE"
-                : data?.freshness === "STALE"
-                ? "STALE"
-                : data?.lastEventTime
-                ? `UPDATED ${formatRelativeTime(data.lastEventTime)}`
-                : "NO DATA"}
+            <span className="text-[11px] font-semibold text-[#1E2024]/60 uppercase tracking-wider">
+              {data?.isLive ? (
+                <span className="inline-flex items-center gap-1 text-[#1E2024]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FFD21F]" />
+                  LAST ACTIVE {data.lastActiveFormatted}
+                </span>
+              ) : (
+                `LAST ACTIVE ${data?.lastActiveFormatted || "UNKNOWN"}`
+              )}
             </span>
           </div>
 
-          {/* EXPANDABLE MODEL DETAILS */}
-          {showModels && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-3 p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 font-mono text-xs space-y-3"
-            >
-              {antigravityMetric?.models && Object.keys(antigravityMetric.models).length > 0 && (
-                <div>
-                  <span className="font-bold text-[#1E2024]/60 text-[10px] uppercase block mb-1.5">
-                    ANTIGRAVITY MODELS
-                  </span>
-                  <div className="space-y-1">
-                    {Object.entries(antigravityMetric.models).map(([model, count]) => (
-                      <div key={model} className="flex justify-between items-center text-[#1E2024]">
-                        <span className="font-semibold">{model}</span>
-                        <span className="font-bold">{count.toLocaleString()} tokens</span>
+          {/* EXPANDABLE RECENT ACTIVITY LIST */}
+          <AnimatePresence>
+            {showHistory && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden"
+              >
+                <div className="mt-2 space-y-2 font-mono text-xs">
+                  {events.slice(0, 5).map((evt, idx) => (
+                    <motion.div
+                      key={evt.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: idx * 0.05 }}
+                      className="p-3 rounded-xl bg-[#1E2024]/5 border border-[#1E2024]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-[10px] font-bold text-[#1E2024]/50">
+                          {formatEventClockTime(evt.timestamp) || formatRelativeTime(evt.timestamp)}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-[#1E2024] text-[#F7F1E5] font-bold text-[10px]">
+                          {evt.project}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
-              {codexMetric?.models && Object.keys(codexMetric.models).length > 0 && (
-                <div>
-                  <span className="font-bold text-[#1E2024]/60 text-[10px] uppercase block mb-1.5">
-                    CODEX MODELS
-                  </span>
-                  <div className="space-y-1">
-                    {Object.entries(codexMetric.models).map(([model, count]) => (
-                      <div key={model} className="flex justify-between items-center text-[#1E2024]">
-                        <span className="font-semibold">{model}</span>
-                        <span className="font-bold">{count.toLocaleString()} tokens</span>
+                      <div className="text-xs text-[#1E2024] font-medium flex-1 sm:px-2">
+                        {evt.action}
                       </div>
-                    ))}
-                  </div>
+
+                      <div className="text-[10px] font-semibold text-[#1E2024]/65 uppercase">
+                        {evt.provider} · {evt.model}
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-              )}
-            </motion.div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </div>
