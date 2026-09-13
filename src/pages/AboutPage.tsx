@@ -191,12 +191,12 @@ const AboutPage: React.FC = () => {
                   </span>
                   <div className="flex items-center justify-between bg-[#1E2024]/5 p-3 sm:p-3.5 rounded-xl border border-[#1E2024]/10 font-mono text-xs font-bold text-[#1E2024]">
                     <span>EXPERIMENT</span>
-                    <div className="arrow-slot-one">
-                      <span className="arrow-one">→</span>
+                    <div className="process-arrow-slot">
+                      <span className="process-arrow-one">→</span>
                     </div>
                     <span>BUILD</span>
-                    <div className="arrow-slot-two">
-                      <span className="arrow-two">→</span>
+                    <div className="process-arrow-slot">
+                      <span className="process-arrow-two">→</span>
                     </div>
                     <span>SHIP</span>
                   </div>

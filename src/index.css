@@ -243,24 +243,29 @@ body.has-custom-cursor [contenteditable="true"] {
   100% { r: 42px; opacity: 0; }
 }
 
-@keyframes processArrowFlow {
-  0% {
+@keyframes processArrowOne {
+  0%, 100% {
     transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(10px, 0, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(8px, 0, 0);
   }
 }
 
-.arrow-slot-one,
-.arrow-slot-two {
+@keyframes processArrowTwo {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(8px, 0, 0);
+  }
+}
+
+.process-arrow-slot {
   position: relative;
   overflow: hidden;
-  width: 36px;
-  height: 24px;
+  width: 34px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -269,31 +274,31 @@ body.has-custom-cursor [contenteditable="true"] {
   pointer-events: none;
 }
 
-.arrow-one {
+.process-arrow-one {
   display: inline-block;
   font-size: 18px;
   font-weight: 700;
   color: #FFD21F;
   line-height: 1;
-  animation: processArrowFlow 1.4s ease-in-out infinite;
-  animation-delay: 0s;
+  animation: processArrowOne 1.5s ease-in-out infinite;
+  animation-delay: 0ms;
   will-change: transform;
 }
 
-.arrow-two {
+.process-arrow-two {
   display: inline-block;
   font-size: 18px;
   font-weight: 700;
   color: #FFD21F;
   line-height: 1;
-  animation: processArrowFlow 1.4s ease-in-out infinite;
-  animation-delay: 0.2s;
+  animation: processArrowTwo 1.5s ease-in-out infinite;
+  animation-delay: 180ms;
   will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arrow-one,
-  .arrow-two {
+  .process-arrow-one,
+  .process-arrow-two {
     animation: none !important;
     transform: none !important;
   }
