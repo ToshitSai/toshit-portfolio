@@ -362,4 +362,34 @@ body.has-custom-cursor [contenteditable="true"] {
   animation-play-state: paused;
 }
 
+/* ABOUT SECTION BENTO GRID MICRO-INTERACTIONS */
+@keyframes nodePulseOnce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.group:hover .animate-node-pulse-once {
+  animation: nodePulseOnce 300ms ease-out 1;
+}
+
+@keyframes signalPassOnce {
+  0% { transform: translate3d(-100%, -50%, 0); opacity: 0; }
+  30% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translate3d(240%, -50%, 0); opacity: 0; }
+}
+
+.group:hover .animate-signal-pass-once {
+  animation: signalPassOnce 650ms ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .animate-node-pulse-once,
+  .group:hover .animate-signal-pass-once {
+    animation: none !important;
+  }
+}
+
+
 
