@@ -364,18 +364,18 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
 
   return (
     <div className="relative w-full flex flex-col items-center select-none py-2 sm:py-6">
-      {/* 1. SHORT CENTERED INTRO SENTENCE (REFERENCE 1 TOP TEXT) */}
-      <div className="w-full max-w-[760px] px-4 text-center mb-8 sm:mb-14">
-        <p className="font-sans text-[16px] sm:text-[19px] md:text-[21px] text-[#4A525D] leading-relaxed tracking-tight font-normal">
+      {/* 1. TOP INTRO SENTENCE (CLEAR VISIBILITY, MAX 2 LINES DESKTOP, COLOR #4F5054) */}
+      <div className="w-full max-w-[720px] px-4 text-center mb-16 sm:mb-20 lg:mb-24">
+        <p className="font-sans text-[16px] sm:text-[18px] md:text-[20px] text-[#4F5054] leading-[1.5] tracking-tight font-normal">
           A small archive of certifications, courses, and milestones from my AI/ML journey.
         </p>
       </div>
 
-      {/* 2. 3D CAROUSEL STAGE CONTAINER */}
+      {/* 2. 3D CAROUSEL STAGE CONTAINER (VISUAL HERO, 70-90PX GAP FROM INTRO) */}
       <div
         ref={stageRef}
         data-cursor="certificate-stage"
-        className="relative w-full max-w-[1280px] h-[260px] sm:h-[360px] md:h-[420px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing mb-8 sm:mb-12"
+        className="relative w-full max-w-[1280px] h-[260px] sm:h-[360px] md:h-[420px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing mb-6 sm:mb-8"
         style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -442,14 +442,14 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col items-center"
             >
-              {/* A. SMALL METADATA LINE (01 / 19  ·  OPENAI ACADEMY  ·  2026) */}
-              <div className="font-mono text-[11px] sm:text-[13px] tracking-[0.22em] font-semibold text-[#6F6C63] uppercase mb-2.5 sm:mb-3 select-none">
+              {/* A. METADATA LINE (18-28PX BELOW CERTIFICATE, 12-14PX MONO, LETTER-SPACING 0.2EM) */}
+              <div className="font-mono text-[12px] sm:text-[13px] tracking-[0.2em] font-semibold text-[#6F6C63] uppercase mb-3 sm:mb-3.5 select-none">
                 <span>{String(activeIndex + 1).padStart(2, "0")} / {String(totalCertificates).padStart(2, "0")}</span>
                 <span className="mx-2.5 sm:mx-3 text-[#20252B]/30">·</span>
                 <span>{activeCert.issuer}</span>
@@ -457,13 +457,13 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                 <span>{activeCert.year}</span>
               </div>
 
-              {/* B. LARGE EDITORIAL DISPLAY TITLE */}
-              <h2 className="font-serif font-normal text-[28px] sm:text-[44px] md:text-[50px] text-[#20252B] tracking-[-0.02em] leading-[1.08] max-w-[780px] mb-2.5 sm:mb-3">
+              {/* B. MAIN CERTIFICATE TITLE (PREFERRED 48PX DESKTOP, COLOR #232529, MODERN DISPLAY STYLE) */}
+              <h2 className="font-serif font-normal text-[28px] sm:text-[44px] md:text-[48px] text-[#232529] tracking-[-0.02em] leading-[1.08] max-w-[800px] mb-2.5 sm:mb-3">
                 {activeCert.title}
               </h2>
 
-              {/* C. SHORT DESCRIPTION */}
-              <p className="font-sans text-[14px] sm:text-[16px] md:text-[17px] text-[#6F6C63] max-w-[620px] leading-[1.55] tracking-normal font-normal">
+              {/* C. SHORT DESCRIPTION (COLOR #77736D, MAX WIDTH 680PX, 1-2 LINES DESKTOP) */}
+              <p className="font-sans text-[14px] sm:text-[16px] md:text-[17px] text-[#77736D] max-w-[680px] leading-[1.55] tracking-normal font-normal">
                 {activeCert.description}
               </p>
             </motion.div>

@@ -36,8 +36,8 @@ const PlaygroundPage: React.FC = () => {
         </svg>
       </motion.div>
 
-      <main className="relative z-10 pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 max-w-[1360px] mx-auto w-full flex-1 flex flex-col items-center">
-        <div className="w-full flex items-center justify-between border-b border-[#20252B]/12 pb-4 mb-6 sm:mb-10">
+      <main className="relative z-10 pt-32 sm:pt-40 lg:pt-44 pb-16 sm:pb-24 px-4 sm:px-8 max-w-[1360px] mx-auto w-full flex-1 flex flex-col items-center">
+        <div className="w-full flex items-center justify-between border-b border-[#20252B]/12 pb-4 mb-8 sm:mb-12">
           <Link
             to="/"
             className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#20252B]/75 transition-colors hover:text-[#20252B]"
