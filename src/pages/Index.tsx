@@ -99,7 +99,9 @@ const Index = () => {
             <Hero />
           </div>
 
-          {/* ABOUT ME INTRO STATEMENT BLOCK (RIGHT AFTER HERO SECTION) */}
+          <TechMarquee />
+
+          {/* ABOUT ME INTRO STATEMENT BLOCK (AFTER TECH MARQUEE) */}
           <section id="about-intro" className="relative w-full py-16 sm:py-20 bg-cream text-[#333333] z-10 select-none">
             <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
               <a href="/about" className="group block w-full">
@@ -120,8 +122,6 @@ const Index = () => {
               </p>
             </div>
           </section>
-
-          <TechMarquee />
 
           <Suspense fallback={<SelectedWorkFallback />}>
             <SelectedWork />
