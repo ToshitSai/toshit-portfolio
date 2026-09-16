@@ -166,29 +166,6 @@ const AboutPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* EXACT ABOUT ME STATEMENT BLOCK MATCHING USER REFERENCE SCREENSHOT */}
-        <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center mb-14 sm:mb-20"
-        >
-          <h1
-            style={{
-              fontFamily: '"Host Grotesk", sans-serif',
-              fontWeight: 400,
-              color: "#333333",
-            }}
-            className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] text-center mb-6 sm:mb-8 max-w-[820px] mx-auto"
-          >
-            I'm Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
-          </h1>
-
-          <p className="text-base sm:text-lg md:text-xl text-[#20252B]/70 font-sans leading-[1.6] max-w-2xl text-center font-normal">
-            I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
-          </p>
-        </motion.div>
-
         {/* SECTION 1: ASYMMETRIC BENTO GRID ABOUT / SKILLS WORKSPACE */}
         <section className="relative z-10 pb-20 sm:pb-28">
           <BentoGridWorkspace />
