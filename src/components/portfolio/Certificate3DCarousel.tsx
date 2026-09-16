@@ -451,23 +451,6 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col items-center text-center w-full"
             >
-              {/* A. MONO METADATA LINE (GEIST MONO, 13PX, WEIGHT 500, LETTER-SPACING 0.22EM, COLOR #6F6A62) */}
-              <div
-                className="mb-4 sm:mb-4.5 select-none text-center font-medium uppercase"
-                style={{
-                  fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
-                  fontSize: "13px",
-                  letterSpacing: "0.22em",
-                  color: "#6F6A62",
-                }}
-              >
-                <span>{String(activeIndex + 1).padStart(2, "0")} / {String(totalCertificates).padStart(2, "0")}</span>
-                <span className="mx-2.5 sm:mx-3 text-[#20252B]/30">·</span>
-                <span>{activeCert.issuer}</span>
-                <span className="mx-2.5 sm:mx-3 text-[#20252B]/30">·</span>
-                <span>{activeCert.year}</span>
-              </div>
-
               {/* B. EDITORIAL DISPLAY TITLE (DM SERIF DISPLAY, CLAMP(38PX, 4VW, 56PX), WEIGHT 400, LINE-HEIGHT 1.05, COLOR #232326) */}
               <h2
                 className="mb-3 sm:mb-4 max-w-[850px] mx-auto text-center font-normal tracking-[-0.035em] text-[28px] sm:text-[42px] md:text-[50px] lg:text-[54px]"
