@@ -18,6 +18,7 @@ export default {
         sans: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
         grotesk: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
         host: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        display: ['"DM Serif Display"', 'Georgia', 'serif'],
         instrument: ['"Instrument Serif"', 'Georgia', 'serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         mono: ['"Geist Mono"', '"JetBrains Mono"', 'monospace'],

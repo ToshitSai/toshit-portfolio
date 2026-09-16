@@ -363,19 +363,22 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
   };
 
   return (
-    <div className="relative w-full flex flex-col items-center select-none py-2 sm:py-6">
-      {/* 1. TOP INTRO SENTENCE (CLEAR VISIBILITY, MAX 2 LINES DESKTOP, COLOR #4F5054) */}
-      <div className="w-full max-w-[720px] px-4 text-center mb-16 sm:mb-20 lg:mb-24">
-        <p className="font-sans text-[16px] sm:text-[18px] md:text-[20px] text-[#4F5054] leading-[1.5] tracking-tight font-normal">
+    <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 flex flex-col items-center select-none text-center py-2">
+      {/* 1. UPPER INTRO (SHARED CENTER AXIS, MANROPE/GEIST SANS, 19PX, COLOR #5F5B55) */}
+      <div className="w-full max-w-[760px] mx-auto text-center mb-14 sm:mb-16 md:mb-[72px]">
+        <p
+          className="text-center font-normal max-w-[calc(100%-32px)] sm:max-w-[760px] mx-auto text-[15px] sm:text-[18px] md:text-[19px] leading-[1.5] tracking-[-0.01em] text-[#5F5B55]"
+          style={{ fontFamily: "'Manrope', 'Geist Sans', system-ui, sans-serif" }}
+        >
           A small archive of certifications, courses, and milestones from my AI/ML journey.
         </p>
       </div>
 
-      {/* 2. 3D CAROUSEL STAGE CONTAINER (VISUAL HERO, 70-90PX GAP FROM INTRO) */}
+      {/* 2. 3D CAROUSEL STAGE CONTAINER (VISUAL HERO, 56-80PX GAP FROM INTRO) */}
       <div
         ref={stageRef}
         data-cursor="certificate-stage"
-        className="relative w-full max-w-[1280px] h-[260px] sm:h-[360px] md:h-[420px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing mb-6 sm:mb-8"
+        className="relative w-full max-w-[1280px] h-[260px] sm:h-[360px] md:h-[420px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing mb-6 sm:mb-8 md:mb-9"
         style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -436,20 +439,28 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
         })}
       </div>
 
-      {/* 3. REFERENCE 1 TYPOGRAPHIC HIERARCHY BELOW CAROUSEL: METADATA → TITLE → DESCRIPTION */}
-      <div className="w-full max-w-[800px] px-4 flex flex-col items-center text-center">
-        <div className="min-h-[140px] sm:min-h-[160px] flex flex-col items-center justify-start">
+      {/* 3. REFERENCE HIERARCHY BELOW CAROUSEL: METADATA → TITLE → DESCRIPTION */}
+      <div className="w-full max-w-[850px] mx-auto px-4 flex flex-col items-center text-center">
+        <div className="min-h-[140px] sm:min-h-[160px] flex flex-col items-center justify-start w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
+              exit={{ opacity: 0, y: 6 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center text-center w-full"
             >
-              {/* A. METADATA LINE (18-28PX BELOW CERTIFICATE, 12-14PX MONO, LETTER-SPACING 0.2EM) */}
-              <div className="font-mono text-[12px] sm:text-[13px] tracking-[0.2em] font-semibold text-[#6F6C63] uppercase mb-3 sm:mb-3.5 select-none">
+              {/* A. MONO METADATA LINE (GEIST MONO, 13PX, WEIGHT 500, LETTER-SPACING 0.22EM, COLOR #6F6A62) */}
+              <div
+                className="mb-4 sm:mb-4.5 select-none text-center font-medium uppercase"
+                style={{
+                  fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+                  fontSize: "13px",
+                  letterSpacing: "0.22em",
+                  color: "#6F6A62",
+                }}
+              >
                 <span>{String(activeIndex + 1).padStart(2, "0")} / {String(totalCertificates).padStart(2, "0")}</span>
                 <span className="mx-2.5 sm:mx-3 text-[#20252B]/30">·</span>
                 <span>{activeCert.issuer}</span>
@@ -457,13 +468,23 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                 <span>{activeCert.year}</span>
               </div>
 
-              {/* B. MAIN CERTIFICATE TITLE (PREFERRED 48PX DESKTOP, COLOR #232529, MODERN DISPLAY STYLE) */}
-              <h2 className="font-serif font-normal text-[28px] sm:text-[44px] md:text-[48px] text-[#232529] tracking-[-0.02em] leading-[1.08] max-w-[800px] mb-2.5 sm:mb-3">
+              {/* B. EDITORIAL DISPLAY TITLE (DM SERIF DISPLAY, CLAMP(38PX, 4VW, 56PX), WEIGHT 400, LINE-HEIGHT 1.05, COLOR #232326) */}
+              <h2
+                className="mb-3 sm:mb-4 max-w-[850px] mx-auto text-center font-normal tracking-[-0.035em] text-[28px] sm:text-[42px] md:text-[50px] lg:text-[54px]"
+                style={{
+                  fontFamily: "'DM Serif Display', Georgia, serif",
+                  lineHeight: 1.05,
+                  color: "#232326",
+                }}
+              >
                 {activeCert.title}
               </h2>
 
-              {/* C. SHORT DESCRIPTION (COLOR #77736D, MAX WIDTH 680PX, 1-2 LINES DESKTOP) */}
-              <p className="font-sans text-[14px] sm:text-[16px] md:text-[17px] text-[#77736D] max-w-[680px] leading-[1.55] tracking-normal font-normal">
+              {/* C. LOWER DESCRIPTION (MANROPE/GEIST SANS, 18PX, WEIGHT 400, LINE-HEIGHT 1.55, COLOR #77736C, MAX-WIDTH 760PX) */}
+              <p
+                className="max-w-[760px] mx-auto text-center font-normal text-[15px] sm:text-[17px] md:text-[18px] leading-[1.55] tracking-[-0.01em] text-[#77736C] mt-0"
+                style={{ fontFamily: "'Manrope', 'Geist Sans', system-ui, sans-serif" }}
+              >
                 {activeCert.description}
               </p>
             </motion.div>
