@@ -9,7 +9,7 @@ interface HeroRole {
 const HERO_ROLES: HeroRole[] = [
   { highlight: "AI", base: "BUILDER" },
   { highlight: "AI/ML", base: "DEVELOPER" },
-  { highlight: "GENERATIVE AI", base: "ENGINEER" },
+  { highlight: "GENAI", base: "ENGINEER" },
   { highlight: "FULL-STACK", base: "DEVELOPER" },
   { highlight: "AI PRODUCT", base: "BUILDER" },
   { highlight: "CREATIVE", base: "TECHNOLOGIST" },
