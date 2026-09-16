@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motionDistance } from "@/lib/scrollMotion";
+import BentoGridWorkspace from "@/components/portfolio/BentoGridWorkspace";
 
 const About: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,8 +14,6 @@ const About: React.FC = () => {
     target: containerRef,
     offset: ["start end", "end start"],
   });
-
-
 
   const headingY = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], shouldReduceMotion ? [0, 0, 0, 0] : [motionDistance(isMobile, 28), 0, -motionDistance(isMobile, 18), -motionDistance(isMobile, 18)]);
   const headingMask = useTransform(scrollYProgress, [0.05, 0.35], shouldReduceMotion ? ["inset(0% 0 0 0)", "inset(0% 0 0 0)"] : ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]);
@@ -45,9 +44,7 @@ const About: React.FC = () => {
         />
       </div>
 
-      <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
-
-
+      <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center mb-16">
         {/* Display Heading Statement — vertical mask reveal */}
         <Link to="/about" className="group block w-full">
           <motion.h2
@@ -73,8 +70,14 @@ const About: React.FC = () => {
           I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
         </motion.p>
       </div>
+
+      {/* Bento Grid Capability Cards with Micro-Animations */}
+      <div className="relative z-10">
+        <BentoGridWorkspace />
+      </div>
     </section>
   );
 };
 
 export default About;
+
