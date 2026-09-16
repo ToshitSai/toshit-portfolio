@@ -106,7 +106,124 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
   },
 ];
 
-const Hero: React.FC = () => {
+interface DraggableOptions {
+  heroRef: React.RefObject<HTMLElement>;
+  isSun?: boolean;
+}
+
+const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
+  const elementRef = useRef<HTMLDivElement | null>(null);
+  const stateRef = useRef({
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    currentX: 0,
+    currentY: 0,
+    dragStartX: 0,
+    dragStartY: 0,
+    initialRect: null as DOMRect | null,
+  });
+
+  useEffect(() => {
+    const el = elementRef.current;
+    if (!el) return;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      const heroEl = heroRef.current;
+      if (!heroEl) return;
+
+      const state = stateRef.current;
+      state.isDragging = true;
+      state.startX = e.clientX;
+      state.startY = e.clientY;
+      state.dragStartX = state.currentX;
+      state.dragStartY = state.currentY;
+
+      const currentRect = el.getBoundingClientRect();
+      state.initialRect = new DOMRect(
+        currentRect.left - state.currentX,
+        currentRect.top - state.currentY,
+        currentRect.width,
+        currentRect.height
+      );
+
+      try {
+        el.setPointerCapture(e.pointerId);
+      } catch (_err) {}
+
+      el.style.transition = "transform 150ms cubic-bezier(0.16, 1, 0.3, 1)";
+      const scale = isSun ? 1.03 : 1.025;
+      el.style.transform = `translate3d(${state.currentX}px, ${state.currentY}px, 0px) scale(${scale})`;
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const state = stateRef.current;
+      if (!state.isDragging) return;
+
+      const heroEl = heroRef.current;
+      if (!heroEl) return;
+
+      const dx = e.clientX - state.startX;
+      const dy = e.clientY - state.startY;
+
+      let targetX = state.dragStartX + dx;
+      let targetY = state.dragStartY + dy;
+
+      const heroRect = heroEl.getBoundingClientRect();
+      const elemRect = state.initialRect || el.getBoundingClientRect();
+      const padding = 24;
+
+      const minX = heroRect.left + padding - elemRect.left;
+      const maxX = heroRect.right - padding - elemRect.right;
+      const minY = heroRect.top + padding - elemRect.top;
+      const maxY = heroRect.bottom - padding - elemRect.bottom;
+
+      targetX = Math.max(minX, Math.min(maxX, targetX));
+      targetY = Math.max(minY, Math.min(maxY, targetY));
+
+      state.currentX = targetX;
+      state.currentY = targetY;
+
+      const rot = isSun ? 0 : Math.max(-2, Math.min(2, dx * 0.04));
+      const scale = isSun ? 1.03 : 1.025;
+
+      el.style.transition = "none";
+      el.style.transform = `translate3d(${targetX}px, ${targetY}px, 0px) scale(${scale}) rotate(${rot}deg)`;
+    };
+
+    const handlePointerUpOrCancel = (e: PointerEvent) => {
+      const state = stateRef.current;
+      if (!state.isDragging) return;
+
+      state.isDragging = false;
+      try {
+        if (el.hasPointerCapture(e.pointerId)) {
+          el.releasePointerCapture(e.pointerId);
+        }
+      } catch (_err) {}
+
+      el.style.transition = "transform 200ms cubic-bezier(0.16, 1, 0.3, 1)";
+      el.style.transform = `translate3d(${state.currentX}px, ${state.currentY}px, 0px) scale(1) rotate(0deg)`;
+    };
+
+    el.addEventListener("pointerdown", handlePointerDown);
+    el.addEventListener("pointermove", handlePointerMove);
+    el.addEventListener("pointerup", handlePointerUpOrCancel);
+    el.addEventListener("pointercancel", handlePointerUpOrCancel);
+
+    return () => {
+      el.removeEventListener("pointerdown", handlePointerDown);
+      el.removeEventListener("pointermove", handlePointerMove);
+      el.removeEventListener("pointerup", handlePointerUpOrCancel);
+      el.removeEventListener("pointercancel", handlePointerUpOrCancel);
+    };
+  }, [heroRef, isSun]);
+
+  return elementRef;
+};
+
+export const Hero: React.FC = () => {
   const [isCardHovered, setIsCardHovered] = useState(false);
 
   // Interactive Now Building Card State
@@ -119,6 +236,11 @@ const Hero: React.FC = () => {
 
   const shouldReduceMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
+
+  // Draggable Scenery Element Controller Refs
+  const sunRef = useDraggableElement({ heroRef, isSun: true });
+  const leftCloudRef = useDraggableElement({ heroRef, isSun: false });
+  const rightCloudRef = useDraggableElement({ heroRef, isSun: false });
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -214,11 +336,16 @@ const Hero: React.FC = () => {
         {/* Patterned Yellow Sun Graphic */}
         <motion.div
           style={{ y: heroSunY }}
-          className="absolute top-16 right-2 sm:top-20 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28"
+          className="absolute top-16 right-2 sm:top-20 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 z-20 pointer-events-none"
         >
-          <div className="w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow">
-            <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center">
-              <div className="w-3/4 h-3/4 rounded-full bg-[radial-gradient(#20252B_1.5px,transparent_1.5px)] [background-size:8px_8px] opacity-40" />
+          <div
+            ref={sunRef}
+            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
+          >
+            <div className="w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow pointer-events-none">
+              <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center">
+                <div className="w-3/4 h-3/4 rounded-full bg-[radial-gradient(#20252B_1.5px,transparent_1.5px)] [background-size:8px_8px] opacity-40" />
+              </div>
             </div>
           </div>
         </motion.div>
@@ -226,10 +353,13 @@ const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Left */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36"
+          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36 z-30 pointer-events-none"
         >
-          <div>
-            <svg viewBox="0 0 160 90" fill="none" className="w-full drop-shadow-sm filter">
+          <div
+            ref={leftCloudRef}
+            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
+          >
+            <svg viewBox="0 0 160 90" fill="none" className="w-full drop-shadow-sm filter pointer-events-none">
               <path
                 d="M20 70 C 10 70, 0 60, 0 45 C 0 32, 10 20, 25 20 C 35 10, 55 5, 75 15 C 85 5, 115 5, 130 20 C 145 20, 160 30, 160 45 C 160 60, 145 70, 130 70 Z"
                 fill="#FFF8E8"
@@ -241,10 +371,13 @@ const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Right */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px]"
+          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] z-30 pointer-events-none"
         >
-          <div>
-            <svg viewBox="0 0 200 110" fill="none" className="w-full drop-shadow-md filter">
+          <div
+            ref={rightCloudRef}
+            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
+          >
+            <svg viewBox="0 0 200 110" fill="none" className="w-full drop-shadow-md filter pointer-events-none">
               <path
                 d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
                 fill="#FFF8E8"
