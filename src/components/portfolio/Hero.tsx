@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 
-const HERO_WORDS = [
-  "AI-POWERED",
-  "FULL STACK",
-  "CREATIVE",
-  "PROMPT",
-  "AI BUILDER",
+interface HeroRole {
+  highlight: string;
+  base: string;
+}
+
+const HERO_ROLES: HeroRole[] = [
+  { highlight: "AI-POWERED", base: "DEVELOPER" },
+  { highlight: "FULL STACK", base: "DEVELOPER" },
+  { highlight: "CREATIVE", base: "DEVELOPER" },
+  { highlight: "PROMPT", base: "ENGINEER" },
+  { highlight: "AI BUILDER", base: "DEVELOPER" },
 ];
 
 const RotatingHeroWord: React.FC = React.memo(() => {
@@ -14,12 +19,12 @@ const RotatingHeroWord: React.FC = React.memo(() => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % HERO_WORDS.length);
-    }, 2100); // 1.6s hold + 0.5s transition
+      setIndex((prev) => (prev + 1) % HERO_ROLES.length);
+    }, 2200);
     return () => clearInterval(timer);
   }, []);
 
-  const currentWord = HERO_WORDS[index];
+  const currentRole = HERO_ROLES[index];
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
@@ -27,26 +32,51 @@ const RotatingHeroWord: React.FC = React.memo(() => {
       <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="popLayout">
           <motion.span
-            key={currentWord}
-            initial={{ opacity: 0, y: "100%" }}
-            animate={{ opacity: 1, y: "0%" }}
-            exit={{ opacity: 0, y: "-100%" }}
+            key={currentRole.highlight}
+            initial={{ opacity: 0, y: "60%", filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: "0%", filter: "blur(0px)" }}
+            exit={{
+              opacity: 0,
+              y: "-60%",
+              filter: "blur(6px)",
+              transition: { duration: 0.2, ease: "easeIn" },
+            }}
             transition={{
-              duration: 0.5,
+              duration: 0.38,
               ease: [0.16, 1, 0.3, 1],
             }}
-            style={{ willChange: "transform, opacity" }}
+            style={{ willChange: "transform, opacity, filter" }}
             className="absolute inset-x-0 text-center text-[#FFD42A] font-serif font-normal tracking-[-0.02em] whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
           >
-            {currentWord}
+            {currentRole.highlight}
           </motion.span>
         </AnimatePresence>
       </div>
 
-      {/* Line 2: Permanent Static DEVELOPER Line */}
-      <span className="text-[#20252B] block drop-shadow-sm font-serif font-normal tracking-[-0.02em]">
-        DEVELOPER
-      </span>
+      {/* Line 2: Fixed or Dynamic Base Line (DEVELOPER / ENGINEER) */}
+      <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={currentRole.base}
+            initial={{ opacity: 0, y: "40%", filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: "0%", filter: "blur(0px)" }}
+            exit={{
+              opacity: 0,
+              y: "-40%",
+              filter: "blur(4px)",
+              transition: { duration: 0.2, ease: "easeIn" },
+            }}
+            transition={{
+              duration: 0.38,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            style={{ willChange: "transform, opacity, filter" }}
+            className="absolute inset-x-0 text-center text-[#20252B] block drop-shadow-sm font-serif font-normal tracking-[-0.02em] whitespace-nowrap"
+          >
+            {currentRole.base}
+          </motion.span>
+        </AnimatePresence>
+      </div>
     </div>
   );
 });
@@ -408,21 +438,7 @@ const Hero: React.FC = () => {
       </div>
 
       {/* BOTTOM SCROLL INDICATOR & BOUNCING ARROW */}
-      <motion.div style={{ y: heroDecorY }} className="relative z-20 w-full flex flex-col items-center pb-1">
-        <a
-          href="#about"
-          className="group inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[#20252B] font-bold hover:text-[#FFF8E8] transition-colors mb-1 bg-white/30 backdrop-blur-md px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/40 shadow-sm"
-        >
-          <span>SCROLL TO WORK</span>
-          <motion.span
-            animate={{ y: [0, 4, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block"
-          >
-            ↓
-          </motion.span>
-        </a>
-
+      <motion.div style={{ y: heroDecorY }} className="relative z-20 w-full flex flex-col items-center">
         {/* Organic Rolling Waves Transition to Cream Background */}
         <motion.div
           style={{ y: heroWaveY }}

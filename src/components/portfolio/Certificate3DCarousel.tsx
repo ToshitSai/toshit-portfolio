@@ -39,13 +39,21 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Preload Images for ultra-smooth transitions
+  // Lazy-preload active and adjacent certificate images only
   useEffect(() => {
-    certificates.forEach((cert) => {
-      const img = new Image();
-      img.src = cert.image;
+    if (!certificates.length) return;
+    const indicesToLoad = [
+      activeIndex,
+      (activeIndex + 1) % totalCertificates,
+      (activeIndex - 1 + totalCertificates) % totalCertificates,
+    ];
+    indicesToLoad.forEach((idx) => {
+      if (certificates[idx]?.image) {
+        const img = new Image();
+        img.src = certificates[idx].image;
+      }
     });
-  }, [certificates]);
+  }, [activeIndex, certificates, totalCertificates]);
 
   // Safe Index Navigation with Debounce/Queue lock
   const navigateTo = useCallback(

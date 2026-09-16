@@ -133,10 +133,11 @@
 
 @layer utilities {
   .font-gothic,
-  .font-blackletter {
-    font-family: 'UnifrakturCook', 'Grenze Gotisch', Georgia, serif !important;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+  .font-blackletter,
+  .font-script {
+    font-family: 'Host Grotesk', 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important;
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
   .text-display {
@@ -245,35 +246,33 @@ body.has-custom-cursor [contenteditable="true"] {
 
 /* SYNCHRONIZED BUILDING PHILOSOPHY FLOW ANIMATION */
 @keyframes flowStage1 {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  4%, 16% { opacity: 1; transform: scale(1.03); }
-  22% { opacity: 0.7; transform: scale(1); }
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  4%, 18% { opacity: 1; transform: scale(1.05); }
+  24% { opacity: 0.6; transform: scale(1); }
 }
 
 @keyframes flowArrowOne {
-  0%, 100% { opacity: 0.6; transform: translate3d(0, 0, 0); }
-  18% { opacity: 0.6; transform: translate3d(0, 0, 0); }
-  24%, 36% { opacity: 1; transform: translate3d(5px, 0, 0); }
-  42% { opacity: 0.6; transform: translate3d(0, 0, 0); }
+  0%, 100% { opacity: 0.5; transform: translate3d(0, 0, 0); }
+  20%, 34% { opacity: 1; transform: translate3d(4px, 0, 0); }
+  40% { opacity: 0.5; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes flowStage2 {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  38%, 50% { opacity: 1; transform: scale(1.03); }
-  56% { opacity: 0.7; transform: scale(1); }
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  36%, 50% { opacity: 1; transform: scale(1.05); }
+  56% { opacity: 0.6; transform: scale(1); }
 }
 
 @keyframes flowArrowTwo {
-  0%, 100% { opacity: 0.6; transform: translate3d(0, 0, 0); }
-  52% { opacity: 0.6; transform: translate3d(0, 0, 0); }
-  58%, 70% { opacity: 1; transform: translate3d(5px, 0, 0); }
-  76% { opacity: 0.6; transform: translate3d(0, 0, 0); }
+  0%, 100% { opacity: 0.5; transform: translate3d(0, 0, 0); }
+  52%, 66% { opacity: 1; transform: translate3d(4px, 0, 0); }
+  72% { opacity: 0.5; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes flowStage3 {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  72%, 84% { opacity: 1; transform: scale(1.03); }
-  90% { opacity: 0.7; transform: scale(1); }
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  68%, 82% { opacity: 1; transform: scale(1.05); }
+  88% { opacity: 0.6; transform: scale(1); }
 }
 
 .process-arrow-slot {
@@ -343,4 +342,24 @@ body.has-custom-cursor [contenteditable="true"] {
     opacity: 1 !important;
   }
 }
+
+/* GPU-ACCELERATED TECH MARQUEE ANIMATION (OFF MAIN-THREAD) */
+@keyframes techMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.33333%, 0, 0);
+  }
+}
+
+.animate-tech-marquee {
+  animation: techMarquee 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-tech-marquee:hover {
+  animation-play-state: paused;
+}
+
 

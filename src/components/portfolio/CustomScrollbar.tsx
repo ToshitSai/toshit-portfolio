@@ -17,7 +17,7 @@ const CustomScrollbar: React.FC = () => {
       const docEl = document.documentElement;
       const body = document.body;
 
-      const isScrollLocked = window.getComputedStyle(body).overflow === "hidden";
+      const isScrollLocked = document.body.style.overflow === "hidden";
       if (isScrollLocked) {
         if (visibleState) {
           visibleState = false;

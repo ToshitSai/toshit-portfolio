@@ -158,9 +158,10 @@ const TechnicalSkills: React.FC = () => {
     return null;
   }, []);
 
-  // Single Continuous RAF Animation Loop for Highlight Position & Lerp Smoothing
+  // Single Continuous RAF Animation Loop (Gated by IntersectionObserver)
   useEffect(() => {
     let animationFrameId: number;
+    let isVisible = false;
 
     measureLayout();
     const timer = setTimeout(measureLayout, 100);
@@ -185,6 +186,8 @@ const TechnicalSkills: React.FC = () => {
     const LERP_FACTOR = 0.16; // Responsive smoothing factor per frame
 
     const updateFrame = () => {
+      if (!isVisible) return;
+
       if (listGridRef.current && highlightRef.current) {
         const gridRect = listGridRef.current.getBoundingClientRect();
         const vh = window.innerHeight || 800;
@@ -346,13 +349,32 @@ const TechnicalSkills: React.FC = () => {
       animationFrameId = requestAnimationFrame(updateFrame);
     };
 
-    animationFrameId = requestAnimationFrame(updateFrame);
+    let intersectionObserver: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined" && sectionRef.current) {
+      intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(updateFrame);
+          } else {
+            cancelAnimationFrame(animationFrameId);
+          }
+        },
+        { threshold: 0.05 }
+      );
+      intersectionObserver.observe(sectionRef.current);
+    } else {
+      isVisible = true;
+      animationFrameId = requestAnimationFrame(updateFrame);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       clearTimeout(timer);
       window.removeEventListener("resize", handleResize);
       if (resizeObserver) resizeObserver.disconnect();
+      if (intersectionObserver) intersectionObserver.disconnect();
     };
   }, [measureLayout, getBound]);
 
@@ -434,7 +456,7 @@ const TechnicalSkills: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="text-sm sm:text-base md:text-lg text-ink/75 font-sans mt-4 max-w-xl"
             >
-              A mix of <span className="font-script text-[1.3em] font-normal text-ink px-1">AI</span>, code, APIs and platforms I use to turn <span className="font-script text-[1.3em] font-normal text-ink px-1">ideas</span> into working products.
+              A mix of <span className="font-semibold text-ink">AI</span>, code, APIs and platforms I use to turn <span className="font-semibold text-ink">ideas</span> into working products.
             </motion.p>
           </div>
         </div>
