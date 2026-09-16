@@ -20,7 +20,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % HERO_ROLES.length);
-    }, 2200);
+    }, 2400);
     return () => clearInterval(timer);
   }, []);
 
@@ -30,19 +30,19 @@ const RotatingHeroWord: React.FC = React.memo(() => {
     <div className="w-full flex flex-col items-center justify-center">
       {/* Line 1: Dedicated Fixed Height Overlapping Word Viewport */}
       <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           <motion.span
             key={currentRole.highlight}
-            initial={{ opacity: 0, y: "60%", filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: "0%", filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{
               opacity: 0,
-              y: "-60%",
+              y: -24,
               filter: "blur(6px)",
-              transition: { duration: 0.2, ease: "easeIn" },
+              transition: { duration: 0.18, ease: "easeIn" },
             }}
             transition={{
-              duration: 0.38,
+              duration: 0.28,
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity, filter" }}
@@ -55,19 +55,19 @@ const RotatingHeroWord: React.FC = React.memo(() => {
 
       {/* Line 2: Fixed or Dynamic Base Line (DEVELOPER / ENGINEER) */}
       <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           <motion.span
             key={currentRole.base}
-            initial={{ opacity: 0, y: "40%", filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: "0%", filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 18, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{
               opacity: 0,
-              y: "-40%",
+              y: -18,
               filter: "blur(4px)",
-              transition: { duration: 0.2, ease: "easeIn" },
+              transition: { duration: 0.18, ease: "easeIn" },
             }}
             transition={{
-              duration: 0.38,
+              duration: 0.28,
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity, filter" }}
