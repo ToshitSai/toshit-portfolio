@@ -112,13 +112,13 @@ const Testimonials: React.FC = () => {
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
-  // Automatic Rotation System (2000ms display duration — resets timer on activeIndex change)
+  // Automatic Rotation System (3200ms display duration — resets timer on activeIndex change)
   useEffect(() => {
     if (isPaused || shouldReduceMotion) return;
 
     timerRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total);
-    }, 2000);
+    }, 3200);
 
     return () => {
       if (timerRef.current) {
@@ -214,7 +214,7 @@ const Testimonials: React.FC = () => {
               transition={
                 shouldReduceMotion
                   ? { duration: 0.2 }
-                  : { duration: 0.3, ease: [0.16, 1, 0.3, 1] }
+                  : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
               }
               className="flex flex-col justify-between"
             >
@@ -236,7 +236,7 @@ const Testimonials: React.FC = () => {
                 transition={
                   shouldReduceMotion
                     ? {}
-                    : { duration: 0.5, delay: 0.04, ease: [0.16, 1, 0.3, 1] }
+                    : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
                 }
                 className="mt-8 sm:mt-10 flex items-center gap-4"
               >
