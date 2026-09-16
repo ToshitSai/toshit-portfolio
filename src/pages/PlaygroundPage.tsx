@@ -36,8 +36,8 @@ const PlaygroundPage: React.FC = () => {
         </svg>
       </motion.div>
 
-      <main className="relative z-10 pt-28 sm:pt-36 pb-16 sm:pb-24 px-4 sm:px-8 max-w-[1360px] mx-auto w-full flex-1 flex flex-col items-center">
-        <div className="w-full flex items-center justify-between border-b border-[#20252B]/12 pb-5 mb-8 sm:mb-12">
+      <main className="relative z-10 pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 max-w-[1360px] mx-auto w-full flex-1 flex flex-col items-center">
+        <div className="w-full flex items-center justify-between border-b border-[#20252B]/12 pb-4 mb-6 sm:mb-10">
           <Link
             to="/"
             className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#20252B]/75 transition-colors hover:text-[#20252B]"
@@ -45,15 +45,6 @@ const PlaygroundPage: React.FC = () => {
             <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
             <span>Back to Home</span>
           </Link>
-        </div>
-
-        <div className="text-center max-w-xl mx-auto mb-6 sm:mb-10 space-y-3">
-          <h1 className="font-sans text-3xl sm:text-4xl md:text-5xl font-bold text-[#20252B] tracking-[-0.035em] leading-[1.02]">
-            Curated Archive
-          </h1>
-          <p className="font-sans text-sm sm:text-base text-[#20252B]/75 leading-relaxed">
-            A small archive of things I've learned, built, and explored.
-          </p>
         </div>
 
         <motion.div

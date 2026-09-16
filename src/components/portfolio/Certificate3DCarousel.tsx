@@ -363,12 +363,19 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
   };
 
   return (
-    <div className="relative w-full flex flex-col items-center select-none py-4 sm:py-8">
-      {/* 3D CAROUSEL STAGE CONTAINER */}
+    <div className="relative w-full flex flex-col items-center select-none py-2 sm:py-6">
+      {/* 1. SHORT CENTERED INTRO SENTENCE (REFERENCE 1 TOP TEXT) */}
+      <div className="w-full max-w-[760px] px-4 text-center mb-8 sm:mb-14">
+        <p className="font-sans text-[16px] sm:text-[19px] md:text-[21px] text-[#4A525D] leading-relaxed tracking-tight font-normal">
+          A small archive of certifications, courses, and milestones from my AI/ML journey.
+        </p>
+      </div>
+
+      {/* 2. 3D CAROUSEL STAGE CONTAINER */}
       <div
         ref={stageRef}
         data-cursor="certificate-stage"
-        className="relative w-full max-w-[1280px] h-[340px] sm:h-[440px] md:h-[500px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing"
+        className="relative w-full max-w-[1280px] h-[260px] sm:h-[360px] md:h-[420px] flex items-center justify-center overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing mb-8 sm:mb-12"
         style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -420,7 +427,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                     src={cert.image}
                     alt={cert.title}
                     loading="eager"
-                    className="w-auto h-auto max-w-[280px] sm:max-w-[540px] md:max-w-[660px] lg:max-w-[740px] max-h-[220px] sm:max-h-[350px] md:max-h-[410px] object-contain block transition-transform duration-500 group-hover:scale-[1.008]"
+                    className="w-auto h-auto max-w-[280px] sm:max-w-[500px] md:max-w-[620px] lg:max-w-[700px] max-h-[200px] sm:max-h-[310px] md:max-h-[360px] object-contain block transition-transform duration-500 group-hover:scale-[1.008]"
                   />
                 </div>
               </div>
@@ -429,28 +436,34 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
         })}
       </div>
 
-      {/* ACTIVE CERTIFICATE METADATA PANEL BELOW STAGE */}
-      <div className="w-full max-w-[680px] px-6 mt-6 sm:mt-8 flex flex-col items-center text-center">
-        {/* TITLE & DETAILS ANIMATION */}
-        <div className="min-h-[110px] sm:min-h-[120px] flex flex-col items-center justify-center">
+      {/* 3. REFERENCE 1 TYPOGRAPHIC HIERARCHY BELOW CAROUSEL: METADATA → TITLE → DESCRIPTION */}
+      <div className="w-full max-w-[800px] px-4 flex flex-col items-center text-center">
+        <div className="min-h-[140px] sm:min-h-[160px] flex flex-col items-center justify-start">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center space-y-2"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center"
             >
-              <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl font-bold text-[#20252B] tracking-[-0.035em] leading-tight">
-                {activeCert.title}
-              </h2>
-              <div className="flex items-center gap-2 font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-[#20252B]/60">
+              {/* A. SMALL METADATA LINE (01 / 19  ·  OPENAI ACADEMY  ·  2026) */}
+              <div className="font-mono text-[11px] sm:text-[13px] tracking-[0.22em] font-semibold text-[#6F6C63] uppercase mb-2.5 sm:mb-3 select-none">
+                <span>{String(activeIndex + 1).padStart(2, "0")} / {String(totalCertificates).padStart(2, "0")}</span>
+                <span className="mx-2.5 sm:mx-3 text-[#20252B]/30">·</span>
                 <span>{activeCert.issuer}</span>
-                <span>·</span>
+                <span className="mx-2.5 sm:mx-3 text-[#20252B]/30">·</span>
                 <span>{activeCert.year}</span>
               </div>
-              <p className="font-sans text-xs sm:text-sm text-[#20252B]/80 max-w-[540px] leading-relaxed mt-1">
+
+              {/* B. LARGE EDITORIAL DISPLAY TITLE */}
+              <h2 className="font-serif font-normal text-[28px] sm:text-[44px] md:text-[50px] text-[#20252B] tracking-[-0.02em] leading-[1.08] max-w-[780px] mb-2.5 sm:mb-3">
+                {activeCert.title}
+              </h2>
+
+              {/* C. SHORT DESCRIPTION */}
+              <p className="font-sans text-[14px] sm:text-[16px] md:text-[17px] text-[#6F6C63] max-w-[620px] leading-[1.55] tracking-normal font-normal">
                 {activeCert.description}
               </p>
             </motion.div>
