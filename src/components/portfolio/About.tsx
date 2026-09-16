@@ -15,12 +15,12 @@ const About: React.FC = () => {
     offset: ["start end", "end start"],
   });
 
-  const headingY = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], shouldReduceMotion ? [0, 0, 0, 0] : [motionDistance(isMobile, 28), 0, -motionDistance(isMobile, 18), -motionDistance(isMobile, 18)]);
-  const headingMask = useTransform(scrollYProgress, [0.05, 0.35], shouldReduceMotion ? ["inset(0% 0 0 0)", "inset(0% 0 0 0)"] : ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]);
-  const headingOpacity = useTransform(scrollYProgress, [0.1, 0.3, 0.85, 1], [0, 1, 1, 0.75]);
+  const headingY = 0;
+  const headingMask = "inset(0% 0 0 0)";
+  const headingOpacity = 1;
 
-  const subtextY = useTransform(scrollYProgress, [0.1, 0.45, 0.85, 1], shouldReduceMotion ? [0, 0, 0, 0] : [14, 0, -10, -14]);
-  const subtextOpacity = useTransform(scrollYProgress, [0.12, 0.38, 0.85, 1], [0, 1, 1, 0.75]);
+  const subtextY = 0;
+  const subtextOpacity = 1;
 
   const bgY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 8)]);
   const decorLineY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -motionDistance(isMobile, 20)]);

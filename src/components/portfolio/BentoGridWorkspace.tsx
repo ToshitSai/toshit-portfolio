@@ -68,9 +68,9 @@ export const BentoGridWorkspace: React.FC = () => {
 
         {/* 2. CARD 2: WHAT I BUILD — BORDER-LIGHT PASS (0ms STAGGER) */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-40px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0 }}
           className="order-2 lg:col-span-7 rounded-3xl bg-[#F7F1E5] border border-[#1E2024]/16 p-6 sm:p-8 lg:p-10 shadow-[0_12px_36px_rgba(30,32,36,0.06)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/30 select-none relative overflow-hidden"
         >
@@ -118,9 +118,9 @@ export const BentoGridWorkspace: React.FC = () => {
 
         {/* 3. CARD 1: AI / ML SYSTEMS — NODE SYSTEM MICRO-ANIMATION (0ms STAGGER) */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-30px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0 }}
           className="order-3 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group"
         >
@@ -186,9 +186,9 @@ export const BentoGridWorkspace: React.FC = () => {
 
         {/* 4. CARD 3: WEB ENGINEERING — CLEAN UNDERLINE DRAW (100ms STAGGER) */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-30px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.10 }}
           className="order-4 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group"
         >
@@ -221,9 +221,9 @@ export const BentoGridWorkspace: React.FC = () => {
 
         {/* 5. CARD 4: PRODUCT BUILDING — PROGRESSION SIGNAL TRAVEL (200ms STAGGER) */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+          initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-30px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.20 }}
           className="order-5 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group"
         >
