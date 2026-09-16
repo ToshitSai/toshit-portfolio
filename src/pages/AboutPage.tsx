@@ -166,22 +166,26 @@ const AboutPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* ABOUT ME HERO BIO INTRO STATEMENT */}
+        {/* EXACT ABOUT ME STATEMENT BLOCK MATCHING USER REFERENCE SCREENSHOT */}
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center mb-14 sm:mb-20"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#FFD21F] bg-[#1E2024] px-3.5 py-1 rounded-full mb-6 shadow-xs">
-            ABOUT ME
-          </span>
-          <h1 className="text-2xl sm:text-3xl md:text-[38px] leading-[1.35] text-center mb-6 max-w-[880px] mx-auto font-sans font-bold tracking-[-0.02em] text-[#1E2024]">
-            I'm Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications to experiences designed for real people.
+          <h1
+            style={{
+              fontFamily: '"Host Grotesk", sans-serif',
+              fontWeight: 400,
+              color: "#333333",
+            }}
+            className="text-lg sm:text-2xl md:text-[28px] leading-[1.5] sm:leading-[1.4] text-center mb-6 sm:mb-8 max-w-[820px] mx-auto"
+          >
+            I'm Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-[#1E2024]/75 font-sans leading-[1.6] max-w-2xl text-center font-normal">
-            Computer Science Engineering student specializing in Artificial Intelligence &amp; Machine Learning. I believe great technology should feel simple, useful, and human.
+          <p className="text-base sm:text-lg md:text-xl text-[#20252B]/70 font-sans leading-[1.6] max-w-2xl text-center font-normal">
+            I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
           </p>
         </motion.div>
 
