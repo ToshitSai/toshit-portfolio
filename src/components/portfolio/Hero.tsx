@@ -7,11 +7,12 @@ interface HeroRole {
 }
 
 const HERO_ROLES: HeroRole[] = [
-  { highlight: "AI-POWERED", base: "DEVELOPER" },
-  { highlight: "FULL STACK", base: "DEVELOPER" },
-  { highlight: "CREATIVE", base: "DEVELOPER" },
-  { highlight: "PROMPT", base: "ENGINEER" },
-  { highlight: "AI BUILDER", base: "DEVELOPER" },
+  { highlight: "AI", base: "BUILDER" },
+  { highlight: "AI/ML", base: "DEVELOPER" },
+  { highlight: "GENERATIVE AI", base: "ENGINEER" },
+  { highlight: "FULL-STACK", base: "DEVELOPER" },
+  { highlight: "AI PRODUCT", base: "BUILDER" },
+  { highlight: "CREATIVE", base: "TECHNOLOGIST" },
 ];
 
 const RotatingHeroWord: React.FC = React.memo(() => {
@@ -20,58 +21,48 @@ const RotatingHeroWord: React.FC = React.memo(() => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % HERO_ROLES.length);
-    }, 2400);
+    }, 2500);
     return () => clearInterval(timer);
   }, []);
 
   const currentRole = HERO_ROLES[index];
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
-      {/* Line 1: Dedicated Fixed Height Overlapping Word Viewport */}
-      <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
+    <div className="w-full flex flex-col items-center justify-center text-center select-none">
+      {/* Line 1: Accent Highlight Word (Yellow) */}
+      <div className="relative w-full h-[1.12em] min-h-[34px] xs:min-h-[40px] sm:min-h-[72px] md:min-h-[96px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentRole.highlight}
-            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{
-              opacity: 0,
-              y: -24,
-              filter: "blur(6px)",
-              transition: { duration: 0.18, ease: "easeIn" },
-            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{
-              duration: 0.28,
+              duration: 0.45,
               ease: [0.16, 1, 0.3, 1],
             }}
-            style={{ willChange: "transform, opacity, filter" }}
-            className="absolute inset-x-0 text-center text-[#FFD42A] font-serif font-normal tracking-[-0.02em] whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+            style={{ willChange: "transform, opacity" }}
+            className="absolute inset-x-0 text-center text-[#FFD42A] font-serif font-normal text-[clamp(1.75rem,6.4vw,5.5rem)] leading-[0.98] tracking-[-0.02em] whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
           >
             {currentRole.highlight}
           </motion.span>
         </AnimatePresence>
       </div>
 
-      {/* Line 2: Fixed or Dynamic Base Line (DEVELOPER / ENGINEER) */}
-      <div className="relative w-full h-[1.15em] min-h-[36px] xs:min-h-[42px] sm:min-h-[85px] md:min-h-[105px] overflow-hidden flex items-center justify-center text-center">
+      {/* Line 2: Base Role Title (Charcoal) */}
+      <div className="relative w-full h-[1.12em] min-h-[34px] xs:min-h-[40px] sm:min-h-[72px] md:min-h-[96px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentRole.base}
-            initial={{ opacity: 0, y: 18, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{
-              opacity: 0,
-              y: -18,
-              filter: "blur(4px)",
-              transition: { duration: 0.18, ease: "easeIn" },
-            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{
-              duration: 0.28,
+              duration: 0.45,
               ease: [0.16, 1, 0.3, 1],
             }}
-            style={{ willChange: "transform, opacity, filter" }}
-            className="absolute inset-x-0 text-center text-[#20252B] block drop-shadow-sm font-serif font-normal tracking-[-0.02em] whitespace-nowrap"
+            style={{ willChange: "transform, opacity" }}
+            className="absolute inset-x-0 text-center text-[#20252B] font-serif font-normal text-[clamp(1.75rem,6.4vw,5.5rem)] leading-[0.98] tracking-[-0.02em] whitespace-nowrap block drop-shadow-sm"
           >
             {currentRole.base}
           </motion.span>
