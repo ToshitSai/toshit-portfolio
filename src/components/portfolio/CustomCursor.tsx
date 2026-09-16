@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useIntro } from "@/context/IntroContext";
+import { usePageTransition } from "@/context/PageTransitionContext";
 
 export type CursorMode =
   | "DEFAULT"
@@ -31,6 +32,7 @@ const DEFAULT_STATE: CursorState = {
 
 const CustomCursor: React.FC = () => {
   const { isIntroComplete, latestPointerRef } = useIntro();
+  const { isTransitioning } = usePageTransition();
   const location = useLocation();
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [cursorState, setCursorState] = useState<CursorState>(DEFAULT_STATE);
@@ -461,7 +463,7 @@ const CustomCursor: React.FC = () => {
       aria-hidden="true"
       className="pointer-events-none fixed top-0 left-0 z-[2147483647] flex items-center justify-center select-none"
       style={{
-        opacity: isInput || !isPointerInitialized.current || !isFadedIn ? 0 : 1,
+        opacity: isInput || !isPointerInitialized.current || !isFadedIn || isTransitioning ? 0 : 1,
         transition: "opacity 200ms cubic-bezier(0.16, 1, 0.3, 1)",
         willChange: "transform",
       }}

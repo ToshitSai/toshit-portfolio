@@ -5,11 +5,13 @@ import { ArrowLeft } from "lucide-react";
 import { Certificate3DCarousel } from "@/components/portfolio/Certificate3DCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SECTION_APPROACH, motionDistance } from "@/lib/scrollMotion";
+import { usePageTransition } from "@/context/PageTransitionContext";
 
 const PlaygroundPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const stageRef = useRef<HTMLDivElement>(null);
+  const { triggerTransition } = usePageTransition();
 
   const { scrollYProgress } = useScroll({
     target: stageRef,
@@ -38,13 +40,17 @@ const PlaygroundPage: React.FC = () => {
 
       <main className="relative z-10 pt-32 sm:pt-40 lg:pt-44 pb-16 sm:pb-24 px-4 sm:px-8 max-w-[1360px] mx-auto w-full flex-1 flex flex-col items-center">
         <div className="w-full flex items-center justify-between border-b border-[#20252B]/12 pb-4 mb-8 sm:mb-12">
-          <Link
-            to="/"
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              triggerTransition("/");
+            }}
             className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#20252B]/75 transition-colors hover:text-[#20252B]"
           >
             <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
             <span>Back to Home</span>
-          </Link>
+          </a>
         </div>
 
         <motion.div

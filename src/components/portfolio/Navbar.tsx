@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { usePageTransition } from "@/context/PageTransitionContext";
 
 interface NavItem {
   id: string;
@@ -30,6 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { triggerTransition } = usePageTransition();
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
   const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
@@ -84,36 +86,23 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
     };
   }, []);
 
-  const navLockRef = useRef<number>(0);
-
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
 
-    // Prevent rapid double-clicks during transition (200ms cooldown)
-    const now = Date.now();
-    if (now - navLockRef.current < 200) return;
-    navLockRef.current = now;
-
     if (href === "/about") {
-      if (location.pathname !== "/about") {
-        navigate("/about");
-      }
-      window.scrollTo({ top: 0, behavior: "instant" });
+      triggerTransition("/about");
       return;
     }
 
     if (href === "/playground") {
-      if (location.pathname !== "/playground") {
-        navigate("/playground");
-      }
-      window.scrollTo({ top: 0, behavior: "instant" });
+      triggerTransition("/playground");
       return;
     }
 
     if (href === "#hero" || href === "/#hero" || href === "/") {
       if (location.pathname !== "/") {
-        navigate("/");
+        triggerTransition("/");
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -123,12 +112,12 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
     const targetId = href.replace("/#", "").replace("#", "");
 
     if (location.pathname !== "/") {
-      navigate("/");
+      triggerTransition("/");
       setTimeout(() => {
         let targetEl = document.getElementById(targetId);
         if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
         if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });
-      }, 150);
+      }, 550);
       return;
     }
 

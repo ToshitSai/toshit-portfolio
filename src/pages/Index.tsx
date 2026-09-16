@@ -2,7 +2,6 @@ import React, { useState, useEffect, Suspense } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Hero from "@/components/portfolio/Hero";
 import TechMarquee from "@/components/portfolio/TechMarquee";
-import About from "@/components/portfolio/About";
 import AcademicJourney from "@/components/portfolio/AcademicJourney";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
@@ -100,7 +99,6 @@ const Index = () => {
             <Hero />
           </div>
           <TechMarquee />
-          <About />
 
           <Suspense fallback={<SelectedWorkFallback />}>
             <SelectedWork />

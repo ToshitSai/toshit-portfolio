@@ -3,6 +3,7 @@ import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus } from "lucide-react";
 import BentoGridWorkspace from "@/components/portfolio/BentoGridWorkspace";
+import { usePageTransition } from "@/context/PageTransitionContext";
 
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
@@ -119,6 +120,7 @@ const pageCanvasVariants = {
 
 const AboutPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
+  const { triggerTransition } = usePageTransition();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -150,13 +152,17 @@ const AboutPage: React.FC = () => {
           className="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16 mb-8 sm:mb-12"
         >
           <div className="flex items-center justify-between border-b border-[#1E2024]/12 pb-4 sm:pb-5">
-            <Link
-              to="/"
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                triggerTransition("/");
+              }}
               className="group inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#1E2024]/70 transition-colors hover:text-[#1E2024]"
             >
               <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span>Back to Home</span>
-            </Link>
+            </a>
           </div>
         </motion.div>
 
