@@ -376,17 +376,17 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Organic Cutout Cloud Left */}
+        {/* Organic Cutout Cloud Left — Compact, distinct silhouette */}
         <div
-          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36 aspect-[160/90]"
+          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-12 sm:w-24 md:w-32 aspect-[140/80]"
         >
           <div
             ref={leftCloudRef}
             className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none block"
           >
-            <svg viewBox="0 0 160 90" fill="none" className="w-full h-full drop-shadow-sm filter pointer-events-none">
+            <svg viewBox="0 0 140 80" fill="none" className="w-full h-full drop-shadow-sm filter pointer-events-none">
               <path
-                d="M20 70 C 10 70, 0 60, 0 45 C 0 32, 10 20, 25 20 C 35 10, 55 5, 75 15 C 85 5, 115 5, 130 20 C 160 60, 145 70, 130 70 Z"
+                d="M 15 65 C 5 65, 0 55, 0 42 C 0 30, 10 20, 22 20 C 30 10, 48 5, 68 14 C 78 5, 102 6, 116 18 C 128 18, 140 28, 140 42 C 140 56, 128 65, 115 65 Z"
                 fill="#FFF8E8"
                 className="pointer-events-none"
               />
@@ -394,17 +394,17 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Organic Cutout Cloud Right */}
+        {/* Organic Cutout Cloud Right — Larger, distinct puff silhouette */}
         <div
-          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[200/110]"
+          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[220/115]"
         >
           <div
             ref={rightCloudRef}
             className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none block"
           >
-            <svg viewBox="0 0 200 110" fill="none" className="w-full h-full drop-shadow-md filter pointer-events-none">
+            <svg viewBox="0 0 220 115" fill="none" className="w-full h-full drop-shadow-md filter pointer-events-none">
               <path
-                d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
+                d="M 25 95 C 10 95, 0 80, 0 60 C 0 42, 14 28, 32 28 C 45 12, 75 5, 105 16 C 122 4, 155 6, 172 24 C 190 22, 210 35, 220 52 C 225 68, 218 85, 200 95 Z"
                 fill="#FFF8E8"
                 className="pointer-events-none"
               />
