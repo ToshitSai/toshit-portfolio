@@ -148,8 +148,9 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
         currentRect.height
       );
 
+      const targetEl = (e.currentTarget as HTMLElement) || el;
       try {
-        el.setPointerCapture(e.pointerId);
+        targetEl.setPointerCapture(e.pointerId);
       } catch (_err) {}
 
       el.style.transition = "transform 150ms cubic-bezier(0.16, 1, 0.3, 1)";
@@ -197,9 +198,10 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
       if (!state.isDragging) return;
 
       state.isDragging = false;
+      const targetEl = (e.currentTarget as HTMLElement) || el;
       try {
-        if (el.hasPointerCapture(e.pointerId)) {
-          el.releasePointerCapture(e.pointerId);
+        if (targetEl.hasPointerCapture(e.pointerId)) {
+          targetEl.releasePointerCapture(e.pointerId);
         }
       } catch (_err) {}
 
@@ -343,8 +345,8 @@ export const Hero: React.FC = () => {
             className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
           >
             <div className="w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow pointer-events-none">
-              <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center">
-                <div className="w-3/4 h-3/4 rounded-full bg-[radial-gradient(#20252B_1.5px,transparent_1.5px)] [background-size:8px_8px] opacity-40" />
+              <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center pointer-events-none">
+                <div className="w-3/4 h-3/4 rounded-full bg-[radial-gradient(#20252B_1.5px,transparent_1.5px)] [background-size:8px_8px] opacity-40 pointer-events-none" />
               </div>
             </div>
           </div>
@@ -353,16 +355,17 @@ export const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Left */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36 z-30 pointer-events-none"
+          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36 aspect-[160/90] z-30 pointer-events-none"
         >
           <div
             ref={leftCloudRef}
-            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
+            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none block"
           >
-            <svg viewBox="0 0 160 90" fill="none" className="w-full drop-shadow-sm filter pointer-events-none">
+            <svg viewBox="0 0 160 90" fill="none" className="w-full h-full drop-shadow-sm filter pointer-events-none">
               <path
                 d="M20 70 C 10 70, 0 60, 0 45 C 0 32, 10 20, 25 20 C 35 10, 55 5, 75 15 C 85 5, 115 5, 130 20 C 145 20, 160 30, 160 45 C 160 60, 145 70, 130 70 Z"
                 fill="#FFF8E8"
+                className="pointer-events-none"
               />
             </svg>
           </div>
@@ -371,16 +374,17 @@ export const Hero: React.FC = () => {
         {/* Organic Cutout Cloud Right */}
         <motion.div
           style={{ y: heroCloudsY }}
-          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] z-30 pointer-events-none"
+          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[200/110] z-30 pointer-events-none"
         >
           <div
             ref={rightCloudRef}
-            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
+            className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none block"
           >
-            <svg viewBox="0 0 200 110" fill="none" className="w-full drop-shadow-md filter pointer-events-none">
+            <svg viewBox="0 0 200 110" fill="none" className="w-full h-full drop-shadow-md filter pointer-events-none">
               <path
                 d="M30 85 C 15 85, 0 70, 0 50 C 0 35, 15 25, 35 25 C 50 10, 80 5, 110 18 C 130 5, 165 10, 180 30 C 195 30, 205 45, 205 60 C 205 78, 190 85, 170 85 Z"
                 fill="#FFF8E8"
+                className="pointer-events-none"
               />
             </svg>
           </div>
