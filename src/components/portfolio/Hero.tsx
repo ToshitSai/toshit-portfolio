@@ -121,38 +121,64 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
     currentY: 0,
     dragStartX: 0,
     dragStartY: 0,
-    initialRect: null as DOMRect | null,
+    elemInitialLeft: 0,
+    elemInitialTop: 0,
+    elemWidth: 0,
+    elemHeight: 0,
+    activePointerId: null as number | null,
   });
 
   useEffect(() => {
     const el = elementRef.current;
     if (!el) return;
 
+    const stopDrag = (pointerId?: number) => {
+      const state = stateRef.current;
+      if (!state.isDragging) return;
+
+      const pId = pointerId ?? state.activePointerId;
+      if (pId !== null) {
+        try {
+          if (el.hasPointerCapture(pId)) {
+            el.releasePointerCapture(pId);
+          }
+        } catch (_err) {}
+      }
+
+      state.isDragging = false;
+      state.activePointerId = null;
+      el.style.cursor = "grab";
+      el.style.transition = "transform 200ms cubic-bezier(0.16, 1, 0.3, 1)";
+      el.style.transform = `translate3d(${state.currentX}px, ${state.currentY}px, 0px) scale(1) rotate(0deg)`;
+    };
+
     const handlePointerDown = (e: PointerEvent) => {
-      if (e.button !== 0 && e.pointerType === "mouse") return;
+      // Primary button check for mouse events (e.button === 0)
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+
       const heroEl = heroRef.current;
       if (!heroEl) return;
 
       const state = stateRef.current;
+      const heroRect = heroEl.getBoundingClientRect();
+      const elemRect = el.getBoundingClientRect();
+
       state.isDragging = true;
       state.startX = e.clientX;
       state.startY = e.clientY;
       state.dragStartX = state.currentX;
       state.dragStartY = state.currentY;
+      state.elemInitialLeft = elemRect.left - state.currentX - heroRect.left;
+      state.elemInitialTop = elemRect.top - state.currentY - heroRect.top;
+      state.elemWidth = elemRect.width;
+      state.elemHeight = elemRect.height;
+      state.activePointerId = e.pointerId;
 
-      const currentRect = el.getBoundingClientRect();
-      state.initialRect = new DOMRect(
-        currentRect.left - state.currentX,
-        currentRect.top - state.currentY,
-        currentRect.width,
-        currentRect.height
-      );
-
-      const targetEl = (e.currentTarget as HTMLElement) || el;
       try {
-        targetEl.setPointerCapture(e.pointerId);
+        el.setPointerCapture(e.pointerId);
       } catch (_err) {}
 
+      el.style.cursor = "grabbing";
       el.style.transition = "transform 150ms cubic-bezier(0.16, 1, 0.3, 1)";
       const scale = isSun ? 1.03 : 1.025;
       el.style.transform = `translate3d(${state.currentX}px, ${state.currentY}px, 0px) scale(${scale})`;
@@ -172,13 +198,12 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
       let targetY = state.dragStartY + dy;
 
       const heroRect = heroEl.getBoundingClientRect();
-      const elemRect = state.initialRect || el.getBoundingClientRect();
-      const padding = 24;
+      const padding = 16;
 
-      const minX = heroRect.left + padding - elemRect.left;
-      const maxX = heroRect.right - padding - elemRect.right;
-      const minY = heroRect.top + padding - elemRect.top;
-      const maxY = heroRect.bottom - padding - elemRect.bottom;
+      const minX = padding - state.elemInitialLeft;
+      const maxX = heroRect.width - padding - state.elemWidth - state.elemInitialLeft;
+      const minY = padding - state.elemInitialTop;
+      const maxY = heroRect.height - padding - state.elemHeight - state.elemInitialTop;
 
       targetX = Math.max(minX, Math.min(maxX, targetX));
       targetY = Math.max(minY, Math.min(maxY, targetY));
@@ -194,31 +219,33 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
     };
 
     const handlePointerUpOrCancel = (e: PointerEvent) => {
-      const state = stateRef.current;
-      if (!state.isDragging) return;
+      stopDrag(e.pointerId);
+    };
 
-      state.isDragging = false;
-      const targetEl = (e.currentTarget as HTMLElement) || el;
-      try {
-        if (targetEl.hasPointerCapture(e.pointerId)) {
-          targetEl.releasePointerCapture(e.pointerId);
-        }
-      } catch (_err) {}
+    const handleWindowBlur = () => {
+      stopDrag();
+    };
 
-      el.style.transition = "transform 200ms cubic-bezier(0.16, 1, 0.3, 1)";
-      el.style.transform = `translate3d(${state.currentX}px, ${state.currentY}px, 0px) scale(1) rotate(0deg)`;
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") {
+        stopDrag();
+      }
     };
 
     el.addEventListener("pointerdown", handlePointerDown);
     el.addEventListener("pointermove", handlePointerMove);
     el.addEventListener("pointerup", handlePointerUpOrCancel);
     el.addEventListener("pointercancel", handlePointerUpOrCancel);
+    window.addEventListener("blur", handleWindowBlur);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       el.removeEventListener("pointerdown", handlePointerDown);
       el.removeEventListener("pointermove", handlePointerMove);
       el.removeEventListener("pointerup", handlePointerUpOrCancel);
       el.removeEventListener("pointercancel", handlePointerUpOrCancel);
+      window.removeEventListener("blur", handleWindowBlur);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [heroRef, isSun]);
 
@@ -254,8 +281,6 @@ export const Hero: React.FC = () => {
   const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.85]);
   const heroSupportingY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -18]);
   const heroBackgroundY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
-  const heroCloudsY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -15]);
-  const heroSunY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -12]);
   const heroDecorY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
   const heroWaveY = useTransform(scrollYProgress, [0.35, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
 
@@ -333,12 +358,11 @@ export const Hero: React.FC = () => {
       {/* Top spacing spacer for floating navbar */}
       <div className="pt-20 sm:pt-24" />
 
-      {/* BACKGROUND SCENERY & MULTI-LAYER PARALLAX GRAPHICS */}
-      <motion.div style={{ y: heroBackgroundY }} className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+      {/* DEDICATED DRAG LAYER FOR HERO SCENERY (Requirement 7 & 8) */}
+      <div className="hero-draggable-layer absolute inset-0 pointer-events-none z-30 overflow-hidden">
         {/* Patterned Yellow Sun Graphic */}
-        <motion.div
-          style={{ y: heroSunY }}
-          className="absolute top-16 right-2 sm:top-20 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 z-20 pointer-events-none"
+        <div
+          className="absolute top-16 right-2 sm:top-20 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28"
         >
           <div
             ref={sunRef}
@@ -350,12 +374,11 @@ export const Hero: React.FC = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Organic Cutout Cloud Left */}
-        <motion.div
-          style={{ y: heroCloudsY }}
-          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36 aspect-[160/90] z-30 pointer-events-none"
+        <div
+          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-14 sm:w-28 md:w-36 aspect-[160/90]"
         >
           <div
             ref={leftCloudRef}
@@ -363,18 +386,17 @@ export const Hero: React.FC = () => {
           >
             <svg viewBox="0 0 160 90" fill="none" className="w-full h-full drop-shadow-sm filter pointer-events-none">
               <path
-                d="M20 70 C 10 70, 0 60, 0 45 C 0 32, 10 20, 25 20 C 35 10, 55 5, 75 15 C 85 5, 115 5, 130 20 C 145 20, 160 30, 160 45 C 160 60, 145 70, 130 70 Z"
+                d="M20 70 C 10 70, 0 60, 0 45 C 0 32, 10 20, 25 20 C 35 10, 55 5, 75 15 C 85 5, 115 5, 130 20 C 160 60, 145 70, 130 70 Z"
                 fill="#FFF8E8"
                 className="pointer-events-none"
               />
             </svg>
           </div>
-        </motion.div>
+        </div>
 
         {/* Organic Cutout Cloud Right */}
-        <motion.div
-          style={{ y: heroCloudsY }}
-          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[200/110] z-30 pointer-events-none"
+        <div
+          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[200/110]"
         >
           <div
             ref={rightCloudRef}
@@ -388,8 +410,8 @@ export const Hero: React.FC = () => {
               />
             </svg>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {/* MAIN HERO CONTENT AREA */}
       <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-1 sm:pt-4 pb-2 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
