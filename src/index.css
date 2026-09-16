@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ENTRANCE / PRELOADER STATE CURSOR LOCK */
+html.intro-active,
+body.intro-active,
+html.intro-active *,
+body.intro-active * {
+  cursor: none !important;
+}
+
 @layer base {
   :root {
     --nav-width-rest: min(545px, calc(100vw - 24px));

@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import Navbar from "@/components/portfolio/Navbar";
 import CustomScrollbar from "@/components/portfolio/CustomScrollbar";
 import CustomCursor from "@/components/portfolio/CustomCursor";
+import { IntroProvider } from "@/context/IntroContext";
 import Index from "./pages/Index";
 import ProjectsPage from "./pages/ProjectsPage";
 import AboutPage from "./pages/AboutPage";
@@ -62,7 +63,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AppLayout />
+        <IntroProvider>
+          <AppLayout />
+        </IntroProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useIntro } from "@/context/IntroContext";
 
 export type CursorMode =
   | "DEFAULT"
@@ -29,25 +30,33 @@ const DEFAULT_STATE: CursorState = {
 };
 
 const CustomCursor: React.FC = () => {
+  const { isIntroComplete, latestPointerRef } = useIntro();
   const location = useLocation();
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [cursorState, setCursorState] = useState<CursorState>(DEFAULT_STATE);
+  const [isFadedIn, setIsFadedIn] = useState(false);
+
+  // Subtle 200ms fade-in transition when cursor activates after intro completes
+  useEffect(() => {
+    if (!isIntroComplete) return;
+    const timer = requestAnimationFrame(() => {
+      setIsFadedIn(true);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, [isIntroComplete]);
 
   // Reset cursor state immediately on route navigation
   useEffect(() => {
     setCursorState(DEFAULT_STATE);
   }, [location.pathname]);
 
-  // Single Source of Position Coordinates (Initializes to window center so cursor renders immediately)
-  const pointerPos = useRef({
-    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
-    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
-  });
-  const cursorPos = useRef({
-    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
-    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
-  });
-  const isPointerInitialized = useRef(true);
+  // Single Source of Position Coordinates (Initializes directly to latest pointer position — NO teleport from 0,0 or center)
+  const initialX = latestPointerRef.current?.x ?? (typeof window !== "undefined" ? window.innerWidth / 2 : 0);
+  const initialY = latestPointerRef.current?.y ?? (typeof window !== "undefined" ? window.innerHeight / 2 : 0);
+
+  const pointerPos = useRef({ x: initialX, y: initialY });
+  const cursorPos = useRef({ x: initialX, y: initialY });
+  const isPointerInitialized = useRef(latestPointerRef.current !== null);
 
   // State Refs for RAF loop access without re-renders
   const stateRef = useRef<CursorState>(DEFAULT_STATE);
@@ -408,7 +417,7 @@ const CustomCursor: React.FC = () => {
     };
   }, [isTouchDevice]);
 
-  if (isTouchDevice || typeof document === "undefined") return null;
+  if (!isIntroComplete || isTouchDevice || typeof document === "undefined") return null;
 
   const { mode, text, accentColor } = cursorState;
 
@@ -452,8 +461,8 @@ const CustomCursor: React.FC = () => {
       aria-hidden="true"
       className="pointer-events-none fixed top-0 left-0 z-[2147483647] flex items-center justify-center select-none"
       style={{
-        opacity: isInput || !isPointerInitialized.current ? 0 : 1,
-        transition: "opacity 0.18s ease",
+        opacity: isInput || !isPointerInitialized.current || !isFadedIn ? 0 : 1,
+        transition: "opacity 200ms cubic-bezier(0.16, 1, 0.3, 1)",
         willChange: "transform",
       }}
     >

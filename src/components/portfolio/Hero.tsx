@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useIntro } from "@/context/IntroContext";
 
 interface HeroRole {
   highlight: string;
@@ -109,9 +110,10 @@ const NOW_BUILDING_PROJECTS: NowBuildingProject[] = [
 interface DraggableOptions {
   heroRef: React.RefObject<HTMLElement>;
   isSun?: boolean;
+  isIntroComplete?: boolean;
 }
 
-const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
+const useDraggableElement = ({ heroRef, isSun = false, isIntroComplete = true }: DraggableOptions) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const stateRef = useRef({
     isDragging: false,
@@ -153,6 +155,9 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
     };
 
     const handlePointerDown = (e: PointerEvent) => {
+      // Prevent drag interactions during preloader intro
+      if (!isIntroComplete) return;
+
       // Primary button check for mouse events (e.button === 0)
       if (e.pointerType === "mouse" && e.button !== 0) return;
 
@@ -253,6 +258,7 @@ const useDraggableElement = ({ heroRef, isSun = false }: DraggableOptions) => {
 };
 
 export const Hero: React.FC = () => {
+  const { isIntroComplete } = useIntro();
   const [isCardHovered, setIsCardHovered] = useState(false);
 
   // Interactive Now Building Card State
@@ -267,9 +273,9 @@ export const Hero: React.FC = () => {
   const heroRef = useRef<HTMLElement>(null);
 
   // Draggable Scenery Element Controller Refs
-  const sunRef = useDraggableElement({ heroRef, isSun: true });
-  const leftCloudRef = useDraggableElement({ heroRef, isSun: false });
-  const rightCloudRef = useDraggableElement({ heroRef, isSun: false });
+  const sunRef = useDraggableElement({ heroRef, isSun: true, isIntroComplete });
+  const leftCloudRef = useDraggableElement({ heroRef, isSun: false, isIntroComplete });
+  const rightCloudRef = useDraggableElement({ heroRef, isSun: false, isIntroComplete });
 
   const { scrollYProgress } = useScroll({
     target: heroRef,

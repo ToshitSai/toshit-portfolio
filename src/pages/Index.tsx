@@ -7,6 +7,7 @@ import AcademicJourney from "@/components/portfolio/AcademicJourney";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import EditorialLoginLoader from "@/components/portfolio/EditorialLoginLoader";
 import SelectedWork from "@/components/portfolio/SelectedWork";
+import { useIntro } from "@/context/IntroContext";
 
 import VelocityTiltWrapper from "@/components/portfolio/VelocityTiltWrapper";
 
@@ -42,24 +43,14 @@ const homeCanvasVariants = {
 
 const Index = () => {
   const shouldReduceMotion = useReducedMotion();
+  const { isIntroActive, completeIntro } = useIntro();
 
-  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("intro") === "true" || urlParams.get("reset") === "true") {
-        sessionStorage.removeItem("has_seen_loader");
-        sessionStorage.removeItem("hasVisited");
-        try {
-          window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-        } catch {
-          // Ignore state replace errors
-        }
-        return true;
-      }
-      return !sessionStorage.getItem("has_seen_loader") && !sessionStorage.getItem("hasVisited");
-    }
-    return false;
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(isIntroActive);
+
+  // Synchronize isLoading if isIntroActive changes
+  useEffect(() => {
+    setIsLoading(isIntroActive);
+  }, [isIntroActive]);
 
   // Global State for Contact Drawer Overlay (Opens smoothly from right on any "Work with me" click)
   const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
@@ -67,7 +58,7 @@ const Index = () => {
   // Coordinate hash navigation AFTER loader finishes
   useEffect(() => {
     console.log("EDITORIAL_MOTION_SYSTEM_V2_ACTIVE", new Date().toISOString());
-    if (!isLoggingIn && typeof window !== "undefined") {
+    if (!isLoading && typeof window !== "undefined") {
       const hash = window.location.hash;
       if (hash) {
         const targetId = hash.replace("#", "");
@@ -82,14 +73,10 @@ const Index = () => {
         }
       }
     }
-  }, [isLoggingIn]);
+  }, [isLoading]);
 
   const handleLoadingComplete = React.useCallback(() => {
-    setIsLoggingIn(false);
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("hasVisited", "true");
-      sessionStorage.setItem("has_seen_loader", "true");
-    }
+    setIsLoading(false);
   }, []);
 
   return (
@@ -102,11 +89,12 @@ const Index = () => {
     >
       {/* CONTEXTUAL EDITORIAL LOGIN LOADER (FIRST VISIT PER SESSION ONLY) */}
       <EditorialLoginLoader
-        isLoading={isLoggingIn}
+        isLoading={isLoading}
         onLoadingComplete={handleLoadingComplete}
+        onExitComplete={completeIntro}
       />
       
-      <main className={`transition-opacity duration-700 ease-out ${isLoggingIn ? "opacity-0" : "opacity-100"}`}>
+      <main className={`transition-opacity duration-700 ease-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
         <VelocityTiltWrapper>
           <div>
             <Hero />
