@@ -162,31 +162,36 @@ const TechnicalSkills: React.FC = () => {
   useEffect(() => {
     let animationFrameId: number;
     let isVisible = false;
+    let isMounted = true;
 
     measureLayout();
-    const timer = setTimeout(measureLayout, 100);
+    const timer = setTimeout(() => {
+      if (isMounted) measureLayout();
+    }, 100);
 
     if (typeof document !== "undefined" && document.fonts) {
-      document.fonts.ready.then(measureLayout);
+      document.fonts.ready.then(() => {
+        if (isMounted) measureLayout();
+      });
     }
 
     let resizeObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== "undefined" && listGridRef.current) {
       resizeObserver = new ResizeObserver(() => {
-        measureLayout();
+        if (isMounted) measureLayout();
       });
       resizeObserver.observe(listGridRef.current);
     }
 
     const handleResize = () => {
-      measureLayout();
+      if (isMounted) measureLayout();
     };
     window.addEventListener("resize", handleResize);
 
     const LERP_FACTOR = 0.16; // Responsive smoothing factor per frame
 
     const updateFrame = () => {
-      if (!isVisible) return;
+      if (!isMounted || !isVisible) return;
 
       if (listGridRef.current && highlightRef.current) {
         const gridRect = listGridRef.current.getBoundingClientRect();
@@ -370,6 +375,7 @@ const TechnicalSkills: React.FC = () => {
     }
 
     return () => {
+      isMounted = false;
       cancelAnimationFrame(animationFrameId);
       clearTimeout(timer);
       window.removeEventListener("resize", handleResize);

@@ -86,6 +86,14 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
     };
   }, []);
 
+  const navTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (navTimerRef.current) clearTimeout(navTimerRef.current);
+    };
+  }, []);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
@@ -113,7 +121,8 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
 
     if (location.pathname !== "/") {
       triggerTransition("/");
-      setTimeout(() => {
+      if (navTimerRef.current) clearTimeout(navTimerRef.current);
+      navTimerRef.current = setTimeout(() => {
         let targetEl = document.getElementById(targetId);
         if (!targetEl && targetId === "work") targetEl = document.getElementById("projects");
         if (targetEl) targetEl.scrollIntoView({ behavior: "smooth" });

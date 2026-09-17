@@ -154,6 +154,10 @@ const CustomCursor: React.FC = () => {
     let frameCount = 0;
     let prevMouseX = -100;
     let prevMouseY = -100;
+    let lastInspectedX = -999;
+    let lastInspectedY = -999;
+
+    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const animate = () => {
       frameCount++;
@@ -168,9 +172,14 @@ const CustomCursor: React.FC = () => {
         prevMouseY = pY;
 
         // 2. High-speed Responsive Lerp (15-25ms perceived lag: lerp factor = 0.38)
-        const lerpFactor = 0.38;
-        cursorPos.current.x += (pX - cursorPos.current.x) * lerpFactor;
-        cursorPos.current.y += (pY - cursorPos.current.y) * lerpFactor;
+        if (prefersReducedMotion) {
+          cursorPos.current.x = pX;
+          cursorPos.current.y = pY;
+        } else {
+          const lerpFactor = 0.38;
+          cursorPos.current.x += (pX - cursorPos.current.x) * lerpFactor;
+          cursorPos.current.y += (pY - cursorPos.current.y) * lerpFactor;
+        }
 
         // 3. Dwell Progress Logic for Projects
         const currentMode = stateRef.current.mode;
@@ -191,7 +200,7 @@ const CustomCursor: React.FC = () => {
         }
 
         // 4. One-time Entry Pulse Animation (scale 1 -> 1.06 -> 1 over ~240ms)
-        if (isPulsing.current) {
+        if (isPulsing.current && !prefersReducedMotion) {
           const t = Date.now() - pulseStartTime.current;
           if (t < 240) {
             const p = Math.sin((t / 240) * Math.PI);
@@ -205,11 +214,14 @@ const CustomCursor: React.FC = () => {
         // 5. Update Single Root Transform via GPU translate3d
         if (rootRef.current) {
           const scale = pulseScale.current || 1;
-          rootRef.current.style.transform = `translate3d(${cursorPos.current.x}px, ${cursorPos.current.y}px, 0) translate(-50%, -50%) scale(${scale})`;
+          rootRef.current.style.transform = `translate3d(${cursorPos.current.x.toFixed(1)}px, ${cursorPos.current.y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${scale})`;
         }
 
-        // 6. Robust Dynamic Element Inspection (Fixes Sticking Hover States)
-        if (frameCount % 3 === 0) {
+        // 6. Optimized Dynamic Element Inspection (Only inspect when pointer moves significantly or every 12 frames)
+        const inspectedDelta = Math.hypot(pX - lastInspectedX, pY - lastInspectedY);
+        if (inspectedDelta > 2 || frameCount % 12 === 0) {
+          lastInspectedX = pX;
+          lastInspectedY = pY;
           const target = document.elementFromPoint(pX, pY) as HTMLElement | null;
           if (target) {
             inspectElementRef.current(target);
