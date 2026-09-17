@@ -17,9 +17,10 @@ export default {
       fontFamily: {
         sans: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
         grotesk: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-        host: ['Manrope', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        host: ['"Host Grotesk"', 'sans-serif'],
         display: ['"DM Serif Display"', 'Georgia', 'serif'],
         instrument: ['"Instrument Serif"', 'Georgia', 'serif'],
+        instrumentSans: ['"Instrument Sans"', 'sans-serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         mono: ['"Geist Mono"', '"JetBrains Mono"', 'monospace'],
       },

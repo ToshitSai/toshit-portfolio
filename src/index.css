@@ -409,6 +409,11 @@ body.has-custom-cursor [contenteditable="true"] {
   }
 }
 
+.font-instrument-sans {
+  font-family: "Instrument Sans", sans-serif !important;
+}
+
+
 
 
 

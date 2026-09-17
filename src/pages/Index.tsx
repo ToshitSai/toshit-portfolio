@@ -107,14 +107,14 @@ const Index = () => {
               <a href="/about" className="group block w-full">
                 <h2
                   style={{
-                    fontFamily: '"Host Grotesk", "Plus Jakarta Sans", sans-serif',
+                    fontFamily: '"Instrument Sans", sans-serif',
                     fontWeight: 400,
                     color: "#1E2024",
-                    fontSize: "clamp(28px, 3.1vw, 42px)",
-                    lineHeight: 1.2,
+                    fontSize: "clamp(34px, 3.2vw, 44px)",
+                    lineHeight: 1.18,
                     letterSpacing: "-0.02em",
                   }}
-                  className="text-center group-hover:opacity-90 transition-opacity max-w-[1140px] mx-auto"
+                  className="text-center group-hover:opacity-90 transition-opacity max-w-[1180px] mx-auto font-instrument-sans"
                 >
                   I'm Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
                 </h2>
@@ -122,14 +122,14 @@ const Index = () => {
 
               <p
                 style={{
-                  fontFamily: '"Host Grotesk", "Plus Jakarta Sans", sans-serif',
+                  fontFamily: '"Instrument Sans", sans-serif',
                   fontWeight: 400,
                   fontSize: "clamp(17px, 1.8vw, 24px)",
                   lineHeight: 1.4,
                   letterSpacing: "-0.01em",
                   color: "rgba(30, 32, 36, 0.65)",
                 }}
-                className="text-center max-w-[850px] mx-auto mt-8 sm:mt-9 font-normal"
+                className="text-center max-w-[700px] mx-auto mt-8 sm:mt-9 font-normal font-instrument-sans"
               >
                 I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
               </p>
