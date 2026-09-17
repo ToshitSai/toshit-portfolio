@@ -1,5 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+
+interface TypewriterSubtitleProps {
+  fullText: string;
+  isActive: boolean;
+  shouldReduceMotion: boolean | null;
+  charDelay?: number;
+  pauseDelay?: number;
+}
+
+const TypewriterSubtitle: React.FC<TypewriterSubtitleProps> = React.memo(
+  ({ fullText, isActive, shouldReduceMotion, charDelay = 28, pauseDelay = 450 }) => {
+    const [displayedText, setDisplayedText] = useState(fullText);
+    const [showCursor, setShowCursor] = useState(false);
+
+    useEffect(() => {
+      if (shouldReduceMotion || !isActive) {
+        setDisplayedText(fullText);
+        setShowCursor(false);
+        return;
+      }
+
+      setDisplayedText("");
+      setShowCursor(true);
+
+      let currentIndex = 0;
+      let pauseTimer: NodeJS.Timeout | null = null;
+
+      const typingInterval = setInterval(() => {
+        currentIndex++;
+        setDisplayedText(fullText.slice(0, currentIndex));
+
+        if (currentIndex >= fullText.length) {
+          clearInterval(typingInterval);
+          pauseTimer = setTimeout(() => {
+            setShowCursor(false);
+          }, pauseDelay);
+        }
+      }, charDelay);
+
+      return () => {
+        clearInterval(typingInterval);
+        if (pauseTimer) clearTimeout(pauseTimer);
+      };
+    }, [fullText, isActive, shouldReduceMotion, charDelay, pauseDelay]);
+
+    return (
+      <span className="font-mono text-xs text-[#1E2024]/60 block mt-1.5 min-h-[1.25rem] select-none">
+        {displayedText}
+        {showCursor && (
+          <span className="inline-block font-mono text-[#FFD42A] ml-0.5 animate-cursor-blink">
+            ▍
+          </span>
+        )}
+      </span>
+    );
+  }
+);
+
+TypewriterSubtitle.displayName = "TypewriterSubtitle";
 
 const BuildingPhilosophyPill: React.FC = React.memo(() => {
   return (
@@ -26,6 +85,15 @@ BuildingPhilosophyPill.displayName = "BuildingPhilosophyPill";
 
 export const BentoGridWorkspace: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % 3);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [shouldReduceMotion]);
 
   return (
     <div className="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
@@ -116,61 +184,49 @@ export const BentoGridWorkspace: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* 3. CARD 1: AI / ML SYSTEMS — NODE SYSTEM MICRO-ANIMATION (0ms STAGGER) */}
+        {/* 3. CARD 1: AI / ML SYSTEMS — STEPPER CARD 0 */}
         <motion.div
           initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0 }}
-          className="order-3 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group"
+          onClick={() => setActiveIndex(0)}
+          className={`order-3 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group cursor-pointer ${
+            activeIndex === 0 ? "border-[#1E2024]/30" : "border-[#1E2024]/14"
+          }`}
         >
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
-                01 // SYSTEM
-              </span>
+              <div className="flex items-center gap-2">
+                {/* Index Dot: switches from muted gray to accent yellow when active */}
+                <span
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    activeIndex === 0 ? "bg-[#FFD42A]" : "bg-[#1E2024]/30"
+                  }`}
+                />
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
+                  01 // SYSTEM
+                </span>
+              </div>
 
-              {/* THREE TINY VISUAL NODE POINTS (● —— ● —— ●) */}
+              {/* THREE STEPPER DOTS (● —— ● —— ●) */}
               <div className="flex items-center gap-1">
-                {/* Node 1 (0ms: left node muted) */}
-                <motion.span
-                  initial={shouldReduceMotion ? { opacity: 0.4 } : { opacity: 0.2, scale: 0.8 }}
-                  whileInView={{ opacity: 0.4, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: 0 }}
-                  className="w-1.5 h-1.5 rounded-full bg-[#1E2024]/40"
+                <span
+                  className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                    activeIndex === 0 ? "bg-[#FFD42A]" : "bg-[#1E2024]/30"
+                  }`}
                 />
-                {/* Connection Line 1 */}
-                <motion.span
-                  initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-2.5 h-[1px] bg-[#1E2024]/25 origin-right"
+                <span className="w-2.5 h-[1px] bg-[#1E2024]/25" />
+                <span
+                  className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                    activeIndex === 1 ? "bg-[#FFD42A]" : "bg-[#1E2024]/30"
+                  }`}
                 />
-                {/* Node 2 (120ms: middle node becomes yellow) */}
-                <motion.span
-                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0.3, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: [0.5, 1.25, 1] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.12 }}
-                  className="w-2 h-2 rounded-full bg-[#FFD42A] shadow-[0_0_6px_rgba(255,212,42,0.8)] animate-node-pulse-once"
-                />
-                {/* Connection Line 2 */}
-                <motion.span
-                  initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-2.5 h-[1px] bg-[#1E2024]/25 origin-left"
-                />
-                {/* Node 3 (240ms: right node highlighted) */}
-                <motion.span
-                  initial={shouldReduceMotion ? { opacity: 0.7 } : { opacity: 0.2, scale: 0.8 }}
-                  whileInView={{ opacity: 0.7, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: 0.24 }}
-                  className="w-1.5 h-1.5 rounded-full bg-[#1E2024]/60"
+                <span className="w-2.5 h-[1px] bg-[#1E2024]/25" />
+                <span
+                  className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                    activeIndex === 2 ? "bg-[#FFD42A]" : "bg-[#1E2024]/30"
+                  }`}
                 />
               </div>
             </div>
@@ -178,113 +234,99 @@ export const BentoGridWorkspace: React.FC = () => {
             <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em] transition-transform duration-300 group-hover:translate-x-0.5">
               AI / ML Systems
             </h3>
-            <span className="font-mono text-xs text-[#1E2024]/60 block mt-0.5">
-              Neural Nets &amp; Preprocessing
-            </span>
+
+            {/* Typewriter Subtitle for Card 0 */}
+            <TypewriterSubtitle
+              fullText="Neural Nets & Preprocessing"
+              isActive={activeIndex === 0}
+              shouldReduceMotion={shouldReduceMotion}
+            />
           </div>
         </motion.div>
 
-        {/* 4. CARD 3: WEB ENGINEERING — CLEAN UNDERLINE DRAW (100ms STAGGER) */}
+        {/* 4. CARD 3: WEB ENGINEERING — STEPPER CARD 1 */}
         <motion.div
           initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.10 }}
-          className="order-4 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group"
+          onClick={() => setActiveIndex(1)}
+          className={`order-4 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group cursor-pointer ${
+            activeIndex === 1 ? "border-[#1E2024]/30" : "border-[#1E2024]/14"
+          }`}
         >
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
-                03 // FRONTEND
-              </span>
+              <div className="flex items-center gap-2">
+                {/* Index Dot: switches from muted gray to accent yellow when active */}
+                <span
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    activeIndex === 1 ? "bg-[#FFD42A]" : "bg-[#1E2024]/30"
+                  }`}
+                />
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
+                  03 // FRONTEND
+                </span>
+              </div>
             </div>
 
-            <div className="inline-block relative">
+            <div>
               <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em] transition-transform duration-300 group-hover:translate-x-0.5">
                 Web Engineering
               </h3>
-              {/* THIN YELLOW UNDERLINE DRAW (LEFT -> RIGHT, 550ms, REMAINS VISIBLE, EXTENDS SLIGHTLY ON HOVER) */}
-              <motion.span
-                initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: 0.10, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-[#FFD42A] origin-left rounded-full transition-transform duration-300 group-hover:scale-x-105"
-              />
             </div>
 
-            <span className="font-mono text-xs text-[#1E2024]/60 block mt-1.5">
-              React 18 &amp; TypeScript Systems
-            </span>
+            {/* Typewriter Subtitle for Card 1 */}
+            <TypewriterSubtitle
+              fullText="React 18 & TypeScript Systems"
+              isActive={activeIndex === 1}
+              shouldReduceMotion={shouldReduceMotion}
+            />
           </div>
         </motion.div>
 
-        {/* 5. CARD 4: PRODUCT BUILDING — PROGRESSION SIGNAL TRAVEL (200ms STAGGER) */}
+        {/* 5. CARD 4: PRODUCT BUILDING — STEPPER CARD 2 */}
         <motion.div
           initial={{ opacity: 1 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.20 }}
-          className="order-5 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border border-[#1E2024]/14 p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group"
+          onClick={() => setActiveIndex(2)}
+          className={`order-5 lg:col-span-4 rounded-2xl bg-[#F7F1E5] border p-5 sm:p-6 shadow-[0_8px_24px_rgba(30,32,36,0.04)] flex flex-col justify-between transition-colors duration-300 hover:border-[#1E2024]/28 select-none group cursor-pointer ${
+            activeIndex === 2 ? "border-[#1E2024]/30" : "border-[#1E2024]/14"
+          }`}
         >
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
-                04 // ARCHITECTURE
-              </span>
+              <div className="flex items-center gap-2">
+                {/* Index Dot: switches from muted gray to accent yellow when active */}
+                <span
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    activeIndex === 2 ? "bg-[#FFD42A]" : "bg-[#1E2024]/30"
+                  }`}
+                />
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1E2024]/55">
+                  04 // ARCHITECTURE
+                </span>
+              </div>
             </div>
 
             <h3 className="font-sans font-bold text-lg text-[#1E2024] tracking-[-0.02em] transition-transform duration-300 group-hover:translate-x-0.5">
               Product Building
             </h3>
 
-            {/* PROGRESSION SIGNAL TRAVEL (Yellow signal pulses through IDEA -> EXECUTION -> SHIP once in 1000ms) */}
+            {/* Typewriter Subtitle for Card 2 */}
+            <TypewriterSubtitle
+              fullText="Idea → Execution → Ship"
+              isActive={activeIndex === 2}
+              shouldReduceMotion={shouldReduceMotion}
+            />
+
+            {/* PROGRESSION SIGNAL TRAVEL */}
             <div className="relative overflow-hidden pt-0.5 mt-0.5">
-              <div className="font-mono text-xs text-[#1E2024]/60 flex items-center gap-1">
-                <motion.span
-                  initial={shouldReduceMotion ? { color: "#1E2024" } : { color: "rgba(30, 32, 36, 0.6)" }}
-                  whileInView={{ color: ["rgba(30, 32, 36, 0.6)", "#FFD42A", "rgba(30, 32, 36, 0.6)"] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.25 }}
-                >
-                  Idea
-                </motion.span>
-                <motion.span
-                  initial={shouldReduceMotion ? { opacity: 0.6 } : { opacity: 0.3 }}
-                  whileInView={{ opacity: [0.3, 1, 0.3] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: 0.45 }}
-                >
-                  →
-                </motion.span>
-                <motion.span
-                  initial={shouldReduceMotion ? { color: "#1E2024" } : { color: "rgba(30, 32, 36, 0.6)" }}
-                  whileInView={{ color: ["rgba(30, 32, 36, 0.6)", "#FFD42A", "rgba(30, 32, 36, 0.6)"] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.55 }}
-                >
-                  Execution
-                </motion.span>
-                <motion.span
-                  initial={shouldReduceMotion ? { opacity: 0.6 } : { opacity: 0.3 }}
-                  whileInView={{ opacity: [0.3, 1, 0.3] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: 0.75 }}
-                >
-                  →
-                </motion.span>
-                <motion.span
-                  initial={shouldReduceMotion ? { color: "#1E2024" } : { color: "rgba(30, 32, 36, 0.6)" }}
-                  whileInView={{ color: ["rgba(30, 32, 36, 0.6)", "#FFD42A", "rgba(30, 32, 36, 0.6)"] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.85 }}
-                >
-                  Ship
-                </motion.span>
-              </div>
               {!shouldReduceMotion && (
                 <>
-                  {/* Viewport Entry Signal Sweep (Plays ONCE, 1000ms) */}
+                  {/* Viewport Entry Signal Sweep */}
                   <motion.span
                     initial={{ x: "-40%", opacity: 0 }}
                     whileInView={{ x: "140%", opacity: [0, 0.9, 0.9, 0] }}
@@ -292,7 +334,7 @@ export const BentoGridWorkspace: React.FC = () => {
                     transition={{ duration: 1.0, delay: 0.20, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute top-1/2 -translate-y-1/2 left-0 w-12 h-[2px] bg-gradient-to-r from-transparent via-[#FFD42A] to-transparent rounded-full pointer-events-none shadow-[0_0_8px_rgba(255,212,42,0.8)]"
                   />
-                  {/* Hover Single Pass Sweep (Plays ONCE per hover) */}
+                  {/* Hover Single Pass Sweep */}
                   <span className="absolute top-1/2 left-0 w-12 h-[2px] bg-gradient-to-r from-transparent via-[#FFD42A] to-transparent rounded-full pointer-events-none shadow-[0_0_8px_rgba(255,212,42,0.8)] animate-signal-pass-once opacity-0" />
                 </>
               )}
@@ -304,4 +346,6 @@ export const BentoGridWorkspace: React.FC = () => {
     </div>
   );
 };
+
 export default BentoGridWorkspace;
+

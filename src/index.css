@@ -392,12 +392,23 @@ body.has-custom-cursor [contenteditable="true"] {
   animation: signalPassOnce 650ms ease-out 1;
 }
 
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: cursorBlink 0.7s steps(2, start) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .group:hover .animate-node-pulse-once,
-  .group:hover .animate-signal-pass-once {
+  .group:hover .animate-signal-pass-once,
+  .animate-cursor-blink {
     animation: none !important;
   }
 }
+
 
 
 
