@@ -102,19 +102,19 @@ const Index = () => {
           <TechMarquee />
 
           {/* ABOUT ME INTRO STATEMENT BLOCK (AFTER TECH MARQUEE) */}
-          <section id="about-intro" className="relative w-full py-16 sm:py-20 bg-cream text-[#1E2024] z-10 select-none">
-            <div className="max-w-[1180px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
+          <section id="about-intro" className="relative w-full py-12 sm:py-16 bg-cream text-[#1E2024] z-10 select-none">
+            <div className="max-w-[980px] mx-auto px-6 sm:px-10 lg:px-12 relative z-10 flex flex-col items-center text-center">
               <a href="/about" className="group block w-full">
                 <h2
                   style={{
                     fontFamily: '"Instrument Sans", sans-serif',
                     fontWeight: 400,
                     color: "#1E2024",
-                    fontSize: "clamp(34px, 3.2vw, 44px)",
-                    lineHeight: 1.18,
-                    letterSpacing: "-0.02em",
+                    fontSize: "clamp(22px, 2.2vw, 32px)",
+                    lineHeight: 1.3,
+                    letterSpacing: "-0.015em",
                   }}
-                  className="text-center group-hover:opacity-90 transition-opacity max-w-[1180px] mx-auto font-instrument-sans"
+                  className="text-center group-hover:opacity-90 transition-opacity max-w-[920px] mx-auto font-instrument-sans"
                 >
                   I'm Toshit Sai. I build with AI, experiment relentlessly, and turn ideas into complete digital products from intelligent applications and Generative AI systems to experiences designed for real people.
                 </h2>
@@ -124,12 +124,12 @@ const Index = () => {
                 style={{
                   fontFamily: '"Instrument Sans", sans-serif',
                   fontWeight: 400,
-                  fontSize: "clamp(17px, 1.8vw, 24px)",
-                  lineHeight: 1.4,
-                  letterSpacing: "-0.01em",
+                  fontSize: "clamp(15px, 1.3vw, 18px)",
+                  lineHeight: 1.5,
+                  letterSpacing: "-0.005em",
                   color: "rgba(30, 32, 36, 0.65)",
                 }}
-                className="text-center max-w-[700px] mx-auto mt-8 sm:mt-9 font-normal font-instrument-sans"
+                className="text-center max-w-[640px] mx-auto mt-6 sm:mt-7 font-normal font-instrument-sans"
               >
                 I believe great technology should feel simple, useful, and human, and I'm here to keep building mine.
               </p>
