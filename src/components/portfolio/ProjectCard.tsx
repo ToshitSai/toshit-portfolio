@@ -97,8 +97,9 @@ const ProjectVideo: React.FC<ProjectVideoProps> = ({ active, shouldLoad, project
     return (
       <img
         src={project.bgImage}
-        alt=""
-        aria-hidden="true"
+        alt={`${project.title} project preview`}
+        loading="lazy"
+        decoding="async"
         draggable={false}
         className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
         style={{ objectPosition: device.objectPosition || "50% 50%" }}
@@ -367,7 +368,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, cardIndex = 0
         <ProjectDeviceScene project={project} cardIndex={cardIndex} />
 
         {/* UNIFIED FULL-CARD BLUR & TEXT OVERLAY */}
-        <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center sm:p-10 bg-[#121417]/65 backdrop-blur-md opacity-0 transition-opacity duration-350 ease-out group-hover/project:opacity-100 group-focus-visible/project:opacity-100">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center sm:p-10 bg-[#121417]/65 backdrop-blur-md opacity-0 transition-opacity duration-350 ease-out group-hover/project:opacity-100 group-focus-visible/project:opacity-100">
           <h3 className="translate-y-3 font-sans text-[clamp(26px,3.6vw,46px)] font-bold uppercase leading-[1.05] tracking-tight text-white drop-shadow-sm transition-transform duration-350 ease-out group-hover/project:translate-y-0 group-focus-visible/project:translate-y-0">
             {project.title}
           </h3>

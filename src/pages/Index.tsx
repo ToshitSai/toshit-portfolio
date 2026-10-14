@@ -9,6 +9,7 @@ import SelectedWork from "@/components/portfolio/SelectedWork";
 import { useIntro } from "@/context/IntroContext";
 
 import VelocityTiltWrapper from "@/components/portfolio/VelocityTiltWrapper";
+import RouteMetadata from "@/components/RouteMetadata";
 
 // Lazy-loaded heavy sections for bundle optimization and code-splitting
 const TechnicalSkills = React.lazy(() => import("@/components/portfolio/TechnicalSkills"));
@@ -56,7 +57,6 @@ const Index = () => {
 
   // Coordinate hash navigation AFTER loader finishes
   useEffect(() => {
-    console.log("EDITORIAL_MOTION_SYSTEM_V2_ACTIVE", new Date().toISOString());
     if (!isLoading && typeof window !== "undefined") {
       const hash = window.location.hash;
       if (hash) {
@@ -86,6 +86,11 @@ const Index = () => {
       exit="exit"
       className="min-h-screen bg-cream text-ink selection:bg-yellow-accent selection:text-ink font-sans relative"
     >
+      <RouteMetadata
+        title="Toshit Sai Galam | AI Builder & Software Developer"
+        description="Portfolio of Toshit Sai Galam, a B.Tech AI/ML student building practical AI applications, full-stack products, and thoughtful digital experiences."
+        canonicalPath="/"
+      />
       {/* CONTEXTUAL EDITORIAL LOGIN LOADER (FIRST VISIT PER SESSION ONLY) */}
       <EditorialLoginLoader
         isLoading={isLoading}

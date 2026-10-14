@@ -5,6 +5,7 @@ import { Certificate3DCarousel } from "@/components/portfolio/Certificate3DCarou
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SECTION_APPROACH, motionDistance } from "@/lib/scrollMotion";
 import { usePageTransition } from "@/context/PageTransitionContext";
+import RouteMetadata from "@/components/RouteMetadata";
 
 const PlaygroundPage: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
@@ -28,6 +29,12 @@ const PlaygroundPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FFF8E8] text-[#20252B] selection:bg-[#FFD42A] selection:text-[#20252B] font-sans relative overflow-x-hidden flex flex-col justify-between">
+      <RouteMetadata
+        title="Playground & Certificates | Toshit Sai Galam"
+        description="Browse Toshit Sai Galam's AI, software engineering, and technology certificates in an interactive learning playground."
+        canonicalPath="/playground"
+      />
+      <h1 className="sr-only">Toshit Sai Galam Playground and Certificates</h1>
       {/* AMBIENT QUIET GALLERY CANVAS BACKGROUND DEPTH */}
       <motion.div style={{ y: depthY }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[18%] left-1/2 -translate-x-1/2 w-[85vw] max-w-[1100px] h-[550px] rounded-full bg-gradient-to-b from-[#FFD42A]/14 via-[#FFF8E8]/50 to-transparent blur-3xl" />

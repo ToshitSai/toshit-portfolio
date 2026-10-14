@@ -429,7 +429,10 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                   <img
                     src={cert.image}
                     alt={cert.title}
-                    loading="eager"
+                    loading={isActive ? "eager" : "lazy"}
+                    decoding="async"
+                    width={cert.aspectRatio === "4/3" ? 1200 : 1600}
+                    height={cert.aspectRatio === "4/3" ? 900 : 1000}
                     className="w-auto h-auto max-w-[280px] sm:max-w-[500px] md:max-w-[620px] lg:max-w-[700px] max-h-[200px] sm:max-h-[310px] md:max-h-[360px] object-contain block transition-transform duration-500 group-hover:scale-[1.008]"
                   />
                 </div>
@@ -534,6 +537,7 @@ export const Certificate3DCarousel: React.FC<Certificate3DCarouselProps> = ({
                   <img
                     src={selectedModalCert.image}
                     alt={selectedModalCert.title}
+                    decoding="async"
                     className="max-w-full h-auto max-h-[72vh] object-contain rounded-lg"
                   />
                 </div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Plus } from "lucide-react";
 import BentoGridWorkspace from "@/components/portfolio/BentoGridWorkspace";
 import { usePageTransition } from "@/context/PageTransitionContext";
+import RouteMetadata from "@/components/RouteMetadata";
 
 
 // FACTUAL EXPERIENCE & CAPABILITIES DATA
@@ -141,8 +142,14 @@ const AboutPage: React.FC = () => {
       ref={containerRef}
       className="min-h-screen bg-[#F7F1E5] text-[#1E2024] selection:bg-[#FFD21F] selection:text-[#1E2024] font-sans relative overflow-x-hidden"
     >
+      <RouteMetadata
+        title="About Toshit Sai Galam | AI/ML Engineer & Builder"
+        description="Learn about Toshit Sai Galam's AI/ML studies, full-stack engineering work, product-building practice, and creative technology approach."
+        canonicalPath="/about"
+      />
       {/* MAIN ABOUT PAGE CONTENT */}
       <main className="relative z-10 pt-20 sm:pt-28 pb-20 sm:pb-28 select-none">
+        <h1 className="sr-only">About Toshit Sai Galam</h1>
         {/* TOP BACK TO HOME BREADCRUMB */}
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}

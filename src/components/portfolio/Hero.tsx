@@ -449,6 +449,7 @@ export const Hero: React.FC = () => {
 
           {/* Display Headline with Staggered Entrance Reveal */}
           <motion.h1
+            aria-label="AI Builder"
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}

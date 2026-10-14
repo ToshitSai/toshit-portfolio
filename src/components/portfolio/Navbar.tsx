@@ -265,7 +265,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         >
           {/* REUSED YELLOW T AVATAR MONOGRAM */}
           <a
-            href="#hero"
+            href={isHomeRoute ? "#hero" : "/"}
             onClick={(e) => {
               handleNavClick(e, "#hero");
               if (onTriggerLogin && e.detail === 2) onTriggerLogin();

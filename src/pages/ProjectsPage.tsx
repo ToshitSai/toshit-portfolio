@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import ContactFooter from "@/components/portfolio/ContactFooter";
 import ProjectGrid from "@/components/portfolio/ProjectGrid";
 import ProjectStoryViewer from "@/components/portfolio/ProjectStoryViewer";
+import RouteMetadata from "@/components/RouteMetadata";
 
 const ProjectsPage: React.FC = () => {
   const { slug } = useParams<{ slug?: string }>();
@@ -26,6 +27,11 @@ const ProjectsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F2E6] text-[#1D2024] selection:bg-[#FFD42A] selection:text-[#1D2024] font-sans relative">
+      <RouteMetadata
+        title="Projects & Experiments | Toshit Sai Galam"
+        description="Explore Toshit Sai Galam's AI applications, full-stack tools, and creative web projects built with modern technologies."
+        canonicalPath="/projects"
+      />
       {/* STORY VIEWER OVERLAY FOR PROJECTS PAGE */}
       <ProjectStoryViewer
         projectSlug={activeSlug}
