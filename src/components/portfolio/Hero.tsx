@@ -424,7 +424,7 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* MAIN HERO CONTENT AREA */}
-      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-1 sm:pt-4 pb-2 sm:pb-6 flex-1 flex flex-col justify-center items-center text-center">
+      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-[22vh] sm:pt-4 pb-2 sm:pb-6 flex-1 flex flex-col justify-start sm:justify-center items-center text-center">
         <motion.div
           style={{ y: heroTitleY, opacity: heroTitleOpacity }}
           className="w-full max-w-[780px] flex flex-col items-center relative"
