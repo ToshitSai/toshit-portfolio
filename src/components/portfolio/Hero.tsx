@@ -346,7 +346,7 @@ export const Hero: React.FC = () => {
   return (
     <motion.section
       ref={heroRef}
-      className="relative w-full min-h-[100svh] sm:min-h-[580px] max-h-[880px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
+      className="relative w-full min-h-[calc(100svh-56px)] sm:min-h-[580px] max-h-[880px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
     >
       {/* Background layer — slowest parallax */}
       <motion.div

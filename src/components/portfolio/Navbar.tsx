@@ -324,7 +324,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -12, scale: 0.95 }}
             transition={NAV_TRANSITION}
-            className="pointer-events-auto absolute top-20 left-4 right-4 max-w-md mx-auto bg-white/90 backdrop-blur-2xl border border-white p-3 rounded-3xl shadow-2xl flex flex-col gap-1.5"
+            className="pointer-events-auto absolute top-20 left-4 right-4 z-50 max-w-md mx-auto bg-[#FFF8E8] border border-white/90 p-3 rounded-3xl shadow-2xl flex flex-col gap-1.5"
           >
             {NAV_ITEMS.map((item) => {
               return (
