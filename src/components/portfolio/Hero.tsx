@@ -452,7 +452,7 @@ export const Hero: React.FC = () => {
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.92] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
+            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(3rem,13vw,6.2rem)] sm:text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.92] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
           >
             <RotatingHeroWord />
           </motion.h1>
