@@ -144,7 +144,9 @@ const useDraggableElement = ({ heroRef, isSun = false, isIntroComplete = true }:
           if (el.hasPointerCapture(pId)) {
             el.releasePointerCapture(pId);
           }
-        } catch (_err) {}
+        } catch (_err) {
+          // Pointer capture may already have been released.
+        }
       }
 
       state.isDragging = false;
@@ -181,7 +183,9 @@ const useDraggableElement = ({ heroRef, isSun = false, isIntroComplete = true }:
 
       try {
         el.setPointerCapture(e.pointerId);
-      } catch (_err) {}
+      } catch (_err) {
+        // Pointer capture may not be available for this interaction.
+      }
 
       el.style.cursor = "grabbing";
       el.style.transition = "transform 150ms cubic-bezier(0.16, 1, 0.3, 1)";

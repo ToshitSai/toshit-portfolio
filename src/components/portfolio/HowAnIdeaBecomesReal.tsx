@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowRight, ArrowDown, Sparkles, AlertTriangle, Cpu, Wrench, CheckCircle2, RefreshCw, Rocket, Lightbulb } from "lucide-react";
+import { ArrowDown, Sparkles, AlertTriangle, Cpu, Wrench, CheckCircle2, RefreshCw, Rocket, Lightbulb } from "lucide-react";
 
 export interface ProcessStageStep {
   stepNumber: string;

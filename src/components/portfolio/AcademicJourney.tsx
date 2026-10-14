@@ -271,8 +271,8 @@ const AcademicJourney: React.FC = () => {
 
           {/* Timeline Entries */}
           <div className="space-y-16 sm:space-y-20">
-            {timelineEntries.map((entry, idx) => (
-              <ArchiveRow key={entry.id} entry={entry} idx={idx} />
+            {timelineEntries.map((entry) => (
+              <ArchiveRow key={entry.id} entry={entry} />
             ))}
           </div>
 

@@ -115,7 +115,6 @@ export function getAiBuildActivitySummary(period: ActivityFilterPeriod = "recent
     (a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)
   );
 
-  const now = Date.now();
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 

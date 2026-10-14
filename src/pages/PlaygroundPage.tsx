@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Certificate3DCarousel } from "@/components/portfolio/Certificate3DCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";

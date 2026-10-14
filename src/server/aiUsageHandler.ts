@@ -1,5 +1,4 @@
 import {
-  getAggregatedMetrics,
   hasPersistentUsageStore,
   normalizeUsageEvent,
   recordUsageEvent,
@@ -8,13 +7,12 @@ import {
 import {
   getAiBuildActivitySummary,
   ActivityFilterPeriod,
-  AiActivitySummary,
 } from "./aiActivityStore.js";
 import { isRateLimited } from "./security.js";
 
 export interface AiUsageApiResult {
   status: number;
-  data: any;
+  data: unknown;
 }
 
 export async function handleGetAiUsage(

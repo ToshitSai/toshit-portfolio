@@ -91,7 +91,7 @@ interface WhatImExploringProps {
   isExpanded?: boolean;
 }
 
-export const WhatImExploring: React.FC<WhatImExploringProps> = ({ isExpanded = true }) => {
+export const WhatImExploring: React.FC<WhatImExploringProps> = ({ isExpanded: _isExpanded = true }) => {
   const shouldReduceMotion = useReducedMotion();
   const [selectedTopicId, setSelectedTopicId] = useState<string>("ai-agents");
   const [hoveredTopicId, setHoveredTopicId] = useState<string | null>(null);
