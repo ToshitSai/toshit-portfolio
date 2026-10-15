@@ -162,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
         animate={{
           width: isMobile ? "calc(100vw - 24px)" : (isCompact ? "min(310px, calc(100vw - 20px))" : "min(545px, calc(100vw - 20px))"),
           maxWidth: isMobile ? "calc(100vw - 24px)" : (isCompact ? "310px" : "545px"),
-          height: isMobile ? "44px" : "56px",
+          height: isMobile ? "48px" : "56px",
           opacity: 1,
           y: 0,
           pointerEvents: "auto",
