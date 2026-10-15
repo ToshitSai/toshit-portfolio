@@ -31,7 +31,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
   return (
     <div className="w-full flex flex-col items-center justify-center text-center select-none">
       {/* Line 1: Accent Highlight Word (Yellow) */}
-      <div className="relative w-full h-[1.12em] min-h-[34px] xs:min-h-[40px] sm:min-h-[72px] md:min-h-[96px] overflow-hidden flex items-center justify-center text-center">
+      <div className="hero-word-line relative w-full h-[1.12em] min-h-[34px] xs:min-h-[40px] sm:min-h-[72px] md:min-h-[96px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentRole.highlight}
@@ -43,7 +43,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity" }}
-            className="absolute inset-x-0 text-center text-[#FFD42A] font-serif font-normal text-[clamp(1.75rem,6.4vw,5.5rem)] leading-[0.98] tracking-[-0.02em] whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+            className="hero-word-text absolute inset-x-0 text-center text-[#FFD42A] font-serif font-normal text-[clamp(1.75rem,6.4vw,5.5rem)] leading-[0.98] tracking-[-0.02em] whitespace-nowrap block drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
           >
             {currentRole.highlight}
           </motion.span>
@@ -51,7 +51,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
       </div>
 
       {/* Line 2: Base Role Title (Charcoal) */}
-      <div className="relative w-full h-[1.12em] min-h-[34px] xs:min-h-[40px] sm:min-h-[72px] md:min-h-[96px] overflow-hidden flex items-center justify-center text-center">
+      <div className="hero-word-line relative w-full h-[1.12em] min-h-[34px] xs:min-h-[40px] sm:min-h-[72px] md:min-h-[96px] overflow-hidden flex items-center justify-center text-center">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentRole.base}
@@ -63,7 +63,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity" }}
-            className="absolute inset-x-0 text-center text-[#20252B] font-serif font-normal text-[clamp(1.75rem,6.4vw,5.5rem)] leading-[0.98] tracking-[-0.02em] whitespace-nowrap block drop-shadow-sm"
+            className="hero-word-text absolute inset-x-0 text-center text-[#20252B] font-serif font-normal text-[clamp(1.75rem,6.4vw,5.5rem)] leading-[0.98] tracking-[-0.02em] whitespace-nowrap block drop-shadow-sm"
           >
             {currentRole.base}
           </motion.span>
@@ -256,7 +256,7 @@ const useDraggableElement = ({ heroRef, isSun = false, isIntroComplete = true }:
       window.removeEventListener("blur", handleWindowBlur);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [heroRef, isSun]);
+  }, [heroRef, isSun, isIntroComplete]);
 
   return elementRef;
 };
@@ -346,7 +346,7 @@ export const Hero: React.FC = () => {
   return (
     <motion.section
       ref={heroRef}
-      className="relative w-full min-h-[calc(100svh-56px)] sm:min-h-[580px] max-h-[880px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
+      className="relative w-full min-h-[100svh] sm:min-h-[580px] max-h-[880px] overflow-hidden flex flex-col justify-between select-none studio-noise-bg border-b border-[#20252B]/10"
     >
       {/* Background layer — slowest parallax */}
       <motion.div
@@ -369,10 +369,10 @@ export const Hero: React.FC = () => {
       <div className="pt-20 sm:pt-24" />
 
       {/* DEDICATED DRAG LAYER FOR HERO SCENERY (Requirement 7 & 8) */}
-      <div className="hero-draggable-layer absolute inset-0 pointer-events-none z-30 overflow-hidden">
+      <div className="hero-draggable-layer absolute inset-0 pointer-events-none z-10 sm:z-30 overflow-hidden">
         {/* Patterned Yellow Sun Graphic */}
         <div
-          className="absolute top-16 right-2 sm:top-20 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28"
+          className="hero-sun absolute top-24 right-2 z-20 sm:top-20 sm:right-8 sm:z-auto md:right-16 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28"
         >
           <div
             ref={sunRef}
@@ -388,7 +388,7 @@ export const Hero: React.FC = () => {
 
         {/* Organic Cutout Cloud Left — Compact, distinct silhouette */}
         <div
-          className="absolute top-[16%] sm:top-[28%] left-[1%] sm:left-[4%] w-12 sm:w-24 md:w-32 aspect-[140/80]"
+          className="hero-cloud-left absolute top-[20%] z-0 sm:top-[28%] left-[1%] sm:left-[4%] w-12 sm:w-24 md:w-32 aspect-[140/80]"
         >
           <div
             ref={leftCloudRef}
@@ -406,7 +406,7 @@ export const Hero: React.FC = () => {
 
         {/* Organic Cutout Cloud Right — Larger, distinct puff silhouette */}
         <div
-          className="absolute top-[10%] sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[220/115]"
+          className="hero-cloud-right absolute top-[18%] z-0 sm:top-[22%] right-[1%] sm:right-[2%] md:right-[8%] lg:right-[10%] w-20 sm:w-36 md:w-[220px] lg:w-[250px] aspect-[220/115]"
         >
           <div
             ref={rightCloudRef}
@@ -424,7 +424,7 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* MAIN HERO CONTENT AREA */}
-      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-[22vh] sm:pt-4 pb-2 sm:pb-6 flex-1 flex flex-col justify-start sm:justify-center items-center text-center">
+      <div className="hero-content relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-[22vh] sm:pt-4 pb-2 sm:pb-6 flex-1 flex flex-col justify-start sm:justify-center items-center text-center">
         <motion.div
           style={{ y: heroTitleY, opacity: heroTitleOpacity }}
           className="w-full max-w-[780px] flex flex-col items-center relative"
@@ -441,7 +441,7 @@ export const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 mb-3 sm:mb-4 text-[10px] sm:text-[11px] font-mono tracking-[0.18em] uppercase text-white font-bold drop-shadow-sm"
+            className="inline-flex items-center gap-2 mb-3 sm:mb-4 text-[12px] sm:text-[11px] font-mono tracking-[0.18em] uppercase text-[#20252B] sm:text-white font-bold drop-shadow-[0_1px_2px_rgba(255,255,255,0.45)] sm:drop-shadow-sm"
           >
             <span className="w-2 h-2 rounded-full bg-[#FFD42A] animate-pulse" />
             <span>HELLO, I'M TOSHIT SAI GALAM. A —</span>
@@ -453,7 +453,7 @@ export const Hero: React.FC = () => {
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(3rem,13vw,6.2rem)] sm:text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.92] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
+            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(3.5rem,18vw,7.5rem)] sm:text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.82] sm:leading-[0.92] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
           >
             <RotatingHeroWord />
           </motion.h1>
@@ -479,14 +479,15 @@ export const Hero: React.FC = () => {
                 onClick={handlePrevProject}
                 onMouseEnter={() => setLeftDiscHovered(true)}
                 onMouseLeave={() => setLeftDiscHovered(false)}
-                aria-label="Previous Project"
-                className={`relative w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${leftDiscHovered
+                aria-label="Previous project"
+                className={`relative w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${leftDiscHovered
                   ? "-rotate-12 scale-110 shadow-lg"
                   : isCardHovered
                     ? "animate-[spin_6s_linear_infinite]"
                     : "animate-[spin_12s_linear_infinite]"
                   }`}
               >
+                <span aria-hidden="true" className="text-[#FFD42A] text-lg leading-none sm:hidden">‹</span>
                 <div
                   className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${leftDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
                     }`}
@@ -565,14 +566,15 @@ export const Hero: React.FC = () => {
                 onClick={handleNextProject}
                 onMouseEnter={() => setRightDiscHovered(true)}
                 onMouseLeave={() => setRightDiscHovered(false)}
-                aria-label="Next Project"
-                className={`relative w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${rightDiscHovered
+                aria-label="Next project"
+                className={`relative w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${rightDiscHovered
                   ? "rotate-12 scale-110 shadow-lg"
                   : isCardHovered
                     ? "animate-[spin_6s_linear_infinite]"
                     : "animate-[spin_12s_linear_infinite]"
                   }`}
               >
+                <span aria-hidden="true" className="text-[#FFD42A] text-lg leading-none sm:hidden">›</span>
                 <div
                   className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFD42A] transition-shadow duration-300 ${rightDiscHovered ? "shadow-[0_0_8px_#FFD42A]" : ""
                     }`}

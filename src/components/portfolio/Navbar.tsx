@@ -232,7 +232,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           <button
             type="button"
             onClick={handleWorkWithMeClick}
-            className="group flex items-center justify-center gap-1.5 sm:gap-2 w-auto px-3 sm:px-3.5 lg:w-[170px] h-[36px] sm:h-[40px] rounded-full bg-white/90 text-[#20252B] text-xs sm:text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
+            className="nav-work-cta group flex items-center justify-center gap-1.5 sm:gap-2 w-auto px-3 sm:px-3.5 lg:w-[170px] h-[36px] sm:h-[40px] rounded-full bg-white/90 text-[#20252B] text-xs sm:text-[14px] font-semibold tracking-tight shadow-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap backdrop-blur-md ml-auto cursor-pointer"
           >
             <svg
               className="w-4 h-3 sm:w-[18px] sm:h-[13px] flex-shrink-0 group-hover:rotate-6 transition-transform"
@@ -308,7 +308,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1.5 text-[#20252B] hover:text-black rounded-full bg-white/50 border border-white/70 focus:outline-none flex-shrink-0"
+            className="nav-menu-toggle p-1.5 text-[#20252B] hover:text-black rounded-full bg-white/50 border border-white/70 focus:outline-none flex-shrink-0"
             aria-label="Toggle Mobile Menu"
           >
             {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
