@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useIntro } from "@/context/IntroContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface HeroRole {
   highlight: string;
@@ -18,6 +19,7 @@ const HERO_ROLES: HeroRole[] = [
 
 const RotatingHeroWord: React.FC = React.memo(() => {
   const [index, setIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -39,7 +41,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{
-              duration: 0.45,
+              duration: isMobile ? 0.2 : 0.45,
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity" }}
@@ -59,7 +61,7 @@ const RotatingHeroWord: React.FC = React.memo(() => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{
-              duration: 0.45,
+              duration: isMobile ? 0.2 : 0.45,
               ease: [0.16, 1, 0.3, 1],
             }}
             style={{ willChange: "transform, opacity" }}
@@ -274,6 +276,7 @@ export const Hero: React.FC = () => {
   const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
   const heroRef = useRef<HTMLElement>(null);
 
   // Draggable Scenery Element Controller Refs
@@ -287,12 +290,13 @@ export const Hero: React.FC = () => {
   });
 
   // Lightweight section entrance & scroll exit transforms
-  const heroTitleY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -30]);
-  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.85]);
-  const heroSupportingY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -18]);
-  const heroBackgroundY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -10]);
-  const heroDecorY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
-  const heroWaveY = useTransform(scrollYProgress, [0.35, 1], shouldReduceMotion ? [0, 0] : [0, -14]);
+  const noScrollMotion = shouldReduceMotion || isMobile;
+  const heroTitleY = useTransform(scrollYProgress, [0, 1], noScrollMotion ? [0, 0] : [0, -30]);
+  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.8], noScrollMotion ? [1, 1] : [1, 0.85]);
+  const heroSupportingY = useTransform(scrollYProgress, [0, 1], noScrollMotion ? [0, 0] : [0, -18]);
+  const heroBackgroundY = useTransform(scrollYProgress, [0, 1], noScrollMotion ? [0, 0] : [0, -10]);
+  const heroDecorY = useTransform(scrollYProgress, [0, 1], noScrollMotion ? [0, 0] : [0, -14]);
+  const heroWaveY = useTransform(scrollYProgress, [0.35, 1], noScrollMotion ? [0, 0] : [0, -14]);
 
   // Automatic Project Rotation (every 4.5s, pauses on manual interaction)
   useEffect(() => {
@@ -355,7 +359,7 @@ export const Hero: React.FC = () => {
           y: heroBackgroundY,
           background: "linear-gradient(180deg, #7EB8E8 0%, #A9D3F0 45%, #5B9BD5 100%)",
         }}
-        className="absolute inset-0 z-0"
+        className="hero-background absolute inset-0 z-0"
       />
       {/* SVG Noise Overlay */}
       <svg className="pointer-events-none absolute inset-0 opacity-[0.035] w-full h-full z-0">
@@ -378,7 +382,7 @@ export const Hero: React.FC = () => {
             ref={sunRef}
             className="w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing touch-none select-none"
           >
-            <div className="w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow pointer-events-none">
+            <div className="hero-sun-core w-full h-full rounded-full bg-[#FFD42A] p-1 sm:p-2 shadow-xl opacity-95 animate-spin-slow pointer-events-none">
               <div className="w-full h-full rounded-full border-2 border-dashed border-[#20252B]/30 flex items-center justify-center pointer-events-none">
                 <div className="w-3/4 h-3/4 rounded-full bg-[radial-gradient(#20252B_1.5px,transparent_1.5px)] [background-size:8px_8px] opacity-40 pointer-events-none" />
               </div>
@@ -443,7 +447,7 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-flex items-center gap-2 mb-3 sm:mb-4 text-[12px] sm:text-[11px] font-mono tracking-[0.18em] uppercase text-[#20252B] sm:text-white font-bold drop-shadow-[0_1px_2px_rgba(255,255,255,0.45)] sm:drop-shadow-sm"
           >
-            <span className="w-2 h-2 rounded-full bg-[#FFD42A] animate-pulse" />
+            <span className="hero-pulse w-2 h-2 rounded-full bg-[#FFD42A] animate-pulse" />
             <span>HELLO, I'M TOSHIT SAI GALAM. A —</span>
           </motion.div>
 
@@ -453,7 +457,7 @@ export const Hero: React.FC = () => {
             initial={{ clipPath: "inset(100% 0 0 0)", y: 40 }}
             animate={{ clipPath: "inset(0% 0 0 0)", y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full text-center text-[#20252B] font-serif font-normal text-[clamp(3.5rem,18vw,7.5rem)] sm:text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.82] sm:leading-[0.92] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
+            className="hero-title w-full text-center text-[#20252B] font-serif font-normal text-[clamp(3.5rem,18vw,7.5rem)] sm:text-[clamp(2.1rem,7.5vw,6.2rem)] leading-[0.82] sm:leading-[0.92] tracking-[-0.02em] mb-4 sm:mb-6 flex flex-col items-center justify-center"
           >
             <RotatingHeroWord />
           </motion.h1>
@@ -480,7 +484,7 @@ export const Hero: React.FC = () => {
                 onMouseEnter={() => setLeftDiscHovered(true)}
                 onMouseLeave={() => setLeftDiscHovered(false)}
                 aria-label="Previous project"
-                className={`relative w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${leftDiscHovered
+                className={`hero-project-disc relative w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${leftDiscHovered
                   ? "-rotate-12 scale-110 shadow-lg"
                   : isCardHovered
                     ? "animate-[spin_6s_linear_infinite]"
@@ -567,7 +571,7 @@ export const Hero: React.FC = () => {
                 onMouseEnter={() => setRightDiscHovered(true)}
                 onMouseLeave={() => setRightDiscHovered(false)}
                 aria-label="Next project"
-                className={`relative w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${rightDiscHovered
+                className={`hero-project-disc relative w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-[#20252B] flex items-center justify-center shadow-md transition-all duration-300 transform focus:outline-none ${rightDiscHovered
                   ? "rotate-12 scale-110 shadow-lg"
                   : isCardHovered
                     ? "animate-[spin_6s_linear_infinite]"
@@ -601,11 +605,11 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* BOTTOM SCROLL INDICATOR & BOUNCING ARROW */}
-      <motion.div style={{ y: heroDecorY }} className="relative z-20 w-full flex flex-col items-center">
+      <motion.div style={{ y: heroDecorY }} className="hero-decor relative z-20 w-full flex flex-col items-center">
         {/* Organic Rolling Waves Transition to Cream Background */}
         <motion.div
           style={{ y: heroWaveY }}
-          className="w-full h-8 sm:h-16 relative overflow-hidden pointer-events-none"
+          className="hero-wave w-full h-8 sm:h-16 relative overflow-hidden pointer-events-none"
         >
           <svg
             viewBox="0 0 1440 120"

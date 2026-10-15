@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { usePageTransition } from "@/context/PageTransitionContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface NavItem {
   id: string;
@@ -31,6 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { triggerTransition } = usePageTransition();
+  const isMobile = useIsMobile();
 
   // SINGLE SOURCE OF TRUTH FOR NAVBAR MODE (NO SECTION TRACKING)
   const [navbarMode, setNavbarMode] = useState<"full" | "compact">("full");
@@ -158,14 +160,14 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
       {/* HIGH-TRANSPARENCY GLASSMORPHIC FLOATING CAPSULE NAVBAR */}
       <motion.nav
         animate={{
-          width: isCompact ? "min(310px, calc(100vw - 20px))" : "min(545px, calc(100vw - 20px))",
-          maxWidth: isCompact ? "310px" : "545px",
-          height: "56px",
+          width: isMobile ? "calc(100vw - 24px)" : (isCompact ? "min(310px, calc(100vw - 20px))" : "min(545px, calc(100vw - 20px))"),
+          maxWidth: isMobile ? "calc(100vw - 24px)" : (isCompact ? "310px" : "545px"),
+          height: isMobile ? "44px" : "56px",
           opacity: 1,
           y: 0,
           pointerEvents: "auto",
         }}
-        transition={NAV_TRANSITION}
+        transition={isMobile ? { duration: 0 } : NAV_TRANSITION}
         style={{
           borderRadius: "9999px",
           backgroundColor: "rgba(248, 242, 230, 0.85)",
