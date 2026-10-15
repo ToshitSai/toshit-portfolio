@@ -199,7 +199,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
               if (onTriggerLogin && e.detail === 2) onTriggerLogin();
             }}
             aria-label="Toshit Sai - Return to top"
-            className="group relative flex items-center justify-center w-9 h-9 sm:w-[44px] sm:h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
+            className="nav-avatar group relative flex items-center justify-center w-9 h-9 sm:w-[44px] sm:h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
             <span className="font-sans text-sm sm:text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
               T
@@ -273,7 +273,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTriggerLogin, onOpenContact }) => {
               if (onTriggerLogin && e.detail === 2) onTriggerLogin();
             }}
             aria-label="Toshit Sai - Return to top"
-            className="group relative flex items-center justify-center w-9 h-9 sm:w-[44px] sm:h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
+            className="nav-avatar group relative flex items-center justify-center w-9 h-9 sm:w-[44px] sm:h-[44px] rounded-full bg-[#FFD42A] text-[#20252B] shadow-xs hover:scale-105 transition-transform flex-shrink-0 ml-0.5"
           >
             <span className="font-sans text-sm sm:text-base font-bold tracking-tight text-[#20252B] group-hover:rotate-6 transition-transform">
               T

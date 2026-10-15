@@ -375,15 +375,25 @@ body.has-custom-cursor [contenteditable="true"] {
   .nav-container {
     width: calc(100vw - 24px) !important;
     max-width: calc(100vw - 24px) !important;
-    height: 44px !important;
+    height: 48px !important;
+    min-height: 48px !important;
     padding: 4px 6px !important;
     background-color: rgba(255, 255, 255, 0.92) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
+  .nav-container .nav-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    margin-left: 0 !important;
+  }
+
   .nav-work-cta {
     height: 32px !important;
+    min-height: 32px !important;
     padding-left: 10px !important;
     padding-right: 10px !important;
     font-size: 12px !important;
@@ -402,14 +412,15 @@ body.has-custom-cursor [contenteditable="true"] {
   }
 
   .hero-word-line {
-    height: clamp(52px, 17vw, 96px) !important;
+    height: clamp(36px, 10vw, 60px) !important;
     min-height: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 
   .hero-word-text {
-    font-size: clamp(52px, 17vw, 96px) !important;
-    line-height: 0.96 !important;
+    font-size: clamp(36px, 10vw, 60px) !important;
+    line-height: 1 !important;
   }
 
   .hero-sun {
